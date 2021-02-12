@@ -3,10 +3,14 @@
 Applikasjon i GCP som lagrer metrikker om IA tjenester.
 
 ## Kjøre lokalt
-TODO 
+Fra IntelliJ start `main()` funksjon i `App.kt`
+
+I terminal kjør
+`curl -v  -X GET "http://localhost:8222/internal/isAlive"`
+
 
 # Hvordan fungerer appen
-TODO 
+Applikasjonen tar imot _metrikker_ fra andre IA applikasjoner og persistere dem  
 
 
 # Henvendelser
