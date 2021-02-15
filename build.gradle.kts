@@ -5,7 +5,7 @@ plugins {
 }
 
 application {
-    mainClassName = "ia.stilling.indekser.AppKt"
+    mainClassName = "no.nav.arbeidsgiver.iatjenester.metrikker.AppKt"
 }
 
 repositories {
