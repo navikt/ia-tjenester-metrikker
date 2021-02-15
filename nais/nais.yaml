@@ -1,0 +1,21 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: ia-tjenester-metrikker
+  namespace: arbeidsgiver
+  labels:
+    team: arbeidsgiver
+spec:
+  image: {{image}}
+  port: 8222
+  ingresses:
+  {{#each ingress as |url|}}
+    - {{url}}
+  {{/each}}
+  liveness:
+    path: /internal/isAlive
+  readiness:
+    path: /internal/isReady
+#  azure:
+#    application:
+#      enabled: true

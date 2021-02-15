@@ -1,0 +1,62 @@
+name: Build & deploy
+
+on: [push]
+
+env:
+    IMAGE: docker.pkg.github.com/${{ github.repository }}/ia-tjenester-metrikker:${{ github.sha }}
+
+jobs:
+    test:
+        name: Run tests
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-java@v1
+              with:
+                  java-version: '13.x'
+            - uses: actions/cache@v2
+              with:
+                  path: |
+                      ~/.gradle/caches
+                      ~/.gradle/wrapper
+                  key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+                  restore-keys: |
+                      ${{ runner.os }}-gradle-
+            - name: Run tests
+              run: ./gradlew test --info
+
+    deploy-to-dev:
+        name: Deploy to dev
+        needs: test
+#        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/deploy-to-dev-gcp'
+        if: github.ref == 'refs/heads/deploy-to-dev-gcp'
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-java@v1
+              with:
+                  java-version: '13.x'
+            - uses: actions/cache@v2
+              with:
+                  path: |
+                      ~/.gradle/caches
+                      ~/.gradle/wrapper
+                  key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+                  restore-keys: |
+                      ${{ runner.os }}-gradle-
+            - name: Build jar with Gradle
+              run: ./gradlew shadowJar
+            - name: Build and publish Docker image
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  docker build --tag ${IMAGE} .
+                  echo ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} --password-stdin
+                  docker push ${IMAGE}
+            - uses: nais/deploy/actions/deploy@v1
+              env:
+                  APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+                  CLUSTER: dev-gcp
+                  VAR: image=${{ env.IMAGE }}
+                  RESOURCE: nais/nais.yaml
+                  VARS: nais/nais-dev.json
