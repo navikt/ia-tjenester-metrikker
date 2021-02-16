@@ -21,6 +21,7 @@ spec:
       - type: POSTGRES_12
         databases:
           - name: ia_tjenenster_metrikker
+            envVarPrefix: DATABASE
 #  azure:
 #    application:
 #      enabled: true
