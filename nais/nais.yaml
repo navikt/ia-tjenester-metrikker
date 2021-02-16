@@ -16,6 +16,11 @@ spec:
     path: /internal/isAlive
   readiness:
     path: /internal/isReady
+  gcp:
+    sqlInstance:
+      - type: POSTGRES_12
+        databases:
+          - name: ia_tjenenster_metrikker
 #  azure:
 #    application:
 #      enabled: true
