@@ -17,6 +17,10 @@ class App(
     }
 
     fun start() = try {
+        // TODO
+        // getDataSource() --->
+            // migrate
+                // ...
         webServer.start(8222)
 
 
@@ -32,6 +36,12 @@ class App(
 }
 
 fun main() {
+    /*properties (DB config, Auth config, ...) i parameter til startApplikasjon()
+    i startApplikasjon()
+    -> create Hikari Datasource
+    -> run Flyway.Migrate()
+    -> gi datasource som parameter til f.eks MetrikkerRepository()
+    -> startWebServer()*/
     try {
         App(
 

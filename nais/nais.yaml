@@ -22,7 +22,14 @@ spec:
         databases:
           - name: ia_tjenester_metrikker
             envVarPrefix: DATABASE
-
+ # envFrom:
+  #  - secret: ia-tjenester-metrikker-secrets
+  accessPolicy:
+    azure:
+      application:
+        enabled: true
+        tenant: trygdeetaten.no
+    webproxy: false
 #  azure:
 #    application:
 #      enabled: true
