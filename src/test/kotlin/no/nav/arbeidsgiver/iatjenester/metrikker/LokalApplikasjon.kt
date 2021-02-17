@@ -18,5 +18,5 @@ fun main() {
     flyway.migrate()
 
     // Og til slutt kaller vi applikasjon (akkurat som i PROD)
-    App().start()
+    start()
 }

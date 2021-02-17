@@ -29,6 +29,7 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:6.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
     implementation("com.github.ben-manes.caffeine:caffeine:2.8.8")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
     implementation("com.zaxxer:HikariCP:3.3.0")
     implementation("org.flywaydb:flyway-core:5.0.2")
 
