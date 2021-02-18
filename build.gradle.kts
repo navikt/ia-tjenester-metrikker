@@ -32,6 +32,8 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
     implementation("com.zaxxer:HikariCP:3.3.0")
     implementation("org.flywaydb:flyway-core:5.0.2")
+    implementation("org.postgresql:postgresql:42.2.18")
+    implementation("com.h2database:h2:1.4.200")
 
     testImplementation ("org.postgresql:postgresql:42.2.18")
     testImplementation("io.mockk:mockk:1.10.5")

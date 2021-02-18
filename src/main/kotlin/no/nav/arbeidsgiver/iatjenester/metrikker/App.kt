@@ -3,11 +3,10 @@ package no.nav.arbeidsgiver.iatjenester.metrikker
 import io.github.cdimascio.dotenv.dotenv
 import io.javalin.Javalin
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfig
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.DatabaseCredentials
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.FlywayMigration
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.Liveness
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
-import java.io.Closeable
-import java.lang.RuntimeException
 
 
 private val environment = dotenv { ignoreIfMissing = true }
@@ -29,7 +28,6 @@ fun start() {
 
 }
 
-
 fun main() {
     /*properties (DB config, Auth config, ...) i parameter til startApplikasjon()
     i startApplikasjon()
@@ -38,24 +36,30 @@ fun main() {
     -> gi datasource som parameter til f.eks MetrikkerRepository()
     -> startWebServer()*/
     try {
-        val testmiljø = when (environment["NAIS_CLUSTER_NAME"]) {
-            "local" -> {"sthg"}
-            "dev-gcp" -> {"sthg else"}
+        val driverClassName = when (environment["NAIS_CLUSTER_NAME"]) {
+            "local" -> {
+                "org.h2.Driver"
+            }
+            "dev-gcp" -> {
+                "org.postgresql.Driver"
+            }
             else -> throw RuntimeException("Ukjent miljø")
-        }
+        }//jdbc:h2:mem:ia-tjenester-metrikker
 
         // TODO: Fix me
-        /*
+
         val dataSource = DBConfig(
-            environment["DATABASE_URL"],
+            DatabaseCredentials(environment["NAIS_CLUSTER_NAME"],environment["DATABASE_HOST"],environment["DATABASE_PORT"],environment["DATABASE_DATABASE"]).getUrl(),
             environment["DATABASE_USERNAME"],
-            environment["DATABASE_PASSWORD"]
+            environment["DATABASE_PASSWORD"],
+            driverClassName
         ).getDataSource()
 
 
-        FlywayMigration(dataSource).setupOgMigrer()*/
+        FlywayMigration(dataSource).setupOgMigrer()
+
         start(/* Mulig vi trenger å sende Datasource til applikasjon for å kunne skrive i DB*/)
     } catch (exception: Exception) {
-        log("main()").error("Noe galt skjedde – oppstart er stoppet", exception)
+        log("main()").error("Det har skjedd en feil ved oppstarting av ia-tjenester-metrikker", exception)
     }
 }
