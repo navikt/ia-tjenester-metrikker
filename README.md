@@ -12,6 +12,13 @@ I terminal kjør
 # Hvordan fungerer appen
 Applikasjonen tar imot _metrikker_ fra andre IA applikasjoner og persistere dem  
 
+## Docker
+Bygg image
+`docker build -t ia-tjenester-metrikker .`
+
+Kjør container
+`docker run -d -p 8222:8222 ia-tjenester-metrikker`
+
 
 # Henvendelser
 
