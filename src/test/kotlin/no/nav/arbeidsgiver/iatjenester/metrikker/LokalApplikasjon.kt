@@ -9,7 +9,7 @@ fun main() {
     // Vi starter DB serveren lokalt
     Server.createPgServer().start()
     // Vi oppretter en DS til denne DB
-    val dataSource = DBConfig("jdbc:h2:mem:ia-tjenester-metrikker", "sa", "").getDataSource()
+    val dataSource = DBConfig("jdbc:h2:mem:ia-tjenester-metrikker", "sa", "", "org.h2.Driver").getDataSource()
 
     // Nå skal vi migrere vår DB lokalt !
     val flyway = Flyway()
