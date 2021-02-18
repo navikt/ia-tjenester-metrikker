@@ -5,19 +5,15 @@ import com.zaxxer.hikari.HikariDataSource
 import javax.sql.DataSource
 
 class DBConfig(jdbcUrl: String, username: String, password: String, driverClassName: String) {
-    private val dataSource: DataSource
-
-    init {
-        dataSource = HikariConfig().let { config ->
-            config.jdbcUrl = jdbcUrl
-            config.username = username
-            config.password = password
-            config.driverClassName = driverClassName
-            HikariDataSource(config)
-        }
+    private val dataSource: HikariDataSource = HikariConfig().let { config ->
+        config.jdbcUrl = jdbcUrl
+        config.username = username
+        config.password = password
+        config.driverClassName = driverClassName
+        HikariDataSource(config)
     }
 
-    fun getDataSource(): DataSource {
+    fun getDataSource(): HikariDataSource {
         return dataSource
     }
 

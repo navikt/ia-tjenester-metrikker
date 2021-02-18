@@ -4,7 +4,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
 import java.sql.Connection
 import javax.sql.DataSource
 
-class IaTjenesterMetrikkerRepository(val datasource: DataSource): DatabaseInterfacePostgres {
+class IaTjenesterMetrikkerRepository(private val datasource: DataSource) : DatabaseInterface {
 
     override val connection: Connection
         get() = datasource.connection
@@ -18,22 +18,21 @@ fun Connection.opprett(iatjeneste: IaTjeneste) {
     }
 }
 
-fun insertIaTjeneste(connection : Connection, iatjeneste: IaTjeneste) {
+private fun insertIaTjeneste(connection: Connection, iatjeneste: IaTjeneste) {
     connection.prepareStatement(
         """
-                INSERT INTO metrikker_ia_tjenester_innlogget(id, sykmelding) 
-                   VALUES  (?, ?)
+                INSERT INTO metrikker_ia_tjenester_innlogget(orgnr, naering_kode_5siffer, form_av_tjeneste, kilde_applikasjon) 
+                   VALUES  (?, ?, ?, ?)
                    """
     ).use {
-        // it.setString(1, iatjeneste.id)  --> TODO: trenger vi ID?
-        it.setObject(2, iatjeneste.orgnr)
-        it.setObject(3, iatjeneste.næringKode5Siffer)
-        it.setObject(4, iatjeneste.type.name)
-        it.setObject(5, iatjeneste.kilde)
+        it.setObject(1, iatjeneste.orgnr)
+        it.setObject(2, iatjeneste.næringKode5Siffer)
+        it.setObject(3, iatjeneste.type.name)
+        it.setObject(4, iatjeneste.kilde.name)
         it.executeUpdate()
     }
 }
 
-interface DatabaseInterfacePostgres {
+interface DatabaseInterface {
     val connection: Connection
 }
