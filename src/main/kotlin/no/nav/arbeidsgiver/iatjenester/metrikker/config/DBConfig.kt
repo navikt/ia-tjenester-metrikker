@@ -2,7 +2,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import javax.sql.DataSource
 
 class DBConfig(jdbcUrl: String, username: String, password: String, driverClassName: String) {
     private val dataSource: HikariDataSource = HikariConfig().let { config ->
@@ -22,7 +21,7 @@ class DBConfig(jdbcUrl: String, username: String, password: String, driverClassN
 data class DatabaseCredentials(val miljø: String, val host: String, val port: String, val name: String) {
     fun getUrl(): String {
         return if (miljø == "local")
-            "jdbc:h2:mem:ia-tjenester-metrikker"
+            "jdbc:h2:mem:${name}"
         else
             "jdbc:postgresql://${host}:${port}/${name}"
     }
