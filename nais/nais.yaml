@@ -17,7 +17,7 @@ spec:
   readiness:
     path: /internal/isReady
   gcp:
-    sqlInstance:
+    sqlInstances:
       - type: POSTGRES_12
         databases:
           - name: ia_tjenester_metrikker
