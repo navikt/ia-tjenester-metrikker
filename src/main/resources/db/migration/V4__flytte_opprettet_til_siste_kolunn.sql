@@ -1,0 +1,4 @@
+alter table metrikker_ia_tjenester_innlogget rename column opprettet to opprettet_old ;
+alter table metrikker_ia_tjenester_innlogget add column opprettet timestamp default current_timestamp;
+update metrikker_ia_tjenester_innlogget set opprettet=opprettet_old;
+alter table metrikker_ia_tjenester_innlogget drop column opprettet_old;

@@ -15,6 +15,8 @@ import org.junit.jupiter.api.TestInstance
 import java.sql.Connection
 import java.sql.Date
 import java.sql.ResultSet
+import java.sql.Timestamp
+import java.time.LocalDateTime.now
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class IaTjenesterMetrikkerRepositoryJdbcTest {
@@ -51,7 +53,17 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                 "987654321",
                 "12345",
                 TypeIATjeneste.DIGITAL_IA_TJENESTE,
-                Kilde.SYKKEFRAVÆRSSTATISTIKK
+                Kilde.SYKKEFRAVÆRSSTATISTIKK,
+                Timestamp.valueOf(now()),
+                10,
+                "en beskrivelse for næringskode 5 siffer",
+                "en beskrivelse for næring kode 2 siffer",
+                "21000",
+                "beskrivelse ssb sektor kode",
+                "30",
+                "Viken",
+                "0234",
+                "Gjerdrum"
             )
         )
 
@@ -64,6 +76,16 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.næringKode5Siffer).isEqualTo("12345")
         assertThat(iaTjenesteRad.type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
         assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKKEFRAVÆRSSTATISTIKK)
+        assertThat(iaTjenesteRad.tjeneste_mottakkelsesdato).isNotNull()
+        assertThat(iaTjenesteRad.antallAnsatte).isEqualTo(10)
+        assertThat(iaTjenesteRad.næringskode5SifferBeskrivelse).isEqualTo("en beskrivelse for næringskode 5 siffer")
+        assertThat(iaTjenesteRad.næring2SifferBeskrivelse).isEqualTo("en beskrivelse for næring kode 2 siffer")
+        assertThat(iaTjenesteRad.SSBSektorKode).isEqualTo("21000")
+        assertThat(iaTjenesteRad.SSBSektorKodeBeskrivelse).isEqualTo("beskrivelse ssb sektor kode")
+        assertThat(iaTjenesteRad.fylkesnummer).isEqualTo("30")
+        assertThat(iaTjenesteRad.fylke).isEqualTo("Viken")
+        assertThat(iaTjenesteRad.kommunenummer).isEqualTo("0234")
+        assertThat(iaTjenesteRad.kommune).isEqualTo("Gjerdrum")
         assertThat(iaTjenesteRad.opprettet).isNotNull()
     }
 
@@ -98,7 +120,7 @@ fun Connection.getAlleIATjenester(): List<IaTjenesteRad> =
     use {
         this.prepareStatement(
             """
-                SELECT id, orgnr, naering_kode_5siffer, form_av_tjeneste, kilde_applikasjon, opprettet 
+                SELECT *  
                 FROM metrikker_ia_tjenester_innlogget
                 WHERE orgnr = ?
                 """
@@ -124,6 +146,16 @@ private fun ResultSet.getIaTjenesteRad(): IaTjenesteRad {
         næringKode5Siffer = getString("naering_kode_5siffer"),
         type = TypeIATjeneste.valueOf(getString("form_av_tjeneste")),
         kilde = Kilde.valueOf(getString("kilde_applikasjon")),
+        tjeneste_mottakkelsesdato = getTimestamp("tjeneste_mottakkelsesdato"),
+        antallAnsatte = getInt("antall_ansatte"),
+        næringskode5SifferBeskrivelse = getString("naering_kode5siffer_beskrivelse"),
+        næring2SifferBeskrivelse = getString("naerring_2siffer_beskrivelse"),
+        SSBSektorKode = getString("ssb_sektor_kode"),
+        SSBSektorKodeBeskrivelse = getString("ssb_sektor_kode_beskrivelse"),
+        fylkesnummer = getString("fylkesnummer"),
+        fylke = getString("fylke"),
+        kommunenummer = getString("kommunenummer"),
+        kommune = getString("kommune"),
         opprettet = getDate("opprettet")
     )
 }
@@ -134,5 +166,15 @@ data class IaTjenesteRad(
     val næringKode5Siffer: String,
     val type: TypeIATjeneste,
     val kilde: Kilde,
+    val tjeneste_mottakkelsesdato: Timestamp,
+    val antallAnsatte: Int,
+    val næringskode5SifferBeskrivelse: String,
+    val næring2SifferBeskrivelse: String,
+    val SSBSektorKode: String,
+    val SSBSektorKodeBeskrivelse: String,
+    val fylkesnummer: String,
+    val fylke: String,
+    val kommunenummer: String,
+    val kommune: String,
     val opprettet: Date
 )
