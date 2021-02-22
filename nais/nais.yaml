@@ -17,19 +17,8 @@ spec:
   readiness:
     path: /internal/isReady
   gcp:
-    sqlInstance:
+    sqlInstances:
       - type: POSTGRES_12
         databases:
           - name: ia_tjenester_metrikker
             envVarPrefix: DATABASE
- # envFrom:
-  #  - secret: ia-tjenester-metrikker-secrets
-  accessPolicy:
-    azure:
-      application:
-        enabled: true
-        tenant: trygdeetaten.no
-    webproxy: false
-#  azure:
-#    application:
-#      enabled: true
