@@ -29,7 +29,7 @@ jobs:
         name: Deploy to dev
         needs: test
 #        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/deploy-to-dev-gcp'
-        if: github.ref == 'refs/heads/deploy-to-dev-gcp'
+        if: github.ref == 'refs/heads/deploy-to-dev-gcp || github.ref == 'refs/heads/add_kafka_topic'
         runs-on: ubuntu-20.04
         steps:
             - uses: actions/checkout@v2
@@ -58,5 +58,5 @@ jobs:
                   APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
                   CLUSTER: dev-gcp
                   VAR: image=${{ env.IMAGE }}
-                  RESOURCE: nais/nais.yaml
+                  RESOURCE: nais/nais.yaml, nais/topic.yaml
                   VARS: nais/nais-dev.json

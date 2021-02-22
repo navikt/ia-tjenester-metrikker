@@ -16,6 +16,8 @@ spec:
     path: /internal/isAlive
   readiness:
     path: /internal/isReady
+  kafka:
+    pool: {{ kafka_pool }}
 #  azure:
 #    application:
 #      enabled: true
