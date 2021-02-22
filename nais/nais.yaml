@@ -20,5 +20,5 @@ spec:
     sqlInstances:
       - type: POSTGRES_12
         databases:
-          - name: ia_tjenester_metrikker
+          - name: ia-tjenester-metrikker
             envVarPrefix: DATABASE
