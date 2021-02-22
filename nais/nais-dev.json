@@ -1,5 +1,6 @@
 {
   "ingress": [
     "https://ia-tjenester-metrikker.dev.intern.nav.no"
-  ]
+  ],
+  "kafka_pool": "nav-dev"
 }
