@@ -35,6 +35,9 @@ fun main() {
             else -> throw RuntimeException("Ukjent miljø")
         }
 
+        //TODO delete me
+        log("DATABASE_USERNAME" + environment["DATABASE_USERNAME"])
+        log("DATABASE_Passord" + environment["DATABASE_PASSWORD"].substring(0, 10))
 
         val dataSource = DBConfig(
             DatabaseCredentials(
