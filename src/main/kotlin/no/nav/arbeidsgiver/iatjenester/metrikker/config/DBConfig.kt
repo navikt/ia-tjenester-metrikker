@@ -9,7 +9,7 @@ class DBConfig(jdbcUrl: String, username: String, password: String, driverClassN
         config.username = username
         config.password = password
         config.driverClassName = driverClassName
-        config.maximumPoolSize = 5
+        //config.maximumPoolSize = 5
         //config.initializationFailTimeout = 60000
         HikariDataSource(config)
     }
