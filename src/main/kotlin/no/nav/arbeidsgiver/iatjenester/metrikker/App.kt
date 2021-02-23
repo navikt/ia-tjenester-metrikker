@@ -36,8 +36,10 @@ fun main() {
         }
 
         //TODO delete me
-        log("DATABASE_USERNAME" + environment["DATABASE_USERNAME"])
-        log("DATABASE_Passord" + environment["DATABASE_PASSWORD"].substring(0, 10))
+        val password = if (environment["DATABASE_PASSWORD"].isEmpty())
+            "empty" else environment["DATABASE_PASSWORD"].substring(0,8)
+        log("main()").info("DATABASE_USERNAME=" + environment["DATABASE_USERNAME"])
+        log("main()").info("DATABASE_Passord=" + password+"*****")
 
         val dataSource = DBConfig(
             DatabaseCredentials(
