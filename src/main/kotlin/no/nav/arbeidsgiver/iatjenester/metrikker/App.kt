@@ -49,7 +49,7 @@ fun main() {
         ).getDataSource()
 
 
-        FlywayMigration(dataSource).setupOgMigrer()
+        FlywayMigration(dataSource).setupOgMigrer("local" == environment["NAIS_CLUSTER_NAME"])
 
         start(/* Mulig vi trenger å sende Datasource til applikasjon for å kunne skrive i DB*/)
     } catch (exception: Exception) {
