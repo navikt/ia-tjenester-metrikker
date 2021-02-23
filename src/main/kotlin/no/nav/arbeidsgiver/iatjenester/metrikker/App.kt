@@ -41,6 +41,7 @@ fun main() {
         log("main()").info("DATABASE_USERNAME=" + environment["DATABASE_USERNAME"])
         log("main()").info("DATABASE_Passord=" + password+"*****")
 
+        /*
         val dataSource = DBConfig(
             DatabaseCredentials(
                 environment["NAIS_CLUSTER_NAME"],
@@ -52,9 +53,9 @@ fun main() {
             environment["DATABASE_PASSWORD"],
             driverClassName
         ).getDataSource()
+*/
 
-
-        FlywayMigration(dataSource).setupOgMigrer("local" == environment["NAIS_CLUSTER_NAME"])
+//        FlywayMigration(dataSource).setupOgMigrer("local" == environment["NAIS_CLUSTER_NAME"])
 
         start(/* Mulig vi trenger å sende Datasource til applikasjon for å kunne skrive i DB*/)
     } catch (exception: Exception) {
