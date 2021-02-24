@@ -17,7 +17,7 @@ Bygg image
 `docker build -t ia-tjenester-metrikker .`
 
 Kjør container
-`docker run -d -p 8222:8222 ia-tjenester-metrikker`
+`docker run -d -p 8080:8080 ia-tjenester-metrikker`
 
 
 # Henvendelser
