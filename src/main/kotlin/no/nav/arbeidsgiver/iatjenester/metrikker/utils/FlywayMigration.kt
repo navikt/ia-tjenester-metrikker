@@ -1,7 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
 import org.flywaydb.core.Flyway
-import java.util.*
 import javax.sql.DataSource
 
 class FlywayMigration(private val dataSource: DataSource) {
@@ -13,7 +12,7 @@ class FlywayMigration(private val dataSource: DataSource) {
         if (!erLokalt){
             locations.add("db/privileges")
         }
-        flyway.setDataSource(dataSource)
+        flyway.dataSource = dataSource
         flyway.setLocations(*locations.toTypedArray())
         flyway.migrate()
     }

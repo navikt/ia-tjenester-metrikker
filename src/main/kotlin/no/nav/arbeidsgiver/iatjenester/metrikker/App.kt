@@ -10,6 +10,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 
 
 private val environment = dotenv { ignoreIfMissing = true }
+private val erSQLInstanseKlarTilBruk = false
 
 private val webServer = Javalin.create().apply {
     config.defaultContentType = "application/json"
@@ -35,29 +36,29 @@ fun main() {
             else -> throw RuntimeException("Ukjent miljø")
         }
 
-        //TODO delete me
-        val password = if (environment["DATABASE_PASSWORD"].isEmpty())
-            "empty" else environment["DATABASE_PASSWORD"].substring(0,8)
-        log("main()").info("DATABASE_USERNAME=" + environment["DATABASE_USERNAME"])
-        log("main()").info("DATABASE_Passord=" + password+"*****")
 
-        /*
-        val dataSource = DBConfig(
-            DatabaseCredentials(
-                environment["NAIS_CLUSTER_NAME"],
-                environment["DATABASE_HOST"],
-                environment["DATABASE_PORT"],
-                environment["DATABASE_DATABASE"]
-            ).getUrl(),
-            environment["DATABASE_USERNAME"],
-            environment["DATABASE_PASSWORD"],
-            driverClassName
-        ).getDataSource()
-*/
+        if (erSQLInstanseKlarTilBruk) {
+            val password = if (environment["DATABASE_PASSWORD"].isEmpty())
+                "empty" else environment["DATABASE_PASSWORD"].substring(0, 8)
+            log("main()").info("DATABASE_USERNAME=" + environment["DATABASE_USERNAME"])
+            log("main()").info("DATABASE_Passord=$password*****")
 
-//        FlywayMigration(dataSource).setupOgMigrer("local" == environment["NAIS_CLUSTER_NAME"])
+            val dataSource = DBConfig(
+                DatabaseCredentials(
+                    environment["NAIS_CLUSTER_NAME"],
+                    environment["DATABASE_HOST"],
+                    environment["DATABASE_PORT"],
+                    environment["DATABASE_DATABASE"]
+                ).getUrl(),
+                environment["DATABASE_USERNAME"],
+                environment["DATABASE_PASSWORD"],
+                driverClassName
+            ).getDataSource()
 
-        start(/* Mulig vi trenger å sende Datasource til applikasjon for å kunne skrive i DB*/)
+            FlywayMigration(dataSource).setupOgMigrer("local" == environment["NAIS_CLUSTER_NAME"])
+        }
+
+        start()
     } catch (exception: Exception) {
         log("main()").error("Det har skjedd en feil ved oppstarting av ia-tjenester-metrikker", exception)
     }

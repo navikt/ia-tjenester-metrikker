@@ -21,9 +21,6 @@ import java.time.LocalDateTime.now
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class IaTjenesterMetrikkerRepositoryJdbcTest {
 
-
-    // jdbc:h2:mem:ia-tjenester-metrikker
-
     private val dataSource: HikariDataSource
         get() {
             return DBConfig(
