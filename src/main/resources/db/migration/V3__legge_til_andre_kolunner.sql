@@ -1,0 +1,10 @@
+alter table metrikker_ia_tjenester_innlogget add column tjeneste_mottakkelsesdato timestamp not null ;
+alter table metrikker_ia_tjenester_innlogget add column antall_ansatte numeric(17,0) not null ;
+alter table metrikker_ia_tjenester_innlogget add column naering_kode5siffer_beskrivelse varchar not null ;
+alter table metrikker_ia_tjenester_innlogget add column naerring_2siffer_beskrivelse varchar not null ;
+alter table metrikker_ia_tjenester_innlogget add column ssb_sektor_kode varchar not null ;
+alter table metrikker_ia_tjenester_innlogget add column ssb_sektor_kode_beskrivelse varchar not null ;
+alter table metrikker_ia_tjenester_innlogget add column fylkesnummer varchar not null ;
+alter table metrikker_ia_tjenester_innlogget add column fylke varchar not null ;
+alter table metrikker_ia_tjenester_innlogget add column kommunenummer varchar not null ;
+alter table metrikker_ia_tjenester_innlogget add column kommune varchar not null ;
