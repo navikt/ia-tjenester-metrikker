@@ -1,11 +1,28 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.4.21"
+    id("org.springframework.boot") version "2.4.3"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.github.johnrengelman.shadow") version "6.1.0"
+    kotlin("jvm") version "1.4.30"
+    kotlin("plugin.spring") version "1.4.30"
+
     application
 }
 
+group = "no.nav.arbeidsgiver"
+version = "0.0.1-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_11
+
 application {
     mainClassName = "no.nav.arbeidsgiver.iatjenester.metrikker.AppKt"
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+        jvmTarget = "11"
+    }
 }
 
 tasks.withType<Test> {
@@ -20,10 +37,14 @@ repositories {
 }
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.30")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
-    implementation("io.javalin:javalin:3.12.0")
+
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("net.logstash.logback:logstash-logback-encoder:6.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
@@ -33,7 +54,9 @@ dependencies {
     implementation("org.flywaydb:flyway-core:5.0.2")
     implementation("org.postgresql:postgresql:42.2.18")
     implementation("com.h2database:h2:1.4.200")
+    implementation("org.springframework.boot:spring-boot-starter-web")
 
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation ("org.postgresql:postgresql:42.2.18")
     testImplementation("io.mockk:mockk:1.10.5")
     testImplementation("org.jetbrains.kotlin:kotlin-test")

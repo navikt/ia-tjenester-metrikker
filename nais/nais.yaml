@@ -7,15 +7,15 @@ metadata:
     team: arbeidsgiver
 spec:
   image: {{image}}
-  port: 8222
+  port: 8080
   ingresses:
   {{#each ingress as |url|}}
     - {{url}}
   {{/each}}
   liveness:
-    path: /internal/isAlive
+    path: /internal/isalive
   readiness:
-    path: /internal/isReady
+    path: /internal/isready
   kafka:
     pool: {{ kafka_pool }}
   gcp:

@@ -6,7 +6,7 @@ Applikasjon i GCP som lagrer metrikker om IA tjenester.
 Fra IntelliJ start `main()` funksjon i `App.kt`
 
 I terminal kjør
-`curl -v  -X GET "http://localhost:8222/internal/isAlive"`
+`curl -v  -X GET "http://localhost:8080/internal/isalive"`
 
 
 # Hvordan fungerer appen
@@ -17,7 +17,7 @@ Bygg image
 `docker build -t ia-tjenester-metrikker .`
 
 Kjør container
-`docker run -d -p 8222:8222 ia-tjenester-metrikker`
+`docker run -d -p 8080:8080 ia-tjenester-metrikker`
 
 
 # Henvendelser
