@@ -2,17 +2,13 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 
-@Profile("local", "dev-gcp")
-@Configuration
+// TODO: bare brukt til test --> bruk dependency injection i stedet
 class DBConfig(
-    @Value("\${spring.datasource.url}") private val jdbcUrl: String,
-    @Value("\${spring.datasource.username}") private val username: String,
-    @Value("\${spring.datasource.password}") private val password: String,
-    @Value("\${spring.datasource.driver-class-name}") private val driverClassName: String
+    private val jdbcUrl: String,
+    private val username: String,
+    private val password: String,
+    private val driverClassName: String
 ) {
 
     private val hikariDataSource: HikariDataSource = HikariConfig().let { config ->

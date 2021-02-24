@@ -7,10 +7,12 @@ spring:
     path: /h2
 
   datasource:
-    url: "jdbc:h2:mem:ia-tjenester-metrikker"
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    hikari:
+      jdbc-url: "jdbc:h2:mem:${DATABASE_DATABASE}"
+      username: sa
+      password:
+      maximum-pool-size: 2
+      driver-class-name: org.h2.Driver
 
   flyway:
     locations: classpath:/db/migration

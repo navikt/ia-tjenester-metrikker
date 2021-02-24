@@ -59,6 +59,8 @@ dependencies {
     implementation("com.h2database:h2:1.4.200")
     implementation("org.springframework.boot:spring-boot-starter-web")
 
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:2.4.3")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation ("org.postgresql:postgresql:42.2.18")
     testImplementation("io.mockk:mockk:1.10.5")
