@@ -1,6 +1,10 @@
+## Insert common config here
+
+spring.profiles.active: local
+
+---
 spring:
-  profiles:
-    active: local
+  config.activate.on-profile: local
 
   h2.console:
     enabled: true
@@ -16,4 +20,16 @@ spring:
 
   flyway:
     locations: classpath:/db/migration
+
+---
+spring:
+  config.activate.on-profile: dev-gcp
+  datasource:
+    hikari:
+      jdbc-url: "jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DATABASE}"
+      username: ${DATABASE_USERNAME}
+      password: ${DATABASE_PASSWORD}
+      maximum-pool-size: 2
+  flyway:
+    locations: classpath:/db/migration, classpath:/db/privileges
 
