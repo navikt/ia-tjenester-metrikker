@@ -1,35 +1,5 @@
 ## Insert common config here
-
-spring.profiles.active: local
-
----
 spring:
-  config.activate.on-profile: local
-
-  h2.console:
-    enabled: true
-    path: /h2
-
   datasource:
     hikari:
-      jdbc-url: "jdbc:h2:mem:${DATABASE_DATABASE}"
-      username: sa
-      password:
       maximum-pool-size: 2
-      driver-class-name: org.h2.Driver
-
-  flyway:
-    locations: classpath:/db/migration
-
----
-spring:
-  config.activate.on-profile: dev-gcp
-  datasource:
-    hikari:
-      jdbc-url: "jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DATABASE}"
-      username: ${DATABASE_USERNAME}
-      password: ${DATABASE_PASSWORD}
-      maximum-pool-size: 2
-  flyway:
-    locations: classpath:/db/migration, classpath:/db/privileges
-
