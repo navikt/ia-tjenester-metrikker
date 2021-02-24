@@ -2,9 +2,20 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 
-class DBConfig(jdbcUrl: String, username: String, password: String, driverClassName: String) {
-    private val dataSource: HikariDataSource = HikariConfig().let { config ->
+@Profile("local", "dev-gcp")
+@Configuration
+class DBConfig(
+    @Value("\${spring.datasource.url}") private val jdbcUrl: String,
+    @Value("\${spring.datasource.username}") private val username: String,
+    @Value("\${spring.datasource.password}") private val password: String,
+    @Value("\${spring.datasource.driver-class-name}") private val driverClassName: String
+) {
+
+    private val hikariDataSource: HikariDataSource = HikariConfig().let { config ->
         config.jdbcUrl = jdbcUrl
         config.username = username
         config.password = password
@@ -15,16 +26,7 @@ class DBConfig(jdbcUrl: String, username: String, password: String, driverClassN
     }
 
     fun getDataSource(): HikariDataSource {
-        return dataSource
+        return hikariDataSource
     }
 
-}
-
-data class DatabaseCredentials(val miljø: String, val host: String, val port: String, val name: String) {
-    fun getUrl(): String {
-        return if (miljø == "local")
-            "jdbc:h2:mem:${name}"
-        else
-            "jdbc:postgresql://${host}:${port}/${name}"
-    }
 }

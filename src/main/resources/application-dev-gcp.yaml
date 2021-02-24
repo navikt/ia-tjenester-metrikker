@@ -1,0 +1,8 @@
+spring:
+  config.activate.on-profile: dev-gcp
+  datasource:
+    url: "jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DATABASE}"
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  flyway:
+    locations: classpath:/db/migration, classpath:/db/privileges
