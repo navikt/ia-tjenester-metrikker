@@ -18,6 +18,9 @@ spec:
     path: /internal/isReady
   kafka:
     pool: {{ kafka_pool }}
-#  azure:
-#    application:
-#      enabled: true
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_12
+        databases:
+          - name: ia-tjenester-metrikker
+            envVarPrefix: DATABASE
