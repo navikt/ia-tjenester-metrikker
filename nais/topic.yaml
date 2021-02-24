@@ -1,0 +1,13 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: ia-tjenester-metrikker-topic
+  namespace: arbeidsgiver
+  labels:
+    team: arbeidsgiver
+spec:
+  pool: {{ kafka_pool }}
+  acl:
+    - team: arbeidsgiver
+      application: ia-tjenester-metrikker
+      access: readwrite   # read, write, readwrite
