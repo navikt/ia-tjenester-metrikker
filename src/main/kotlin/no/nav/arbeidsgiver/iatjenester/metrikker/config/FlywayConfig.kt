@@ -22,5 +22,5 @@ class FlywayConfig {
 
     @Bean
     fun flywayMigrationInitializer(flyway: Flyway, flywayMigrationStrategy: FlywayMigrationStrategy): FlywayMigrationInitializer =
-        FlywayMigrationInitializer(flyway, null)
+        FlywayMigrationInitializer(flyway, flywayMigrationStrategy)
 }
