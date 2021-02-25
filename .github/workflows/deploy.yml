@@ -45,7 +45,7 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-gradle-
             - name: Build jar with Gradle
-              run: ./gradlew shadowJar
+              run: ./gradlew clean build
             - name: Build and publish Docker image
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
