@@ -1,9 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datamottakelse
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.IaTjenesteRad
-import org.h2.util.json.JSONString
 import org.springframework.web.bind.annotation.*
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 @RestController
 @RequestMapping("/metrikker")
