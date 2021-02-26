@@ -2,5 +2,6 @@
   "ingress": [
     "https://ia-tjenester-metrikker.dev.intern.nav.no"
   ],
-  "kafka_pool": "nav-dev"
+  "kafka_pool": "nav-dev",
+  "spring_profile_active": "dev-gcp"
 }

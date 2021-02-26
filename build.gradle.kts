@@ -3,10 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.4.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+    //id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.4.30"
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.spring") version "1.4.30"
-
     application
 }
 
@@ -15,6 +15,7 @@ version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 application {
+    // Det kommer en fix på denne: https://github.com/johnrengelman/shadow/issues/609
     mainClassName = "no.nav.arbeidsgiver.iatjenester.metrikker.AppKt"
 }
 
@@ -38,30 +39,30 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.30")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("net.logstash.logback:logstash-logback-encoder:6.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
-    implementation("com.github.ben-manes.caffeine:caffeine:2.8.8")
-    implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
+
     implementation("com.zaxxer:HikariCP:3.3.0")
     implementation("org.flywaydb:flyway-core:5.0.2")
     implementation("org.postgresql:postgresql:42.2.18")
     implementation("com.h2database:h2:1.4.200")
-    implementation("org.springframework.boot:spring-boot-starter-web")
 
+
+    // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation ("org.postgresql:postgresql:42.2.18")
-    testImplementation("io.mockk:mockk:1.10.5")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-    testImplementation("com.h2database:h2:1.4.197")
+    testImplementation("io.mockk:mockk:1.10.5")
     testImplementation("org.assertj:assertj-core:3.18.1")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")

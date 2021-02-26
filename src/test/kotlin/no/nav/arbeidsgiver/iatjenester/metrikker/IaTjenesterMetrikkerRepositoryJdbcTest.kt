@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
+import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
@@ -17,20 +18,29 @@ import java.sql.Date
 import java.sql.ResultSet
 import java.sql.Timestamp
 import java.time.LocalDateTime.now
+import javax.sql.DataSource
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class IaTjenesterMetrikkerRepositoryJdbcTest {
 
-    private val dataSource: HikariDataSource
-        get() {
+    private val dataSource: DataSource = HikariConfig().let { config ->
+        config.jdbcUrl = "jdbc:h2:mem:ia-tjenester-metrikker"
+        config.username = "sa"
+        config.password = ""
+        config.driverClassName = "org.h2.Driver"
+        config.maximumPoolSize = 5
+        config.initializationFailTimeout = 60000
+        HikariDataSource(config)
+    }
+/*        get() {
             return DBConfig(
                 "jdbc:h2:mem:ia-tjenester-metrikker",
                 "sa",
                 "",
                 "org.h2.Driver"
-            ).getDataSource()
+            ).dataSource()
         }
-
+*/
     @BeforeAll
     fun `Start og init DB med Flyway`() {
         System.out.println("Først starter vi en in-memory DB");
