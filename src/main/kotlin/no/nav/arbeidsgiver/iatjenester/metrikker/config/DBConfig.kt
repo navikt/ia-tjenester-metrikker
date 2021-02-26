@@ -20,16 +20,15 @@ class DBConfig(private val dbConfigProperties: DBConfigProperties) {
         println("---------> username is:$username")
         println("---------> Driver is:$driverClassName")
         return HikariConfig().let { config ->
-            /*
+
             config.jdbcUrl = url
             config.username = username
             config.password = password
             config.driverClassName = driverClassName
-            */
-            config.jdbcUrl = "jdbc:h2:mem:TEMP-IM-MEM-DB"
+            /*config.jdbcUrl = "jdbc:h2:mem:TEMP-IM-MEM-DB"
             config.username = "sa"
             config.password = ""
-            config.driverClassName = "org.h2.Driver"
+            config.driverClassName = "org.h2.Driver"*/
             config.maximumPoolSize = 2 // TODO: use spring.datasource.hikari.maximum-pool-size
             config.initializationFailTimeout = 60000
             HikariDataSource(config)
