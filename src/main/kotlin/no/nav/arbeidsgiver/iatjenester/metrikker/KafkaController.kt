@@ -32,6 +32,6 @@ class KafkaController(var kafkaService: KafkaService) {
     @GetMapping("/sendKafka")
     fun ping(): ResponseEntity<Unit> {
         kafkaService.send(dummyIaTjeneste)
-        return ResponseEntity.ok().build()
+        return ResponseEntity.ok("Melding sendt").build()
     }
 }
