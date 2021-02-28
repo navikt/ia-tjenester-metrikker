@@ -10,14 +10,15 @@ import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConfigurationProperties(prefix = "kafka.outbound")
 @ConstructorBinding
-class OutboundKafkaProperties(var bootstrapServers: String? = null,
+class OutboundKafkaProperties(var topic: String = "",
+                              var bootstrapServers: String? = null,
                               var caPath: String? = null,
                               var truststorePath: String? = null,
                               var keystorePath: String? = null,
                               var credstorePassword: String? = null,
                               var acks: String = "all",
                               var securityProtocol: String? = null,
-                              var clientId: String = "ia-tjenester-metrikker-topic",
+                              var clientId: String = "ia-tjenester-metrikker",
                               var valueSerializerClass: String = ByteArraySerializer::class.java.name,
                               var keySerializerCLass: String = StringSerializer::class.java.name,
                               var retries: Int = Int.MAX_VALUE,
@@ -26,7 +27,6 @@ class OutboundKafkaProperties(var bootstrapServers: String? = null,
                               var lingerMs: Int = 100,
                               var batchSize: Int = 16384*4
 ) {
-
     fun asProperties(): Map<String, Any> {
         val props = mutableMapOf<String, Any>()
         bootstrapServers?.let { props[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers!! }
