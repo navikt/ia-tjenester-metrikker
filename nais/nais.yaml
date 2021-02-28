@@ -24,3 +24,7 @@ spec:
         databases:
           - name: ia-tjenester-metrikker
             envVarPrefix: DATABASE
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: {{ spring_profile_active }}
+

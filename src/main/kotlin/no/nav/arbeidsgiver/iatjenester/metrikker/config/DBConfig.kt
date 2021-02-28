@@ -2,29 +2,36 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import javax.sql.DataSource
 
-class DBConfig(jdbcUrl: String, username: String, password: String, driverClassName: String) {
-    private val dataSource: HikariDataSource = HikariConfig().let { config ->
-        config.jdbcUrl = jdbcUrl
-        config.username = username
-        config.password = password
-        config.driverClassName = driverClassName
-        //config.maximumPoolSize = 5
-        //config.initializationFailTimeout = 60000
-        HikariDataSource(config)
-    }
+@Configuration
+class DBConfig(private val dbConfigProperties: DBConfigProperties) {
 
-    fun getDataSource(): HikariDataSource {
-        return dataSource
-    }
+    @Bean
+    fun dataSource(): DataSource {
+        val url: String= dbConfigProperties.url
+        val username: String= dbConfigProperties.username
+        val password: String= dbConfigProperties.password
+        val driverClassName: String= dbConfigProperties.driverClassName
 
-}
+        println("---------> url is:$url")
+        println("---------> username is:$username")
+        println("---------> Driver is:$driverClassName")
+        return HikariConfig().let { config ->
 
-data class DatabaseCredentials(val miljø: String, val host: String, val port: String, val name: String) {
-    fun getUrl(): String {
-        return if (miljø == "local")
-            "jdbc:h2:mem:${name}"
-        else
-            "jdbc:postgresql://${host}:${port}/${name}"
+            config.jdbcUrl = url
+            config.username = username
+            config.password = password
+            config.driverClassName = driverClassName
+            /*config.jdbcUrl = "jdbc:h2:mem:TEMP-IM-MEM-DB"
+            config.username = "sa"
+            config.password = ""
+            config.driverClassName = "org.h2.Driver"*/
+            config.maximumPoolSize = 2 // TODO: use spring.datasource.hikari.maximum-pool-size
+            config.initializationFailTimeout = 60000
+            HikariDataSource(config)
+        }
     }
 }

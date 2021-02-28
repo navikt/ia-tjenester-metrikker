@@ -1,4 +1,8 @@
-spring.profiles.active: local
+## Insert common config here
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 2
 kafka:
   outbound:
     topic: arbeidsgiver.ia-tjenester-metrikker-topic
