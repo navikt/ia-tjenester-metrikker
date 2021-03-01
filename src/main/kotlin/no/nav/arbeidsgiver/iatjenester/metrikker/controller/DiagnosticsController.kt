@@ -1,4 +1,4 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker
+package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
