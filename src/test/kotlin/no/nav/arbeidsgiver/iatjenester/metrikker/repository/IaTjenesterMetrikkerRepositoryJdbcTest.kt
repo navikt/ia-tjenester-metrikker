@@ -2,6 +2,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
@@ -32,22 +33,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
     fun `Enkel test som sjekker at repository oppretter en rad i DB`() {
 
         IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).opprett(
-            IaTjeneste(
-                "987654321",
-                "12345",
-                TypeIATjeneste.DIGITAL_IA_TJENESTE,
-                Kilde.SYKKEFRAVÆRSSTATISTIKK,
-                Timestamp.valueOf(now()),
-                10,
-                "En beskrivelse for næringskode 5 siffer",
-                "En beskrivelse for næring kode 2 siffer",
-                "21000",
-                "Beskrivelse ssb sektor kode",
-                "30",
-                "Viken",
-                "0234",
-                "Gjerdrum"
-            )
+            TestUtils.vilkårligIaTjeneste()
         )
 
         startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
