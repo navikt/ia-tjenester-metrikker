@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.*
 class DatamottakelseController() {
 
     @PostMapping
-    fun addCustomer(@RequestBody metrikkerData: IaTjenesteRad) = println(metrikkerData)
-    // = repository.save(customer)
+    fun leggTilNyMottattTjeneste(@RequestBody metrikkerData: IaTjenesteRad) {
+
+        println(metrikkerData)
+        // = repository.save(customer)
+    }
 
     @PutMapping("/{id}")
-    fun updateCustomer(@PathVariable id: Long, @RequestBody metrikekrData: IaTjenesteRad) {
+    fun oppdaterMottatTjeneste(@PathVariable id: Long, @RequestBody metrikekrData: IaTjenesteRad) {
         println("putmapping--->${metrikekrData}")
         println("id--->${id}")
     }
