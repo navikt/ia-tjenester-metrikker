@@ -14,9 +14,4 @@ class DatamottakelseController() {
         // = repository.save(customer)
     }
 
-    @PutMapping("/{id}")
-    fun oppdaterMottatTjeneste(@PathVariable id: Long, @RequestBody metrikekrData: IaTjenesteRad) {
-        println("putmapping--->${metrikekrData}")
-        println("id--->${id}")
-    }
 }
