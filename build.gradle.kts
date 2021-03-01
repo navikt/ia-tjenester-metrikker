@@ -51,11 +51,15 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("net.logstash.logback:logstash-logback-encoder:6.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
+    implementation("com.google.code.gson:gson:2.8.6")
 
     implementation("com.zaxxer:HikariCP:3.3.0")
     implementation("org.flywaydb:flyway-core:5.0.2")
     implementation("org.postgresql:postgresql:42.2.18")
     implementation("com.h2database:h2:1.4.200")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.retry:spring-retry")
+    implementation("org.springframework.kafka:spring-kafka")
 
 
     // Test dependencies
