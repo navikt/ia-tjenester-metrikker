@@ -17,7 +17,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-internal class DatamottakelseControllerTest {
+internal class IaTjenesterMetrikkerControllerTest {
 
     @LocalServerPort
     lateinit var port: String
