@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.4.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    //id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.4.30"
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.spring") version "1.4.30"
@@ -60,13 +59,14 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.kafka:spring-kafka")
-
+    implementation("no.nav.security:oidc-spring-support:0.2.18")
 
     // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
     testImplementation("io.mockk:mockk:1.10.5")
+    testImplementation("no.nav.security:oidc-test-support:0.2.18")
     testImplementation("org.assertj:assertj-core:3.18.1")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")

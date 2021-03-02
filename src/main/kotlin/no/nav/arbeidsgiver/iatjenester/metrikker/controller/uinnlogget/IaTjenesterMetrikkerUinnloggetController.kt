@@ -1,4 +1,4 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.controller
+package no.nav.arbeidsgiver.iatjenester.metrikker.controller.uinnlogget
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
@@ -11,16 +11,14 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping("/")
-class IATjenesterMetrikkerController(private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService) {
+@RequestMapping("/uinnlogget")
+class IATjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService) {
 
-    @Protected
-    @PostMapping(value = ["/innlogget/iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
-    fun leggTilNyIaMottattTjenesteForInnloggetKlient(@RequestBody iaTjeneste: IaTjeneste): no.nav.arbeidsgiver.iatjenester.metrikker.controller.uinnlogget.ResponseStatus {
+    @PostMapping(value = ["/iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
+    fun leggTilNyMottattIaTjeneste(@RequestBody iaTjeneste: IaTjeneste): no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus {
         iaTjenesterMetrikkerService.sjekkOgOpprett(iaTjeneste)
-        return no.nav.arbeidsgiver.iatjenester.metrikker.controller.uinnlogget.ResponseStatus.Created
+        return no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus.Created
     }
-
 }
 
 
