@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.sql.Date
+import java.time.LocalDateTime
 
 @Transactional
 @Repository
@@ -56,7 +58,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                 .addValue("naering_kode_5siffer", iatjeneste.næringKode5Siffer)
                 .addValue("form_av_tjeneste", iatjeneste.type.name)
                 .addValue("kilde_applikasjon", iatjeneste.kilde.name)
-                .addValue("tjeneste_mottakkelsesdato", iatjeneste.tjenesteMottakkelsesdato)
+                .addValue("tjeneste_mottakkelsesdato", iatjeneste.tjenesteMottakkelsesdato.toLocalDateTime())
                 .addValue("antall_ansatte", iatjeneste.antallAnsatte)
                 .addValue("naering_kode5siffer_beskrivelse", iatjeneste.næringskode5SifferBeskrivelse)
                 .addValue("naerring_2siffer_beskrivelse", iatjeneste.næring2SifferBeskrivelse)
