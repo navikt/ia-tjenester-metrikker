@@ -27,4 +27,10 @@ spec:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: {{ spring_profile_active }}
+  accessPolicy:
+    inbound:
+      rules:
+        - application: sykefravarsstatistikk
+          namespace: arbeidsgiver
+          cluster: dev-sbs
 
