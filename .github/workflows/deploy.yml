@@ -28,7 +28,7 @@ jobs:
     deploy-to-dev:
         name: Deploy to dev
         needs: test
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/implement_kafka'
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/opne-for-kall-fra-sykefravarsstatistikk'
 #        if: github.ref == 'refs/heads/koble-til-gcp-dev'
         runs-on: ubuntu-20.04
         steps:
