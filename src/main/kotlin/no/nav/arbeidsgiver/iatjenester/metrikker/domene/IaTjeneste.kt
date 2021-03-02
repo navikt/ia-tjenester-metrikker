@@ -1,21 +1,32 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.domene
 
-import java.sql.Timestamp
+import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer
+import java.time.ZonedDateTime
 
-data class IaTjeneste(val orgnr: String,
-                      val næringKode5Siffer :String,
-                      val type: TypeIATjeneste,
-                      val kilde: Kilde,
-                      val tjenesteMottakkelsesdato: Timestamp,
-                      val antallAnsatte : Int,
-                      val næringskode5SifferBeskrivelse: String,
-                      val næring2SifferBeskrivelse: String,
-                      val SSBSektorKode: String,
-                      val SSBSektorKodeBeskrivelse: String,
-                      val fylkesnummer: String,
-                      val fylke: String,
-                      val kommunenummer: String,
-                      val kommune: String
+data class IaTjeneste(
+    var orgnr: String,
+    var næringKode5Siffer: String,
+    var type: TypeIATjeneste,
+    var kilde: Kilde,
+    @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
+    @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    var tjenesteMottakkelsesdato: ZonedDateTime,
+    var antallAnsatte: Int,
+    var næringskode5SifferBeskrivelse: String,
+    var næring2SifferBeskrivelse: String,
+    @get:JsonProperty("ssbSektorKode")
+    @param:JsonProperty("ssbSektorKode")
+    var SSBSektorKode: String,
+    @get:JsonProperty("ssbSektorKodeBeskrivelse")
+    @param:JsonProperty("ssbSektorKodeBeskrivelse")
+    var SSBSektorKodeBeskrivelse: String,
+    var fylkesnummer: String,
+    var fylke: String,
+    var kommunenummer: String,
+    var kommune: String
 )
 
 enum class Kilde {

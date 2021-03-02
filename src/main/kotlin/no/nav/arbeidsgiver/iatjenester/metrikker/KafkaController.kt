@@ -6,8 +6,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import java.sql.Timestamp
-import java.time.Instant
+import java.time.ZonedDateTime
 
 @RestController
 class KafkaController(var kafkaService: KafkaService) {
@@ -17,7 +16,7 @@ class KafkaController(var kafkaService: KafkaService) {
         "næringskode",
         TypeIATjeneste.RÅDGIVNING,
         Kilde.DIALOG,
-        Timestamp.from(Instant.now()),
+        ZonedDateTime.now(),
         0,
         "næringskode 5 beskrivelse",
         "næringskode 2 beskrivelse",
