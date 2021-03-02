@@ -10,14 +10,15 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.HttpHeaders
-import java.lang.Exception
+import org.springframework.test.context.ActiveProfiles
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-internal class IaTjenesterMetrikkerControllerTest {
+class IaTjenesterMetrikkerControllerTest {
 
     @LocalServerPort
     lateinit var port: String
@@ -35,7 +36,7 @@ internal class IaTjenesterMetrikkerControllerTest {
 
     @Test
     @Throws(Exception::class)
-    fun `Endepunkt legge til nye tjeneste skal returnere ok naar den mottar tjeneste`() {
+    fun `POST til metrikker endepunkt`() {
         val requestBody: String = objectMapper
             .writeValueAsString(
                 TestUtils.vilkårligIaTjeneste()

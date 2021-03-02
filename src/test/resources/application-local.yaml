@@ -1,8 +1,12 @@
 spring:
+  config.activate.on-profile: local
+#  profiles:
+#    active: local
+
   datasource:
     hikari:
       maximum-pool-size: 2
-    url: "jdbc:h2:mem:local-db-test"
+    url: "jdbc:h2:mem:local-db-TEST"
     username: sa
     password:
     driver-class-name: org.h2.Driver

@@ -12,10 +12,10 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
 
 
     fun opprett(iatjeneste: IaTjeneste) {
-        insertIaTjeneste(namedParameterJdbcTemplate, iatjeneste)
+        insertIaTjeneste(iatjeneste)
     }
 
-    private fun insertIaTjeneste(connection: NamedParameterJdbcTemplate, iatjeneste: IaTjeneste) {
+    private fun insertIaTjeneste(iatjeneste: IaTjeneste) {
         namedParameterJdbcTemplate.update(
             """
                 INSERT INTO metrikker_ia_tjenester_innlogget(

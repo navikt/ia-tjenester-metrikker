@@ -6,8 +6,8 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConstructorBinding
 @ConfigurationProperties(prefix = "spring.datasource")
 data class DBConfigProperties(
-    var url: String = "jdbc:h2:mem:DEFAULT-CONSTRUCTOR-VALUE",
-    var username: String = "sa",
-    var password: String = "",
-    var driverClassName: String = "org.h2.Driver"
+    var url: String,
+    var username: String,
+    var password: String,
+    var driverClassName: String
 )

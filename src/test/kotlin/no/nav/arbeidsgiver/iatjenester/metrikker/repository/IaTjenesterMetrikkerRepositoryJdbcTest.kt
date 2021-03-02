@@ -3,7 +3,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.IaTjenesteRad
@@ -13,24 +12,17 @@ import org.h2.jdbc.JdbcConnection
 import org.h2.tools.Server
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.test.annotation.DirtiesContext
 import java.sql.Connection
 import java.sql.ResultSet
-import java.sql.Timestamp
-import java.time.LocalDateTime.now
 import javax.sql.DataSource
 
-@SpringBootTest
-@DirtiesContext
 class IaTjenesterMetrikkerRepositoryJdbcTest {
-
-
+    
     private val IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED = false
 
     @Test
-    fun `Enkel test som sjekker at repository oppretter en rad i DB`() {
+    fun `opprett() lagrer en IaTjeneste i DB`() {
 
         IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).opprett(
             TestUtils.vilkårligIaTjeneste()
@@ -58,15 +50,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.opprettet).isNotNull()
     }
 
-    private fun startWebConsoleForInMemDatabase(isActivated: Boolean) {
-        if (!isActivated) return
-        val lokalDBInMemoryServer = Server.createTcpServer(
-            "-tcp", "-tcpAllowOthers", "-tcpPort", "9090"
-        )
-        lokalDBInMemoryServer.start()
-        val connection = dataSource.connection.unwrap(JdbcConnection::class.java)
-        Server.startWebServer(connection)
-    }
 
     companion object {
 
@@ -89,7 +72,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
             flyway.migrate()
         }
 
-        fun Connection.getAlleIATjenester(): List<IaTjenesteRad> =
+        private fun Connection.getAlleIATjenester(): List<IaTjenesteRad> =
             use {
                 this.prepareStatement(
                     """
@@ -131,6 +114,16 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                 kommune = getString("kommune"),
                 opprettet = getDate("opprettet")
             )
+        }
+
+        private fun startWebConsoleForInMemDatabase(isActivated: Boolean) {
+            if (!isActivated) return
+            val lokalDBInMemoryServer = Server.createTcpServer(
+                "-tcp", "-tcpAllowOthers", "-tcpPort", "9090"
+            )
+            lokalDBInMemoryServer.start()
+            val connection = dataSource.connection.unwrap(JdbcConnection::class.java)
+            Server.startWebServer(connection)
         }
     }
 }
