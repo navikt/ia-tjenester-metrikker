@@ -2,6 +2,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
@@ -27,7 +28,7 @@ class IaTjenesterMetrikkerControllerTest {
 
     @BeforeEach
     fun setUp() {
-
+        objectMapper.registerModule(JavaTimeModule())
     }
 
     @AfterEach
