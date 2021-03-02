@@ -18,7 +18,7 @@ import java.sql.ResultSet
 import javax.sql.DataSource
 
 class IaTjenesterMetrikkerRepositoryJdbcTest {
-    
+
     private val IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED = false
 
     @Test
