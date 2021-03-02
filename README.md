@@ -3,10 +3,23 @@
 Applikasjon i GCP som lagrer metrikker om IA tjenester.
 
 ## Kjøre lokalt
-Fra IntelliJ start `main()` funksjon i `App.kt`
+Fra IntelliJ: 
+ - sett opp profile til `local` i `run configuration`
+ - start `main()` funksjon i `LokalApp.kt`
 
+
+### Dette kan du sjekke lokalt
+
+#### Diagnostic endepunkt
 I terminal kjør
 `curl -v  -X GET "http://localhost:8080/internal/isalive"`
+
+#### Lokal DB instance
+Åpne følgende URL i nettleser: http://localhost:8080/h2 
+ - Driver class: `org.h2.Driver`
+ - URL: `jdbc:h2:mem:local-db`
+ - user name: `sa`
+ - password: _blank_
 
 
 # Hvordan fungerer appen
