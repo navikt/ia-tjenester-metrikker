@@ -1,22 +1,24 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.controller.uinnlogget
+package no.nav.arbeidsgiver.iatjenester.metrikker.controller.innlogget
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
-import no.nav.security.oidc.api.Unprotected
+import no.nav.security.oidc.api.Protected
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 
-@Unprotected
+@Protected
 @RestController
-@RequestMapping("/uinnlogget")
-class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService) {
+@RequestMapping("/innlogget")
+class IaTjenesterMetrikkerInnloggetController(private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService) {
 
     @PostMapping(value = ["/mottatt-iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
-    fun leggTilNyMottattIaTjeneste(@RequestBody iaTjeneste: IaTjeneste): no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus {
+    fun leggTilNyIaMottattTjenesteForInnloggetKlient(@RequestBody iaTjeneste: IaTjeneste): ResponseStatus {
         iaTjenesterMetrikkerService.sjekkOgOpprett(iaTjeneste)
-        return no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus.Created
+        return ResponseStatus.Created
     }
 }
+

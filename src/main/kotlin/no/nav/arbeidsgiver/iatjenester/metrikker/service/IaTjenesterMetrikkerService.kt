@@ -4,6 +4,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime.now
 
 @Component
 class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository) {
@@ -21,7 +22,13 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
     }
 
     private fun sjekk(iaTjeneste: IaTjeneste) {
-        // det meste er tatt av controller
+        val muligDeltaMellomServerneiMinutter: Long = 1
+
+        if (iaTjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
+                .isAfter(now().plusMinutes(muligDeltaMellomServerneiMinutter))
+        ) {
+            throw IaTjenesterMetrikkerValideringException("tjenesteMottakkelsesdato kan ikke være i fremtiden")
+        }
     }
 
 }

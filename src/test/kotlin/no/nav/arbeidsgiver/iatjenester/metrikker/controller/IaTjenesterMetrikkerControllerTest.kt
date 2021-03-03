@@ -45,7 +45,7 @@ class IaTjenesterMetrikkerControllerTest {
 
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:$port/uinnlogget/iatjeneste"))
+                .uri(URI.create("http://localhost:$port/uinnlogget/mottatt-iatjeneste"))
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .build(),
@@ -66,7 +66,7 @@ class IaTjenesterMetrikkerControllerTest {
 
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:$port/innlogget/iatjeneste"))
+                .uri(URI.create("http://localhost:$port/innlogget/mottatt-iatjeneste"))
                 .header(
                     HttpHeaders.AUTHORIZATION,
                     "Bearer " + "DETTE_ER_IKKE_EN_GYLDIG_TOKEN"

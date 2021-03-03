@@ -14,7 +14,7 @@ import org.springframework.boot.runApplication
 @SpringBootApplication(exclude = [DataSourceAutoConfiguration::class, FlywayAutoConfiguration::class])
 @EnableConfigurationProperties(value = [DBConfigProperties::class, OutboundKafkaProperties::class])
 @EnableOIDCTokenValidation(
-    ignore = ["springfox.documentation.swagger.web.ApiResourceController", "org.springframework", "no.nav"]
+    ignore = ["springfox.documentation.swagger.web.ApiResourceController", "org.springframework"]
 )
 class App
 
