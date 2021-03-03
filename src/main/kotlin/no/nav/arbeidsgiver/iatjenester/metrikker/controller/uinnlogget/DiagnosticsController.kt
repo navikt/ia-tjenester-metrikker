@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.controller.uinnlogget
 
-import no.nav.security.oidc.api.Unprotected
+import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController

@@ -14,3 +14,9 @@ spring:
   flyway:
       locations: classpath:/db/migration
 
+no.nav.security.jwt:
+  expirythreshold: 1 #threshold in minutes until token expires (optional)
+  issuer:
+    selvbetjening:
+      discoveryurl: http://localhost:${mock-oauth2-server.port}/selvbetjening/.well-known/openid-configuration
+      accepted_audience: aud-localhost

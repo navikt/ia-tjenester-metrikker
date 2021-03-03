@@ -2,7 +2,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller.uinnlogget
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
-import no.nav.security.oidc.api.Unprotected
+import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping

@@ -2,7 +2,9 @@ package no.nav.arbeidsgiver.iatjenester.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerValideringException
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
-import no.nav.security.spring.oidc.validation.interceptor.OIDCUnauthorizedException
+import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
+import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException
+import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -17,7 +19,6 @@ import java.util.*
 
 
 @ControllerAdvice(annotations = [RestController::class])
-//@ControllerAdvice(assignableTypes = [IaTjenesterMetrikkerInnloggetController::class, IaTjenesterMetrikkerUinnloggetController::class])
 class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = [IaTjenesterMetrikkerValideringException::class])
@@ -29,7 +30,7 @@ class RestResponseEntityExceptionHandler {
         )
     }
 
-    @ExceptionHandler(value = [OIDCUnauthorizedException::class, AccessDeniedException::class])
+    @ExceptionHandler(value = [JwtTokenValidatorException::class, JwtTokenMissingException::class, JwtTokenUnauthorizedException::class, AccessDeniedException::class])
     @ResponseBody
     protected fun handleUnauthorizedException(e: RuntimeException, webRequest: WebRequest?): ResponseEntity<Any> {
         return getResponseEntity(e, "You are not authorized to access this ressource", HttpStatus.UNAUTHORIZED)
