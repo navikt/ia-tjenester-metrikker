@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Profile
     value = [
         DBConfigProperties::class,
         OutboundKafkaProperties::class,
-        SecurityConfig::class
+        //SecurityConfig::class
     ]
 )
 @EnableJwtTokenValidation

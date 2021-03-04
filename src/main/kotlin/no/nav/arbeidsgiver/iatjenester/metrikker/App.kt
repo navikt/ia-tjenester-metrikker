@@ -16,7 +16,7 @@ import org.springframework.boot.runApplication
     value = [
         DBConfigProperties::class,
         OutboundKafkaProperties::class,
-        SecurityConfig::class
+        //SecurityConfig::class
     ]
 )
 class App
