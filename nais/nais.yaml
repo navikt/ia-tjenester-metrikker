@@ -27,6 +27,8 @@ spec:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: {{ spring_profile_active }}
+  envFrom:
+    - configmap: loginservice-idporten
   accessPolicy:
     inbound:
       rules:

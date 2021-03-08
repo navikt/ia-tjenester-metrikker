@@ -2,10 +2,10 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import no.nav.arbeidsgiver.iatjenester.metrikker.IaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.IaTjenesteRad
 import org.assertj.core.api.Assertions.assertThat
 import org.flywaydb.core.Flyway
 import org.h2.jdbc.JdbcConnection

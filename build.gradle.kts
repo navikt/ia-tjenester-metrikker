@@ -3,12 +3,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.4.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    //id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.4.30"
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.spring") version "1.4.30"
     application
 }
+
+val navSecurityVersion = "1.3.3"
 
 group = "no.nav.arbeidsgiver"
 version = "0.0.1-SNAPSHOT"
@@ -37,10 +38,14 @@ repositories {
     }
 }
 
+ext["nimbus-jose-jwt.version"] = "8.20" // https://nav-it.slack.com/archives/C01381BAT62/p1611056940004800
+ext["okhttp3.version"] = "4.9.0" // For at token support testen kjører
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -60,10 +65,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.kafka:spring-kafka")
-
+    implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
 
     // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("no.nav.security:token-validation-spring-test:${navSecurityVersion}")
+    testImplementation("io.rest-assured:spring-mock-mvc") // TODO: sjekk om denne er tatt i bruk
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
     testImplementation("io.mockk:mockk:1.10.5")
