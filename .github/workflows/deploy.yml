@@ -28,7 +28,7 @@ jobs:
     deploy-to-dev:
         name: Deploy to dev
         needs: test
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/innføre-autentisering-for-endepunktet-metrikker'
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/lagre-labs-gcp-versjon'
 #        if: github.ref == 'refs/heads/koble-til-gcp-dev'
         runs-on: ubuntu-20.04
         steps:

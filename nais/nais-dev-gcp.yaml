@@ -14,8 +14,10 @@ spec:
   {{/each}}
   liveness:
     path: /internal/isalive
+    initialDelay: 60
   readiness:
     path: /internal/isready
+    initialDelay: 60
   kafka:
     pool: {{ kafka_pool }}
   gcp:
