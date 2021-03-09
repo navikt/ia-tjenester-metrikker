@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
@@ -15,6 +16,30 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
 
     fun opprett(iatjeneste: IaTjeneste) {
         insertIaTjeneste(iatjeneste)
+    }
+
+    fun opprett(uinnloggetIatjeneste: UinnloggetIaTjeneste) {
+        namedParameterJdbcTemplate.update(
+            """
+                INSERT INTO metrikker_ia_tjenester_uinnlogget(
+                form_av_tjeneste, 
+                kilde_applikasjon,
+                tjeneste_mottakkelsesdato
+                ) 
+                VALUES  (
+                  :form_av_tjeneste, 
+                  :kilde_applikasjon, 
+                  :tjeneste_mottakkelsesdato
+                )
+                """,
+            MapSqlParameterSource()
+                .addValue("form_av_tjeneste", uinnloggetIatjeneste.type.name)
+                .addValue("kilde_applikasjon", uinnloggetIatjeneste.kilde.name)
+                .addValue(
+                    "tjeneste_mottakkelsesdato",
+                    uinnloggetIatjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
+                )
+        )
     }
 
     private fun insertIaTjeneste(iatjeneste: IaTjeneste) {
