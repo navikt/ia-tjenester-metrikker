@@ -3,11 +3,13 @@ spring:
 
   datasource:
     hikari:
+      jdbc-url: "jdbc:h2:mem:local-db"
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
       maximum-pool-size: 2
-    url: "jdbc:h2:mem:local-db"
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+      minimum-idle: 1
+      initialization-fail-timeout: 60000
 
   h2.console:
     enabled: true
@@ -21,4 +23,3 @@ no.nav.security.jwt.issuer:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
     cookiename: selvbetjening-idtoken
-#    proxyurl: http://webproxy.nais:8088

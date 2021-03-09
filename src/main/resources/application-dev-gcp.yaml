@@ -1,10 +1,14 @@
 spring:
   config.activate.on-profile: dev-gcp
   datasource:
-    url: "jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DATABASE}"
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    hikari:
+      jdbc-url: "jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DATABASE}"
+      username: ${DATABASE_USERNAME}
+      password: ${DATABASE_PASSWORD}
+      driver-class-name: org.postgresql.Driver
+      maximum-pool-size: 2
+      minimum-idle: 1
+      initialization-fail-timeout: 60000
   flyway:
     locations: classpath:/db/migration, classpath:/db/privileges
 
@@ -13,4 +17,3 @@ no.nav.security.jwt.issuer:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
     cookiename: selvbetjening-idtoken
-#    proxyurl: http://webproxy.nais:8088
