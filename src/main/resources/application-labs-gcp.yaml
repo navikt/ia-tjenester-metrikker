@@ -1,9 +1,5 @@
 server.servlet.context-path: /ia-tjenester-metrikker
 
-management.endpoints.web:
-  exposure.include: info, health, metrics
-  base-path: /internal/actuator
-
 spring:
   config.activate.on-profile: labs-gcp
 

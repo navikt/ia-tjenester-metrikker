@@ -18,9 +18,6 @@ spec:
   readiness:
     path: /ia-tjenester-metrikker/internal/isready
     initialDelay: 60
-  prometheus:
-    enabled: true
-    path: /ia-tjenester-metrikker/internal/actuator/prometheus
   kafka:
     pool: {{ kafka_pool }}
   env:
