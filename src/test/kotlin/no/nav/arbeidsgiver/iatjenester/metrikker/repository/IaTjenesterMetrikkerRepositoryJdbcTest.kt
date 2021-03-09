@@ -2,8 +2,9 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import no.nav.arbeidsgiver.iatjenester.metrikker.IaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.getAlleIATjenester
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.getAlleUinnloggetIaTjenester
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
 import org.assertj.core.api.Assertions.assertThat
@@ -13,13 +14,28 @@ import org.h2.tools.Server
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.sql.Connection
-import java.sql.ResultSet
 import javax.sql.DataSource
 
 class IaTjenesterMetrikkerRepositoryJdbcTest {
 
     private val IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED = false
+
+    @Test
+    fun `opprett() lagrer en UinnloggetIaTjeneste i DB`() {
+        IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).opprett(
+            TestUtils.vilkårligUinnloggetIaTjeneste()
+        )
+
+        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
+        val antallUinnloggetIaTjenester = dataSource.connection.getAlleUinnloggetIaTjenester()
+        assertThat(antallUinnloggetIaTjenester.size).isEqualTo(1)
+        val iaTjenesteRad = antallUinnloggetIaTjenester[0]
+        assertThat(iaTjenesteRad.id).isEqualTo(1)
+        assertThat(iaTjenesteRad.type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
+        assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKKEFRAVÆRSSTATISTIKK)
+        assertThat(iaTjenesteRad.tjeneste_mottakkelsesdato).isNotNull()
+        assertThat(iaTjenesteRad.opprettet).isNotNull()
+    }
 
     @Test
     fun `opprett() lagrer en IaTjeneste i DB`() {
@@ -70,50 +86,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
             flyway.dataSource = dataSource
             flyway.setLocations("db/migration")
             flyway.migrate()
-        }
-
-        private fun Connection.getAlleIATjenester(): List<IaTjenesteRad> =
-            use {
-                this.prepareStatement(
-                    """
-                SELECT *  
-                FROM metrikker_ia_tjenester_innlogget
-                WHERE orgnr = ?
-                """
-                ).use {
-                    it.setString(1, "987654321")
-                    it.executeQuery()
-                        .use {
-                            generateSequence {
-                                if (it.next()) {
-                                    it.getIaTjenesteRad()
-                                } else {
-                                    null
-                                }
-                            }.toList()
-                        }
-                }
-            }
-
-        private fun ResultSet.getIaTjenesteRad(): IaTjenesteRad {
-            return IaTjenesteRad(
-                id = getInt("id"),
-                orgnr = getString("orgnr"),
-                næringKode5Siffer = getString("naering_kode_5siffer"),
-                type = TypeIATjeneste.valueOf(getString("form_av_tjeneste")),
-                kilde = Kilde.valueOf(getString("kilde_applikasjon")),
-                tjeneste_mottakkelsesdato = getTimestamp("tjeneste_mottakkelsesdato"),
-                antallAnsatte = getInt("antall_ansatte"),
-                næringskode5SifferBeskrivelse = getString("naering_kode5siffer_beskrivelse"),
-                næring2SifferBeskrivelse = getString("naerring_2siffer_beskrivelse"),
-                SSBSektorKode = getString("ssb_sektor_kode"),
-                SSBSektorKodeBeskrivelse = getString("ssb_sektor_kode_beskrivelse"),
-                fylkesnummer = getString("fylkesnummer"),
-                fylke = getString("fylke"),
-                kommunenummer = getString("kommunenummer"),
-                kommune = getString("kommune"),
-                opprettet = getDate("opprettet")
-            )
         }
 
         private fun startWebConsoleForInMemDatabase(isActivated: Boolean) {

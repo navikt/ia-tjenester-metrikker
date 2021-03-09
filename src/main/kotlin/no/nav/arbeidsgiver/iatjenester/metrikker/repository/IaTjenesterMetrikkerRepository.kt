@@ -1,23 +1,46 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import java.sql.Date
-import java.time.LocalDateTime
 
 @Transactional
 @Repository
 class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
 
-    fun opprett(iatjeneste: IaTjeneste) {
+    fun opprett(iatjeneste: InnloggetIaTjeneste) {
         insertIaTjeneste(iatjeneste)
     }
 
-    private fun insertIaTjeneste(iatjeneste: IaTjeneste) {
+    fun opprett(uinnloggetIatjeneste: UinnloggetIaTjeneste) {
+        namedParameterJdbcTemplate.update(
+            """
+                INSERT INTO metrikker_ia_tjenester_uinnlogget(
+                form_av_tjeneste, 
+                kilde_applikasjon,
+                tjeneste_mottakkelsesdato
+                ) 
+                VALUES  (
+                  :form_av_tjeneste, 
+                  :kilde_applikasjon, 
+                  :tjeneste_mottakkelsesdato
+                )
+                """,
+            MapSqlParameterSource()
+                .addValue("form_av_tjeneste", uinnloggetIatjeneste.type.name)
+                .addValue("kilde_applikasjon", uinnloggetIatjeneste.kilde.name)
+                .addValue(
+                    "tjeneste_mottakkelsesdato",
+                    uinnloggetIatjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
+                )
+        )
+    }
+
+    private fun insertIaTjeneste(iatjeneste: InnloggetIaTjeneste) {
         namedParameterJdbcTemplate.update(
             """
                 INSERT INTO metrikker_ia_tjenester_innlogget(
