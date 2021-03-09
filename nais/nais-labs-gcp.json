@@ -1,0 +1,7 @@
+{
+  "ingress": [
+    "https://arbeidsgiver.labs.nais.io/ia-tjenester-metrikker"
+  ],
+  "kafka_pool": "nav-dev",
+  "spring_profile_active": "labs-gcp"
+}

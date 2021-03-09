@@ -1,0 +1,32 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: ia-tjenester-metrikker
+  namespace: arbeidsgiver
+  labels:
+    team: arbeidsgiver
+spec:
+  image: {{image}}
+  port: 8080
+  ingresses:
+  {{#each ingress as |url|}}
+    - {{url}}
+  {{/each}}
+  liveness:
+    path: /internal/isalive
+  readiness:
+    path: /internal/isready
+  kafka:
+    pool: {{ kafka_pool }}
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: {{ spring_profile_active }}
+  envFrom:
+    - configmap: loginservice-idporten
+  accessPolicy:
+    inbound:
+      rules:
+        - application: sykefravarsstatistikk
+          namespace: arbeidsgiver
+          cluster: labs-gcp
+
