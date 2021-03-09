@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
@@ -13,7 +13,7 @@ import java.time.ZonedDateTime
 class TestUtils {
 
     companion object {
-        fun vilkårligIaTjeneste(): IaTjeneste = IaTjeneste(
+        fun vilkårligIaTjeneste(): InnloggetIaTjeneste = InnloggetIaTjeneste(
             "987654321",
             "12345",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,

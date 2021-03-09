@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
 import org.springframework.http.ResponseEntity
@@ -11,7 +11,7 @@ import java.time.ZonedDateTime
 @RestController
 class KafkaController(var kafkaService: KafkaService) {
 
-    val dummyIaTjeneste = IaTjeneste(
+    val dummyIaTjeneste = InnloggetIaTjeneste(
         "orgnr",
         "næringskode",
         TypeIATjeneste.RÅDGIVNING,

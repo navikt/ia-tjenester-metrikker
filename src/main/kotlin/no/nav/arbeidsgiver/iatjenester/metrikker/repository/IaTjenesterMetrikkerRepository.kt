@@ -1,20 +1,18 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import java.sql.Date
-import java.time.LocalDateTime
 
 @Transactional
 @Repository
 class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
 
-    fun opprett(iatjeneste: IaTjeneste) {
+    fun opprett(iatjeneste: InnloggetIaTjeneste) {
         insertIaTjeneste(iatjeneste)
     }
 
@@ -42,7 +40,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         )
     }
 
-    private fun insertIaTjeneste(iatjeneste: IaTjeneste) {
+    private fun insertIaTjeneste(iatjeneste: InnloggetIaTjeneste) {
         namedParameterJdbcTemplate.update(
             """
                 INSERT INTO metrikker_ia_tjenester_innlogget(
