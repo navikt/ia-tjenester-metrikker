@@ -3,6 +3,10 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
     </appender>
 
+    <logger name="org.springframework.web.servlet.DispatcherServlet" level="debug" additivity="false">
+        <appender-ref ref="loggIJsonFormatTilKibana" />
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="loggIJsonFormatTilKibana"/>
     </root>
