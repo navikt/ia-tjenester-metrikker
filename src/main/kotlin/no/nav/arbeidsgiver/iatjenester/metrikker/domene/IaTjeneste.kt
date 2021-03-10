@@ -6,14 +6,20 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer
 import java.time.ZonedDateTime
 
-data class IaTjeneste(
+interface IaTjeneste {
+    var tjenesteMottakkelsesdato: ZonedDateTime
+    var type: TypeIATjeneste
+    var kilde: Kilde
+}
+
+data class InnloggetIaTjeneste(
     var orgnr: String,
     var næringKode5Siffer: String,
-    var type: TypeIATjeneste,
-    var kilde: Kilde,
+    override var type: TypeIATjeneste,
+    override var kilde: Kilde,
     @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
     @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    var tjenesteMottakkelsesdato: ZonedDateTime,
+    override var tjenesteMottakkelsesdato: ZonedDateTime,
     var antallAnsatte: Int,
     var næringskode5SifferBeskrivelse: String,
     var næring2SifferBeskrivelse: String,
@@ -27,10 +33,20 @@ data class IaTjeneste(
     var fylke: String,
     var kommunenummer: String,
     var kommune: String
-)
+) : IaTjeneste
+
+data class UinnloggetIaTjeneste(
+    override var type: TypeIATjeneste,
+    override var kilde: Kilde,
+    @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
+    @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    override var tjenesteMottakkelsesdato: ZonedDateTime,
+) : IaTjeneste
+
 
 enum class Kilde {
     SYKKEFRAVÆRSSTATISTIKK,
+    SAMTALESTØTTE,
     DIALOG
 }
 
