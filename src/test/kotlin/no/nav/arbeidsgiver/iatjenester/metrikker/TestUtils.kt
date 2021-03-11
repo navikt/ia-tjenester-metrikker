@@ -17,7 +17,7 @@ class TestUtils {
             "987654321",
             "12345",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKKEFRAVÆRSSTATISTIKK,
+            Kilde.SYKEFRAVÆRSSTATISTIKK,
             ZonedDateTime.now(),
             10,
             "En beskrivelse for næringskode 5 siffer",
@@ -32,10 +32,40 @@ class TestUtils {
 
         fun vilkårligUinnloggetIaTjeneste(): UinnloggetIaTjeneste = UinnloggetIaTjeneste(
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKKEFRAVÆRSSTATISTIKK,
+            Kilde.SYKEFRAVÆRSSTATISTIKK,
             ZonedDateTime.now(),
         )
 
+        fun vilkårligUinnloggetIaTjenesteAsString(): String {
+            return """
+            {
+              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "type":"DIGITAL_IA_TJENESTE",
+              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
+            }
+        """.trimIndent()
+        }
+
+        fun vilkårligInnloggetIaTjenesteAsString(): String {
+            return """
+            {
+              "orgnr":"444444444",
+              "antallAnsatte":99,
+              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "type":"DIGITAL_IA_TJENESTE",
+              "fylke":"IKKE_TILGJENGELIG",
+              "fylkesnummer":"IKKE_TILGJENGELIG",
+              "kommune":"OSLO",
+              "kommunenummer":"9999",
+              "næring2SifferBeskrivelse":"Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
+              "næringKode5Siffer":"84300",
+              "næringskode5SifferBeskrivelse":"Trygdeordninger underlagt offentlig orvaltning",
+              "ssbSektorKode":"6500",
+              "ssbSektorKodeBeskrivelse":"Offentlig sektor",
+              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
+            }
+        """.trimIndent()
+        }
 
         fun Connection.getAlleIATjenester(): List<IaTjenesteRad> =
             use {
