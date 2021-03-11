@@ -7,6 +7,8 @@ Fra IntelliJ:
  - sett opp profile til `local` i `run configuration`
  - start `main()` funksjon i `LokalApp.kt`
 
+### Dokumentasjon
+API dok finner du her: http://localhost:8080/ia-tjenester-metrikker/swagger-ui/index.html
 
 ### Dette kan du sjekke lokalt
 

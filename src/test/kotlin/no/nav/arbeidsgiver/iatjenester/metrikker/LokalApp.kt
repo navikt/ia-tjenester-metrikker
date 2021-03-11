@@ -19,11 +19,10 @@ import org.springframework.context.annotation.Profile
 @EnableConfigurationProperties(
     value = [
         DBConfigProperties::class,
-        OutboundKafkaProperties::class,
-        //SecurityConfig::class
+        OutboundKafkaProperties::class
     ]
 )
-@EnableJwtTokenValidation
+@EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])
 @EnableMockOAuth2Server
 class LokalApp
 

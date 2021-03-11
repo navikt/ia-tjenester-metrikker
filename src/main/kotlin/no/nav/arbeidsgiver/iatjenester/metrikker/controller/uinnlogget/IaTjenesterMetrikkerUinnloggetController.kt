@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @Unprotected
 @RestController
-@CrossOrigin(origins = ["https://arbeidsgiver-q.nav.no", "https://arbeidsgiver.labs.nais.io"], allowCredentials = "false")
+@CrossOrigin(origins = ["https://arbeidsgiver-q.nav.no", "https://arbeidsgiver.labs.nais.io", "http://localhost:3000"], allowCredentials = "false")
 @RequestMapping("/uinnlogget")
 class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService) {
 

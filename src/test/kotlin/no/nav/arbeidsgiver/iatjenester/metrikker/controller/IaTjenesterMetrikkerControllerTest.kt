@@ -57,7 +57,7 @@ class IaTjenesterMetrikkerControllerTest {
 
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:$port/uinnlogget/mottatt-iatjeneste"))
+                .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/uinnlogget/mottatt-iatjeneste"))
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .build(),
@@ -78,7 +78,7 @@ class IaTjenesterMetrikkerControllerTest {
 
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:$port/innlogget/mottatt-iatjeneste"))
+                .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/innlogget/mottatt-iatjeneste"))
                 .header(
                     HttpHeaders.AUTHORIZATION,
                     "Bearer " + "DETTE_ER_IKKE_EN_GYLDIG_TOKEN"
@@ -104,7 +104,7 @@ class IaTjenesterMetrikkerControllerTest {
         val gyldigToken = issueToken("selvbetjening", "01079812345", audience = "aud-localhost")
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:$port/innlogget/mottatt-iatjeneste"))
+                .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/innlogget/mottatt-iatjeneste"))
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
