@@ -4,7 +4,11 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.security.token.support.core.api.Protected
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.CrossOrigin
 
 
 @Protected
