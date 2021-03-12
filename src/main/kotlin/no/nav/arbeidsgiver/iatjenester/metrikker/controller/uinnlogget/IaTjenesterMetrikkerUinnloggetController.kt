@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.CrossOrigin
 
 @Unprotected
 @RestController
-@CrossOrigin(origins = ["https://arbeidsgiver-q.nav.no", "https://arbeidsgiver.labs.nais.io", "http://localhost:3000"], allowCredentials = "false")
+@CrossOrigin(origins = ["https://arbeidsgiver-q.nav.no", "https://arbeidsgiver.labs.nais.io"], allowCredentials = "false")
 @RequestMapping("/uinnlogget")
 class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService) {
 
     @PostMapping(value = ["/mottatt-iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
     fun leggTilNyMottattIaTjeneste(@RequestBody uinnloggetIaTjeneste: UinnloggetIaTjeneste): ResponseStatus {
         iaTjenesterMetrikkerService.sjekkOgOpprett(uinnloggetIaTjeneste)
-        return no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus.Created
+        return ResponseStatus.Created
     }
 }
