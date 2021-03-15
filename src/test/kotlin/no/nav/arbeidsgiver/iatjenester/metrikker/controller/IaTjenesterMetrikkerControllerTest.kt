@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligInnloggetIaTjenesteAsString
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligUinnloggetIaTjenesteAsString
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -50,14 +52,11 @@ class IaTjenesterMetrikkerControllerTest {
     @Test
     @Throws(Exception::class)
     fun `POST til uinnlogget-iatjeneste endepunkt`() {
-        val requestBody: String = objectMapper
-            .writeValueAsString(
-                TestUtils.vilkårligIaTjeneste()
-            )
+        val requestBody: String = vilkårligUinnloggetIaTjenesteAsString()
 
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:$port/uinnlogget/mottatt-iatjeneste"))
+                .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/uinnlogget/mottatt-iatjeneste"))
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .build(),
@@ -69,16 +68,14 @@ class IaTjenesterMetrikkerControllerTest {
         Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
     }
 
+
     @Test
     fun `Endepunkt innlogget-metrikker krever AUTH header med gyldig token`() {
-        val requestBody: String = objectMapper
-            .writeValueAsString(
-                TestUtils.vilkårligIaTjeneste()
-            )
+        val requestBody: String = vilkårligInnloggetIaTjenesteAsString()
 
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:$port/innlogget/mottatt-iatjeneste"))
+                .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/innlogget/mottatt-iatjeneste"))
                 .header(
                     HttpHeaders.AUTHORIZATION,
                     "Bearer " + "DETTE_ER_IKKE_EN_GYLDIG_TOKEN"
@@ -96,15 +93,12 @@ class IaTjenesterMetrikkerControllerTest {
 
     @Test
     fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 200 OK dersom token er gyldig`() {
-        val requestBody: String = objectMapper
-            .writeValueAsString(
-                TestUtils.vilkårligIaTjeneste()
-            )
+        val requestBody: String = vilkårligInnloggetIaTjenesteAsString()
 
         val gyldigToken = issueToken("selvbetjening", "01079812345", audience = "aud-localhost")
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:$port/innlogget/mottatt-iatjeneste"))
+                .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/innlogget/mottatt-iatjeneste"))
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))

@@ -7,15 +7,17 @@ Fra IntelliJ:
  - sett opp profile til `local` i `run configuration`
  - start `main()` funksjon i `LokalApp.kt`
 
+### Dokumentasjon
+API dok finner du her: http://localhost:8080/ia-tjenester-metrikker/swagger-ui/index.html
 
 ### Dette kan du sjekke lokalt
 
 #### Diagnostic endepunkt
 I terminal kjør
-`curl -v  -X GET "http://localhost:8080/internal/isalive"`
+`curl -v  -X GET "http://localhost:8080/ia-tjenester-metrikker/internal/isalive"`
 
 #### Lokal DB instance
-Åpne følgende URL i nettleser: http://localhost:8080/h2 
+Åpne følgende URL i nettleser: http://localhost:8080/ia-tjenester-metrikker/h2 
  - Driver class: `org.h2.Driver`
  - URL: `jdbc:h2:mem:local-db`
  - user name: `sa`

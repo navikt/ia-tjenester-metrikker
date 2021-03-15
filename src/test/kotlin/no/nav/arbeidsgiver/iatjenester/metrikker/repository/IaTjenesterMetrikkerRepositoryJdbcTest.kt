@@ -32,7 +32,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         val iaTjenesteRad = antallUinnloggetIaTjenester[0]
         assertThat(iaTjenesteRad.id).isEqualTo(1)
         assertThat(iaTjenesteRad.type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
-        assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKKEFRAVÆRSSTATISTIKK)
+        assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKEFRAVÆRSSTATISTIKK)
         assertThat(iaTjenesteRad.tjeneste_mottakkelsesdato).isNotNull()
         assertThat(iaTjenesteRad.opprettet).isNotNull()
     }
@@ -52,7 +52,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.orgnr).isEqualTo("987654321")
         assertThat(iaTjenesteRad.næringKode5Siffer).isEqualTo("12345")
         assertThat(iaTjenesteRad.type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
-        assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKKEFRAVÆRSSTATISTIKK)
+        assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKEFRAVÆRSSTATISTIKK)
         assertThat(iaTjenesteRad.tjeneste_mottakkelsesdato).isNotNull()
         assertThat(iaTjenesteRad.antallAnsatte).isEqualTo(10)
         assertThat(iaTjenesteRad.næringskode5SifferBeskrivelse).isEqualTo("En beskrivelse for næringskode 5 siffer")

@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
 
 
-@EnableJwtTokenValidation(ignore = ["springfox.documentation.swagger.web.ApiResourceController", "org.springframework"])
+@EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc", "springfox.documentation.swagger.web.ApiResourceController", "org.springframework"])
 @ConfigurationProperties(prefix = "no.nav.security.jwt")
 @Configuration
 class SecurityConfig
