@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.FlywayConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.OutboundKafkaProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.SecurityConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
@@ -15,6 +16,7 @@ import org.springframework.boot.runApplication
 @EnableConfigurationProperties(
     value = [
         DBConfigProperties::class,
+        FlywayConfigProperties::class,
         OutboundKafkaProperties::class,
         SecurityConfig::class
     ]

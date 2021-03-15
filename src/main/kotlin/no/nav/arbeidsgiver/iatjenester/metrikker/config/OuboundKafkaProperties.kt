@@ -3,11 +3,12 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.config
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.config.SslConfigs
-import org.apache.kafka.common.serialization.ByteArraySerializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
+import org.springframework.context.annotation.Profile
 
+@Profile("dev-gcp")
 @ConfigurationProperties(prefix = "kafka.outbound")
 @ConstructorBinding
 class OutboundKafkaProperties(var topic: String = "",

@@ -7,7 +7,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 
 @Configuration
-@Profile("dev-gcp", "prod-gcp")
+@Profile("dev-gcp")
 class KafkaProducerConfig {
 
     @Bean
