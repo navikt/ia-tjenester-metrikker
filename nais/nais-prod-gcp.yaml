@@ -18,8 +18,6 @@ spec:
   readiness:
     path: /internal/isready
     initialDelay: 60
-  kafka:
-    pool: {{ kafka_pool }}
   gcp:
     sqlInstances:
       - type: POSTGRES_12
@@ -31,10 +29,3 @@ spec:
       value: {{ spring_profile_active }}
   envFrom:
     - configmap: loginservice-idporten
-  accessPolicy:
-    inbound:
-      rules:
-        - application: sykefravarsstatistikk
-          namespace: arbeidsgiver
-          cluster: dev-sbs
-

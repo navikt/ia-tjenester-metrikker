@@ -2,6 +2,6 @@
   "ingress": [
     "https://arbeidsgiver.nav.no/ia-tjenester-metrikker/"
   ],
-  "kafka_pool": "nav-dev",
+  "kafka_pool": "nav-prod",
   "spring_profile_active": "prod-gcp"
 }
