@@ -121,7 +121,7 @@ class TestUtils {
                 tjeneste_mottakkelsesdato = getTimestamp("tjeneste_mottakkelsesdato"),
                 antallAnsatte = getInt("antall_ansatte"),
                 næringskode5SifferBeskrivelse = getString("naering_kode5siffer_beskrivelse"),
-                næring2SifferBeskrivelse = getString("naerring_2siffer_beskrivelse"),
+                næring2SifferBeskrivelse = getString("naering_2siffer_beskrivelse"),
                 SSBSektorKode = getString("ssb_sektor_kode"),
                 SSBSektorKodeBeskrivelse = getString("ssb_sektor_kode_beskrivelse"),
                 fylkesnummer = getString("fylkesnummer"),

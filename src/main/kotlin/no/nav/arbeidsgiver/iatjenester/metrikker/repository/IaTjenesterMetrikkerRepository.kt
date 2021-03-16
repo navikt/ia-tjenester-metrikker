@@ -51,7 +51,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                 tjeneste_mottakkelsesdato,
                 antall_ansatte,
                 naering_kode5siffer_beskrivelse,
-                naerring_2siffer_beskrivelse,
+                naering_2siffer_beskrivelse,
                 ssb_sektor_kode,
                 ssb_sektor_kode_beskrivelse,
                 fylkesnummer,
@@ -67,7 +67,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                   :tjeneste_mottakkelsesdato, 
                   :antall_ansatte, 
                   :naering_kode5siffer_beskrivelse,
-                  :naerring_2siffer_beskrivelse,
+                  :naering_2siffer_beskrivelse,
                   :ssb_sektor_kode,
                   :ssb_sektor_kode_beskrivelse,
                   :fylkesnummer,
@@ -84,7 +84,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                 .addValue("tjeneste_mottakkelsesdato", iatjeneste.tjenesteMottakkelsesdato.toLocalDateTime())
                 .addValue("antall_ansatte", iatjeneste.antallAnsatte)
                 .addValue("naering_kode5siffer_beskrivelse", iatjeneste.næringskode5SifferBeskrivelse)
-                .addValue("naerring_2siffer_beskrivelse", iatjeneste.næring2SifferBeskrivelse)
+                .addValue("naering_2siffer_beskrivelse", iatjeneste.næring2SifferBeskrivelse)
                 .addValue("ssb_sektor_kode", iatjeneste.SSBSektorKode)
                 .addValue("ssb_sektor_kode_beskrivelse", iatjeneste.SSBSektorKodeBeskrivelse)
                 .addValue("fylkesnummer", iatjeneste.fylkesnummer)

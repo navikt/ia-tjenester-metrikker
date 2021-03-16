@@ -1,0 +1,1 @@
+alter table metrikker_ia_tjenester_innlogget rename column naerring_2siffer_beskrivelse to naering_2siffer_beskrivelse;
