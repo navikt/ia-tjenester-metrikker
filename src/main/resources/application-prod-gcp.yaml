@@ -1,3 +1,5 @@
+server.servlet.context-path: /ia-tjenester-metrikker
+
 spring:
   config.activate.on-profile: prod-gcp
   datasource:

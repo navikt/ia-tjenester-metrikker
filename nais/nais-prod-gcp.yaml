@@ -13,10 +13,10 @@ spec:
     - {{url}}
   {{/each}}
   liveness:
-    path: /internal/isalive
+    path: /ia-tjenester-metrikker/internal/isalive
     initialDelay: 60
   readiness:
-    path: /internal/isready
+    path: /ia-tjenester-metrikker/internal/isready
     initialDelay: 60
   gcp:
     sqlInstances:
