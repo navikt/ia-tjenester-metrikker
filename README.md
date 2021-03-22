@@ -8,7 +8,15 @@ Fra IntelliJ:
  - start `main()` funksjon i `LokalApp.kt`
 
 ### Dokumentasjon
-API dok finner du her: http://localhost:8080/ia-tjenester-metrikker/swagger-ui/index.html
+API dok finner du her: http://localhost:8080/ia-tjenester-metrikker/swagger-ui.html
+
+### Hente en lokal selvbetjenening-idtoken for å kjøre Postman mot innlogget endepunkt
+
+Start applikasjon og kjør i terminal (Mac med python 2):
+
+`curl --location --request GET 'http://localhost:8080/ia-tjenester-metrikker/local/cookie?issuerId=selvbetjening&audience=aud-localhost&subject=12345678910&cookiename=selvbetjening-idtoken' | python -c "import sys, json; print json.load(sys.stdin)['value']" | tr -d '\n' | pbcopy`
+
+Da er `selvbetjening-token` kopiert i clipboard og kan limes inn direkte etter `Authorization: Bearer ` i f.eks Postman. 
 
 ### Dette kan du sjekke lokalt
 
@@ -26,6 +34,12 @@ I terminal kjør
 
 # Hvordan fungerer appen
 Applikasjonen tar imot _metrikker_ fra andre IA applikasjoner og persistere dem  
+
+## GCP konfig
+Applikasjon trenger `ALTINN_APIKEY` og `ALTINN_APIGW_APIKEY` for å kunne gjøre oppslag til `altinn-rettigheter-proxy` eller eventuelt direkte til Altinn ved fallback kall. 
+
+Disse må legges inn som secrets via `kubectl`
+
 
 ## Docker
 Bygg image
