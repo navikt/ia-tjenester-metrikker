@@ -3,9 +3,10 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligInnloggetIaTjenesteAsString
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligUinnloggetIaTjenesteAsString
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.WiremockConfigProperties
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.HttpHeaders
@@ -27,6 +29,12 @@ import java.net.http.HttpResponse.BodyHandlers
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableConfigurationProperties(
+    value = [
+        AltinnConfigProperties::class,
+        WiremockConfigProperties::class
+    ]
+)
 @EnableMockOAuth2Server
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

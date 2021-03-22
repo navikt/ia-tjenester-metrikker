@@ -10,6 +10,7 @@ plugins {
 }
 
 val navSecurityVersion = "1.3.3"
+val altinnRettigheterProxyKlientVersion = "2.0.1"
 
 group = "no.nav.arbeidsgiver"
 version = "0.0.1-SNAPSHOT"
@@ -68,11 +69,13 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
+    implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}:kotlin-client")
 
     // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:token-validation-spring-test:${navSecurityVersion}")
     testImplementation("io.rest-assured:spring-mock-mvc") // TODO: sjekk om denne er tatt i bruk
+    testImplementation("com.github.tomakehurst:wiremock:2.24.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
     testImplementation("io.mockk:mockk:1.10.5")

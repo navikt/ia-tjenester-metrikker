@@ -17,3 +17,9 @@ no.nav.security.jwt.issuer:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
     cookiename: selvbetjening-idtoken
+
+altinn:
+  proxyUrl: https://arbeidsgiver.dev.intern.nav.no/altinn-rettigheter-proxy
+  fallbackUrl: https://api-gw-q1.adeo.no/
+  altinnApiKey: ${ALTINN_APIKEY}
+  apiGwKey: ${ALTINN_APIGW_APIKEY}

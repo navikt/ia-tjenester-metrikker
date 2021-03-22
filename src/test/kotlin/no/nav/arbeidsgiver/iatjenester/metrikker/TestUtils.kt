@@ -13,6 +13,9 @@ import java.time.ZonedDateTime
 class TestUtils {
 
     companion object {
+
+        val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
+
         fun vilkårligIaTjeneste(): InnloggetIaTjeneste = InnloggetIaTjeneste(
             "987654321",
             "12345",
@@ -49,7 +52,7 @@ class TestUtils {
         fun vilkårligInnloggetIaTjenesteAsString(): String {
             return """
             {
-              "orgnr":"444444444",
+              "orgnr":"${ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN}",
               "antallAnsatte":99,
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
