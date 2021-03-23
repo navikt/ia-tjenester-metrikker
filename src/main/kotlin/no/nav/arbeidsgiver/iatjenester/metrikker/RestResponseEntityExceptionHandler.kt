@@ -1,6 +1,9 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
+import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.AltinnrettigheterProxyKlientException
+import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.AltinnrettigheterProxyKlientFallbackException
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerValideringException
+import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollException
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException
@@ -36,6 +39,19 @@ class RestResponseEntityExceptionHandler {
         return getResponseEntity(e, "You are not authorized to access this ressource", HttpStatus.UNAUTHORIZED)
     }
 
+    @ExceptionHandler(value = [AltinnrettigheterProxyKlientFallbackException::class, AltinnrettigheterProxyKlientException::class])
+    @ResponseBody
+    protected fun handleAltinnException(e: RuntimeException, webRequest: WebRequest?): ResponseEntity<Any> {
+        log("RestResponseEntityExceptionHandler").error("Kunne ikke verifisere at innlogget bruker har tilgang til orgnr i Altinn", e)
+        return getResponseEntity(e, "Forbidden", HttpStatus.FORBIDDEN)
+    }
+
+    @ExceptionHandler(value = [TilgangskontrollException::class])
+    @ResponseBody
+    protected fun handleTilgangskontrollException(e: RuntimeException, webRequest: WebRequest?): ResponseEntity<Any> {
+        log("RestResponseEntityExceptionHandler").error("Bruker har tilgang til orgnr i Altinn", e)
+        return getResponseEntity(e, "Forbidden", HttpStatus.FORBIDDEN)
+    }
 
     @ExceptionHandler(value = [ResponseStatusException::class])
     @ResponseBody

@@ -30,6 +30,3 @@ altinn:
   fallbackUrl: http://localhost:${wiremock.port}/altinn/
   altinnApiKey: "test-altinn-API-key"
   apiGwKey: "test-API-GW-key"
-
-wiremock:
-  port: 8585
