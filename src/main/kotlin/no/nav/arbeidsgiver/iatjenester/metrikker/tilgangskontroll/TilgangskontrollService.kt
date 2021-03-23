@@ -1,11 +1,16 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 
+import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
+import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.SelvbetjeningToken
+import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceCode
+import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceEdition
+import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
 import org.springframework.stereotype.Component
 
 
 @Component
 class TilgangskontrollService(
-    private val klient: AltinnClient,
+    private val klient: AltinnrettigheterProxyKlient,
     private val tilgangskontrollUtils: TilgangskontrollUtils
 ) {
     private val serviceCode: String = "3403"
@@ -17,11 +22,12 @@ class TilgangskontrollService(
             val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetSelvbetjeningBruker()
 
             innloggetSelvbetjeningBruker.organisasjoner =
-                klient.hentOrganisasjonerBasertPaRettigheter(
-                    innloggetSelvbetjeningBruker.fnr.asString(),
-                    serviceCode,
-                    serviceEdition,
-                    tilgangskontrollUtils.selvbetjeningToken.tokenAsString
+                klient.hentOrganisasjoner(
+                    SelvbetjeningToken(tilgangskontrollUtils.selvbetjeningToken.tokenAsString),
+                    Subject(innloggetSelvbetjeningBruker.fnr.asString()),
+                    ServiceCode(serviceCode),
+                    ServiceEdition(serviceEdition),
+                    false
                 ).map {
                     AltinnOrganisasjon(
                         it.name,

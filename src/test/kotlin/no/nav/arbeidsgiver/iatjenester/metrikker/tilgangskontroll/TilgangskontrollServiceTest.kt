@@ -8,7 +8,6 @@ internal class TilgangskontrollServiceTest {
     @Test
     @Throws(Exception::class)
     fun `Sjekker at bruker har tilgang til en bedrift`() {
-
         val bruker = InnloggetBruker(Fnr("01019912345"))
         bruker.organisasjoner = listOf(AltinnOrganisasjon(organizationNumber = "9876543210"))
         TilgangskontrollService.sjekkTilgangTilOrgnr(Orgnr("9876543210"), bruker)

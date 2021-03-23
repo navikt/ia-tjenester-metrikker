@@ -8,7 +8,6 @@ class InnloggetBruker(val fnr: Fnr) {
 
     var organisasjoner: List<AltinnOrganisasjon> = ArrayList<AltinnOrganisasjon>()
 
-
     fun harTilgang(orgnr: Orgnr): Boolean {
         val orgnumreBrukerHarTilgangTil = organisasjoner
             .stream()
