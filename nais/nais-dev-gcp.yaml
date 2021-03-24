@@ -31,7 +31,7 @@ spec:
       value: {{ spring_profile_active }}
   envFrom:
     - configmap: loginservice-idporten
-    - secret: ia-tjenester-metrikker
+    - secret: ia-tjenester-metrikker-secrets
   accessPolicy:
     outbound:
       rules:

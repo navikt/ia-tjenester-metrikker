@@ -36,9 +36,14 @@ I terminal kjør
 Applikasjonen tar imot _metrikker_ fra andre IA applikasjoner og persistere dem  
 
 ## GCP konfig
-Applikasjon trenger `ALTINN_APIKEY` og `ALTINN_APIGW_APIKEY` for å kunne gjøre oppslag til `altinn-rettigheter-proxy` eller eventuelt direkte til Altinn ved fallback kall. 
+Applikasjon trenger `ALTINN_APIKEY` og `ALTINN_APIGW_APIKEY` for å kunne gjøre oppslag til `altinn-rettigheter-proxy` eller eventuelt direkte til Altinn ved fallback kall.
 
-Disse må legges inn som secrets via `kubectl`
+Disse må legges inn som secrets via `kubectl`. Bruk følgende kommando for å legge dem til `ia-tjenester-metrikker-secrets`: 
+```
+kubectl create secret generic ia-tjenester-metrikker-secrets \
+--from-literal=ALTINN_APIGW_APIKEY=******** \
+--from-literal=ALTINN_APIKEY=******* -n arbeidsgiver
+```
 
 
 ## Docker
