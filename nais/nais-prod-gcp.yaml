@@ -29,3 +29,9 @@ spec:
       value: {{ spring_profile_active }}
   envFrom:
     - configmap: loginservice-idporten
+    - secret: ia-tjenester-metrikker-secrets
+  accessPolicy:
+    outbound:
+      rules:
+        - application: altinn-rettigheter-proxy
+
