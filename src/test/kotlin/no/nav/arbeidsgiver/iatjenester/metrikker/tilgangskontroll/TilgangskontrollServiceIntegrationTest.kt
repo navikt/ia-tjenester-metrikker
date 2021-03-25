@@ -8,6 +8,8 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.Altin
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.TEST_FNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.testTokenForTestFNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.IaServiceIAltinnKonfig
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfigProperties
 import no.nav.security.token.support.core.context.TokenValidationContext
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.core.jwt.JwtToken
@@ -39,7 +41,11 @@ internal class TilgangskontrollServiceIntegrationTest {
     private lateinit var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
 
     @Autowired
+    private lateinit var iaServiceIAltinnKonfig: IaServiceIAltinnKonfig
+
+    @Autowired
     private lateinit var altinnrettigheterProxyKlient: AltinnrettigheterProxyKlient
+
 
 
     init {
@@ -84,9 +90,9 @@ internal class TilgangskontrollServiceIntegrationTest {
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
         tilgangskontrollService =
-            TilgangskontrollService(altinnrettigheterProxyKlient, dummyTilgangskontrollUtils)
+            TilgangskontrollService(altinnrettigheterProxyKlient, iaServiceIAltinnKonfig, dummyTilgangskontrollUtils)
         tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer =
-            TilgangskontrollService(proxyKlientSomIkkeSvarer, dummyTilgangskontrollUtils)
+            TilgangskontrollService(proxyKlientSomIkkeSvarer, iaServiceIAltinnKonfig, dummyTilgangskontrollUtils)
     }
 
 

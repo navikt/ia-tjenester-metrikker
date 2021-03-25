@@ -30,3 +30,8 @@ altinn:
   fallbackUrl: http://localhost:${wiremock.port}/altinn/
   altinnApiKey: "test-altinn-API-key"
   apiGwKey: "test-API-GW-key"
+
+tilgangskontroll:
+  ia-service-i-altinn:
+    servicecode: 3403
+    serviceedition: 1

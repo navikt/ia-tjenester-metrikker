@@ -25,3 +25,9 @@ altinn:
   fallbackUrl: https://api-gw.oera.no/
   altinnApiKey: ${ALTINN_APIKEY}
   apiGwKey: ${ALTINN_APIGW_APIKEY}
+
+tilgangskontroll:
+  ia-service-i-altinn:
+    servicecode: 3403
+    serviceedition: 2
+
