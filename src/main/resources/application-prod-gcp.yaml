@@ -20,7 +20,7 @@ no.nav.security.jwt.issuer:
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
     cookiename: selvbetjening-idtoken
 
-altinn:
+altinn-proxy:
   proxyUrl: https://arbeidsgiver.intern.nav.no/altinn-rettigheter-proxy/
   fallbackUrl: https://api-gw.oera.no/
   altinnApiKey: ${ALTINN_APIKEY}

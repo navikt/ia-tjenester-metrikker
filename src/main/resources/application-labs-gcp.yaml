@@ -26,7 +26,7 @@ no.nav.security.jwt.issuer:
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
     cookiename: selvbetjening-idtoken
 
-altinn:
+altinn-proxy:
   proxyUrl: http://localhost:${wiremock.port}/proxy/
   fallbackUrl: http://localhost:${wiremock.port}/altinn/
   altinnApiKey: "labs-altinn-API-key"

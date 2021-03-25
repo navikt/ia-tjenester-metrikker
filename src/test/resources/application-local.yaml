@@ -27,7 +27,7 @@ no.nav.security.jwt:
       discoveryurl: http://localhost:${mock-oauth2-server.port}/selvbetjening/.well-known/openid-configuration
       accepted_audience: aud-localhost
 
-altinn:
+altinn-proxy:
   proxyUrl: http://localhost:${wiremock.port}/proxy/
   fallbackUrl: http://localhost:${wiremock.port}/altinn/
   altinnApiKey: "local-altinn-API-key"
