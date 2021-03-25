@@ -32,5 +32,10 @@ altinn-proxy:
   altinnApiKey: "labs-altinn-API-key"
   apiGwKey: "labs-API-GW-key"
 
+tilgangskontroll:
+  ia-service-i-altinn:
+    servicecode: 3403
+    serviceedition: 1
+
 wiremock:
   port: 8585
