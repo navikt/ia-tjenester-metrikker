@@ -5,16 +5,16 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.SelvbetjeningTok
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceCode
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceEdition
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.IaServiceIAltinnKonfig
 import org.springframework.stereotype.Component
 
 
 @Component
 class TilgangskontrollService(
     private val klient: AltinnrettigheterProxyKlient,
+    private val iaServiceIAltinnKonfig: IaServiceIAltinnKonfig,
     private val tilgangskontrollUtils: TilgangskontrollUtils
 ) {
-    private val serviceCode: String = "3403"
-    private val serviceEdition: String = "1"
 
     fun hentInnloggetBruker(): InnloggetBruker {
 
@@ -25,8 +25,8 @@ class TilgangskontrollService(
                 klient.hentOrganisasjoner(
                     SelvbetjeningToken(tilgangskontrollUtils.selvbetjeningToken.tokenAsString),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                    ServiceCode(serviceCode),
-                    ServiceEdition(serviceEdition),
+                    ServiceCode(iaServiceIAltinnKonfig.serviceCode),
+                    ServiceEdition(iaServiceIAltinnKonfig.serviceEdition),
                     false
                 ).map {
                     AltinnOrganisasjon(

@@ -28,7 +28,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/sjekk-innlogget-bruk-har-rettigheter-til-orgnr'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/fiks--service-edition-er-ikke-lik-i-dev-og-prod'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
