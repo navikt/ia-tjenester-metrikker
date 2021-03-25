@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.OutboundKafkaProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
@@ -18,7 +19,8 @@ import org.springframework.context.annotation.Profile
 @EnableConfigurationProperties(
     value = [
         DBConfigProperties::class,
-        OutboundKafkaProperties::class
+        OutboundKafkaProperties::class,
+        AltinnConfigProperties::class
     ]
 )
 @EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])

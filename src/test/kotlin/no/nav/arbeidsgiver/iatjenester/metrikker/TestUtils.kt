@@ -4,6 +4,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Fnr
 import java.sql.Connection
 import java.sql.Date
 import java.sql.ResultSet
@@ -13,6 +14,22 @@ import java.time.ZonedDateTime
 class TestUtils {
 
     companion object {
+
+        val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
+        val TEST_FNR: Fnr = Fnr("01019912345")
+
+        fun testTokenForTestFNR(): String {
+            val mockOAuth2Header = "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ"
+            val localhostOnlyJasonPayload =
+                "eyJzdWIiOiIwMTAxOTkxMjM0NSIsImF1ZCI6ImF1ZC1sb2NhbGhvc3QiLCJhY3IiOi" +
+                        "JMZXZlbDQiLCJuYmYiOjE2MTY0OTQwMDksImF6cCI6Ik1vY2tMb2dpbkNvbnRyb2xsZXIiLCJpc3MiOiJodH" +
+                        "RwOlwvXC9sb2NhbGhvc3Q6MTA4MzJcL3NlbHZiZXRqZW5pbmciLCJleHAiOjE2MTY0OTc2MDksImlhdCI6M" +
+                        "TYxNjQ5NDAwOSwianRpIjoiZWY1ZGEzM2YtMTBhMC00YTZlLTgyMjYtOWY5NTUxNTA5Y2ZlIiwidGlkIjoic" +
+                        "2VsdmJldGplbmluZyJ9"
+            val signature = "Ingen signature"
+            return "$mockOAuth2Header.$localhostOnlyJasonPayload.$signature"
+        }
+
         fun vilkårligIaTjeneste(): InnloggetIaTjeneste = InnloggetIaTjeneste(
             "987654321",
             "12345",
@@ -49,7 +66,7 @@ class TestUtils {
         fun vilkårligInnloggetIaTjenesteAsString(): String {
             return """
             {
-              "orgnr":"444444444",
+              "orgnr":"${ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN}",
               "antallAnsatte":99,
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",

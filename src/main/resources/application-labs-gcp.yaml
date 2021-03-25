@@ -25,3 +25,12 @@ no.nav.security.jwt.issuer:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
     cookiename: selvbetjening-idtoken
+
+altinn:
+  proxyUrl: http://localhost:${wiremock.port}/proxy/
+  fallbackUrl: http://localhost:${wiremock.port}/altinn/
+  altinnApiKey: "labs-altinn-API-key"
+  apiGwKey: "labs-API-GW-key"
+
+wiremock:
+  port: 8585
