@@ -18,8 +18,7 @@ version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 application {
-    // Det kommer en fix på denne: https://github.com/johnrengelman/shadow/issues/609
-    mainClassName = "no.nav.arbeidsgiver.iatjenester.metrikker.AppKt"
+    mainClass.set("no.nav.arbeidsgiver.iatjenester.metrikker.AppKt")
 }
 
 tasks.withType<KotlinCompile> {
