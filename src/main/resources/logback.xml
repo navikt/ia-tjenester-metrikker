@@ -1,6 +1,13 @@
 <configuration>
     <appender name="loggIJsonFormatTilKibana" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <jsonGeneratorDecorator class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">
+                <valueMask>
+                    <value>(.*)\d{11}(.*)</value>
+                    <mask>$1***********$2</mask>
+                </valueMask>
+            </jsonGeneratorDecorator>
+        </encoder>
     </appender>
 
     <root level="INFO">
