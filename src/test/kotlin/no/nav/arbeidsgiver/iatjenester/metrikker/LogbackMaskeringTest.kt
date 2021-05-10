@@ -73,6 +73,20 @@ class LogbackMaskeringTest {
     }
 
     @Test
+    fun shouldBlockMultipleSensitiveNumbers() {
+        val captor = ArgumentCaptor.forClass(ByteArray::class.java)
+
+        log.info("fnr:12345678901, fnr:12345678902");
+        verify(System.out).write(captor.capture())
+
+        val value = captor.value.toString(Charsets.UTF_8)
+
+        Assert.assertTrue(value.contains("fnr:**********"));
+        Assert.assertFalse(value.contains("fnr:12345678901"));
+        Assert.assertFalse(value.contains("fnr:12345678902"));
+    }
+
+    @Test
     fun shouldNotMaskWhenLoggingNonSensitiveNumbers(){
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
 
@@ -99,11 +113,8 @@ class LogbackMaskeringTest {
         Assert.assertFalse(values[2].contains("fnr:**********"))
 
         // Disse er en svakhet ved maskerings-regex
-        Assert.assertTrue(values[3].contains("fnr:4**********"))
-        Assert.assertFalse(values[3].contains("fnr:**********"))
-        Assert.assertTrue(values[4].contains("fnr:5**********"))
-        Assert.assertFalse(values[4].contains("fnr:**********"))
-        Assert.assertTrue(values[5].contains("fnr:6**********"))
-        Assert.assertFalse(values[5].contains("fnr:**********"))
+        Assert.assertTrue(values[3].contains("fnr:***********4"))
+        Assert.assertTrue(values[4].contains("fnr:***********5"))
+        Assert.assertTrue(values[5].contains("fnr:***********6"))
     }
 }
