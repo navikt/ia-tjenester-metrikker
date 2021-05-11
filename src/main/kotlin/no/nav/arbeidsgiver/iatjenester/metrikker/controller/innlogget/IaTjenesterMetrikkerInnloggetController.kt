@@ -12,6 +12,9 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.sjekkDataKvalitet
 import no.nav.security.token.support.core.api.Protected
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @Protected
@@ -30,7 +33,7 @@ class IaTjenesterMetrikkerInnloggetController(
     fun leggTilNyIaMottattTjenesteForInnloggetKlient(
         @RequestHeader headers: HttpHeaders,
         @RequestBody innloggetIaTjeneste: InnloggetIaTjeneste
-    ): ResponseStatus {
+    ): ResponseEntity<ResponseStatus> {
         setNavCallid(headers)
         log("IaTjenesterMetrikkerInnloggetController")
             .info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
@@ -39,13 +42,17 @@ class IaTjenesterMetrikkerInnloggetController(
         val bruker: InnloggetBruker = tilgangskontrollService.hentInnloggetBruker()
 
         if (!sjekkDataKvalitet(innloggetIaTjeneste)) {
-            return ResponseStatus.Error
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ResponseStatus.BadRequest)
         }
         TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, bruker)
         iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjeneste)
 
         clearNavCallid()
-        return ResponseStatus.Created
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(ResponseStatus.Created)
     }
 
 
