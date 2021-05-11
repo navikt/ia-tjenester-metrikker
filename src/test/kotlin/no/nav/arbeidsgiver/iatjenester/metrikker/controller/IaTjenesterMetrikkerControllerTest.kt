@@ -116,6 +116,8 @@ class IaTjenesterMetrikkerControllerTest {
     }
 
 
+
+
     private fun issueToken(issuerId: String, subject: String, audience: String): String =
         mockOAuth2Server!!.issueToken(
             issuerId,

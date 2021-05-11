@@ -1,0 +1,57 @@
+package no.nav.arbeidsgiver.iatjenester.metrikker.utils
+
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
+
+private val MAKSIMUM_KOMMUNE_NR = 5444
+private val MAKSIMUM_SSBSEKTORKODE = 9000
+private val MAKSIMUM_ANTALL_KARAKTERERTILLATT = 512
+
+fun sjekkDataKvalitet(innloggetIaTjeneste: InnloggetIaTjeneste)
+        : Boolean {
+    if (innloggetIaTjeneste.orgnr.length != 9) {
+        log("IaTjenesterMetrikkerInnloggetController")
+            .warn("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering")
+        return false
+    }
+    if (innloggetIaTjeneste.næringKode5Siffer.length != 5) {
+        log("IaTjenesterMetrikkerInnloggetController")
+            .warn("Ugyldig næringskode5siffer mottatt fra innlogget tjeneste, avslutter registrering")
+        return false
+    }
+    if (innloggetIaTjeneste.næringKode5Siffer.length != 5) {
+        log("IaTjenesterMetrikkerInnloggetController")
+            .warn("Ugyldig næringskode5siffer mottatt fra innlogget tjeneste, avslutter registrering")
+        return false
+    }
+    if (innloggetIaTjeneste.fylkesnummer.toIntOrNull() == null) {
+        log("IaTjenesterMetrikkerInnloggetController")
+            .warn("Ugyldig næringskode5siffer mottatt fra innlogget tjeneste, avslutter registrering")
+        return false
+    }
+    if (innloggetIaTjeneste.kommunenummer.toIntOrNull() == null ||
+        innloggetIaTjeneste.kommunenummer.toInt() > MAKSIMUM_KOMMUNE_NR
+    ) {
+        log("IaTjenesterMetrikkerInnloggetController")
+            .warn("Ugyldig kommunenummer mottatt fra innlogget tjeneste, avslutter registrering")
+        return false
+    }
+    if (innloggetIaTjeneste.SSBSektorKode.toIntOrNull() == null ||
+        innloggetIaTjeneste.SSBSektorKode.toInt() > MAKSIMUM_SSBSEKTORKODE
+    ) {
+        log("IaTjenesterMetrikkerInnloggetController")
+            .warn("Ugyldig SSB sektorkode mottatt fra innlogget tjeneste, avslutter registrering")
+        return false
+    }
+    if (innloggetIaTjeneste.næring2SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT ||
+        innloggetIaTjeneste.næringskode5SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT ||
+        innloggetIaTjeneste.SSBSektorKodeBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT ||
+        innloggetIaTjeneste.fylke.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT ||
+        innloggetIaTjeneste.kommune.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT
+    ) {
+        log("IaTjenesterMetrikkerInnloggetController")
+            .warn("Ugyldig næringskode5siffer mottatt fra innlogget tjeneste, avslutter registrering")
+        return false
+    }
+
+    return true
+}

@@ -9,14 +9,10 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Tilgangskontro
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.sjekkDataKvalitet
 import no.nav.security.token.support.core.api.Protected
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.http.HttpHeaders
+import org.springframework.web.bind.annotation.*
 
 @Protected
 @RestController
@@ -42,12 +38,17 @@ class IaTjenesterMetrikkerInnloggetController(
         val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
         val bruker: InnloggetBruker = tilgangskontrollService.hentInnloggetBruker()
 
+        if (!sjekkDataKvalitet(innloggetIaTjeneste)) {
+            return ResponseStatus.Error
+        }
         TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, bruker)
         iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjeneste)
 
         clearNavCallid()
         return ResponseStatus.Created
     }
+
+
 }
 
 
