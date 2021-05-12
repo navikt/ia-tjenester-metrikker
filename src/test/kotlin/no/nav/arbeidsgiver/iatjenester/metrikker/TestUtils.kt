@@ -64,16 +64,20 @@ class TestUtils {
         }
 
         fun vilkårligInnloggetIaTjenesteAsString(): String {
+            return vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
+        }
+
+        fun vilkårligInnloggetIaTjenesteAsString(orgNr:String): String {
             return """
             {
-              "orgnr":"${ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN}",
+              "orgnr":"${orgNr}",
               "antallAnsatte":99,
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
               "fylke":"IKKE_TILGJENGELIG",
-              "fylkesnummer":"IKKE_TILGJENGELIG",
+              "fylkesnummer":"54",
               "kommune":"OSLO",
-              "kommunenummer":"9999",
+              "kommunenummer":"5444",
               "næring2SifferBeskrivelse":"Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
               "næringKode5Siffer":"84300",
               "næringskode5SifferBeskrivelse":"Trygdeordninger underlagt offentlig orvaltning",

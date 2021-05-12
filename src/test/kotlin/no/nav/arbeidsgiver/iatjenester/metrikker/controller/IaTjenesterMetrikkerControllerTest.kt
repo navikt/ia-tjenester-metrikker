@@ -110,9 +110,29 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(200)
+        Assertions.assertThat(response.statusCode()).isEqualTo(201)
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
+    }
+
+    @Test
+    fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 400 bad request ved ugyldig data`() {
+        val requestBody: String = vilkårligInnloggetIaTjenesteAsString("83838")
+
+        val gyldigToken = issueToken("selvbetjening", "01079812345", audience = "aud-localhost")
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/innlogget/mottatt-iatjeneste"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build(),
+            BodyHandlers.ofString()
+        )
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(400)
+        val body: JsonNode = objectMapper.readTree(response.body())
+        Assertions.assertThat(body.get("status").asText()).isEqualTo("bad request")
     }
 
 
