@@ -28,7 +28,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/973-data-kvalitet-sjekk'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/tilpasninger-til-grafana'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -98,7 +98,7 @@ jobs:
   deploy-to-labs-gcp:
     name: Deploy to labs-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/lagre-labs-gcp-versjon'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/tilpasninger-til-grafana'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
