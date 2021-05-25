@@ -20,6 +20,9 @@ spec:
     initialDelay: 60
   kafka:
     pool: {{ kafka_pool }}
+  prometheus:
+    enabled: true
+    path: /ia-tjenester-metrikker/internal/actuator/prometheus
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: {{ spring_profile_active }}

@@ -18,6 +18,9 @@ spec:
   readiness:
     path: /ia-tjenester-metrikker/internal/isready
     initialDelay: 60
+  prometheus:
+    enabled: true
+    path: /ia-tjenester-metrikker/internal/actuator/prometheus
   gcp:
     sqlInstances:
       - type: POSTGRES_12
