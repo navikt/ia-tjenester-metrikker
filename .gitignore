@@ -2,4 +2,3 @@
 build
 .idea
 .env
-cloud_sql_proxy
