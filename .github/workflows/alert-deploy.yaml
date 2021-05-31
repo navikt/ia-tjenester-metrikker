@@ -4,8 +4,8 @@ on:
     branches:
       - main
     paths:
-      - 'alerts.yaml'
       - '.github/workflows/alerts.yaml'
+      - '.github/workflows/alerts-dev.yaml'
 jobs:
   apply-alerts:
     name: Apply alerts to cluster
