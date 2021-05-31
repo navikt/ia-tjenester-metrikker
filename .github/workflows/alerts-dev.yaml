@@ -1,0 +1,24 @@
+apiVersion: "nais.io/v1"
+kind: "Alert"
+metadata:
+  name: ia-tjenester-metrikker-alert
+  namespace: arbeidsgiver
+  labels:
+    team: arbeidsgiver
+spec:
+  receivers:
+    slack:
+      channel: 'arbeidsgiver-notifications-test'
+      prependText: '<!channel> | '
+  alerts:
+    - alert: applikasjon nede
+      expr: sum(up{app="ia-tjenester-metrikker", job="kubernetes-pods"}) == 0
+      for: 2m
+      description: "ia-tjenester-metrikker er nede"
+      action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.adeo.no/d/MwhvlzSMz/team-ia-samledashboard"
+
+    - alert: det har skjedd en feil i ia-tjenester-metrikker
+      expr: sum(increase(logd_messages_total{log_app="ia-tjenester-metrikker",log_level="Error"}[10m])) > 0
+      for: 10s
+      description: "ia-tjenester-metrikker har logget en feil"
+      action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.adeo.no/d/MwhvlzSMz/team-ia-samledashboard"
