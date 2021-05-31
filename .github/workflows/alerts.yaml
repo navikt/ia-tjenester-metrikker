@@ -12,7 +12,7 @@ spec:
       prependText: '<!channel> | '
   alerts:
     - alert: applikasjon nede
-      expr: sum(up{app="ia-tjenester-metrikker", job="kubernetes-pods"}) == 0
+      expr: 'kube_deployment_status_replicas_unavailable{deployment="nais-testapp"} > 0'
       for: 2m
       description: "ia-tjenester-metrikker er nede"
       action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.adeo.no/d/MwhvlzSMz/team-ia-samledashboard"
