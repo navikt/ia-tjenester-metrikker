@@ -12,6 +12,11 @@ spring:
   flyway:
     locations: classpath:/db/migration, classpath:/db/privileges
 
+
+management.endpoints.web:
+  exposure.include: info, health, metrics, prometheus
+  base-path: /internal/actuator
+
 no.nav.security.jwt.issuer:
   selvbetjening:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}

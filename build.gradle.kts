@@ -70,6 +70,7 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka:2.6.7")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}:kotlin-client")
+    implementation("io.micrometer:micrometer-core")
 
     // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
