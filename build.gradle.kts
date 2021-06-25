@@ -70,6 +70,7 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka:2.6.7")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}:kotlin-client")
+    implementation("kscience.plotlykt:plotlykt-server:0.3.0")
 
     // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
