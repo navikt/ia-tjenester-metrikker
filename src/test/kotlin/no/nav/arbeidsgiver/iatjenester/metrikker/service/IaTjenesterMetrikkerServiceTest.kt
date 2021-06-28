@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
+import arrow.core.Either
 import com.zaxxer.hikari.HikariDataSource
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
@@ -25,7 +26,7 @@ internal class IaTjenesterMetrikkerServiceTest {
 
         val sjekkOgOpprett =
             IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository).sjekkOgOpprett(TestUtils.vilkårligIaTjeneste())
-        Assertions.assertThat(sjekkOgOpprett).isEqualTo(true)
+        Assertions.assertThat(sjekkOgOpprett is Either.Right).isEqualTo(true)
     }
 
     @Test
@@ -41,10 +42,10 @@ internal class IaTjenesterMetrikkerServiceTest {
         val iaTjenesteMedDatoIFremtiden = TestUtils.vilkårligIaTjeneste()
         iaTjenesteMedDatoIFremtiden.tjenesteMottakkelsesdato = now().plusMinutes(2)
 
-        val exception = assertFailsWith<IaTjenesterMetrikkerValideringException>
-        { IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository).sjekkOgOpprett(iaTjenesteMedDatoIFremtiden) }
+        val iaSjekk = IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository).sjekkOgOpprett(iaTjenesteMedDatoIFremtiden)
 
-        Assertions.assertThat(exception.årsak).isEqualTo("tjenesteMottakkelsesdato kan ikke være i fremtiden")
+        Assertions.assertThat(iaSjekk is Either.Left).isEqualTo(true)
+        Assertions.assertThat((iaSjekk as Either.Left).value.årsak).isEqualTo("tjenesteMottakkelsesdato kan ikke være i fremtiden")
     }
 }
 

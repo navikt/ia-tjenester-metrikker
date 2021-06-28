@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 
+import arrow.core.Either
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.SelvbetjeningToken
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceCode
@@ -16,9 +17,9 @@ class TilgangskontrollService(
     private val tilgangskontrollUtils: TilgangskontrollUtils
 ) {
 
-    fun hentInnloggetBruker(): InnloggetBruker {
+    fun hentInnloggetBruker(): Either<TilgangskontrollException, InnloggetBruker> {
 
-        return if (tilgangskontrollUtils.erInnloggetSelvbetjeningBruker() as Boolean) {
+        if (tilgangskontrollUtils.erInnloggetSelvbetjeningBruker() as Boolean) {
             val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetSelvbetjeningBruker()
 
             innloggetSelvbetjeningBruker.organisasjoner =
@@ -38,9 +39,9 @@ class TilgangskontrollService(
                         it.type
                     )
                 }
-            innloggetSelvbetjeningBruker
+            return Either.Right(innloggetSelvbetjeningBruker)
         } else {
-            throw TilgangskontrollException("Innlogget bruker er ikke selvbetjeningsbruker")
+            return Either.Left(TilgangskontrollException("Innlogget bruker er ikke selvbetjeningsbruker"))
         }
     }
 
@@ -50,10 +51,12 @@ class TilgangskontrollService(
         fun sjekkTilgangTilOrgnr(
             orgnr: Orgnr,
             bruker: InnloggetBruker
-        ) {
+        ): Either<TilgangskontrollException, InnloggetBruker> {
             val harTilgang = bruker.harTilgang(orgnr)
-            if (!harTilgang) {
-                throw TilgangskontrollException("Har ikke tilgang til IA tjenester for denne bedriften.")
+            return if (harTilgang) {
+                Either.Right(bruker)
+            } else {
+                Either.Left(TilgangskontrollException("Har ikke tilgang til IA tjenester for denne bedriften"))
             }
         }
     }
