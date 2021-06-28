@@ -6,4 +6,5 @@ import com.fasterxml.jackson.annotation.JsonFormat
 enum class ResponseStatus(val status: String) {
     Created("created"),
     BadRequest("bad request" ),
+    Forbidden( "forbidden" )
 }

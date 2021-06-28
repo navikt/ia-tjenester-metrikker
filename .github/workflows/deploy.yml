@@ -28,7 +28,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/fjerne-midlertidig-endepunkt'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/Endret_unødvendig_error_til_warn'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
