@@ -9,7 +9,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.TEST_FNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.testTokenForTestFNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.IaServiceIAltinnKonfig
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfigProperties
 import no.nav.security.token.support.core.context.TokenValidationContext
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.core.jwt.JwtToken
@@ -113,8 +112,8 @@ internal class TilgangskontrollServiceIntegrationTest {
 
         val actualInnloggetBruker = tilgangskontrollService.hentInnloggetBruker()
 
-        Assertions.assertThat(actualInnloggetBruker.fnr).isEqualTo(expectedInnloggetBruker.fnr)
-        Assertions.assertThat(actualInnloggetBruker.organisasjoner)
+        Assertions.assertThat(actualInnloggetBruker.orNull()!!.fnr).isEqualTo(expectedInnloggetBruker.fnr)
+        Assertions.assertThat(actualInnloggetBruker.orNull()!!.organisasjoner)
             .isEqualTo(expectedInnloggetBruker.organisasjoner)
             .usingRecursiveFieldByFieldElementComparator(
                 RecursiveComparisonConfiguration.builder().withStrictTypeChecking(true).build()

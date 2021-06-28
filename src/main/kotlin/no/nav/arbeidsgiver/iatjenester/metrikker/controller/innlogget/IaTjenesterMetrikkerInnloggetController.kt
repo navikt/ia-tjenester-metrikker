@@ -1,9 +1,9 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.controller.innlogget
 
+import arrow.core.*
 import no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
-import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.InnloggetBruker
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollService
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
@@ -38,23 +38,48 @@ class IaTjenesterMetrikkerInnloggetController(
         log("IaTjenesterMetrikkerInnloggetController")
             .info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
 
-        val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
-        val bruker: InnloggetBruker = tilgangskontrollService.hentInnloggetBruker()
-
         if (!sjekkDataKvalitet(innloggetIaTjeneste)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResponseStatus.BadRequest)
         }
-        TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, bruker)
-        iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjeneste)
+
+        val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
+
+        val brukerSjekk = tilgangskontrollService
+            .hentInnloggetBruker()
+            .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
+
+        when(brukerSjekk) {
+            is Either.Left -> {
+                log("IaTjenesterMetrikkerInnloggetController")
+                    .warn(brukerSjekk.value.message, brukerSjekk.value)
+                clearNavCallid()
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(ResponseStatus.Forbidden)
+            }
+            else -> {}
+        }
+
+        val iaSjekk = iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjeneste)
+        when(iaSjekk) {
+            is Either.Left -> {
+                log("IaTjenesterMetrikkerInnloggetController")
+                    .warn(iaSjekk.value.message, iaSjekk.value)
+                clearNavCallid()
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(ResponseStatus.BadRequest)
+            }
+            else -> {}
+        }
 
         clearNavCallid()
         return ResponseEntity.status(HttpStatus.CREATED)
             .contentType(MediaType.APPLICATION_JSON)
             .body(ResponseStatus.Created)
     }
-
 
 }
 
