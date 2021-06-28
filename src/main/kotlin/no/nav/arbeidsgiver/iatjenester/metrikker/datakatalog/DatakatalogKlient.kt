@@ -1,4 +1,4 @@
-package statistikkapi.datakatalog
+package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -10,7 +10,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
-import statistikkapi.log
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 
 private fun datapakkeHttpClient() = HttpClient(Apache) {
     install(JsonFeature) {
@@ -22,7 +22,8 @@ private fun datapakkeHttpClient() = HttpClient(Apache) {
 }
 
 class DatakatalogKlient(private val httpClient: HttpClient = datapakkeHttpClient(),
-                        private val url: DatakatalogUrl) {
+                        private val url: DatakatalogUrl
+) {
     fun sendPlotlyFilTilDatavarehus(plotlyJsons: List<Pair<String, String>>) {
         runBlocking {
             val response: HttpResponse = httpClient

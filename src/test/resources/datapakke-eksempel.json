@@ -1,0 +1,49 @@
+{
+  "title": "IA tjenester-metrikker",
+  "type": "datapackage",
+  "description": "Mottatt ia-tjenester-metrikker fra sykefraværsstatistikk og samtalestøtte (OBS: dev/test miljø)",
+  "name": "ia-tjenester-metrikker-i-dev-miljø",
+  "uri": "",
+  "url": "",
+  "team": "teamIA",
+  "views": [
+    {
+      "title": "Mottatt ia-tjenester per applikasjon",
+      "name": "Antall mottatt ia-tjenester",
+      "description": "Mottatt ia-tjenester fra digitale tjenester i Nav",
+      "specType": "markdown",
+      "spec": {
+        "markdown": "## Samtalestøtte \n **12550**\n ## Sykefraværsstatistikk\n **4569** \n ### Antall bedrifter \n **1850**"
+      }
+    },
+    {
+      "title": "Mottat ia-tjenester-metrikker per dag i uke 25",
+      "description": "Antall ia-tjenester mottat per applikasjon: Sykefraværsstatistikk (blå) og Samtalestøtte (grønn)",
+      "specType": "echart",
+      "spec": {
+        "url": "",
+        "option": {
+          "xAxis": {
+            "type": "category",
+            "data": ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun"]
+          },
+          "yAxis": {
+            "type": "value"
+          },
+          "series": [
+            {
+              "data": [0, 240, 650, 570, 530, 495],
+              "type": "bar",
+              "title": "Sykefraværsstatistikk"
+            },
+            {
+              "data": [0, 346, 950, 1165, 1234, 1100],
+              "type": "bar",
+              "title": "Samtalestøtte"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

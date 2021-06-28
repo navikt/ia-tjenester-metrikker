@@ -1,7 +1,8 @@
-package statistikkapi.datakatalog.alder
+package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.kilde
 
-import kscience.plotly.Plotly
-import statistikkapi.datakatalog.*
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Spec
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
 
 class AntallMottattIATjenesteStatistikk(private val antallMottattIATjenesteDatagrunnlag: AntallMottattIATjenesteDatagrunnlag) :
     DatakatalogData {

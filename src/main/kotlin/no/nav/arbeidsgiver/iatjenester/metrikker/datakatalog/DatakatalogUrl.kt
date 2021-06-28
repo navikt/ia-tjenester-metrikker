@@ -1,6 +1,7 @@
-package statistikkapi.datakatalog
+package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
-import statistikkapi.Cluster
+import no.nav.arbeidsgiver.iatjenester.metrikker.Cluster
+
 
 class DatakatalogUrl(cluster: Cluster) {
     private val rootUrl: String = rootUrlFra(cluster)

@@ -1,4 +1,6 @@
-package statistikkapi.datakatalog
+package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
+
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
 
 interface DatakatalogData {
 

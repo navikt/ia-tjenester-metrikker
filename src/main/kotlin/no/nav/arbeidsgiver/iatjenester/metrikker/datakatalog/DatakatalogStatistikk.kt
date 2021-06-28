@@ -3,9 +3,12 @@ package statistikkapi.datakatalog
 import kscience.plotly.Plot
 import kscience.plotly.bar
 import kscience.plotly.layout
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Datapakke
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
 import statistikkapi.log
-import statistikkapi.datakatalog.alder.AntallMottattIATjenesteDatagrunnlag
-import statistikkapi.datakatalog.alder.AntallMottattIATjenesteStatistikk
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.kilde.AntallMottattIATjenesteDatagrunnlag
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.kilde.AntallMottattIATjenesteStatistikk
 import statistikkapi.datakatalog.hull.HullDatagrunnlag
 import statistikkapi.datakatalog.hull.HullStatistikk
 import statistikkapi.datakatalog.tilretteleggingsbehov.TilretteleggingsbehovDatagrunnlag

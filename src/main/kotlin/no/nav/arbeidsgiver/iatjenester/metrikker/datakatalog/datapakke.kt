@@ -1,4 +1,4 @@
-package statistikkapi.datakatalog
+package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

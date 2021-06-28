@@ -1,4 +1,4 @@
-package statistikkapi.datakatalog.alder
+package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.kilde
 
 import statistikkapi.datakatalog.til
 import java.time.LocalDate

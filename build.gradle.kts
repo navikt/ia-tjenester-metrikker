@@ -12,6 +12,9 @@ plugins {
 
 val navSecurityVersion = "1.3.4"
 val altinnRettigheterProxyKlientVersion = "2.0.1"
+val ktorVersion = "1.5.3"
+val jacksonVersion = "2.11.0"  // Oppgradering til 2.12.1 lar seg foreløpig ikke gjøre: https://github.com/spring-projects/spring-boot/issues/23979
+
 
 group = "no.nav.arbeidsgiver"
 version = "0.0.1-SNAPSHOT"
@@ -71,6 +74,13 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}:kotlin-client")
     implementation("kscience.plotlykt:plotlykt-server:0.3.0")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-apache:$ktorVersion")
+    implementation("io.ktor:ktor-jackson:$ktorVersion")
+    implementation("io.ktor:ktor-client-jackson:$ktorVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+
+
 
     // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
