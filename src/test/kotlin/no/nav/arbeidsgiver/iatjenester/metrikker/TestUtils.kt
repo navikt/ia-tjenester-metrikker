@@ -74,10 +74,31 @@ class TestUtils {
               "antallAnsatte":99,
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
-              "fylke":"IKKE_TILGJENGELIG",
+              "fylke":"Troms og Finnmark",
               "fylkesnummer":"54",
-              "kommune":"OSLO",
+              "kommune":"Sør-Varanger",
               "kommunenummer":"5444",
+              "næring2SifferBeskrivelse":"Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
+              "næringKode5Siffer":"84300",
+              "næringskode5SifferBeskrivelse":"Trygdeordninger underlagt offentlig orvaltning",
+              "ssbSektorKode":"6500",
+              "ssbSektorKodeBeskrivelse":"Offentlig sektor",
+              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
+            }
+        """.trimIndent()
+        }
+
+        fun realistiskkInnloggetIaTjenesteAsString(): String {
+            return """
+            {
+              "orgnr":"${ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN}",
+              "antallAnsatte":99,
+              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "type":"DIGITAL_IA_TJENESTE",
+              "fylke":"IKKE_TILGJENGELIG",
+              "fylkesnummer":"IKKE_TILGJENGELIG",
+              "kommune":"OSLO",
+              "kommunenummer":"0301",
               "næring2SifferBeskrivelse":"Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
               "næringKode5Siffer":"84300",
               "næringskode5SifferBeskrivelse":"Trygdeordninger underlagt offentlig orvaltning",

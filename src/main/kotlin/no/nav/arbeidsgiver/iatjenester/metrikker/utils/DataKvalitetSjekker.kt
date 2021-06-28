@@ -23,14 +23,6 @@ fun sjekkDataKvalitet(innloggetIaTjeneste: InnloggetIaTjeneste)
         return false
     }
 
-    if (innloggetIaTjeneste.fylkesnummer.toIntOrNull() == null ||
-        innloggetIaTjeneste.fylkesnummer.toInt() > MAKSIMUM_FYLKE_NR
-    ) {
-        log("IaTjenesterMetrikkerInnloggetController")
-            .warn("Ugyldig fylkesnummer mottatt fra innlogget tjeneste, avslutter registrering")
-        return false
-    }
-
     if (innloggetIaTjeneste.kommunenummer.toIntOrNull() == null ||
         innloggetIaTjeneste.kommunenummer.toInt() > MAKSIMUM_KOMMUNE_NR
     ) {
@@ -53,21 +45,25 @@ fun sjekkDataKvalitet(innloggetIaTjeneste: InnloggetIaTjeneste)
             .warn("For lang beskrivelse for næringskode 5 siffer felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
+
     if (innloggetIaTjeneste.næring2SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for næringskode 2siffer felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
+
     if (innloggetIaTjeneste.SSBSektorKodeBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for SSB sektorkode felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
+
     if (innloggetIaTjeneste.fylke.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for fylke felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
+
     if (innloggetIaTjeneste.kommune.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for kommune felt fra innlogget tjeneste, avslutter registrering")

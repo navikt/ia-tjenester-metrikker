@@ -62,15 +62,6 @@ internal class DataKvalitetSjekkerKtTest {
     }
 
     @Test
-    fun `sjekkDataKvalitet skal logge og retunere false ved ugyldig fylkesnummer`() {
-        val captor = ArgumentCaptor.forClass(ByteArray::class.java)
-        assertFalse(sjekkDataKvalitet(getUgyldigFylkesnummerInnloggetIATjeneste()))
-        verify(System.out).write(captor.capture())
-        val value = captor.value.toString(Charsets.UTF_8)
-        Assert.assertTrue(value.contains("Ugyldig fylkesnummer mottatt fra innlogget tjeneste, avslutter registrering"))
-    }
-
-    @Test
     fun `sjekkDataKvalitet skal logge og retunere false ved ugyldig kommunenr`() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
         assertFalse(sjekkDataKvalitet(getUgyldigKommuneNrInnloggetIATjeneste()))
