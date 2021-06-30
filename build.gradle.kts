@@ -74,9 +74,10 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}:kotlin-client")
 
-    implementation("kscience.plotlykt:plotlykt-core:0.3.0") {
+    implementation("kscience.plotlykt:plotlykt-core:0.3.0")
+    /*{
         exclude("org.jetbrains.kotlinx")
-    }
+    }*/
     implementation("io.github.microutils:kotlin-logging:2.0.6")
 
     implementation("net.javacrumbs.shedlock:shedlock-core:$shedlockVersion")

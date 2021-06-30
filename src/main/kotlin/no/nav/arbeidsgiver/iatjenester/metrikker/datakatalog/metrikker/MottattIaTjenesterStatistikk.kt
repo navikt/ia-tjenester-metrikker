@@ -27,11 +27,11 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
     override fun plotlyFiler() =
         datagrunnlag.let { datagrunnlag ->
             listOf(
-                filnavnIaTjenesterAntallMottatt to lagPlotAntallHullPresentert(datagrunnlag).toJsonString()
+                filnavnIaTjenesterAntallMottatt to lagPlotAntallIaTjenesterMetrikkerMottatt(datagrunnlag).toJsonString()
             )
         }
 
-    private fun lagPlotAntallHullPresentert(datagrunnlag: MottattIaTjenesterDatagrunnlag) = Plotly.plot {
+    private fun lagPlotAntallIaTjenesterMetrikkerMottatt(datagrunnlag: MottattIaTjenesterDatagrunnlag) = Plotly.plot {
         log.info("Skal lage diagram for antall ia-tjenester mottatt (innlogget og uinnlogget)")
         lagBar("Antall mottatt ia-tjenester innlogget", datagrunnlag.gjeldendeDatoer()) { datagrunnlag.hentAntallMottatInnlogget(it) }
         lagBar("Antall pmottatt ia-tjenester uinnlogget", datagrunnlag.gjeldendeDatoer()) { datagrunnlag.hentAntallMottatUinnlogget(it) }
