@@ -30,7 +30,10 @@ import org.springframework.http.ResponseEntity
 class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService) {
 
     @PostMapping(value = ["/mottatt-iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
-    fun leggTilNyMottattIaTjeneste(@RequestHeader headers: HttpHeaders, @RequestBody uinnloggetIaTjeneste: UinnloggetIaTjeneste): ResponseStatus {
+    fun leggTilNyMottattIaTjeneste(
+        @RequestHeader headers: HttpHeaders,
+        @RequestBody uinnloggetIaTjeneste: UinnloggetIaTjeneste
+    ): ResponseEntity<ResponseStatus> {
         setNavCallid(headers)
         log("IaTjenesterMetrikkerUinnloggetController")
             .info("Mottatt IA tjeneste (uinnlogget) fra ${uinnloggetIaTjeneste.kilde.name}")
@@ -41,12 +44,16 @@ class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerS
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(iaSjekk.value.message, iaSjekk.value)
                 clearNavCallid()
-                return ResponseStatus.BadRequest
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(ResponseStatus.BadRequest)
             }
             else -> {}
         }
 
         clearNavCallid()
-        return ResponseStatus.Created
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(ResponseStatus.Created)
     }
 }
