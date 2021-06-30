@@ -1,4 +1,4 @@
-package statistikkapi.datakatalog
+package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
 import net.javacrumbs.shedlock.core.DefaultLockingTaskExecutor
 import net.javacrumbs.shedlock.core.LockConfiguration

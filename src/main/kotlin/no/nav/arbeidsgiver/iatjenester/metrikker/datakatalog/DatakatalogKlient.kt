@@ -6,7 +6,6 @@ import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.client.features.json.*
 import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
@@ -24,25 +23,6 @@ private fun datapakkeHttpClient() = HttpClient(Apache) {
 class DatakatalogKlient(private val httpClient: HttpClient = datapakkeHttpClient(),
                         private val url: DatakatalogUrl
 ) {
-    fun sendPlotlyFilTilDatavarehus(plotlyJsons: List<Pair<String, String>>) {
-        runBlocking {
-            val response: HttpResponse = httpClient
-                .put(url.ressursfil()) {
-                    body = MultiPartFormDataContent(
-                        formData {
-                            plotlyJsons.forEach { plotlyJson ->
-                                this.append("files", plotlyJson.second,
-                                    Headers.build {
-                                        append(HttpHeaders.ContentType, ContentType.Application.Json)
-                                        append(HttpHeaders.ContentDisposition, " filename=${plotlyJson.first}")
-                                    })
-                            }
-                        }
-                    )
-                }
-            log.info("Svar fra datakatalog filapi $response")
-        }
-    }
     fun sendDatapakke(lagDatapakke: Datapakke) {
         runBlocking {
             val response: HttpResponse = httpClient

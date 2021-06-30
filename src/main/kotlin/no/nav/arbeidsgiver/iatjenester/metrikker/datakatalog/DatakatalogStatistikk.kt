@@ -1,36 +1,27 @@
-package statistikkapi.datakatalog
+package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
 import kscience.plotly.Plot
 import kscience.plotly.bar
 import kscience.plotly.layout
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Datapakke
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
-import statistikkapi.log
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.kilde.AntallMottattIATjenesteDatagrunnlag
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.kilde.AntallMottattIATjenesteStatistikk
-import statistikkapi.datakatalog.hull.HullDatagrunnlag
-import statistikkapi.datakatalog.hull.HullStatistikk
-import statistikkapi.datakatalog.tilretteleggingsbehov.TilretteleggingsbehovDatagrunnlag
-import statistikkapi.datakatalog.tilretteleggingsbehov.TilretteleggingsbehovStatistikk
-import statistikkapi.kandidatutfall.KandidatutfallRepository
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesterDatagrunnlag
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.views.MottattIaTjenesterStatistikk
+import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import kotlin.math.roundToInt
 
 
 class DatakatalogStatistikk(
-    private val kandidatutfallRepository: KandidatutfallRepository, private val datakatalogKlient: DatakatalogKlient,
+    private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository, private val datakatalogKlient: DatakatalogKlient,
     private val dagensDato: () -> LocalDate
 ) : Runnable {
 
-    private val målingerStartet = LocalDate.of(2021, 4, 8)
+    private val målingerStartet = LocalDate.of(2021, 2, 1)
 
     override fun run() {
         log.info("Starter jobb som sender statistikk til datakatalogen")
         log.info("Skal sende statistikk for målinger til og med ${dagensDato}")
         plotlydataOgDataPakke().also { (plotly, datapakke) ->
-            datakatalogKlient.sendPlotlyFilTilDatavarehus(plotly)
             datakatalogKlient.sendDatapakke(datapakke)
         }
         log.info("Har gjennomført jobb som sender statistikk til datakatalogen")
@@ -45,13 +36,11 @@ class DatakatalogStatistikk(
         )
 
     private fun plotlydataOgDataPakke() = (
-            kandidatutfallRepository.hentUtfallPresentert(målingerStartet) to
-                    kandidatutfallRepository.hentUtfallFåttJobben(målingerStartet))
-        .let { (utfallElementPresentert, utfallElementFåttJobben) ->
+            iaTjenesterMetrikkerRepository.hentUinnloggetMetrikker(målingerStartet) to
+                    iaTjenesterMetrikkerRepository.hentInnloggetMetrikker(målingerStartet))
+        .let { (uinnloggedeMetrikker, innloggedeMetrikker) ->
             listOf(
-                HullStatistikk(HullDatagrunnlag(utfallElementPresentert,utfallElementFåttJobben,dagensDato)),
-                AntallMottattIATjenesteStatistikk(AntallMottattIATjenesteDatagrunnlag(utfallElementPresentert,utfallElementFåttJobben,dagensDato)),
-                TilretteleggingsbehovStatistikk(TilretteleggingsbehovDatagrunnlag(utfallElementPresentert,utfallElementFåttJobben,dagensDato))
+                MottattIaTjenesterStatistikk(MottattIaTjenesterDatagrunnlag(innloggedeMetrikker, uinnloggedeMetrikker, dagensDato))
             ).let {
                 it.flatMap(DatakatalogData::plotlyFiler) to it.flatMap(DatakatalogData::views).let(this::datapakke)
             }
@@ -91,9 +80,6 @@ fun Plot.lagBar(description: String, datoer: List<LocalDate>, hentVerdi: (LocalD
     y.numbers = datoer.map { hentVerdi(it) }
     name = description
 }
-
-fun Double.somProsent() = (this * 100).roundToInt()
-
 
 infix fun LocalDate.til(tilDato: LocalDate) = ChronoUnit.DAYS.between(this, tilDato)
     .let { antallDager ->

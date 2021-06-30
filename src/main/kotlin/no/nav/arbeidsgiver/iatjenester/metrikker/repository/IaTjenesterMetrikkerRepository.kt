@@ -6,6 +6,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.sql.ResultSet
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Transactional
 @Repository
@@ -92,5 +95,23 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                 .addValue("kommunenummer", iatjeneste.kommunenummer)
                 .addValue("kommune", iatjeneste.kommune)
         )
+    }
+
+    class MottattIaTjenesteMetrikk(val erInnlogget: Boolean?, val orgnr: String?, val tidspunkt: LocalDateTime)
+
+    // TODO: trenger vi det?
+    private fun ResultSet.toMetrikkElement() = MottattIaTjenesteMetrikk(
+        erInnlogget = if(getObject(1) == null) null else getBoolean(1),
+        orgnr = if(getObject(2) == null) null else getString(2),
+        tidspunkt = getTimestamp(3).toLocalDateTime(),
+    )
+
+
+    fun hentUinnloggetMetrikker(målingerStartet: LocalDate?): List<MottattIaTjenesteMetrikk> {
+        TODO("Not yet implemented")
+    }
+
+    fun hentInnloggetMetrikker(målingerStartet: LocalDate?): List<MottattIaTjenesteMetrikk> {
+        TODO("Not yet implemented")
     }
 }

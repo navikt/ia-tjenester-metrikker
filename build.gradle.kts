@@ -14,6 +14,7 @@ val navSecurityVersion = "1.3.4"
 val altinnRettigheterProxyKlientVersion = "2.0.1"
 val ktorVersion = "1.5.3"
 val jacksonVersion = "2.11.0"  // Oppgradering til 2.12.1 lar seg foreløpig ikke gjøre: https://github.com/spring-projects/spring-boot/issues/23979
+val shedlockVersion = "4.20.0"
 
 
 group = "no.nav.arbeidsgiver"
@@ -81,6 +82,8 @@ dependencies {
     implementation("io.ktor:ktor-client-jackson:$ktorVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
 
+    implementation("net.javacrumbs.shedlock:shedlock-core:$shedlockVersion")
+    implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc:$shedlockVersion")
 
 
     // Test dependencies
@@ -93,5 +96,11 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.19.0")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("io.github.microutils:kotlin-logging:2.0.6")
+    }
 }
 

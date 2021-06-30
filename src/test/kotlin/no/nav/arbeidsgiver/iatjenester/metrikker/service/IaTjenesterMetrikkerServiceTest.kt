@@ -9,7 +9,6 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.ZonedDateTime.now
-import kotlin.test.assertFailsWith
 
 internal class IaTjenesterMetrikkerServiceTest {
 
