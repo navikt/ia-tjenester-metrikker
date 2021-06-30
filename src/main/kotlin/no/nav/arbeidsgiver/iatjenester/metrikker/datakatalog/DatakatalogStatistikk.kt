@@ -4,7 +4,7 @@ import kscience.plotly.Plot
 import kscience.plotly.bar
 import kscience.plotly.layout
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesterDatagrunnlag
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.views.MottattIaTjenesterStatistikk
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesterStatistikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import java.time.LocalDate

@@ -12,8 +12,6 @@ plugins {
 
 val navSecurityVersion = "1.3.4"
 val altinnRettigheterProxyKlientVersion = "2.0.1"
-val ktorVersion = "1.5.3"
-val jacksonVersion = "2.11.0"  // Oppgradering til 2.12.1 lar seg foreløpig ikke gjøre: https://github.com/spring-projects/spring-boot/issues/23979
 val shedlockVersion = "4.20.0"
 
 
@@ -75,12 +73,9 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka:2.6.7")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}:kotlin-client")
+
     implementation("kscience.plotlykt:plotlykt-server:0.3.0")
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-apache:$ktorVersion")
-    implementation("io.ktor:ktor-jackson:$ktorVersion")
-    implementation("io.ktor:ktor-client-jackson:$ktorVersion")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+    implementation("io.github.microutils:kotlin-logging:2.0.6")
 
     implementation("net.javacrumbs.shedlock:shedlock-core:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc:$shedlockVersion")
@@ -98,9 +93,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
 }
 
-configurations.all {
+/*configurations.all {
     resolutionStrategy {
         force("io.github.microutils:kotlin-logging:2.0.6")
-    }
-}
+    }*/
+
 

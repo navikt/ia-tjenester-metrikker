@@ -1,16 +1,15 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.views
+package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import kscience.plotly.Plotly
 import kscience.plotly.toJsonString
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesterDatagrunnlag
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) : DatakatalogData {
 
     companion object {
-        private val filnavnIaTjenesterAntallMottatt: String = "iaTjenesterAntallMottatt.json"
+        private const val filnavnIaTjenesterAntallMottatt: String = "iaTjenesterAntallMottatt.json"
     }
 
 
