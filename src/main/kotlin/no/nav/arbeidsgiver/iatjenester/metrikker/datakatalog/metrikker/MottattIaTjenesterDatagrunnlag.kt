@@ -3,6 +3,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.til
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import java.time.LocalDate
+import java.time.Month
 
 class MottattIaTjenesterDatagrunnlag(
     innloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>,
@@ -11,24 +12,35 @@ class MottattIaTjenesterDatagrunnlag(
 ) {
 
     private val fraStartDato = LocalDate.of(2021, 1, 1)
-    private val gjeldendeDatoer = fraStartDato til dagensDato()
-    private val antallInnloggetMetrikkerPerDag: Map<LocalDate, Int> =
-        beregnAntallMetrikkerPerDag(innloggetMetrikker, true) // TODO: fjern boolean
-    private val antallUinnloggetMetrikkerPerDag: Map<LocalDate, Int> =
-        beregnAntallMetrikkerPerDag(uinnloggetMetrikker, false)
+    private val gjeldendeMåneder: List<Month> = fraStartDato.month til dagensDato().month
 
+
+    val antallInnloggetMetrikkerPerMåned: Map<Month, Int> =
+        beregnAntallMetrikkerPerMåned(gjeldendeMåneder, beregnAntallMetrikkerPerDag(innloggetMetrikker))
+    val antallUinnloggetMetrikkerPerMåned: Map<Month, Int> =
+        beregnAntallMetrikkerPerMåned(gjeldendeMåneder, beregnAntallMetrikkerPerDag(uinnloggetMetrikker))
+
+
+    fun beregnAntallMetrikkerPerMåned(
+        måneder: List<Month>,
+        metrikkerPerDag: Map<LocalDate, Int>
+    ): Map<Month, Int> {
+        val metrikkerPerMåned: Map<Month, Collection<Int>> =
+            måneder.map { it to metrikkerPerDag.filter { (key, value) -> key.month == it }.values }.toMap()
+        val antallMetrikkerPerMåned: Map<Month, Int> =
+            metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumBy { it } }
+
+        return antallMetrikkerPerMåned
+    }
 
     fun beregnAntallMetrikkerPerDag(
-        innloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>,
-        erInnlogget: Boolean
-    ): Map<LocalDate, Int> =
-        innloggetMetrikker.filter { it.erInnlogget == erInnlogget }.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
+        mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
+    ): Map<LocalDate, Int> {
+        return mottattIaTjenesteMetrikker.distinctBy {
+            Pair(it.orgnr, it.tidspunkt.toLocalDate())
+        }.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
+    }
 
-
-    fun hentAntallMottatInnlogget(dato: LocalDate) = antallInnloggetMetrikkerPerDag[dato] ?: 0
-
-    fun hentAntallMottatUinnlogget(dato: LocalDate) = antallUinnloggetMetrikkerPerDag[dato] ?: 0
-
-
-    fun gjeldendeDatoer() = gjeldendeDatoer
+    fun gjeldendeMåneder() = gjeldendeMåneder
 }
+

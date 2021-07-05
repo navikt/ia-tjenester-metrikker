@@ -1,35 +1,52 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-
-data class Datapakke (
+data class Datapakke(
     val title: String,
+    val type: String,
     val description: String,
-    val views: List<View>,
-    val resources: List<Resource>
-)
-
-
-data class Resource (
     val name: String,
-    val description: String,
-    val path: String,
-    val format: String,
-
-    @JsonProperty("dsv_separator")
-    val dsvSeparator: String
+    val uri: String,
+    val url: String,
+    val team: String,
+    val views: List<View>
 )
 
-
-data class View (
+data class View(
     val title: String,
     val description: String,
     val specType: String,
-    val spec: Spec
+    val spec: Spec // TODO vi har to forskjellige specType: Markdown og echart
 )
 
+data class Spec ( // Denne er av type 'echart'
+    val url: String,
+    val option: Option
+)
 
-data class Spec (
-    val url: String
+data class Option(
+    val legend: Legend,
+    val xAxis: Xaxis,
+    val yAxis: Yaxis,
+    val series: List<Serie>
+)
+
+data class Legend(
+    val data: List<String>
+)
+
+data class Xaxis(
+    val type: String,
+    val data: List<String>
+)
+
+data class Yaxis(
+    val type: String
+)
+
+data class Serie(
+    val name: String,
+    val stack: String,
+    val data: List<*>,
+    val type: String,
+    val title: String
 )

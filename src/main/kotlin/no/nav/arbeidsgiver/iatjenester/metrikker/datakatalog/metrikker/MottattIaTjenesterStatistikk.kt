@@ -1,40 +1,71 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import kscience.plotly.Plotly
-import kscience.plotly.toJsonString
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
-
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) : DatakatalogData {
-
-    companion object {
-        private const val filnavnIaTjenesterAntallMottatt: String = "iaTjenesterAntallMottatt.json"
-    }
 
 
     override fun views() = listOf(
         View(
             title = "Antall mottatt ia-tjenester",
             description = "Vise antall mottatt ia-tjenester",
-            specType = "plotly",
-            spec = Spec(
-                url = filnavnIaTjenesterAntallMottatt
-            )
+            specType = "echart",
+            spec = lagSpec(datagrunnlag),
         )
     )
+    
 
-    override fun plotlyFiler() =
-        datagrunnlag.let { datagrunnlag ->
-            listOf(
-                filnavnIaTjenesterAntallMottatt to lagPlotAntallIaTjenesterMetrikkerMottatt(datagrunnlag).toJsonString()
+    private fun lagSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): Spec {
+        return Spec(
+            "",
+            Option(
+                Legend(
+                    listOf(
+                        "Samtalestøtte",
+                        "Sykefraværsstatistikk"
+                    )
+                ),
+                Xaxis(
+                    "category",
+                    data = datagrunnlag.gjeldendeMåneder().map { toString() }
+                ),
+                Yaxis("value"),
+                listOf(
+                    Serie(
+                        "Uinnlogget",
+                        "total",
+                        datagrunnlag.antallUinnloggetMetrikkerPerMåned.values.toList(),
+                        "bar",
+                        "Samtalestøtte"
+                    ),
+                    Serie(
+                        "Innlogget",
+                        "total",
+                        datagrunnlag.antallInnloggetMetrikkerPerMåned.values.toList(),
+                        "bar",
+                        "Sykefraværsstatistikk"
+                    )
+                )
             )
-        }
-
-    private fun lagPlotAntallIaTjenesterMetrikkerMottatt(datagrunnlag: MottattIaTjenesterDatagrunnlag) = Plotly.plot {
-        log.info("Skal lage diagram for antall ia-tjenester mottatt (innlogget og uinnlogget)")
-        lagBar("Antall mottatt ia-tjenester innlogget", datagrunnlag.gjeldendeDatoer()) { datagrunnlag.hentAntallMottatInnlogget(it) }
-        lagBar("Antall pmottatt ia-tjenester uinnlogget", datagrunnlag.gjeldendeDatoer()) { datagrunnlag.hentAntallMottatUinnlogget(it) }
-        getLayout("Antall")
+        )
     }
+
+
 }
+
+/*
+#1 hente metrikker fra DB:
+    innlogget metrikk
+    uinnlogget metrikk
+
+   Mappe data til model (fra 1.1.2021 til dagensdato)
+   -> skape liste av måneder
+   -> sette sammen metrikker per måned
+
+   Model -> Json
+
+   Sende Model til endepunktet (ved bruk av RestTemplate)
+
+
+
+ */

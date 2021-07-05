@@ -99,14 +99,6 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
 
     class MottattIaTjenesteMetrikk(val erInnlogget: Boolean?, val orgnr: String?, val tidspunkt: LocalDateTime)
 
-    // TODO: trenger vi det?
-    private fun ResultSet.toMetrikkElement() = MottattIaTjenesteMetrikk(
-        erInnlogget = if(getObject(1) == null) null else getBoolean(1),
-        orgnr = if(getObject(2) == null) null else getString(2),
-        tidspunkt = getTimestamp(3).toLocalDateTime(),
-    )
-
-
     fun hentUinnloggetMetrikker(målingerStartet: LocalDate?): List<MottattIaTjenesteMetrikk> {
         TODO("Not yet implemented")
     }

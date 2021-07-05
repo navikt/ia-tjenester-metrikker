@@ -9,10 +9,4 @@ class DatakatalogKlient(
         println("================> Datapakke: $lagDatapakke")
         log.info("TODO: implement me!")
     }
-
-    fun sendPlotlyFilTilDatavarehus(plotlyJsons: List<Pair<String, String>>) {
-        println("================> plotlyJsons: $plotlyJsons")
-        log.info("TODO: implement me!")
-    }
-
 }

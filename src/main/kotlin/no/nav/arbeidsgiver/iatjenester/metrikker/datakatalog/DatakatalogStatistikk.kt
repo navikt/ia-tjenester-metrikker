@@ -1,18 +1,17 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
-import kscience.plotly.Plot
-import kscience.plotly.bar
-import kscience.plotly.layout
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesterDatagrunnlag
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesterStatistikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import java.time.LocalDate
+import java.time.Month
 import java.time.temporal.ChronoUnit
 
 
 class DatakatalogStatistikk(
-    private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository, private val datakatalogKlient: DatakatalogKlient,
+    private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository,
+    private val datakatalogKlient: DatakatalogKlient,
     private val dagensDato: () -> LocalDate
 ) : Runnable {
 
@@ -21,97 +20,50 @@ class DatakatalogStatistikk(
     override fun run() {
         log.info("Starter jobb som sender statistikk til datakatalogen")
         log.info("Skal sende statistikk for målinger til og med ${dagensDato}")
-        plotlydataOgDataPakke().also { (plotly, datapakke) ->
-            datakatalogKlient.sendDatapakke(datapakke)
-            datakatalogKlient.sendPlotlyFilTilDatavarehus(plotly)
+        byggDatapakke().also {
+            datakatalogKlient.sendDatapakke(it)
         }
-
         log.info("Har gjennomført jobb som sender statistikk til datakatalogen")
     }
 
-    private fun datapakke(views: List<View>) =
+    private fun datapakke(views: List<View>): Datapakke =
         Datapakke(
             title = "IA-tjenester metrikker",
+            type = "",
             description = "Vise mottatt ia-tjenester",
-            resources = emptyList(),
-            views = views
+            views = views,
+            name = "",
+            uri = "",
+            url = "",
+            team = ""
         )
 
-    private fun plotlydataOgDataPakke() : Pair<List<Pair<String, String>>, Datapakke> = (
+    private fun byggDatapakke(): Datapakke = (
             iaTjenesterMetrikkerRepository.hentUinnloggetMetrikker(målingerStartet) to
                     iaTjenesterMetrikkerRepository.hentInnloggetMetrikker(målingerStartet))
         .let { (uinnloggedeMetrikker, innloggedeMetrikker) ->
-            listOf(
-                MottattIaTjenesterStatistikk(MottattIaTjenesterDatagrunnlag(innloggedeMetrikker, uinnloggedeMetrikker, dagensDato))
-            ).let {
-                it.flatMap(DatakatalogData::plotlyFiler) to it.flatMap(DatakatalogData::views).let(this::datapakke)
-            }
-        }
-
-    private fun plotlydataOgDataPakke2() : Pair<List<Pair<String, String>>, Datapakke> = (
-            iaTjenesterMetrikkerRepository.hentUinnloggetMetrikker(målingerStartet) to
-                    iaTjenesterMetrikkerRepository.hentInnloggetMetrikker(målingerStartet))
-        .let { (uinnloggedeMetrikker, innloggedeMetrikker) ->
-            listOf(
-                MottattIaTjenesterStatistikk(MottattIaTjenesterDatagrunnlag(innloggedeMetrikker, uinnloggedeMetrikker, dagensDato))
-            ).let {
-                val generertDatapakke: Datapakke = it.flatMap(DatakatalogData::views).let(this::datapakke)
-                val pair: Pair<List<Pair<String, String>>, Datapakke> =
-                    it.flatMap(DatakatalogData::plotlyFiler) to generertDatapakke
-                pair
-            }
-        }
-
-    private fun plotlydataOgDataPakke3() : Datapakke = (
-            iaTjenesterMetrikkerRepository.hentUinnloggetMetrikker(målingerStartet) to
-                    iaTjenesterMetrikkerRepository.hentInnloggetMetrikker(målingerStartet))
-        .let { (uinnloggedeMetrikker, innloggedeMetrikker) ->
-            listOf(
-                MottattIaTjenesterStatistikk(MottattIaTjenesterDatagrunnlag(innloggedeMetrikker, uinnloggedeMetrikker, dagensDato))
-            ).let {
+            val listOf: List<MottattIaTjenesterStatistikk> = listOf(
+                MottattIaTjenesterStatistikk(
+                    MottattIaTjenesterDatagrunnlag( // HER er datagrunnlaget
+                        innloggedeMetrikker,
+                        uinnloggedeMetrikker,
+                        dagensDato
+                    )
+                )
+            )
+            listOf.let {
                 val flatMap: List<View> = it.flatMap(DatakatalogData::views)
-                val genererteDatapakke: Datapakke = flatMap.let(this::datapakke)
-                genererteDatapakke
+                datapakke(flatMap)
             }
         }
-
 }
 
-fun Plot.getLayout(yTekst: String) {
-    layout {
-        bargap = 0.1
-        title {
-            text = ""
-            font {
-                size = 20
-            }
-        }
-        xaxis {
-            title {
-                text = "Dato"
-                font {
-                    size = 16
-                }
-            }
-        }
-        yaxis {
-            title {
-                text = yTekst
-                font {
-                    size = 16
-                }
-            }
-        }
-    }
-}
-
-fun Plot.lagBar(description: String, datoer: List<LocalDate>, hentVerdi: (LocalDate) -> Int) = bar {
-    x.strings = datoer.map { it.toString() }
-    y.numbers = datoer.map { hentVerdi(it) }
-    name = description
-}
-
-infix fun LocalDate.til(tilDato: LocalDate) = ChronoUnit.DAYS.between(this, tilDato)
+infix fun LocalDate.til(tilDato: LocalDate): List<LocalDate> = ChronoUnit.DAYS.between(this, tilDato)
     .let { antallDager ->
         (0..antallDager).map { this.plusDays(it) }
     }
+
+infix fun Month.til(tilMonth: Month): List<Month> =
+    listOf(this.value, tilMonth.value).map { value -> Month.of(value) }
+
+
