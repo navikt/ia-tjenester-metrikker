@@ -13,7 +13,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             spec = lagSpec(datagrunnlag),
         )
     )
-    
+
 
     private fun lagSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): Spec {
         return Spec(

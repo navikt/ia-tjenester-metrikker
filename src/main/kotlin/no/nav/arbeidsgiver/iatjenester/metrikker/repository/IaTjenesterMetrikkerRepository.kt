@@ -2,6 +2,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
+import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
@@ -99,11 +100,30 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
 
     class MottattIaTjenesteMetrikk(val erInnlogget: Boolean?, val orgnr: String?, val tidspunkt: LocalDateTime)
 
-    fun hentUinnloggetMetrikker(målingerStartet: LocalDate?): List<MottattIaTjenesteMetrikk> {
-        TODO("Not yet implemented")
-    }
 
-    fun hentInnloggetMetrikker(målingerStartet: LocalDate?): List<MottattIaTjenesteMetrikk> {
-        TODO("Not yet implemented")
-    }
+    fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> =
+        namedParameterJdbcTemplate.query(
+            "select tjeneste_mottakkelsesdato from metrikker_ia_tjenester_uinnlogget",
+            MapSqlParameterSource(),
+            RowMapper { rs: ResultSet, _: Int ->
+                MottattIaTjenesteMetrikk(
+                    true,
+                    null,
+                    rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
+                )
+            }
+        )
+
+    fun hentInnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> =
+        namedParameterJdbcTemplate.query(
+            "select orgnr, tjeneste_mottakkelsesdato from metrikker_ia_tjenester_innlogget",
+            MapSqlParameterSource(),
+            RowMapper { rs: ResultSet, _: Int ->
+                MottattIaTjenesteMetrikk(
+                    false,
+                    rs.getString("orgnr"),
+                    rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
+                )
+            }
+        )
 }

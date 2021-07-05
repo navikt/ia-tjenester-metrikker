@@ -17,7 +17,7 @@ internal class DatakatalogStatistikkTest {
 
     init {
         dummyIaTjenesterMetrikkerRepository = object : IaTjenesterMetrikkerRepository(mockJdbcTemplate) {
-            override fun hentUinnloggetMetrikker(målingerStartet: LocalDate?): List<MottattIaTjenesteMetrikk> {
+            override fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> {
                 return listOf(
                     MottattIaTjenesteMetrikk(
                         false,
@@ -32,7 +32,7 @@ internal class DatakatalogStatistikkTest {
                 )
             }
 
-            override fun hentInnloggetMetrikker(målingerStartet: LocalDate?): List<MottattIaTjenesteMetrikk> {
+            override fun hentInnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> {
                 return listOf(
                     MottattIaTjenesteMetrikk(
                         true,

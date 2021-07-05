@@ -9,6 +9,7 @@ import java.sql.Connection
 import java.sql.Date
 import java.sql.ResultSet
 import java.sql.Timestamp
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 class TestUtils {
@@ -67,7 +68,7 @@ class TestUtils {
             return vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
         }
 
-        fun vilkårligInnloggetIaTjenesteAsString(orgNr:String): String {
+        fun vilkårligInnloggetIaTjenesteAsString(orgNr: String): String {
             return """
             {
               "orgnr":"${orgNr}",
@@ -108,6 +109,16 @@ class TestUtils {
             }
         """.trimIndent()
         }
+
+        fun Connection.cleanTable(tableName: String) =
+            use {
+                this.prepareStatement(
+                    """delete from $tableName"""
+                ).use {
+                    it.executeUpdate()
+                }
+            }
+
 
         fun Connection.getAlleIATjenester(): List<IaTjenesteRad> =
             use {
@@ -150,6 +161,60 @@ class TestUtils {
                                 }
                             }.toList()
                         }
+                }
+            }
+
+        fun Connection.opprettInnloggetIaTjeneste(rad: IaTjenesteRad): Any =
+            use {
+                this.prepareStatement(
+                    """insert into metrikker_ia_tjenester_innlogget (
+                         form_av_tjeneste, 
+                         kilde_applikasjon, 
+                         orgnr, 
+                         antall_ansatte,
+                         naering_2siffer_beskrivelse,
+                         naering_kode_5siffer, 
+                         naering_kode5siffer_beskrivelse,
+                         ssb_sektor_kode,
+                         ssb_sektor_kode_beskrivelse,
+                         fylkesnummer, 
+                         fylke,
+                         kommunenummer, 
+                         kommune,
+                         tjeneste_mottakkelsesdato
+                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
+                ).run {
+                    setString(1, rad.type.name)
+                    setString(2, rad.kilde.name)
+                    setString(3, rad.orgnr)
+                    setInt(4, rad.antallAnsatte)
+                    setString(5, rad.næring2SifferBeskrivelse)
+                    setString(6, rad.næringKode5Siffer)
+                    setString(7, rad.næringskode5SifferBeskrivelse)
+                    setString(8, rad.SSBSektorKode)
+                    setString(9, rad.SSBSektorKodeBeskrivelse)
+                    setString(10, rad.fylkesnummer)
+                    setString(11, rad.fylke)
+                    setString(12, rad.kommunenummer)
+                    setString(13, rad.kommune)
+                    setTimestamp(14, rad.tjeneste_mottakkelsesdato)
+                    executeUpdate()
+                }
+            }
+
+        fun Connection.opprettUinnloggetIaTjeneste(rad: UinnloggetIaTjenesteRad): Any =
+            use {
+                this.prepareStatement(
+                    """insert into metrikker_ia_tjenester_uinnlogget (
+                        form_av_tjeneste, 
+                        kilde_applikasjon, 
+                        tjeneste_mottakkelsesdato
+                    ) values (?, ?, ?)"""
+                ).run {
+                    setString(1, rad.type.name)
+                    setString(2, rad.kilde.name)
+                    setTimestamp(3, rad.tjeneste_mottakkelsesdato)
+                    executeUpdate()
                 }
             }
 
