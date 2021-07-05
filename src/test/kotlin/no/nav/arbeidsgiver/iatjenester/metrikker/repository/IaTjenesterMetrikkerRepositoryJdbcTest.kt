@@ -38,84 +38,70 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
 
     @Test
     fun `hentUinnloggetIaTjenesterMetrikker`() {
-        dataSource.connection.opprettUinnloggetIaTjeneste(
-            UinnloggetIaTjenesteRad(
-                id = 1,
-                type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
-                kilde = Kilde.SAMTALESTØTTE,
-                Timestamp.valueOf(now().minusDays(3).atStartOfDay()),
-                Date.valueOf(
-                    now()
-                )
-            )
-        )
-        dataSource.connection.opprettUinnloggetIaTjeneste(
-            UinnloggetIaTjenesteRad(
-                id = 2,
-                type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
-                kilde = Kilde.SAMTALESTØTTE,
-                Timestamp.valueOf(now().minusDays(2).atStartOfDay()),
-                Date.valueOf(
-                    now()
-                )
-            )
-        )
+        opprettUinnloggetIaTjenester(listOf(Date.valueOf(now()), Date.valueOf(now())))
 
-        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
         val innloggetMetrikker =
-            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentUinnloggetMetrikker(now())
+            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentUinnloggetMetrikker(
+                now().withDayOfMonth(
+                    1
+                ).withMonth(1)
+            )
 
         assertThat(innloggetMetrikker.size).isEqualTo(2)
     }
 
     @Test
-    fun `hentInnloggetIaTjenesterMetrikker`() {
-        dataSource.connection.opprettInnloggetIaTjeneste(
-            IaTjenesteRad(
-                id = 1,
-                type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
-                kilde = Kilde.SYKEFRAVÆRSSTATISTIKK,
-                orgnr = "999999999",
-                næringKode5Siffer = "",
-                næring2SifferBeskrivelse = "",
-                tjeneste_mottakkelsesdato = Timestamp.valueOf(now().minusDays(3).atStartOfDay()),
-                antallAnsatte = 23,
-                næringskode5SifferBeskrivelse = "",
-                SSBSektorKode = "",
-                SSBSektorKodeBeskrivelse = "",
-                fylkesnummer = "",
-                fylke = "",
-                kommunenummer = "",
-                kommune = "",
-                opprettet = Date.valueOf(now())
+    fun `hentUinnloggetIaTjenesterMetrikker fra en vis dato`() {
+        opprettUinnloggetIaTjenester(listOf(Date.valueOf(now()), Date.valueOf(now().minusYears(1))))
+
+        val innloggetMetrikker =
+            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentUinnloggetMetrikker(
+                now().withDayOfMonth(
+                    1
+                ).withMonth(1)
             )
-        )
-        dataSource.connection.opprettInnloggetIaTjeneste(
-            IaTjenesteRad(
-                id = 1,
-                type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
-                kilde = Kilde.SYKEFRAVÆRSSTATISTIKK,
-                orgnr = "888888888",
-                næringKode5Siffer = "",
-                næring2SifferBeskrivelse = "",
-                tjeneste_mottakkelsesdato = Timestamp.valueOf(now().minusDays(2).atStartOfDay()),
-                antallAnsatte = 5,
-                næringskode5SifferBeskrivelse = "",
-                SSBSektorKode = "",
-                SSBSektorKodeBeskrivelse = "",
-                fylkesnummer = "",
-                fylke = "",
-                kommunenummer = "",
-                kommune = "",
-                opprettet = Date.valueOf(now())
+        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
+        assertThat(innloggetMetrikker.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `hentInnloggetIaTjenesterMetrikker`() {
+        opprettInnloggetIaTjenester(
+            listOf(
+                Date.valueOf(now().minusDays(3)),
+                Date.valueOf(now().minusDays(3))
             )
         )
 
         startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
         val uinnloggetMetrikker =
-            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentInnloggetMetrikker(now())
+            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentInnloggetMetrikker(
+                now().withDayOfMonth(
+                    1
+                ).withMonth(1)
+            )
 
         assertThat(uinnloggetMetrikker.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `hentInnloggetIaTjenesterMetrikker fra en vis dato`() {
+        opprettInnloggetIaTjenester(
+            listOf(
+                Date.valueOf(now().minusDays(3)),
+                Date.valueOf(now().minusYears(1))
+            )
+        )
+
+        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
+        val uinnloggetMetrikker =
+            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentInnloggetMetrikker(
+                now().withDayOfMonth(
+                    1
+                ).withMonth(1)
+            )
+
+        assertThat(uinnloggetMetrikker.size).isEqualTo(1)
     }
 
     @Test
@@ -161,6 +147,46 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.kommunenummer).isEqualTo("0234")
         assertThat(iaTjenesteRad.kommune).isEqualTo("Gjerdrum")
         assertThat(iaTjenesteRad.opprettet).isNotNull()
+    }
+
+
+    private fun opprettUinnloggetIaTjenester(dates: List<Date> ) {
+        dates.forEachIndexed() { index, date ->
+            dataSource.connection.opprettUinnloggetIaTjeneste(
+                UinnloggetIaTjenesteRad(
+                    id = index + 1,
+                    type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
+                    kilde = Kilde.SAMTALESTØTTE,
+                    Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
+                    Date.valueOf(now())
+                )
+            )
+        }
+    }
+
+    private fun opprettInnloggetIaTjenester(dates: List<Date> ) {
+        dates.forEachIndexed() { index, date ->
+            dataSource.connection.opprettInnloggetIaTjeneste(
+                IaTjenesteRad(
+                    id = index + 1,
+                    type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
+                    kilde = Kilde.SYKEFRAVÆRSSTATISTIKK,
+                    orgnr = (999999900 + index).toString(),
+                    næringKode5Siffer = "",
+                    næring2SifferBeskrivelse = "",
+                    tjeneste_mottakkelsesdato = Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
+                    antallAnsatte = 5 + index,
+                    næringskode5SifferBeskrivelse = "",
+                    SSBSektorKode = "",
+                    SSBSektorKodeBeskrivelse = "",
+                    fylkesnummer = "",
+                    fylke = "",
+                    kommunenummer = "",
+                    kommune = "",
+                    opprettet = Date.valueOf(now())
+                )
+            )
+        }
     }
 
 

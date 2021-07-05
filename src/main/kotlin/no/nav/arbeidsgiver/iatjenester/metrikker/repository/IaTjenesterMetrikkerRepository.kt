@@ -102,9 +102,12 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
 
 
     fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> =
-        namedParameterJdbcTemplate.query(
-            "select tjeneste_mottakkelsesdato from metrikker_ia_tjenester_uinnlogget",
-            MapSqlParameterSource(),
+        namedParameterJdbcTemplate.query("""
+                select tjeneste_mottakkelsesdato 
+                from metrikker_ia_tjenester_uinnlogget 
+                where tjeneste_mottakkelsesdato > :startDato
+                """,
+            MapSqlParameterSource().addValue("startDato", startDato),
             RowMapper { rs: ResultSet, _: Int ->
                 MottattIaTjenesteMetrikk(
                     true,
@@ -115,9 +118,12 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         )
 
     fun hentInnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> =
-        namedParameterJdbcTemplate.query(
-            "select orgnr, tjeneste_mottakkelsesdato from metrikker_ia_tjenester_innlogget",
-            MapSqlParameterSource(),
+        namedParameterJdbcTemplate.query("""
+            select orgnr, tjeneste_mottakkelsesdato 
+            from metrikker_ia_tjenester_innlogget 
+            where tjeneste_mottakkelsesdato > :startDato
+            """,
+            MapSqlParameterSource().addValue("startDato", startDato),
             RowMapper { rs: ResultSet, _: Int ->
                 MottattIaTjenesteMetrikk(
                     false,
