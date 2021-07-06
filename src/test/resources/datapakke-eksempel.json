@@ -13,16 +13,19 @@
       "description": "Mottatt ia-tjenester fra digitale tjenester i Nav",
       "specType": "markdown",
       "spec": {
-        "markdown": "## Samtalestøtte \n **12550**\n ## Sykefraværsstatistikk\n **4569** \n ### Antall bedrifter \n **1850**"
+        "markdown": "## Samtalestøtte \n **12550**\n ## Sykefraværsstatistikk\n **4569** \n ### Antall bedrifter \n **1664**"
       }
     },
     {
-      "title": "Mottat ia-tjenester-metrikker per dag i uke 25",
+      "title": "Mottat ia-tjenester-metrikker per måned",
       "description": "Antall ia-tjenester mottat per applikasjon: Sykefraværsstatistikk (blå) og Samtalestøtte (grønn)",
       "specType": "echart",
       "spec": {
         "url": "",
         "option": {
+          "legend": {
+            "data": ["Innlogget", "Uinlogget"]
+          },
           "xAxis": {
             "type": "category",
             "data": ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun"]
@@ -32,11 +35,13 @@
           },
           "series": [
             {
+              "name": "Innlogget",
               "data": [0, 240, 650, 570, 530, 495],
               "type": "bar",
               "title": "Sykefraværsstatistikk"
             },
             {
+              "name": "Uinlogget",
               "data": [0, 346, 950, 1165, 1234, 1100],
               "type": "bar",
               "title": "Samtalestøtte"

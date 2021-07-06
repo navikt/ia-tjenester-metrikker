@@ -18,7 +18,8 @@ import org.springframework.boot.runApplication
         OutboundKafkaProperties::class,
         SecurityConfig::class,
         AltinnConfigProperties::class,
-        TilgangskontrollConfigProperties::class
+        TilgangskontrollConfigProperties::class,
+        DatakatalogProperties::class
     ]
 )
 class App

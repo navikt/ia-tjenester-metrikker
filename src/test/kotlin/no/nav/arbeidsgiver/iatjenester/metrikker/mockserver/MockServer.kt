@@ -27,9 +27,10 @@ class MockServer @Autowired constructor(
 
     private val MOCK_SERVER_VERBOSE_CONSOLE_LOGGING_ENABLED = false;
 
+    lateinit var wireMockServer: WireMockServer
 
     override fun afterPropertiesSet() {
-        val server = WireMockServer(
+        wireMockServer = WireMockServer(
             WireMockConfiguration()
                 .port(wiremockPort)
                 .extensions(
@@ -42,7 +43,7 @@ class MockServer @Autowired constructor(
 
         val altinnProxyPathToV2Organisasjoner = URL(altinnConfigProperties.proxyUrl).path + "v2/organisasjoner"
         mockWithParameters(
-            server,
+            wireMockServer,
             "$altinnProxyPathToV2Organisasjoner",
             mapOf(
                 "serviceCode" to WireMock.equalTo("3403"),
@@ -50,10 +51,18 @@ class MockServer @Autowired constructor(
             )
         )
 
+        mockDatakatalog(
+            wireMockServer,
+            "/lokal_datakatalog/ikke_en_ekte_datapakke_id"
+        )
+
         log("MockServer.init()").warn("***** Starter MockServer lokalt on port $wiremockPort -- OBS: Denne meldingen skal ikke vises i PROD *****")
-        server.start()
+        wireMockServer.start()
     }
 
+    fun verify() {
+        this.verify()
+    }
 
     private fun mockWithParameters(
         server: WireMockServer,
@@ -81,6 +90,24 @@ class MockServer @Autowired constructor(
                                       }
                                     ]
                                 """.trimIndent()
+                        )
+                )
+        )
+    }
+
+    private fun mockDatakatalog(
+        server: WireMockServer,
+        basePath: String
+    ) {
+        server.stubFor(
+            WireMock.put(WireMock.urlPathEqualTo(basePath))
+                .withHeader("Accept", WireMock.containing("application/json"))
+                .willReturn(
+                    WireMock.aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(
+                            """{"id":"ikke_en_ekte_datapakke_id","status":"Successfully updated datapackage IA tjenester-metrikker"}""".trimIndent()
                         )
                 )
         )

@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.Cluster
+import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import no.nav.arbeidsgiver.iatjenester.metrikker.IaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.cleanTable
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettInnloggetIaTjeneste
@@ -9,6 +10,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.UinnloggetIaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.mockserver.MockServer
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions
@@ -22,6 +24,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
+import org.springframework.web.client.RestTemplate
 import java.sql.Date
 import java.sql.Timestamp
 import java.time.LocalDate
@@ -32,8 +35,11 @@ import java.time.LocalDate
 @EnableMockOAuth2Server
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestPropertySource(properties = ["wiremock.port=8686"])
-internal class DatakatalogStatistikkIntTest {
+@TestPropertySource(properties = ["wiremock.port=8585"])
+internal class DatakatalogStatistikkIntegrasjonTest {
+
+    @Autowired
+    private lateinit var mockServer: MockServer
 
     @Autowired
     private lateinit var iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository
@@ -41,12 +47,17 @@ internal class DatakatalogStatistikkIntTest {
     @Autowired
     private lateinit var namedParameterJdbcTemplate: NamedParameterJdbcTemplate
 
-    private lateinit var datakatalogStatistikk: DatakatalogStatistikk
-    private lateinit var datapakke: Datapakke
+    @Autowired
+    private lateinit var datakatalogKlient: DatakatalogKlient
 
-    private var datakatalogKlient: DatakatalogKlient = object : DatakatalogKlient(url = DatakatalogUrl(cluster = Cluster.LOKAL)) {
-        override fun sendDatapakke(datapakkeTilUtsending: Datapakke) {
-            datapakke = datapakkeTilUtsending
+
+    private lateinit var datakatalogStatistikk: DatakatalogStatistikk
+    private lateinit var datakatalogStatistikkSomSenderTilLokalMockServer: DatakatalogStatistikk
+    private lateinit var produsertDatapakke: Datapakke
+
+    private var mockDatakatalogKlient: DatakatalogKlient = object : DatakatalogKlient(RestTemplate(), "", "") {
+        override fun sendDatapakke(datapakke: Datapakke) {
+            produsertDatapakke = datapakke
         }
     }
 
@@ -56,7 +67,19 @@ internal class DatakatalogStatistikkIntTest {
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
         datakatalogStatistikk =
-            DatakatalogStatistikk(iaTjenesterMetrikkerRepository, datakatalogKlient, dagensDato = { målingFra.plusMonths(6) })
+            DatakatalogStatistikk(
+                iaTjenesterMetrikkerRepository,
+                mockDatakatalogKlient,
+                dagensDato = { målingFra.plusMonths(6) }
+            )
+
+        datakatalogStatistikkSomSenderTilLokalMockServer =
+            DatakatalogStatistikk(
+                iaTjenesterMetrikkerRepository,
+                datakatalogKlient,
+                dagensDato = { målingFra.plusMonths(6) }
+            )
+
     }
 
 
@@ -66,18 +89,34 @@ internal class DatakatalogStatistikkIntTest {
 
         datakatalogStatistikk.run()
 
-        Assertions.assertThat(datapakke.views.size).isEqualTo(1)
-        Assertions.assertThat(datapakke.views[0].spec.option.xAxis.data)
+        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(1)
+        Assertions.assertThat(produsertDatapakke.views[0].spec.option.xAxis.data)
             .isEqualTo(listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"))
-        Assertions.assertThat(datapakke.views[0].spec.option.series[0].name).isEqualTo("Uinnlogget")
-        Assertions.assertThat(datapakke.views[0].spec.option.series[0].title).isEqualTo("Samtalestøtte")
-        Assertions.assertThat(datapakke.views[0].spec.option.series[0].data)
+        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[0].name).isEqualTo("Uinnlogget")
+        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[0].title).isEqualTo("Samtalestøtte")
+        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[0].data)
             .isEqualTo(listOf(0, 1, 2, 2, 1, 0, 0))
-        Assertions.assertThat(datapakke.views[0].spec.option.series[1].name).isEqualTo("Innlogget")
-        Assertions.assertThat(datapakke.views[0].spec.option.series[1].title).isEqualTo("Sykefraværsstatistikk")
-        Assertions.assertThat(datapakke.views[0].spec.option.series[1].data)
+        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[1].name).isEqualTo("Innlogget")
+        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[1].title)
+            .isEqualTo("Sykefraværsstatistikk")
+        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[1].data)
             .isEqualTo(listOf(1, 3, 1, 1, 1, 0, 1))
     }
+
+    @Test
+    fun `kjør DatakatalogStatistikk og send data`() {
+        opprettTestDataIDB(namedParameterJdbcTemplate)
+
+        datakatalogStatistikkSomSenderTilLokalMockServer.run()
+
+        mockServer.wireMockServer.verify(
+            1,
+            putRequestedFor(
+                urlEqualTo("/lokal_datakatalog/ikke_en_ekte_datapakke_id")
+            )
+        )
+    }
+
 
     private fun opprettTestDataIDB(namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
         namedParameterJdbcTemplate.jdbcTemplate.dataSource?.connection?.cleanTable("metrikker_ia_tjenester_innlogget")
@@ -109,7 +148,7 @@ internal class DatakatalogStatistikkIntTest {
         )
     }
 
-    private fun opprettUinnloggetIaTjenester(dates: List<Date> ) {
+    private fun opprettUinnloggetIaTjenester(dates: List<Date>) {
         dates.forEachIndexed() { index, date ->
             namedParameterJdbcTemplate.jdbcTemplate.dataSource?.connection?.opprettUinnloggetIaTjeneste(
                 UinnloggetIaTjenesteRad(
@@ -123,7 +162,7 @@ internal class DatakatalogStatistikkIntTest {
         }
     }
 
-    private fun opprettInnloggetIaTjenester(dates: List<Date> ) {
+    private fun opprettInnloggetIaTjenester(dates: List<Date>) {
         dates.forEachIndexed() { index, date ->
             namedParameterJdbcTemplate.jdbcTemplate.dataSource?.connection?.opprettInnloggetIaTjeneste(
                 IaTjenesteRad(
