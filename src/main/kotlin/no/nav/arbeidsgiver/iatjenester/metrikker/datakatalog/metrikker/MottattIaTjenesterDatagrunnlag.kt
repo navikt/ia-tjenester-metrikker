@@ -12,7 +12,7 @@ class MottattIaTjenesterDatagrunnlag(
 ) {
 
     private val fraStartDato = LocalDate.of(2021, 1, 1)
-    private val gjeldendeMåneder: List<Month> = fraStartDato.month til dagensDato().month
+    private val gjeldendeMåneder: List<Month> = fraStartDato til dagensDato()
 
 
     val antallInnloggetMetrikkerPerMåned: Map<Month, Int> =

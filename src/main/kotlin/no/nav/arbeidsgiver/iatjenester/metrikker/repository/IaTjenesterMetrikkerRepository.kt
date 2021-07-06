@@ -105,7 +105,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         namedParameterJdbcTemplate.query("""
                 select tjeneste_mottakkelsesdato 
                 from metrikker_ia_tjenester_uinnlogget 
-                where tjeneste_mottakkelsesdato > :startDato
+                where tjeneste_mottakkelsesdato >= :startDato
                 """,
             MapSqlParameterSource().addValue("startDato", startDato),
             RowMapper { rs: ResultSet, _: Int ->
@@ -121,7 +121,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         namedParameterJdbcTemplate.query("""
             select orgnr, tjeneste_mottakkelsesdato 
             from metrikker_ia_tjenester_innlogget 
-            where tjeneste_mottakkelsesdato > :startDato
+            where tjeneste_mottakkelsesdato >= :startDato
             """,
             MapSqlParameterSource().addValue("startDato", startDato),
             RowMapper { rs: ResultSet, _: Int ->

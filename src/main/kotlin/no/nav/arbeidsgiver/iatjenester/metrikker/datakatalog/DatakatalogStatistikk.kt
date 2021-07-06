@@ -15,7 +15,7 @@ class DatakatalogStatistikk(
     private val dagensDato: () -> LocalDate
 ) : Runnable {
 
-    private val målingerStartet = LocalDate.of(2021, 6, 1)
+    private val fraDato = LocalDate.of(2021, 1, 1)
 
     override fun run() {
         log.info("Starter jobb som sender statistikk til datakatalogen")
@@ -29,18 +29,18 @@ class DatakatalogStatistikk(
     private fun datapakke(views: List<View>): Datapakke =
         Datapakke(
             title = "IA-tjenester metrikker",
-            type = "",
-            description = "Vise mottatt ia-tjenester",
+            type = "datapackage",
+            description = "Mottatt ia-tjenester-metrikker fra sykefraværsstatistikk og samtalestøtte (OBS: dev/test miljø)",
             views = views,
             name = "",
             uri = "",
             url = "",
-            team = ""
+            team = "Team IA"
         )
 
     private fun byggDatapakke(): Datapakke = (
-            iaTjenesterMetrikkerRepository.hentUinnloggetMetrikker(målingerStartet) to
-                    iaTjenesterMetrikkerRepository.hentInnloggetMetrikker(målingerStartet))
+            iaTjenesterMetrikkerRepository.hentUinnloggetMetrikker(fraDato) to
+                    iaTjenesterMetrikkerRepository.hentInnloggetMetrikker(fraDato))
         .let { (uinnloggedeMetrikker, innloggedeMetrikker) ->
             val listOf: List<MottattIaTjenesterStatistikk> = listOf(
                 MottattIaTjenesterStatistikk(
@@ -58,12 +58,10 @@ class DatakatalogStatistikk(
         }
 }
 
-infix fun LocalDate.til(tilDato: LocalDate): List<LocalDate> = ChronoUnit.DAYS.between(this, tilDato)
-    .let { antallDager ->
-        (0..antallDager).map { this.plusDays(it) }
-    }
-
-infix fun Month.til(tilMonth: Month): List<Month> =
-    listOf(this.value, tilMonth.value).map { value -> Month.of(value) }
-
-
+infix fun LocalDate.til(tilDato: LocalDate): List<Month> {
+    val førstDagIHverMåned :List<LocalDate> = ChronoUnit.MONTHS.between(this, tilDato)
+        .let { antallMåneder ->
+            (0..antallMåneder).map { this.plusMonths(it) }
+        }
+    return førstDagIHverMåned.map { it.month }
+}

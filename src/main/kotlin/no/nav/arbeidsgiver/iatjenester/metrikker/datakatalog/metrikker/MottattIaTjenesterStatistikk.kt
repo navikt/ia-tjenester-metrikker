@@ -1,6 +1,8 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
+import java.time.format.TextStyle
+import java.util.*
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) : DatakatalogData {
 
@@ -27,7 +29,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 ),
                 Xaxis(
                     "category",
-                    data = datagrunnlag.gjeldendeMåneder().map { toString() }
+                    data = datagrunnlag.gjeldendeMåneder().map { month -> month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH) }
                 ),
                 Yaxis("value"),
                 listOf(
