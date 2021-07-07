@@ -9,6 +9,8 @@ import java.time.LocalDate
 import java.time.LocalDate.now
 import java.time.Month
 import java.time.temporal.ChronoUnit
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 
 @Component
@@ -20,10 +22,24 @@ class DatakatalogStatistikk(
     private val dagensDato = now()
     private val fraDato = LocalDate.of(2021, 1, 1)
 
-     override fun run() {
+    override fun run() {
+        byggOgSendDatapakke(false)
+    }
+
+    internal fun byggOgSendDatapakke(erDebugAktivert: Boolean) {
         log.info("Starter jobb som sender statistikk til datakatalogen")
         log.info("Skal sende statistikk for målinger til og med ${dagensDato}")
         byggDatapakke().also {
+            if (erDebugAktivert) {
+                log("DatakatalogStatistikk").info(
+                    "Sender følgende datapakke '${
+                        jacksonObjectMapper().writeValueAsString(
+                            it
+                        )
+                    }'"
+                )
+                println(jacksonObjectMapper().writeValueAsString(it))
+            }
             datakatalogKlient.sendDatapakke(it)
         }
         log.info("Har gjennomført jobb som sender statistikk til datakatalogen")
@@ -35,7 +51,7 @@ class DatakatalogStatistikk(
             type = "datapackage",
             description = "Mottatt ia-tjenester-metrikker fra sykefraværsstatistikk og samtalestøtte (OBS: dev/test miljø)",
             views = views,
-            name = "",
+            name = "ia-tjenester-metrikker-statistikk",
             uri = "",
             url = "",
             team = "Team IA"

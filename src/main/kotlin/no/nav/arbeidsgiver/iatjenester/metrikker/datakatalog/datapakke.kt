@@ -45,7 +45,6 @@ data class Yaxis(
 
 data class Serie(
     val name: String,
-    val stack: String,
     val data: List<*>,
     val type: String,
     val title: String

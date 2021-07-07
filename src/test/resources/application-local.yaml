@@ -42,6 +42,6 @@ wiremock:
   port: 8585
 
 datakatalog:
-  rootUrl: http://localhost/
+  rootUrl: http://localhost:8585/lokal_datakatalog/
   datapakkeId: ikke_en_ekte_datapakke_id
   erUtsendingAktivert: true

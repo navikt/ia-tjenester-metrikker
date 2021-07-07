@@ -23,8 +23,8 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             Option(
                 Legend(
                     listOf(
-                        "Samtalestøtte",
-                        "Sykefraværsstatistikk"
+                        "Uinnlogget",
+                        "Innlogget"
                     )
                 ),
                 Xaxis(
@@ -36,14 +36,12 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 listOf(
                     Serie(
                         "Uinnlogget",
-                        "total",
                         datagrunnlag.antallUinnloggetMetrikkerPerMåned.values.toList(),
                         "bar",
                         "Samtalestøtte"
                     ),
                     Serie(
                         "Innlogget",
-                        "total",
                         datagrunnlag.antallInnloggetMetrikkerPerMåned.values.toList(),
                         "bar",
                         "Sykefraværsstatistikk"
