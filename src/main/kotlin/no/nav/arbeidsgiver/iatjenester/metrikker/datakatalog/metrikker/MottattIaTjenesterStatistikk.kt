@@ -59,9 +59,9 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
 
     private fun lagMarkdownSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): MarkdownSpec {
         return MarkdownSpec(
-            "## Samtalestøtte \\n **${datagrunnlag.totalUinnloggetMetrikker}**\\n " +
-                    "## Sykefraværsstatistikk\\n **${datagrunnlag.totalInnloggetMetrikker}** \\n " +
-                    "### Antall bedrifter \\n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
+            "## Samtalestøtte \n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
+                    "## Sykefraværsstatistikk\n **${datagrunnlag.totalInnloggetMetrikker}** \n " +
+                    "### Antall bedrifter \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
         )
     }
 
