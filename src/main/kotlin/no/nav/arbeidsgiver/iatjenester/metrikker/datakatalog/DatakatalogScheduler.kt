@@ -11,7 +11,7 @@ import java.time.temporal.ChronoUnit
 @Component
 class DatakatalogScheduler(val taskExecutor :LockingTaskExecutor, val datakatalogStatistikk: DatakatalogStatistikk) {
 
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 55 7 * * ?")
     fun scheduledUtsendingAvDatapakke() {
         val lockAtMostFor = Duration.of(10, ChronoUnit.MINUTES)
         val lockAtLeastFor = Duration.of(1, ChronoUnit.MINUTES)
