@@ -89,10 +89,3 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
 }
-
-/*configurations.all {
-    resolutionStrategy {
-        force("io.github.microutils:kotlin-logging:2.0.6")
-    }*/
-
-
