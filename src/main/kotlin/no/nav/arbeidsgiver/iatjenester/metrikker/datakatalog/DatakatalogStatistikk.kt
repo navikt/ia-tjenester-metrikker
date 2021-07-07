@@ -9,7 +9,6 @@ import java.time.LocalDate
 import java.time.LocalDate.now
 import java.time.Month
 import java.time.temporal.ChronoUnit
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 
@@ -32,11 +31,7 @@ class DatakatalogStatistikk(
         byggDatapakke().also {
             if (erDebugAktivert) {
                 log("DatakatalogStatistikk").info(
-                    "Sender følgende datapakke '${
-                        jacksonObjectMapper().writeValueAsString(
-                            it
-                        )
-                    }'"
+                    "Sender følgende datapakke '${jacksonObjectMapper().writeValueAsString(it)}'"
                 )
                 println(jacksonObjectMapper().writeValueAsString(it))
             }
@@ -61,19 +56,17 @@ class DatakatalogStatistikk(
             iaTjenesterMetrikkerRepository.hentUinnloggetMetrikker(fraDato) to
                     iaTjenesterMetrikkerRepository.hentInnloggetMetrikker(fraDato))
         .let { (uinnloggedeMetrikker, innloggedeMetrikker) ->
-            val listOf: List<MottattIaTjenesterStatistikk> = listOf(
-                MottattIaTjenesterStatistikk(
-                    MottattIaTjenesterDatagrunnlag(
-                        innloggedeMetrikker,
-                        uinnloggedeMetrikker
-                    ) { dagensDato }
-                )
-            )
-            listOf.let {
-                val flatMap: List<View> = it.flatMap(DatakatalogData::views)
-                datapakke(flatMap)
+            MottattIaTjenesterStatistikk(
+                MottattIaTjenesterDatagrunnlag(
+                    innloggedeMetrikker,
+                    uinnloggedeMetrikker
+                ) { dagensDato }
+
+            ).let {
+                datapakke(it.views())
             }
         }
+
 }
 
 infix fun LocalDate.til(tilDato: LocalDate): List<Month> {

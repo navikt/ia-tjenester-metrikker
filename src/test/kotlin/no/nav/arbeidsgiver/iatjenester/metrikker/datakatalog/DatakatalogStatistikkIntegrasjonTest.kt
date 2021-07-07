@@ -90,17 +90,20 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
         datakatalogStatistikk.run()
 
-        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(1)
-        Assertions.assertThat(produsertDatapakke.views[0].spec.option.xAxis.data)
+        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(2)
+        Assertions.assertThat(produsertDatapakke.views[0].spec).isInstanceOf(MarkdownSpec::class.java)
+
+        val echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
+        Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"))
-        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[0].name).isEqualTo("Uinnlogget")
-        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[0].title).isEqualTo("Samtalestøtte")
-        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[0].data)
+        Assertions.assertThat(echartSpec.option.series[0].name).isEqualTo("Uinnlogget")
+        Assertions.assertThat(echartSpec.option.series[0].title).isEqualTo("Samtalestøtte")
+        Assertions.assertThat(echartSpec.option.series[0].data)
             .isEqualTo(listOf(0, 1, 2, 2, 1, 0, 0))
-        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[1].name).isEqualTo("Innlogget")
-        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[1].title)
+        Assertions.assertThat(echartSpec.option.series[1].name).isEqualTo("Innlogget")
+        Assertions.assertThat(echartSpec.option.series[1].title)
             .isEqualTo("Sykefraværsstatistikk")
-        Assertions.assertThat(produsertDatapakke.views[0].spec.option.series[1].data)
+        Assertions.assertThat(echartSpec.option.series[1].data)
             .isEqualTo(listOf(1, 3, 1, 1, 1, 0, 1))
     }
 

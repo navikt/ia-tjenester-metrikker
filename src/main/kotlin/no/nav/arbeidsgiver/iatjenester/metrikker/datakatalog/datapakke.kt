@@ -1,5 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
+import com.fasterxml.jackson.annotation.JsonFormat
+
 data class Datapakke(
     val title: String,
     val type: String,
@@ -14,14 +16,25 @@ data class Datapakke(
 data class View(
     val title: String,
     val description: String,
-    val specType: String,
-    val spec: Spec // TODO vi har to forskjellige specType: Markdown og echart
+    val specType: SpecType,
+    val spec: Spec
 )
 
-data class Spec ( // Denne er av type 'echart'
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+enum class SpecType(val type: String) {
+    MARKDOWN("markdown"),
+    ECHART("echart" )
+}
+
+interface Spec
+data class EchartSpec (
     val url: String,
     val option: Option
-)
+) : Spec
+
+data class MarkdownSpec (
+    val markdown: String
+) : Spec
 
 data class Option(
     val legend: Legend,

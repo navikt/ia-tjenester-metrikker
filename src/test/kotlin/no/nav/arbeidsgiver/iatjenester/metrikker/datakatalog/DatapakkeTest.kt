@@ -18,10 +18,22 @@ internal class DatapakkeTest {
 
         val json = jacksonObjectMapper().writeValueAsString(option)
 
-        Assertions.assertThat(json).isEqualTo(expectedJson())
+        Assertions.assertThat(json).isEqualTo(expectedJsonForOption())
     }
 
-    fun expectedJson(): String {
+    @Test
+    fun `Markdown Spec har et felt som heter 'markdown' (med liten 'm')`() {
+        val spec = MarkdownSpec(
+            markdown = "## This is a title"
+        )
+
+        val json = jacksonObjectMapper().writeValueAsString(spec)
+
+        Assertions.assertThat(json).isEqualTo("{\"markdown\":\"## This is a title\"}")
+    }
+
+
+    private fun expectedJsonForOption(): String {
         return "{" +
                 "\"legend\":{\"data\":[\"item1\"]}," +
                 "\"xAxis\":{\"type\":\"The X axis\",\"data\":[\"field 1\",\"field2\",\"field3\"]}," +

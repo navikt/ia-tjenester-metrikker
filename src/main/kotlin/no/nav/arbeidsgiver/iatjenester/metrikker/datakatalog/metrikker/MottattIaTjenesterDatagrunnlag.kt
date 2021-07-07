@@ -10,15 +10,17 @@ class MottattIaTjenesterDatagrunnlag(
     uinnloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>,
     dagensDato: () -> LocalDate
 ) {
-
     private val fraStartDato = LocalDate.of(2021, 1, 1)
     private val gjeldendeMåneder: List<Month> = fraStartDato til dagensDato()
-
 
     val antallInnloggetMetrikkerPerMåned: Map<Month, Int> =
         beregnAntallMetrikkerPerMåned(gjeldendeMåneder, beregnAntallMetrikkerPerDag(innloggetMetrikker))
     val antallUinnloggetMetrikkerPerMåned: Map<Month, Int> =
         beregnAntallMetrikkerPerMåned(gjeldendeMåneder, beregnAntallMetrikkerPerDag(uinnloggetMetrikker))
+
+    val totalInnloggetMetrikker: Int = innloggetMetrikker.size
+    val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
+    val totalUnikeBedrifterPerDag: Int = beregnAntallMetrikkerPerDag(innloggetMetrikker).values.sum()
 
 
     fun beregnAntallMetrikkerPerMåned(
@@ -34,6 +36,14 @@ class MottattIaTjenesterDatagrunnlag(
     }
 
     fun beregnAntallMetrikkerPerDag(
+        mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
+    ): Map<LocalDate, Int> {
+        return mottattIaTjenesteMetrikker.distinctBy {
+            Pair(it.orgnr, it.tidspunkt.toLocalDate())
+        }.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
+    }
+
+    fun beregnTotalUnikeBedrifterPerDag(
         mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
     ): Map<LocalDate, Int> {
         return mottattIaTjenesteMetrikker.distinctBy {

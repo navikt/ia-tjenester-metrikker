@@ -11,14 +11,20 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         View(
             title = "Antall mottatt ia-tjenester",
             description = "Vise antall mottatt ia-tjenester",
-            specType = "echart",
-            spec = lagSpec(datagrunnlag),
+            specType = SpecType.MARKDOWN,
+            spec = lagMarkdownSpec(datagrunnlag),
+        ),
+        View(
+            title = "Antall mottatt ia-tjenester",
+            description = "Vise antall mottatt ia-tjenester",
+            specType = SpecType.ECHART,
+            spec = lagEchartSpec(datagrunnlag),
         )
     )
 
 
-    private fun lagSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): Spec {
-        return Spec(
+    private fun lagEchartSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): EchartSpec {
+        return EchartSpec(
             "",
             Option(
                 Legend(
@@ -50,4 +56,13 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             )
         )
     }
+
+    private fun lagMarkdownSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): MarkdownSpec {
+        return MarkdownSpec(
+            "## Samtalestøtte \\n **${datagrunnlag.totalUinnloggetMetrikker}**\\n " +
+                    "## Sykefraværsstatistikk\\n **${datagrunnlag.totalInnloggetMetrikker}** \\n " +
+                    "### Antall bedrifter \\n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
+        )
+    }
+
 }
