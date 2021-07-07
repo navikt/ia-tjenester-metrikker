@@ -47,7 +47,7 @@ class DatakatalogStatistikk(
         .let { (uinnloggedeMetrikker, innloggedeMetrikker) ->
             val listOf: List<MottattIaTjenesterStatistikk> = listOf(
                 MottattIaTjenesterStatistikk(
-                    MottattIaTjenesterDatagrunnlag( // HER er datagrunnlaget
+                    MottattIaTjenesterDatagrunnlag(
                         innloggedeMetrikker,
                         uinnloggedeMetrikker
                     ) { dagensDato }

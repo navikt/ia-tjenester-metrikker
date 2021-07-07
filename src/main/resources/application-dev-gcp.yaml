@@ -32,4 +32,5 @@ tilgangskontroll:
 datakatalog:
   rootUrl: https://datakatalog-api.dev.intern.nav.no/v1/datapackage/
   datapakkeId: 219e562d893afbc8307b5f4e8b210baa
+  erUtsendingAktivert: true
 

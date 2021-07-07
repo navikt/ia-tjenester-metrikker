@@ -44,3 +44,4 @@ wiremock:
 datakatalog:
   rootUrl: http://localhost/
   datapakkeId: ikke_en_ekte_datapakke_id
+  erUtsendingAktivert: true

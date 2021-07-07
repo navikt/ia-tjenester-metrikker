@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
 
 @Configuration
-class DatakatalogConfig(private val datakatalogProperties: DatakatalogProperties) {
+class DatakatalogConfig(private val datakatalogConfigProperties: DatakatalogConfigProperties) {
 
     @Bean
     fun restTemplate(): RestTemplate = RestTemplate()
@@ -14,8 +14,9 @@ class DatakatalogConfig(private val datakatalogProperties: DatakatalogProperties
     @Bean fun datakatalogKlient(): DatakatalogKlient {
         return DatakatalogKlient(
             restTemplate(),
-            datakatalogProperties.rootUrl,
-            datakatalogProperties.datapakkeId
+            datakatalogConfigProperties.rootUrl,
+            datakatalogConfigProperties.datapakkeId,
+            datakatalogConfigProperties.erUtsendingAktivert
         )
     }
 }

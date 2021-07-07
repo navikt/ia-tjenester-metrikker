@@ -5,7 +5,8 @@ import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "datakatalog")
-data class DatakatalogProperties(
+data class DatakatalogConfigProperties(
     var rootUrl: String,
-    var datapakkeId: String
+    var datapakkeId: String,
+    var erUtsendingAktivert: Boolean
 )

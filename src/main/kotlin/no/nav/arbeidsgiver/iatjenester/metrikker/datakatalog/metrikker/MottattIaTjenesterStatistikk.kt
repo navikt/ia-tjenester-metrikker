@@ -29,7 +29,8 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 ),
                 Xaxis(
                     "category",
-                    data = datagrunnlag.gjeldendeMåneder().map { month -> month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH) }
+                    data = datagrunnlag.gjeldendeMåneder()
+                        .map { month -> month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH) }
                 ),
                 Yaxis("value"),
                 listOf(
@@ -51,23 +52,4 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             )
         )
     }
-
-
 }
-
-/*
-#1 hente metrikker fra DB:
-    innlogget metrikk
-    uinnlogget metrikk
-
-   Mappe data til model (fra 1.1.2021 til dagensdato)
-   -> skape liste av måneder
-   -> sette sammen metrikker per måned
-
-   Model -> Json
-
-   Sende Model til endepunktet (ved bruk av RestTemplate)
-
-
-
- */

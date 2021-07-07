@@ -55,7 +55,11 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     private lateinit var datakatalogStatistikkSomSenderTilLokalMockServer: DatakatalogStatistikk
     private lateinit var produsertDatapakke: Datapakke
 
-    private var mockDatakatalogKlient: DatakatalogKlient = object : DatakatalogKlient(RestTemplate(), "", "") {
+    private var mockDatakatalogKlient: DatakatalogKlient = object : DatakatalogKlient(
+        RestTemplate(),
+        "http://localhost/url/skal/ikke/brukes",
+        "ikke_i_bruk"
+    ) {
         override fun sendDatapakke(datapakke: Datapakke) {
             produsertDatapakke = datapakke
         }
