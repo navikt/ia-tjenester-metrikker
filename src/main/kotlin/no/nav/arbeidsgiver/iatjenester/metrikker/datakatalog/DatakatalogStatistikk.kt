@@ -4,20 +4,23 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIa
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesterStatistikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
+import org.springframework.stereotype.Component
 import java.time.LocalDate
+import java.time.LocalDate.now
 import java.time.Month
 import java.time.temporal.ChronoUnit
 
 
+@Component
 class DatakatalogStatistikk(
     private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository,
-    private val datakatalogKlient: DatakatalogKlient,
-    private val dagensDato: () -> LocalDate
+    private val datakatalogKlient: DatakatalogKlient
 ) : Runnable {
 
+    private val dagensDato = now()
     private val fraDato = LocalDate.of(2021, 1, 1)
 
-    override fun run() {
+     override fun run() {
         log.info("Starter jobb som sender statistikk til datakatalogen")
         log.info("Skal sende statistikk for målinger til og med ${dagensDato}")
         byggDatapakke().also {
@@ -46,9 +49,8 @@ class DatakatalogStatistikk(
                 MottattIaTjenesterStatistikk(
                     MottattIaTjenesterDatagrunnlag( // HER er datagrunnlaget
                         innloggedeMetrikker,
-                        uinnloggedeMetrikker,
-                        dagensDato
-                    )
+                        uinnloggedeMetrikker
+                    ) { dagensDato }
                 )
             )
             listOf.let {
@@ -59,7 +61,7 @@ class DatakatalogStatistikk(
 }
 
 infix fun LocalDate.til(tilDato: LocalDate): List<Month> {
-    val førstDagIHverMåned :List<LocalDate> = ChronoUnit.MONTHS.between(this, tilDato)
+    val førstDagIHverMåned: List<LocalDate> = ChronoUnit.MONTHS.between(this, tilDato)
         .let { antallMåneder ->
             (0..antallMåneder).map { this.plusMonths(it) }
         }

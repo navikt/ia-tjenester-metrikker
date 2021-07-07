@@ -69,22 +69,19 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         datakatalogStatistikk =
             DatakatalogStatistikk(
                 iaTjenesterMetrikkerRepository,
-                mockDatakatalogKlient,
-                dagensDato = { målingFra.plusMonths(6) }
+                mockDatakatalogKlient
             )
 
         datakatalogStatistikkSomSenderTilLokalMockServer =
             DatakatalogStatistikk(
                 iaTjenesterMetrikkerRepository,
-                datakatalogKlient,
-                dagensDato = { målingFra.plusMonths(6) }
+                datakatalogKlient
             )
-
     }
 
 
     @Test
-    fun `kjør DatakatalogStatistikk`() {
+    fun `kjør DatakatalogStatistikk og verifiser innhold til datapakke`() {
         opprettTestDataIDB(namedParameterJdbcTemplate)
 
         datakatalogStatistikk.run()
@@ -104,7 +101,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     }
 
     @Test
-    fun `kjør DatakatalogStatistikk og send data`() {
+    fun `kjør DatakatalogStatistikk og send data til lokal mock datakatalog`() {
         opprettTestDataIDB(namedParameterJdbcTemplate)
 
         datakatalogStatistikkSomSenderTilLokalMockServer.run()

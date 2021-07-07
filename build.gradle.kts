@@ -74,8 +74,8 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}:kotlin-client")
 
-    implementation("net.javacrumbs.shedlock:shedlock-core:$shedlockVersion")
-    implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc:$shedlockVersion")
+    implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
+    implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
 
 
     // Test dependencies

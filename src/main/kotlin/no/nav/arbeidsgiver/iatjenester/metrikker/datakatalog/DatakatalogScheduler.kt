@@ -1,32 +1,24 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
-import net.javacrumbs.shedlock.core.DefaultLockingTaskExecutor
 import net.javacrumbs.shedlock.core.LockConfiguration
-import net.javacrumbs.shedlock.provider.jdbc.JdbcLockProvider
+import net.javacrumbs.shedlock.core.LockingTaskExecutor
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Component
 import java.time.Duration
 import java.time.Instant
-import java.util.*
-import javax.sql.DataSource
-import kotlin.concurrent.fixedRateTimer
+import java.time.temporal.ChronoUnit
 
-class DatakatalogScheduler(dataSource: DataSource, private val runnable: Runnable) {
+@Component
+class DatakatalogScheduler(val taskExecutor :LockingTaskExecutor, val datakatalogStatistikk: DatakatalogStatistikk) {
 
-    private val lockProvider = JdbcLockProvider(dataSource)
-    private val lockingExecutor = DefaultLockingTaskExecutor(lockProvider)
+    @Scheduled(cron = "0 0/5 * * * ?")
+    fun scheduledUtsendingAvDatapakke() {
+        val lockAtMostFor = Duration.of(10, ChronoUnit.MINUTES)
+        val lockAtLeastFor = Duration.of(1, ChronoUnit.MINUTES)
 
-    private val runnableMedLås: TimerTask.() -> Unit = {
-        lockingExecutor.executeWithLock(
-            runnable,
-            LockConfiguration(Instant.now(),"retry-lock", Duration.ofMinutes(10), Duration.ofMillis(0L))
-        )
-    }
-
-    fun kjørPeriodisk() {
-        fixedRateTimer(
-            name = "Send statistikk til Datakatalog periodisk",
-            period = Duration.ofSeconds(60).toMillis(),
-            action = runnableMedLås,
-            initialDelay = Duration.ofSeconds(60).toMillis()
+        taskExecutor.executeWithLock(
+            Runnable { datakatalogStatistikk.run() },
+            LockConfiguration(Instant.now(), "utsending til datakatalog", lockAtMostFor, lockAtLeastFor)
         )
     }
 }
