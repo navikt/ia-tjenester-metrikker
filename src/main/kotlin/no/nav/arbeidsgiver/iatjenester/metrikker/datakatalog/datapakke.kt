@@ -25,7 +25,9 @@ data class Spec ( // Denne er av type 'echart'
 
 data class Option(
     val legend: Legend,
+    @JvmField
     val xAxis: Xaxis,
+    @JvmField
     val yAxis: Yaxis,
     val series: List<Serie>
 )
