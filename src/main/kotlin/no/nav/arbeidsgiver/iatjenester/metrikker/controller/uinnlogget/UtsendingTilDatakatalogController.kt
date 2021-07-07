@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 
 @Unprotected
 @RestController
-@Profile("local", "dev")
+@Profile("local", "dev-gcp")
 @RequestMapping("/utsending")
 class UtsendingTilDatakatalogController(val datakatalogStatistikk: DatakatalogStatistikk) {
 
