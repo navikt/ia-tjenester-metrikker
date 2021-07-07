@@ -20,10 +20,9 @@ data class View(
     val spec: Spec
 )
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
-enum class SpecType(val type: String) {
-    MARKDOWN("markdown"),
-    ECHART("echart" )
+enum class SpecType {
+    markdown,
+    echart
 }
 
 interface Spec

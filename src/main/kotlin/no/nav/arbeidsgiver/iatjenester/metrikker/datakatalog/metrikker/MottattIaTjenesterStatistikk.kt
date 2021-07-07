@@ -11,13 +11,13 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         View(
             title = "Antall mottatt ia-tjenester",
             description = "Vise antall mottatt ia-tjenester",
-            specType = SpecType.MARKDOWN,
+            specType = SpecType.markdown,
             spec = lagMarkdownSpec(datagrunnlag),
         ),
         View(
             title = "Antall mottatt ia-tjenester",
             description = "Vise antall mottatt ia-tjenester",
-            specType = SpecType.ECHART,
+            specType = SpecType.echart,
             spec = lagEchartSpec(datagrunnlag),
         )
     )

@@ -26,10 +26,18 @@ internal class DatapakkeTest {
         val spec = MarkdownSpec(
             markdown = "## This is a title"
         )
+        val viewWithMarkdown = View(
+            title = "The title", description = "A short description", specType = SpecType.markdown, spec = spec
+        )
 
-        val json = jacksonObjectMapper().writeValueAsString(spec)
+        val json = jacksonObjectMapper().writeValueAsString(viewWithMarkdown)
 
-        Assertions.assertThat(json).isEqualTo("{\"markdown\":\"## This is a title\"}")
+        Assertions.assertThat(json).isEqualTo("{" +
+                  "\"title\":\"The title\"," +
+                  "\"description\":\"A short description\"," +
+                  "\"specType\":\"markdown\"," +
+                  "\"spec\":{\"markdown\":\"## This is a title\"}" +
+                "}")
     }
 
 
