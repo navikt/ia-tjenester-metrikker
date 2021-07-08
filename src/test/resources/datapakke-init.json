@@ -1,0 +1,13 @@
+{
+  "title": "Digitale IA-tjenester",
+  "type": "datapackage",
+  "format": "datapackage",
+  "description": "Mottatte digitale IA-tjenester",
+  "name": "mottatte-digitale-ia-tjenester",
+  "pii": "false",
+  "accessRights": "internal",
+  "uri": "",
+  "url": "",
+  "team": "Team IA",
+  "views": []
+}
