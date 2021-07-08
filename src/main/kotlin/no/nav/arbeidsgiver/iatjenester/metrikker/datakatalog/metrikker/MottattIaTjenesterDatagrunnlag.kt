@@ -8,19 +8,27 @@ import java.time.Month
 class MottattIaTjenesterDatagrunnlag(
     innloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>,
     uinnloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>,
-    dagensDato: () -> LocalDate
+    fraDato: LocalDate,
+    tilDato: LocalDate
 ) {
-    private val fraStartDato = LocalDate.of(2021, 1, 1)
-    private val gjeldendeMåneder: List<Month> = fraStartDato til dagensDato()
+    val gjelendeÅr = fraDato.year
+    val gjeldendeMåneder: List<Month> = fraDato til tilDato
 
     val antallInnloggetMetrikkerPerMåned: Map<Month, Int> =
-        beregnAntallMetrikkerPerMåned(gjeldendeMåneder, beregnAntallMetrikkerPerDag(innloggetMetrikker))
+        beregnAntallMetrikkerPerMåned(
+            gjeldendeMåneder,
+            beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker))
+        )
     val antallUinnloggetMetrikkerPerMåned: Map<Month, Int> =
-        beregnAntallMetrikkerPerMåned(gjeldendeMåneder, beregnAntallMetrikkerPerDag(uinnloggetMetrikker))
+        beregnAntallMetrikkerPerMåned(
+            gjeldendeMåneder,
+            beregnAntallMetrikkerPerDag(uinnloggetMetrikker)
+        )
 
     val totalInnloggetMetrikker: Int = innloggetMetrikker.size
     val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
-    val totalUnikeBedrifterPerDag: Int = beregnAntallMetrikkerPerDag(innloggetMetrikker).values.sum()
+    val totalUnikeBedrifterPerDag: Int =
+        beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)).values.sum()
 
 
     fun beregnAntallMetrikkerPerMåned(
@@ -28,27 +36,25 @@ class MottattIaTjenesterDatagrunnlag(
         metrikkerPerDag: Map<LocalDate, Int>
     ): Map<Month, Int> {
         val metrikkerPerMåned: Map<Month, Collection<Int>> =
-            måneder.map { it to metrikkerPerDag.filter { (key, value) -> key.month == it }.values }.toMap()
+            måneder.map { it to metrikkerPerDag.filter { (key, _) -> key.month == it }.values }.toMap()
         val antallMetrikkerPerMåned: Map<Month, Int> =
             metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumBy { it } }
 
         return antallMetrikkerPerMåned
     }
 
+    fun fjernDupliserteMetrikkerSammeDag(
+        mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
+    ): List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk> {
+        return mottattIaTjenesteMetrikker.distinctBy {
+            Pair(it.orgnr, it.tidspunkt.toLocalDate())
+        }
+    }
+
     fun beregnAntallMetrikkerPerDag(
         mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
     ): Map<LocalDate, Int> {
-        return mottattIaTjenesteMetrikker.distinctBy {
-            Pair(it.orgnr, it.tidspunkt.toLocalDate())
-        }.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
-    }
-
-    fun beregnTotalUnikeBedrifterPerDag(
-        mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
-    ): Map<LocalDate, Int> {
-        return mottattIaTjenesteMetrikker.distinctBy {
-            Pair(it.orgnr, it.tidspunkt.toLocalDate())
-        }.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
+        return mottattIaTjenesteMetrikker.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
     }
 
     fun gjeldendeMåneder() = gjeldendeMåneder

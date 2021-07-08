@@ -29,7 +29,7 @@ class UtsendingTilDatakatalogController(val datakatalogStatistikk: DatakatalogSt
         log("UtsendingTilDatakatalogController")
             .info("Sender datapakke til datakatalog")
 
-        datakatalogStatistikk.byggOgSendDatapakke(true)
+        datakatalogStatistikk.byggOgSendDatapakke(erDebugAktivert = true)
 
         clearNavCallid()
         return ResponseEntity.status(HttpStatus.CREATED)

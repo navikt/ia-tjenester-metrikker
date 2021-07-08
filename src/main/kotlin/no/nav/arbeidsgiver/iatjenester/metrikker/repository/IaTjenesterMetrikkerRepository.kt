@@ -98,8 +98,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         )
     }
 
-    class MottattIaTjenesteMetrikk(val erInnlogget: Boolean?, val orgnr: String?, val tidspunkt: LocalDateTime)
-
+    class MottattIaTjenesteMetrikk(val orgnr: String?, val tidspunkt: LocalDateTime)
 
     fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> =
         namedParameterJdbcTemplate.query("""
@@ -110,7 +109,6 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
             MapSqlParameterSource().addValue("startDato", startDato),
             RowMapper { rs: ResultSet, _: Int ->
                 MottattIaTjenesteMetrikk(
-                    true,
                     null,
                     rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
                 )
@@ -126,7 +124,6 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
             MapSqlParameterSource().addValue("startDato", startDato),
             RowMapper { rs: ResultSet, _: Int ->
                 MottattIaTjenesteMetrikk(
-                    false,
                     rs.getString("orgnr"),
                     rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
                 )

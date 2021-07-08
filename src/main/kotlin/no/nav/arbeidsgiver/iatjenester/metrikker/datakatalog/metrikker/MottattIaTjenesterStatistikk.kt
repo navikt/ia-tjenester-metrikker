@@ -2,21 +2,38 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
 import java.time.format.TextStyle
-import java.util.*
+import java.util.Locale
+
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) : DatakatalogData {
 
+    var NORSK_BOKMÅL = Locale("no", "NO", "NB")
 
     override fun views() = listOf(
         View(
-            title = "Antall mottatt ia-tjenester",
-            description = "Vise antall mottatt ia-tjenester",
+            title = "Mottatte digitale IA-tjenester",
+            description = "Tallene viser totalt antall digitale IA-tjenester fra ${
+                datagrunnlag.gjeldendeMåneder.first().getDisplayName(
+                    TextStyle.SHORT,
+                    NORSK_BOKMÅL
+                )
+            } ${datagrunnlag.gjelendeÅr}",
             specType = SpecType.markdown,
             spec = lagMarkdownSpec(datagrunnlag),
         ),
         View(
-            title = "Antall mottatt ia-tjenester",
-            description = "Vise antall mottatt ia-tjenester",
+            title = "Mottatte digitale IA-tjenester per måned (${
+                datagrunnlag.gjeldendeMåneder.first().getDisplayName(
+                    TextStyle.SHORT,
+                    NORSK_BOKMÅL
+                )
+            } - ${
+                datagrunnlag.gjeldendeMåneder.last().getDisplayName(
+                    TextStyle.SHORT,
+                    NORSK_BOKMÅL
+                )
+            } ${datagrunnlag.gjelendeÅr})",
+            description = "Vise antall digitale IA-tjenester mottatt per applikasjon per måned",
             specType = SpecType.echart,
             spec = lagEchartSpec(datagrunnlag),
         )
@@ -36,7 +53,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Xaxis(
                     "category",
                     data = datagrunnlag.gjeldendeMåneder()
-                        .map { month -> month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH) }
+                        .map { month -> month.getDisplayName(TextStyle.SHORT, NORSK_BOKMÅL) }
                 ),
                 Yaxis("value"),
                 listOf(
@@ -59,9 +76,9 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
 
     private fun lagMarkdownSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): MarkdownSpec {
         return MarkdownSpec(
-            "## Samtalestøtte \n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
-                    "## Sykefraværsstatistikk\n **${datagrunnlag.totalInnloggetMetrikker}** \n " +
-                    "### Antall bedrifter \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
+            "## Samtalestøtte (uinnlogget)\n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
+                    "## Sykefraværsstatistikk (innlogget)\n **${datagrunnlag.totalInnloggetMetrikker}** \n " +
+                    "### Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
         )
     }
 

@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesterDatagrunnlag
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesterStatistikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
@@ -9,7 +10,6 @@ import java.time.LocalDate
 import java.time.LocalDate.now
 import java.time.Month
 import java.time.temporal.ChronoUnit
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 
 @Component
@@ -18,14 +18,14 @@ class DatakatalogStatistikk(
     private val datakatalogKlient: DatakatalogKlient
 ) : Runnable {
 
-    private val dagensDato = now()
     private val fraDato = LocalDate.of(2021, 1, 1)
+    private val dagensDato = now()
 
     override fun run() {
         byggOgSendDatapakke(false)
     }
 
-    internal fun byggOgSendDatapakke(erDebugAktivert: Boolean) {
+    internal fun byggOgSendDatapakke(erDebugAktivert: Boolean = false) {
         log.info("Starter jobb som sender statistikk til datakatalogen")
         log.info("Skal sende statistikk for målinger til og med ${dagensDato}")
         byggDatapakke().also {
@@ -33,7 +33,6 @@ class DatakatalogStatistikk(
                 log("DatakatalogStatistikk").info(
                     "Sender følgende datapakke '${jacksonObjectMapper().writeValueAsString(it)}'"
                 )
-                println(jacksonObjectMapper().writeValueAsString(it))
             }
             datakatalogKlient.sendDatapakke(it)
         }
@@ -42,7 +41,7 @@ class DatakatalogStatistikk(
 
     private fun datapakke(views: List<View>): Datapakke =
         Datapakke(
-            title = "IA-tjenester metrikker",
+            title = "Digitale IA-tjenester",
             type = "datapackage",
             description = "Mottatt ia-tjenester-metrikker fra sykefraværsstatistikk og samtalestøtte (OBS: dev/test miljø)",
             views = views,
@@ -52,21 +51,22 @@ class DatakatalogStatistikk(
             team = "Team IA"
         )
 
-    private fun byggDatapakke(): Datapakke = (
-            iaTjenesterMetrikkerRepository.hentUinnloggetMetrikker(fraDato) to
-                    iaTjenesterMetrikkerRepository.hentInnloggetMetrikker(fraDato))
+    private fun byggDatapakke(): Datapakke = (Pair(
+        iaTjenesterMetrikkerRepository.hentUinnloggetMetrikker(fraDato),
+        iaTjenesterMetrikkerRepository.hentInnloggetMetrikker(fraDato)
+    ))
         .let { (uinnloggedeMetrikker, innloggedeMetrikker) ->
             MottattIaTjenesterStatistikk(
                 MottattIaTjenesterDatagrunnlag(
                     innloggedeMetrikker,
-                    uinnloggedeMetrikker
-                ) { dagensDato }
-
+                    uinnloggedeMetrikker,
+                    fraDato,
+                    dagensDato
+                )
             ).let {
                 datapakke(it.views())
             }
         }
-
 }
 
 infix fun LocalDate.til(tilDato: LocalDate): List<Month> {
