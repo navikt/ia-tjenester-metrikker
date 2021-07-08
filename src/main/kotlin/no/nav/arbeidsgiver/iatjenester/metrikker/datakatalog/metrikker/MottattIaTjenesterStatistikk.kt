@@ -46,8 +46,8 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             Option(
                 Legend(
                     listOf(
-                        "Uinnlogget",
-                        "Innlogget"
+                        "Samtalestøtte (uinnlogget)",
+                        "Sykefraværsstatistikk (innlogget)"
                     )
                 ),
                 Xaxis(
@@ -58,13 +58,13 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Yaxis("value"),
                 listOf(
                     Serie(
-                        "Uinnlogget",
+                        "Samtalestøtte (uinnlogget)",
                         datagrunnlag.antallUinnloggetMetrikkerPerMåned.values.toList(),
                         "bar",
                         "Samtalestøtte"
                     ),
                     Serie(
-                        "Innlogget",
+                        "Sykefraværsstatistikk (innlogget)",
                         datagrunnlag.antallInnloggetMetrikkerPerMåned.values.toList(),
                         "bar",
                         "Sykefraværsstatistikk"
@@ -82,4 +82,16 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         )
     }
 
+    // TODO lag en PR på denne og legg til en View med specType = SpecType.markdown, title = "Hva er en digital IA-tjeneste?", uten description
+    private fun lagHvaErEnDigitatlIaTjenesteSpec(): MarkdownSpec {
+        return MarkdownSpec(
+            "I samtalestøtte registreres en digital IA-tjeneste når brukeren\n" +
+                    " 1. finner informasjon om når eller hvordan de skal gjennomføre en samtale\n " +
+                    " 2. benytter seg av veiledningen til systematisk arbeid\n " +
+                    "\n" +
+                    "I sykefraværsstatistikk registreres en digital IA-tjeneste dersom brukerene\n" +
+                    " 1. ser sine og bransjens/næringens sykefraværtall og/eller\n " +
+                    " 2. trykker seg videre til en ressurs inne på siden eller ut til eksterne lenker\n "
+        )
+    }
 }

@@ -43,7 +43,7 @@ class DatakatalogStatistikk(
         Datapakke(
             title = "Digitale IA-tjenester",
             type = "datapackage",
-            description = "Mottatt ia-tjenester-metrikker fra sykefraværsstatistikk og samtalestøtte (OBS: dev/test miljø)",
+            description = "Mottatt ia-tjenester-metrikker fra sykefraværsstatistikk og samtalestøtte",
             views = views,
             name = "ia-tjenester-metrikker-statistikk",
             uri = "",

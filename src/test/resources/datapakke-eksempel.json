@@ -1,7 +1,7 @@
 {
   "title": "IA tjenester-metrikker",
   "type": "datapackage",
-  "description": "Mottatt ia-tjenester-metrikker fra sykefraværsstatistikk og samtalestøtte (OBS: dev/test miljø)",
+  "description": "Mottatt ia-tjenester-metrikker fra sykefraværsstatistikk og samtalestøtte",
   "name": "ia-tjenester-metrikker-i-dev-miljø",
   "uri": "",
   "url": "",
