@@ -1,0 +1,54 @@
+{
+  "title": "IA tjenester-metrikker",
+  "type": "datapackage",
+  "description": "Mottatte ia-tjenester-metrikker fra sykefraværsstatistikk og samtalestøtte",
+  "name": "ia-tjenester-metrikker-i-dev-miljø",
+  "uri": "",
+  "url": "",
+  "team": "teamIA",
+  "views": [
+    {
+      "title": "Mottatte ia-tjenester per applikasjon",
+      "name": "Antall mottatt ia-tjenester",
+      "description": "Mottatte ia-tjenester fra digitale tjenester i Nav",
+      "specType": "markdown",
+      "spec": {
+        "markdown": "## Samtalestøtte \n **12550**\n ## Sykefraværsstatistikk\n **4569** \n ### Antall bedrifter \n **1664**"
+      }
+    },
+    {
+      "title": "Mottatte ia-tjenester-metrikker per måned",
+      "description": "Antall ia-tjenester mottat per applikasjon: Sykefraværsstatistikk (blå) og Samtalestøtte (grønn)",
+      "specType": "echart",
+      "spec": {
+        "url": "",
+        "option": {
+          "legend": {
+            "data": ["Innlogget", "Uinlogget"]
+          },
+          "xAxis": {
+            "type": "category",
+            "data": ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun"]
+          },
+          "yAxis": {
+            "type": "value"
+          },
+          "series": [
+            {
+              "name": "Innlogget",
+              "data": [0, 240, 650, 570, 530, 495],
+              "type": "bar",
+              "title": "Sykefraværsstatistikk"
+            },
+            {
+              "name": "Uinlogget",
+              "data": [0, 346, 950, 1165, 1234, 1100],
+              "type": "bar",
+              "title": "Samtalestøtte"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

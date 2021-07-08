@@ -10,6 +10,15 @@ Fra IntelliJ:
 ### Dokumentasjon
 API dok finner du her: http://localhost:8080/ia-tjenester-metrikker/swagger-ui.html
 
+#### Datapakke til datakatalogen
+##### Opprettelse av en datapakke
+
+Datapakker er opprettet i dev og prod. Om det skulle gjøres på nytt, bruk filen `datapakke-init.json` for å opprette en ny datapakke som følgende (ta var på id-en i response): 
+
+`curl -X 'POST' -d @src/test/resources/datapakke-init.json 'https://{utl til datakatalog-api}/v1/datapackage'`
+##### Cron jobb som sender data til datakatalog
+Hver dag kjøres en cron jobb som henter `ìa-tjenester-metrikker` og sender dem til datakatalog kl. 7:55
+
 ### Hente en lokal selvbetjenening-idtoken for å kjøre Postman mot innlogget endepunkt
 
 Start applikasjon og kjør i terminal (Mac med python 2):

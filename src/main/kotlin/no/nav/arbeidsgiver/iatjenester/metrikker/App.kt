@@ -5,7 +5,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 
@@ -18,7 +17,8 @@ import org.springframework.boot.runApplication
         OutboundKafkaProperties::class,
         SecurityConfig::class,
         AltinnConfigProperties::class,
-        TilgangskontrollConfigProperties::class
+        TilgangskontrollConfigProperties::class,
+        DatakatalogConfigProperties::class
     ]
 )
 class App

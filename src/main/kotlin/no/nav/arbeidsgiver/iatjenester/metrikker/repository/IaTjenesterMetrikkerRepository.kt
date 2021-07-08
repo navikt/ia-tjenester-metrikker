@@ -2,10 +2,14 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
+import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.sql.ResultSet
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Transactional
 @Repository
@@ -93,4 +97,36 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                 .addValue("kommune", iatjeneste.kommune)
         )
     }
+
+    class MottattIaTjenesteMetrikk(val orgnr: String?, val tidspunkt: LocalDateTime)
+
+    fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> =
+        namedParameterJdbcTemplate.query("""
+                select tjeneste_mottakkelsesdato 
+                from metrikker_ia_tjenester_uinnlogget 
+                where tjeneste_mottakkelsesdato >= :startDato
+                """,
+            MapSqlParameterSource().addValue("startDato", startDato),
+            RowMapper { rs: ResultSet, _: Int ->
+                MottattIaTjenesteMetrikk(
+                    null,
+                    rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
+                )
+            }
+        )
+
+    fun hentInnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> =
+        namedParameterJdbcTemplate.query("""
+            select orgnr, tjeneste_mottakkelsesdato 
+            from metrikker_ia_tjenester_innlogget 
+            where tjeneste_mottakkelsesdato >= :startDato
+            """,
+            MapSqlParameterSource().addValue("startDato", startDato),
+            RowMapper { rs: ResultSet, _: Int ->
+                MottattIaTjenesteMetrikk(
+                    rs.getString("orgnr"),
+                    rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
+                )
+            }
+        )
 }

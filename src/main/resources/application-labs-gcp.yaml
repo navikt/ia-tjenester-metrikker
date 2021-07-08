@@ -39,3 +39,8 @@ tilgangskontroll:
 
 wiremock:
   port: 8585
+
+datakatalog:
+  rootUrl: http://localhost:8585/
+  datapakkeId: ingen_datakatalog_i_labs_miljo
+  erUtsendingAktivert: false

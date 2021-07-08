@@ -68,9 +68,11 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(200)
+        Assertions.assertThat(response.statusCode()).isEqualTo(201)
         val body: JsonNode = objectMapper.readTree(response.body())
-        Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
+        val status = body.get("status")
+        Assertions.assertThat(status).isNotNull
+        Assertions.assertThat(status.asText()).isEqualTo("created")
     }
 
 

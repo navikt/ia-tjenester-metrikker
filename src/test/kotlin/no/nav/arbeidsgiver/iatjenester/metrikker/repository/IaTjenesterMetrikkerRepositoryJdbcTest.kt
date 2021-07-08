@@ -2,9 +2,14 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import no.nav.arbeidsgiver.iatjenester.metrikker.IaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.cleanTable
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.getAlleIATjenester
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.getAlleUinnloggetIaTjenester
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettInnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettUinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.UinnloggetIaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
 import org.assertj.core.api.Assertions.assertThat
@@ -12,13 +17,92 @@ import org.flywaydb.core.Flyway
 import org.h2.jdbc.JdbcConnection
 import org.h2.tools.Server
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.sql.Date
+import java.sql.Timestamp
+import java.time.LocalDate.now
 import javax.sql.DataSource
 
 class IaTjenesterMetrikkerRepositoryJdbcTest {
 
     private val IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED = false
+
+    @BeforeEach
+    fun cleanUp() {
+        dataSource.connection.cleanTable("metrikker_ia_tjenester_innlogget")
+        dataSource.connection.cleanTable("metrikker_ia_tjenester_uinnlogget")
+    }
+
+
+    @Test
+    fun `hentUinnloggetIaTjenesterMetrikker`() {
+        opprettUinnloggetIaTjenester(listOf(Date.valueOf(now()), Date.valueOf(now())))
+
+        val innloggetMetrikker =
+            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentUinnloggetMetrikker(
+                now().withDayOfMonth(
+                    1
+                ).withMonth(1)
+            )
+
+        assertThat(innloggetMetrikker.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `hentUinnloggetIaTjenesterMetrikker fra en vis dato`() {
+        opprettUinnloggetIaTjenester(listOf(Date.valueOf(now()), Date.valueOf(now().minusYears(1))))
+
+        val innloggetMetrikker =
+            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentUinnloggetMetrikker(
+                now().withDayOfMonth(
+                    1
+                ).withMonth(1)
+            )
+        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
+        assertThat(innloggetMetrikker.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `hentInnloggetIaTjenesterMetrikker`() {
+        opprettInnloggetIaTjenester(
+            listOf(
+                Date.valueOf(now().minusDays(3)),
+                Date.valueOf(now().minusDays(3))
+            )
+        )
+
+        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
+        val uinnloggetMetrikker =
+            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentInnloggetMetrikker(
+                now().withDayOfMonth(
+                    1
+                ).withMonth(1)
+            )
+
+        assertThat(uinnloggetMetrikker.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `hentInnloggetIaTjenesterMetrikker fra en vis dato`() {
+        opprettInnloggetIaTjenester(
+            listOf(
+                Date.valueOf(now().minusDays(3)),
+                Date.valueOf(now().minusYears(1))
+            )
+        )
+
+        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
+        val uinnloggetMetrikker =
+            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentInnloggetMetrikker(
+                now().withDayOfMonth(
+                    1
+                ).withMonth(1)
+            )
+
+        assertThat(uinnloggetMetrikker.size).isEqualTo(1)
+    }
 
     @Test
     fun `opprett() lagrer en UinnloggetIaTjeneste i DB`() {
@@ -30,7 +114,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         val antallUinnloggetIaTjenester = dataSource.connection.getAlleUinnloggetIaTjenester()
         assertThat(antallUinnloggetIaTjenester.size).isEqualTo(1)
         val iaTjenesteRad = antallUinnloggetIaTjenester[0]
-        assertThat(iaTjenesteRad.id).isEqualTo(1)
         assertThat(iaTjenesteRad.type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
         assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKEFRAVÆRSSTATISTIKK)
         assertThat(iaTjenesteRad.tjeneste_mottakkelsesdato).isNotNull()
@@ -64,6 +147,46 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.kommunenummer).isEqualTo("0234")
         assertThat(iaTjenesteRad.kommune).isEqualTo("Gjerdrum")
         assertThat(iaTjenesteRad.opprettet).isNotNull()
+    }
+
+
+    private fun opprettUinnloggetIaTjenester(dates: List<Date> ) {
+        dates.forEachIndexed() { index, date ->
+            dataSource.connection.opprettUinnloggetIaTjeneste(
+                UinnloggetIaTjenesteRad(
+                    id = index + 1,
+                    type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
+                    kilde = Kilde.SAMTALESTØTTE,
+                    Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
+                    Date.valueOf(now())
+                )
+            )
+        }
+    }
+
+    private fun opprettInnloggetIaTjenester(dates: List<Date> ) {
+        dates.forEachIndexed() { index, date ->
+            dataSource.connection.opprettInnloggetIaTjeneste(
+                IaTjenesteRad(
+                    id = index + 1,
+                    type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
+                    kilde = Kilde.SYKEFRAVÆRSSTATISTIKK,
+                    orgnr = (999999900 + index).toString(),
+                    næringKode5Siffer = "",
+                    næring2SifferBeskrivelse = "",
+                    tjeneste_mottakkelsesdato = Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
+                    antallAnsatte = 5 + index,
+                    næringskode5SifferBeskrivelse = "",
+                    SSBSektorKode = "",
+                    SSBSektorKodeBeskrivelse = "",
+                    fylkesnummer = "",
+                    fylke = "",
+                    kommunenummer = "",
+                    kommune = "",
+                    opprettet = Date.valueOf(now())
+                )
+            )
+        }
     }
 
 
