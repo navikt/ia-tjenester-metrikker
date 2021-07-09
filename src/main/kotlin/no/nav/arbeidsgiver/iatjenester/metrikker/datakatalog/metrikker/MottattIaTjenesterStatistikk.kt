@@ -12,12 +12,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
     override fun views() = listOf(
         View(
             title = "Mottatte digitale IA-tjenester",
-            description = "Tallene viser totalt antall digitale IA-tjenester fra ${
-                datagrunnlag.gjeldendeMåneder.first().getDisplayName(
-                    TextStyle.SHORT,
-                    NORSK_BOKMÅL
-                )
-            } ${datagrunnlag.gjelendeÅr}",
+            description = "Antall digitale IA-tjenester siden 1. januar",
             specType = SpecType.markdown,
             spec = lagMarkdownSpec(datagrunnlag),
         ),
@@ -33,7 +28,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                     NORSK_BOKMÅL
                 )
             } ${datagrunnlag.gjelendeÅr})",
-            description = "Vise antall digitale IA-tjenester mottatt per applikasjon per måned",
+            description = "Antall digitale IA-tjenester mottatt per applikasjon per måned",
             specType = SpecType.echart,
             spec = lagEchartSpec(datagrunnlag),
         )
