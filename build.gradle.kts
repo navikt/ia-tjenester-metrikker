@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.4.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.4.32"
-    id("com.github.ben-manes.versions") version "0.38.0"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.21"
+    id("com.github.ben-manes.versions") version "0.39.0"
     kotlin("jvm") version "1.4.32"
     kotlin("plugin.spring") version "1.4.32"
     application
@@ -12,7 +12,7 @@ plugins {
 
 val navSecurityVersion = "1.3.4"
 val altinnRettigheterProxyKlientVersion = "2.0.1"
-val shedlockVersion = "4.20.0"
+val shedlockVersion = "4.25.0"
 
 
 group = "no.nav.arbeidsgiver"
@@ -49,8 +49,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springdoc:springdoc-openapi-ui:1.5.6")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.6")
+    implementation("org.springdoc:springdoc-openapi-ui:1.5.9")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.9")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -61,16 +61,16 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("net.logstash.logback:logstash-logback-encoder:6.6")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2")
-    implementation("com.google.code.gson:gson:2.8.6")
+    implementation("com.google.code.gson:gson:2.8.7")
 
     implementation("io.arrow-kt:arrow-core:0.13.2")
     implementation("com.zaxxer:HikariCP:3.4.5")
     implementation("org.flywaydb:flyway-core:5.2.4")
-    implementation("org.postgresql:postgresql:42.2.19")
+    implementation("org.postgresql:postgresql:42.2.23")
     implementation("com.h2database:h2:1.4.200")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.retry:spring-retry")
-    implementation("org.springframework.kafka:spring-kafka:2.6.7")
+    implementation("org.springframework.kafka:spring-kafka:2.7.3")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}:kotlin-client")
 
@@ -86,6 +86,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
     testImplementation("io.mockk:mockk:1.11.0")
     testImplementation("org.assertj:assertj-core:3.19.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.0-M1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.0-M1")
 }
