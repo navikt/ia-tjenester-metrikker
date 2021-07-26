@@ -68,7 +68,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.7")
 
     implementation("io.arrow-kt:arrow-core:0.13.2")
-    implementation("com.zaxxer:HikariCP:3.4.5")
+    implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("org.flywaydb:flyway-core:5.2.4")
     implementation("org.postgresql:postgresql:42.2.23")
     implementation("com.h2database:h2:1.4.200")
