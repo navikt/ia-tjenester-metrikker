@@ -88,8 +88,8 @@ dependencies {
     testImplementation("com.github.tomakehurst:wiremock:2.27.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-    testImplementation("io.mockk:mockk:1.11.0")
-    testImplementation("org.assertj:assertj-core:3.19.0")
+    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("org.assertj:assertj-core:3.20.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.0-M1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.0-M1")
 }
