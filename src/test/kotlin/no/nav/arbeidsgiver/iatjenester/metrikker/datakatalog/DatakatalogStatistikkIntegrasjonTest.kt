@@ -67,7 +67,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         }
     }
 
-    private lateinit var målingFra :LocalDate // = LocalDate.of(2021, Month.JANUARY, 1)
+    private lateinit var målingFra :LocalDate
 
 
     @BeforeAll
@@ -80,12 +80,6 @@ internal class DatakatalogStatistikkIntegrasjonTest {
                 return LocalDate.of(2021, Month.JULY, 1)
             }
         }
-        /*
-        datakatalogStatistikk =
-            DatakatalogStatistikk(
-                iaTjenesterMetrikkerRepository,
-                mockDatakatalogKlient
-            )*/
 
         datakatalogStatistikkSomSenderTilLokalMockServer =
             DatakatalogStatistikk(
