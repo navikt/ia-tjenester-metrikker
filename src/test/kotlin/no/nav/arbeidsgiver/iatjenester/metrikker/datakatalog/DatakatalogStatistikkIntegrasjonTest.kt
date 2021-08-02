@@ -28,6 +28,8 @@ import org.springframework.web.client.RestTemplate
 import java.sql.Date
 import java.sql.Timestamp
 import java.time.LocalDate
+import java.time.LocalDate.now
+import java.time.Month
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -51,7 +53,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     private lateinit var datakatalogKlient: DatakatalogKlient
 
 
-    private lateinit var datakatalogStatistikk: DatakatalogStatistikk
+    private lateinit var datakatalogStatistikkMedDato: DatakatalogStatistikk
     private lateinit var datakatalogStatistikkSomSenderTilLokalMockServer: DatakatalogStatistikk
     private lateinit var produsertDatapakke: Datapakke
 
@@ -65,22 +67,33 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         }
     }
 
-    private val målingFra = LocalDate.of(2021, 1, 1)
+    private lateinit var målingFra :LocalDate // = LocalDate.of(2021, Month.JANUARY, 1)
 
 
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
+        datakatalogStatistikkMedDato = object : DatakatalogStatistikk(
+            iaTjenesterMetrikkerRepository,
+            mockDatakatalogKlient
+        ) {
+            override fun dagensDato(): LocalDate {
+                return LocalDate.of(2021, Month.JULY, 1)
+            }
+        }
+        /*
         datakatalogStatistikk =
             DatakatalogStatistikk(
                 iaTjenesterMetrikkerRepository,
                 mockDatakatalogKlient
-            )
+            )*/
 
         datakatalogStatistikkSomSenderTilLokalMockServer =
             DatakatalogStatistikk(
                 iaTjenesterMetrikkerRepository,
                 datakatalogKlient
             )
+
+        målingFra = datakatalogStatistikkSomSenderTilLokalMockServer.startDato()
     }
 
 
@@ -88,7 +101,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     fun `kjør DatakatalogStatistikk og verifiser innhold til datapakke`() {
         opprettTestDataIDB(namedParameterJdbcTemplate)
 
-        datakatalogStatistikk.run()
+        datakatalogStatistikkMedDato.run()
 
         Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(2)
         Assertions.assertThat(produsertDatapakke.views[0].spec).isInstanceOf(MarkdownSpec::class.java)
