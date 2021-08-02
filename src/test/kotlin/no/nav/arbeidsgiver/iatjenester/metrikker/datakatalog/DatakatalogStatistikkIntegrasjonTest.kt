@@ -108,16 +108,16 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
         val echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
         Assertions.assertThat(echartSpec.option.xAxis.data)
-            .isEqualTo(listOf("jan.", "feb.", "mar.", "apr.", "mai", "jun.", "jul."))
+            .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
         Assertions.assertThat(echartSpec.option.series[0].name).isEqualTo("Samtalestøtte (uinnlogget)")
         Assertions.assertThat(echartSpec.option.series[0].title).isEqualTo("Samtalestøtte")
         Assertions.assertThat(echartSpec.option.series[0].data)
-            .isEqualTo(listOf(0, 1, 2, 2, 2, 0, 0))
+            .isEqualTo(listOf(0, 1, 2, 2, 2))
         Assertions.assertThat(echartSpec.option.series[1].name).isEqualTo("Sykefraværsstatistikk (innlogget)")
         Assertions.assertThat(echartSpec.option.series[1].title)
             .isEqualTo("Sykefraværsstatistikk")
         Assertions.assertThat(echartSpec.option.series[1].data)
-            .isEqualTo(listOf(1, 3, 1, 1, 1, 0, 1))
+            .isEqualTo(listOf(1, 3, 1, 1, 1,))
     }
 
     @Test

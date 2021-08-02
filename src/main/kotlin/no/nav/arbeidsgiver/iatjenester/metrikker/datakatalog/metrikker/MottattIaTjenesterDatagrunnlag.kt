@@ -11,6 +11,7 @@ class MottattIaTjenesterDatagrunnlag(
     fraDato: LocalDate,
     tilDato: LocalDate
 ) {
+    val startDate: LocalDate = fraDato
     val gjelendeÅr = fraDato.year
     val gjeldendeMåneder: List<Month> = fraDato til tilDato
 

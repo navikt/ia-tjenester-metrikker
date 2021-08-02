@@ -22,7 +22,7 @@ class DatakatalogStatistikk(
     private val tilDato: LocalDate = dagensDato()
 
     fun startDato(): LocalDate {
-        return LocalDate.of(2021, Month.JANUARY, 1)
+        return LocalDate.of(2021, Month.MARCH, 1)
     }
 
     fun dagensDato(): LocalDate {
