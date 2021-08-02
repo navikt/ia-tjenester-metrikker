@@ -28,6 +28,8 @@ import org.springframework.web.client.RestTemplate
 import java.sql.Date
 import java.sql.Timestamp
 import java.time.LocalDate
+import java.time.LocalDate.now
+import java.time.Month
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -51,7 +53,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     private lateinit var datakatalogKlient: DatakatalogKlient
 
 
-    private lateinit var datakatalogStatistikk: DatakatalogStatistikk
+    private lateinit var datakatalogStatistikkMedDato: DatakatalogStatistikk
     private lateinit var datakatalogStatistikkSomSenderTilLokalMockServer: DatakatalogStatistikk
     private lateinit var produsertDatapakke: Datapakke
 
@@ -65,22 +67,27 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         }
     }
 
-    private val målingFra = LocalDate.of(2021, 1, 1)
+    private lateinit var målingFra :LocalDate
 
 
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
-        datakatalogStatistikk =
-            DatakatalogStatistikk(
-                iaTjenesterMetrikkerRepository,
-                mockDatakatalogKlient
-            )
+        datakatalogStatistikkMedDato = object : DatakatalogStatistikk(
+            iaTjenesterMetrikkerRepository,
+            mockDatakatalogKlient
+        ) {
+            override fun dagensDato(): LocalDate {
+                return LocalDate.of(2021, Month.JULY, 1)
+            }
+        }
 
         datakatalogStatistikkSomSenderTilLokalMockServer =
             DatakatalogStatistikk(
                 iaTjenesterMetrikkerRepository,
                 datakatalogKlient
             )
+
+        målingFra = datakatalogStatistikkSomSenderTilLokalMockServer.startDato()
     }
 
 
@@ -88,23 +95,23 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     fun `kjør DatakatalogStatistikk og verifiser innhold til datapakke`() {
         opprettTestDataIDB(namedParameterJdbcTemplate)
 
-        datakatalogStatistikk.run()
+        datakatalogStatistikkMedDato.run()
 
         Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(2)
         Assertions.assertThat(produsertDatapakke.views[0].spec).isInstanceOf(MarkdownSpec::class.java)
 
         val echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
         Assertions.assertThat(echartSpec.option.xAxis.data)
-            .isEqualTo(listOf("jan.", "feb.", "mar.", "apr.", "mai", "jun.", "jul."))
+            .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
         Assertions.assertThat(echartSpec.option.series[0].name).isEqualTo("Samtalestøtte (uinnlogget)")
         Assertions.assertThat(echartSpec.option.series[0].title).isEqualTo("Samtalestøtte")
         Assertions.assertThat(echartSpec.option.series[0].data)
-            .isEqualTo(listOf(0, 1, 2, 2, 2, 0, 0))
+            .isEqualTo(listOf(0, 1, 2, 2, 2))
         Assertions.assertThat(echartSpec.option.series[1].name).isEqualTo("Sykefraværsstatistikk (innlogget)")
         Assertions.assertThat(echartSpec.option.series[1].title)
             .isEqualTo("Sykefraværsstatistikk")
         Assertions.assertThat(echartSpec.option.series[1].data)
-            .isEqualTo(listOf(1, 3, 1, 1, 1, 0, 1))
+            .isEqualTo(listOf(1, 3, 1, 1, 1,))
     }
 
     @Test

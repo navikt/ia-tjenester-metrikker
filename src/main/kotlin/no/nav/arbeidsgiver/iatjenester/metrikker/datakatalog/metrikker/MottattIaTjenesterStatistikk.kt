@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
+import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -8,11 +9,17 @@ import java.util.Locale
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) : DatakatalogData {
 
     var NORSK_BOKMÅL = Locale("no", "NO", "NB")
+    var startDato: LocalDate = datagrunnlag.startDate
 
     override fun views() = listOf(
         View(
             title = "Mottatte digitale IA-tjenester",
-            description = "Antall digitale IA-tjenester siden 1. januar",
+            description = "Antall digitale IA-tjenester siden 1. ${
+                startDato.month.getDisplayName(
+                    TextStyle.FULL,
+                    NORSK_BOKMÅL
+                )
+            }",
             specType = SpecType.markdown,
             spec = lagMarkdownSpec(datagrunnlag),
         ),

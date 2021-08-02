@@ -18,8 +18,16 @@ class DatakatalogStatistikk(
     private val datakatalogKlient: DatakatalogKlient
 ) : Runnable {
 
-    private val fraDato = LocalDate.of(2021, 1, 1)
-    private val dagensDato = now()
+    private val fraDato: LocalDate = startDato()
+    private val tilDato: LocalDate = dagensDato()
+
+    fun startDato(): LocalDate {
+        return LocalDate.of(2021, Month.MARCH, 1)
+    }
+
+    fun dagensDato(): LocalDate {
+        return now()
+    }
 
     override fun run() {
         byggOgSendDatapakke(false)
@@ -27,7 +35,7 @@ class DatakatalogStatistikk(
 
     internal fun byggOgSendDatapakke(erDebugAktivert: Boolean = false) {
         log.info("Starter jobb som sender statistikk til datakatalogen")
-        log.info("Skal sende statistikk for målinger til og med ${dagensDato}")
+        log.info("Skal sende statistikk for målinger til og med ${tilDato}")
         byggDatapakke().also {
             if (erDebugAktivert) {
                 log("DatakatalogStatistikk").info(
@@ -61,7 +69,7 @@ class DatakatalogStatistikk(
                     innloggedeMetrikker,
                     uinnloggedeMetrikker,
                     fraDato,
-                    dagensDato
+                    tilDato
                 )
             ).let {
                 datapakke(it.views())
