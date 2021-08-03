@@ -11,7 +11,7 @@ plugins {
 }
 
 val navSecurityVersion = "1.3.4"
-val altinnRettigheterProxyKlientVersion = "2.0.1"
+val altinnRettigheterProxyKlientVersion = "2.0.2"
 val shedlockVersion = "4.25.0"
 
 
@@ -39,9 +39,10 @@ tasks.getByName<Jar>("jar") {
 }
 
 repositories {
+    mavenCentral()
     jcenter()
     maven {
-        url = uri("https://packages.confluent.io/maven/")
+        url = uri("https://repo1.maven.org/maven2/")
     }
 }
 
@@ -76,7 +77,8 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.kafka:spring-kafka:2.7.4")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
-    implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}:kotlin-client")
+    implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}")
+    runtime("com.github.kittinunf.result:result:2.2.1")
 
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
