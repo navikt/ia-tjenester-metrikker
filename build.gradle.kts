@@ -5,8 +5,8 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.5.21"
     id("com.github.ben-manes.versions") version "0.39.0"
-    kotlin("jvm") version "1.4.32"
-    kotlin("plugin.spring") version "1.4.32"
+    kotlin("jvm") version "1.5.30-M1"
+    kotlin("plugin.spring") version "1.5.30-M1"
     application
 }
 
@@ -78,7 +78,7 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka:2.7.5")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}")
-    runtime("com.github.kittinunf.result:result:2.2.1")
+    runtimeOnly("com.github.kittinunf.result:result:2.2.1")
 
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
@@ -89,7 +89,6 @@ dependencies {
     testImplementation("no.nav.security:token-validation-spring-test:${navSecurityVersion}")
     testImplementation("com.github.tomakehurst:wiremock:2.27.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
     testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("org.assertj:assertj-core:3.20.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.0-M1")
