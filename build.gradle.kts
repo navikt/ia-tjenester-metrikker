@@ -5,13 +5,13 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.5.21"
     id("com.github.ben-manes.versions") version "0.39.0"
-    kotlin("jvm") version "1.4.32"
-    kotlin("plugin.spring") version "1.4.32"
+    kotlin("jvm") version "1.5.30-M1"
+    kotlin("plugin.spring") version "1.5.30-M1"
     application
 }
 
-val navSecurityVersion = "1.3.4"
-val altinnRettigheterProxyKlientVersion = "2.0.1"
+val navSecurityVersion = "1.3.7"
+val altinnRettigheterProxyKlientVersion = "2.0.2"
 val shedlockVersion = "4.25.0"
 
 
@@ -39,9 +39,10 @@ tasks.getByName<Jar>("jar") {
 }
 
 repositories {
+    mavenCentral()
     jcenter()
     maven {
-        url = uri("https://packages.confluent.io/maven/")
+        url = uri("https://repo1.maven.org/maven2/")
     }
 }
 
@@ -53,8 +54,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springdoc:springdoc-openapi-ui:1.5.9")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.9")
+    implementation("org.springdoc:springdoc-openapi-ui:1.5.10")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.10")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -64,7 +65,7 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("net.logstash.logback:logstash-logback-encoder:6.6")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0-rc1")
     implementation("com.google.code.gson:gson:2.8.7")
 
     implementation("io.arrow-kt:arrow-core:0.13.2")
@@ -74,9 +75,10 @@ dependencies {
     implementation("com.h2database:h2:1.4.200")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.retry:spring-retry")
-    implementation("org.springframework.kafka:spring-kafka:2.7.4")
+    implementation("org.springframework.kafka:spring-kafka:2.7.5")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
-    implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}:kotlin-client")
+    implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}")
+    runtimeOnlyDependenciesMetadata("com.github.kittinunf.result:result:2.2.1")
 
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
@@ -87,7 +89,6 @@ dependencies {
     testImplementation("no.nav.security:token-validation-spring-test:${navSecurityVersion}")
     testImplementation("com.github.tomakehurst:wiremock:2.27.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
     testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("org.assertj:assertj-core:3.20.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.0-M1")
