@@ -10,7 +10,7 @@ plugins {
     application
 }
 
-val navSecurityVersion = "1.3.4"
+val navSecurityVersion = "1.3.7"
 val altinnRettigheterProxyKlientVersion = "2.0.2"
 val shedlockVersion = "4.25.0"
 
@@ -54,8 +54,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springdoc:springdoc-openapi-ui:1.5.9")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.9")
+    implementation("org.springdoc:springdoc-openapi-ui:1.5.10")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.10")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -75,7 +75,7 @@ dependencies {
     implementation("com.h2database:h2:1.4.200")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.retry:spring-retry")
-    implementation("org.springframework.kafka:spring-kafka:2.7.4")
+    implementation("org.springframework.kafka:spring-kafka:2.7.5")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}")
     runtime("com.github.kittinunf.result:result:2.2.1")
