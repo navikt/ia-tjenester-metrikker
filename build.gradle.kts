@@ -65,7 +65,7 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("net.logstash.logback:logstash-logback-encoder:6.6")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0-rc1")
     implementation("com.google.code.gson:gson:2.8.7")
 
     implementation("io.arrow-kt:arrow-core:0.13.2")
@@ -78,7 +78,7 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka:2.7.5")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}")
-    runtimeOnly("com.github.kittinunf.result:result:2.2.1")
+    runtimeOnlyDependenciesMetadata("com.github.kittinunf.result:result:2.2.1")
 
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
