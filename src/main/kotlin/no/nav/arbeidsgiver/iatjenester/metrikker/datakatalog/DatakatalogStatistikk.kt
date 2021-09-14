@@ -19,7 +19,7 @@ class DatakatalogStatistikk(
 ) : Runnable {
 
     private val fraDato: LocalDate = startDato()
-    private val tilDato: LocalDate = dagensDato()
+    private var tilDato: LocalDate = dagensDato()
 
     fun startDato(): LocalDate {
         return LocalDate.of(2021, Month.MARCH, 1)
@@ -34,8 +34,10 @@ class DatakatalogStatistikk(
     }
 
     internal fun byggOgSendDatapakke(erDebugAktivert: Boolean = false) {
+        tilDato = dagensDato()
         log.info("Starter jobb som sender statistikk til datakatalogen")
         log.info("Skal sende statistikk for målinger til og med ${tilDato}")
+
         byggDatapakke().also {
             if (erDebugAktivert) {
                 log("DatakatalogStatistikk").info(
