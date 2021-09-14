@@ -13,6 +13,7 @@ internal class DatapakkeTest {
             legend = Legend(listOf("item1")),
             xAxis = Xaxis("The X axis", listOf("field 1", "field2", "field3")),
             yAxis = Yaxis("The Y axis"),
+            tooltip = Tooltip("item"),
             series = listOf(Serie("My serie", listOf(1, 2, 3, 4, 5), "bar", "The Serie"))
         )
 
@@ -46,6 +47,7 @@ internal class DatapakkeTest {
                 "\"legend\":{\"data\":[\"item1\"]}," +
                 "\"xAxis\":{\"type\":\"The X axis\",\"data\":[\"field 1\",\"field2\",\"field3\"]}," +
                 "\"yAxis\":{\"type\":\"The Y axis\"}," +
+                "\"tooltip\":{\"trigger\":\"item\"}," +
                 "\"series\":" +
                 "[" +
                 "{\"name\":\"My serie\",\"data\":[1,2,3,4,5],\"type\":\"bar\",\"title\":\"The Serie\"}" +
