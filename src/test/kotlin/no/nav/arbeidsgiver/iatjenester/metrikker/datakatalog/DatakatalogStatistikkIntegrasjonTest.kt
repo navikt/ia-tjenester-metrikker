@@ -28,7 +28,6 @@ import org.springframework.web.client.RestTemplate
 import java.sql.Date
 import java.sql.Timestamp
 import java.time.LocalDate
-import java.time.LocalDate.now
 import java.time.Month
 
 @ActiveProfiles("test")
@@ -90,6 +89,34 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         målingFra = datakatalogStatistikkSomSenderTilLokalMockServer.startDato()
     }
 
+
+    @Test
+    fun `Henter ny data ved månedsskifte`() {
+        var idag =  LocalDate.of(2021, Month.JUNE, 1)
+
+        val datakatalogStatistikkMedTilDatoSomVarierer = object : DatakatalogStatistikk(
+            iaTjenesterMetrikkerRepository,
+            mockDatakatalogKlient
+        ) {
+            override fun dagensDato(): LocalDate {
+                return idag
+            }
+        }
+        opprettTestDataIDB(namedParameterJdbcTemplate)
+
+        datakatalogStatistikkMedTilDatoSomVarierer.run()
+        var echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
+
+        Assertions.assertThat(echartSpec.option.xAxis.data)
+            .isEqualTo(listOf("mar.", "apr.", "mai", "jun."))
+
+        idag =  LocalDate.of(2021, Month.JULY, 1)
+        datakatalogStatistikkMedTilDatoSomVarierer.run()
+        echartSpec = produsertDatapakke.views[1].spec as EchartSpec
+
+        Assertions.assertThat(echartSpec.option.xAxis.data)
+            .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
+    }
 
     @Test
     fun `kjør DatakatalogStatistikk og verifiser innhold til datapakke`() {
