@@ -33,6 +33,9 @@
           "yAxis": {
             "type": "value"
           },
+          "tooltip": {
+            "trigger": "item"
+          },
           "series": [
             {
               "name": "Innlogget",

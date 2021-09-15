@@ -28,7 +28,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/fiks--todaysdate-ikke-oppdatert'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/legg-til-tooltip-for-å-vise-nøyaktig-antall-mottatte-ia-tjenester'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -98,7 +98,7 @@ jobs:
   deploy-to-labs-gcp:
     name: Deploy to labs-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/fiks--todaysdate-ikke-oppdatert'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/legg-til-tooltip-for-å-vise-nøyaktig-antall-mottatte-ia-tjenester'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2

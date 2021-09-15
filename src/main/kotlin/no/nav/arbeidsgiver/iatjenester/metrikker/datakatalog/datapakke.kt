@@ -1,7 +1,5 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
-import com.fasterxml.jackson.annotation.JsonFormat
-
 data class Datapakke(
     val title: String,
     val type: String,
@@ -41,11 +39,16 @@ data class Option(
     val xAxis: Xaxis,
     @JvmField
     val yAxis: Yaxis,
+    val tooltip: Tooltip,
     val series: List<Serie>
 )
 
 data class Legend(
     val data: List<String>
+)
+
+data class Tooltip(
+    val trigger: String
 )
 
 data class Xaxis(

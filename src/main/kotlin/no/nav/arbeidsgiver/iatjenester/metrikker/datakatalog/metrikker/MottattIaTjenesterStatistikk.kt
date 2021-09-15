@@ -58,6 +58,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                         .map { month -> month.getDisplayName(TextStyle.SHORT, NORSK_BOKMÅL) }
                 ),
                 Yaxis("value"),
+                Tooltip("item"),
                 listOf(
                     Serie(
                         "Samtalestøtte (uinnlogget)",

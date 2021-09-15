@@ -18,7 +18,7 @@ spring:
     path: /h2
 
   flyway:
-      locations: classpath:/db/migration
+      locations: classpath:/db/migration, classpath:/db/test-lokaldb-data
 
 no.nav.security.jwt:
   expirythreshold: 10 #threshold in minutes until token expires (optional)
@@ -42,6 +42,6 @@ wiremock:
   port: 8585
 
 datakatalog:
-  rootUrl: http://localhost:8585/lokal_datakatalog/
-  datapakkeId: ikke_en_ekte_datapakke_id
+  rootUrl: https://datakatalog-api.dev.intern.nav.no/v1/datapackage/
+  datapakkeId: 219e562d893afbc8307b5f4e8b210baa
   erUtsendingAktivert: true
