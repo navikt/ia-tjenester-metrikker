@@ -6,8 +6,8 @@ import java.time.LocalDate
 import java.time.Month
 
 class MottattIaTjenesterDatagrunnlag(
-    innloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>,
-    uinnloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>,
+    innloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk>,
+    uinnloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk>,
     fraDato: LocalDate,
     tilDato: LocalDate
 ) {
@@ -45,7 +45,7 @@ class MottattIaTjenesterDatagrunnlag(
     }
 
     fun fjernDupliserteMetrikkerSammeDag(
-        mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
+        mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk>
     ): List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk> {
         return mottattIaTjenesteMetrikker.distinctBy {
             Pair(it.orgnr, it.tidspunkt.toLocalDate())

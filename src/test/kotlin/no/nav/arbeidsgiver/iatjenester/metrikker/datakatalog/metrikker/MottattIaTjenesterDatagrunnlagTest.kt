@@ -1,6 +1,8 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
+import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.*
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -42,10 +44,10 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         val _5_JUNI = LocalDate.of(2021, Month.JUNE, 5)
 
         val innloggetMetrikkerTest = listOf(
-            MottattIaTjenesteMetrikk("999999999", _1_MAI.atStartOfDay()),
-            MottattIaTjenesteMetrikk("999999999", _1_MAI.atStartOfDay().plusHours(4)),
-            MottattIaTjenesteMetrikk("888888888", _1_MAI.atStartOfDay().plusHours(4)),
-            MottattIaTjenesteMetrikk("999999999", _5_JUNI.atStartOfDay()),
+            MottattInnloggetIaTjenesteMetrikk("999999999", _1_MAI.atStartOfDay()),
+            MottattInnloggetIaTjenesteMetrikk("999999999", _1_MAI.atStartOfDay().plusHours(4)),
+            MottattInnloggetIaTjenesteMetrikk("888888888", _1_MAI.atStartOfDay().plusHours(4)),
+            MottattInnloggetIaTjenesteMetrikk("999999999", _5_JUNI.atStartOfDay()),
         )
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
             innloggetMetrikker = innloggetMetrikkerTest,
@@ -66,14 +68,14 @@ internal class MottattIaTjenesterDatagrunnlagTest {
     }
 
     @Test
-    fun `beregn antall innlogget metrikker per dag for uinnlogget ia-tjenester`() {
+    fun `beregn antall uinnlogget metrikker per dag for uinnlogget ia-tjenester`() {
         val _1_MAI = LocalDate.of(2021, Month.MAY, 1)
         val _5_JUNI = LocalDate.of(2021, Month.JUNE, 5)
         val uinnloggetMetrikkerTest = listOf(
-            MottattIaTjenesteMetrikk(null, _1_MAI.atStartOfDay()),
-            MottattIaTjenesteMetrikk(null, _1_MAI.atStartOfDay().plusHours(4)),
-            MottattIaTjenesteMetrikk(null, _1_MAI.atStartOfDay().plusHours(4)),
-            MottattIaTjenesteMetrikk(null, _5_JUNI.atStartOfDay()),
+            MottattUinnloggetIaTjenesteMetrikk(Kilde.SAMTALESTØTTE, _1_MAI.atStartOfDay()),
+            MottattUinnloggetIaTjenesteMetrikk(Kilde.SAMTALESTØTTE, _1_MAI.atStartOfDay().plusHours(4)),
+            MottattUinnloggetIaTjenesteMetrikk(Kilde.SAMTALESTØTTE, _1_MAI.atStartOfDay().plusHours(4)),
+            MottattUinnloggetIaTjenesteMetrikk(Kilde.SAMTALESTØTTE, _5_JUNI.atStartOfDay()),
         )
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
             innloggetMetrikker = emptyList(),

@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -98,24 +99,33 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         )
     }
 
-    class MottattIaTjenesteMetrikk(val orgnr: String?, val tidspunkt: LocalDateTime)
+    sealed class MottattIaTjenesteMetrikk {
+        abstract val tidspunkt: LocalDateTime
+    }
 
-    fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> =
+    data class MottattInnloggetIaTjenesteMetrikk(val orgnr: String, override val tidspunkt: LocalDateTime) :
+        MottattIaTjenesteMetrikk()
+
+    data class MottattUinnloggetIaTjenesteMetrikk(val kilde: Kilde, override val tidspunkt: LocalDateTime) :
+        MottattIaTjenesteMetrikk()
+    
+
+    fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattUinnloggetIaTjenesteMetrikk> =
         namedParameterJdbcTemplate.query("""
-                select tjeneste_mottakkelsesdato 
+                select tjeneste_mottakkelsesdato, kilde_applikasjon 
                 from metrikker_ia_tjenester_uinnlogget 
                 where tjeneste_mottakkelsesdato >= :startDato
                 """,
             MapSqlParameterSource().addValue("startDato", startDato),
             RowMapper { rs: ResultSet, _: Int ->
-                MottattIaTjenesteMetrikk(
-                    null,
+                MottattUinnloggetIaTjenesteMetrikk(
+                    Kilde.valueOf(rs.getString("kilde_applikasjon")),
                     rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
                 )
             }
         )
 
-    fun hentInnloggetMetrikker(startDato: LocalDate): List<MottattIaTjenesteMetrikk> =
+    fun hentInnloggetMetrikker(startDato: LocalDate): List<MottattInnloggetIaTjenesteMetrikk> =
         namedParameterJdbcTemplate.query("""
             select orgnr, tjeneste_mottakkelsesdato 
             from metrikker_ia_tjenester_innlogget 
@@ -123,7 +133,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
             """,
             MapSqlParameterSource().addValue("startDato", startDato),
             RowMapper { rs: ResultSet, _: Int ->
-                MottattIaTjenesteMetrikk(
+                MottattInnloggetIaTjenesteMetrikk(
                     rs.getString("orgnr"),
                     rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
                 )
