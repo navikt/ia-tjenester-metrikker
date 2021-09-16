@@ -108,7 +108,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
 
     data class MottattUinnloggetIaTjenesteMetrikk(val kilde: Kilde, override val tidspunkt: LocalDateTime) :
         MottattIaTjenesteMetrikk()
-    
+
 
     fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattUinnloggetIaTjenesteMetrikk> =
         namedParameterJdbcTemplate.query("""
