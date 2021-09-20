@@ -37,12 +37,48 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             } ${datagrunnlag.gjelendeÅr})",
             description = "Antall digitale IA-tjenester mottatt per applikasjon per måned",
             specType = SpecType.echart,
-            spec = lagEchartSpec(datagrunnlag),
+            spec = lagEchartSpecForMottatteDigitaleIATjenesterPerMåned(datagrunnlag),
         )
     )
 
+    private fun lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerNæring2SifferEllerBransje(
+        datagrunnlag: MottattIaTjenesterDatagrunnlag
+    ): EchartSpec {
+        return EchartSpec(
+            "",
+            Option(
+                Legend(
+                    listOf(
+                        "Samtalestøtte (uinnlogget)",
+                        "Sykefraværsstatistikk (innlogget)"
+                    )
+                ),
+                Xaxis(
+                    "category",
+                    data = datagrunnlag.gjeldendeMåneder()
+                        .map { month -> month.getDisplayName(TextStyle.SHORT, NORSK_BOKMÅL) }
+                ),
+                Yaxis("value"),
+                Tooltip("item"),
+                listOf(
+                    Serie(
+                        "Samtalestøtte (uinnlogget)",
+                        datagrunnlag.antallUinnloggetMetrikkerPerMåned.values.toList(),
+                        "bar",
+                        "Samtalestøtte"
+                    ),
+                    Serie(
+                        "Sykefraværsstatistikk (innlogget)",
+                        datagrunnlag.antallInnloggetMetrikkerPerMåned.values.toList(),
+                        "bar",
+                        "Sykefraværsstatistikk"
+                    )
+                )
+            )
+        )
+    }
 
-    private fun lagEchartSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): EchartSpec {
+    private fun lagEchartSpecForMottatteDigitaleIATjenesterPerMåned(datagrunnlag: MottattIaTjenesterDatagrunnlag): EchartSpec {
         return EchartSpec(
             "",
             Option(

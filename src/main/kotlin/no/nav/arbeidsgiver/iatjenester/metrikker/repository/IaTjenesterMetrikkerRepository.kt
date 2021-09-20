@@ -103,8 +103,18 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         abstract val tidspunkt: LocalDateTime
     }
 
-    data class MottattInnloggetIaTjenesteMetrikk(val orgnr: String, override val tidspunkt: LocalDateTime) :
-        MottattIaTjenesteMetrikk()
+    data class VirksomhetMetadata(val todo: String)
+    data class Næringskode5Siffer(val kode: String, val beskrivelse: String)
+
+    data class MottattInnloggetIaTjenesteMetrikk(
+        val orgnr: String,
+        val kilde: Kilde,
+        val næringskode5Siffer: Næringskode5Siffer,
+        val næringskode2SifferBeskrivelse: String,
+        val kommunenummer: String,
+        val kommune: String,
+        override val tidspunkt: LocalDateTime
+    ) : MottattIaTjenesteMetrikk()
 
     data class MottattUinnloggetIaTjenesteMetrikk(val kilde: Kilde, override val tidspunkt: LocalDateTime) :
         MottattIaTjenesteMetrikk()
@@ -127,7 +137,14 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
 
     fun hentInnloggetMetrikker(startDato: LocalDate): List<MottattInnloggetIaTjenesteMetrikk> =
         namedParameterJdbcTemplate.query("""
-            select orgnr, tjeneste_mottakkelsesdato 
+            select orgnr,
+              tjeneste_mottakkelsesdato, 
+              kilde_applikasjon, 
+              naering_kode_5siffer, 
+              naering_kode5siffer_beskrivelse, 
+              naering_2siffer_beskrivelse, 
+              kommunenummer, 
+              kommune
             from metrikker_ia_tjenester_innlogget 
             where tjeneste_mottakkelsesdato >= :startDato
             """,
@@ -135,6 +152,14 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
             RowMapper { rs: ResultSet, _: Int ->
                 MottattInnloggetIaTjenesteMetrikk(
                     rs.getString("orgnr"),
+                    Kilde.valueOf(rs.getString("kilde_applikasjon")),
+                    Næringskode5Siffer(
+                        rs.getString("naering_kode_5siffer"),
+                        rs.getString("naering_kode5siffer_beskrivelse")
+                    ),
+                    rs.getString("naering_2siffer_beskrivelse"),
+                    rs.getString("kommunenummer"),
+                    rs.getString("kommune"),
                     rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
                 )
             }

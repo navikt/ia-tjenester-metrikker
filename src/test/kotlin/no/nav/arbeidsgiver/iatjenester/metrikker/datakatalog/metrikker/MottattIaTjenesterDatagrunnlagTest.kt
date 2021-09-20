@@ -44,10 +44,40 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         val _5_JUNI = LocalDate.of(2021, Month.JUNE, 5)
 
         val innloggetMetrikkerTest = listOf(
-            MottattInnloggetIaTjenesteMetrikk("999999999", _1_MAI.atStartOfDay()),
-            MottattInnloggetIaTjenesteMetrikk("999999999", _1_MAI.atStartOfDay().plusHours(4)),
-            MottattInnloggetIaTjenesteMetrikk("888888888", _1_MAI.atStartOfDay().plusHours(4)),
-            MottattInnloggetIaTjenesteMetrikk("999999999", _5_JUNI.atStartOfDay()),
+            MottattInnloggetIaTjenesteMetrikk(
+                "999999999",
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                Næringskode5Siffer("88911", "Barnehager"),
+                "Helse- og sosialtjenester  ",
+                "0576",
+                "Oslo",
+                _1_MAI.atStartOfDay()
+            ),
+            MottattInnloggetIaTjenesteMetrikk(
+                "999999999",
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                Næringskode5Siffer("88911", "Barnehager"),
+                "Helse- og sosialtjenester  ",
+                "0576",
+                "Oslo",
+                _1_MAI.atStartOfDay().plusHours(4)
+            ),
+            MottattInnloggetIaTjenesteMetrikk(
+                "888888888",
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                Næringskode5Siffer("88911", "Barnehager"),
+                "Helse- og sosialtjenester  ",
+                "0576",
+                "Oslo",
+                _1_MAI.atStartOfDay().plusHours(4)
+            ),
+            MottattInnloggetIaTjenesteMetrikk(
+                "999999999", Kilde.SYKEFRAVÆRSSTATISTIKK, Næringskode5Siffer("88911", "Barnehager"),
+                "Helse- og sosialtjenester  ",
+                "0576",
+                "Oslo",
+                _5_JUNI.atStartOfDay()
+            ),
         )
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
             innloggetMetrikker = innloggetMetrikkerTest,

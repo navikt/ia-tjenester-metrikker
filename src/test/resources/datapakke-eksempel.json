@@ -49,15 +49,98 @@
           "series": [
             {
               "name": "Samtalestøtte (uinnlogget)",
-              "data": [0, 240, 650, 570, 530, 495, 345],
+              "data": [
+                0,
+                240,
+                650,
+                570,
+                530,
+                495,
+                345
+              ],
               "type": "bar",
               "title": "Samtalestøtte"
             },
             {
               "name": "Sykefraværsstatistikk (innlogget)",
-              "data": [0, 346, 950, 1165, 1234, 1100, 999],
+              "data": [
+                0,
+                346,
+                950,
+                1165,
+                1234,
+                1100,
+                999
+              ],
               "type": "bar",
               "title": "Sykefraværsstatistikk"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Mottatte digitale IA-tjenester per næring 2 siffer eller bransje",
+      "description": "Antall digitale IA-tjenester siden 1. mars",
+      "specType": "echart",
+      "spec": {
+        "option": {
+          "tooltip": {
+            "trigger": "item"
+          },
+          "legend": {
+            "data": [
+              "Samtalestøtte (innlogget)",
+              "Sykefraværsstatistikk"
+            ]
+          },
+          "grid": {
+            "left": "3%",
+            "right": "4%",
+            "bottom": "3%",
+            "containLabel": true
+          },
+          "xAxis": {
+            "type": "value"
+          },
+          "yAxis": {
+            "type": "category",
+            "data": [
+              "Sykehjem.",
+              "Anlegg",
+              "Bygg",
+              "Sykehus",
+              "Barnehager",
+              "Fiske fangst og akvakultur.",
+              "Andre næringer"
+            ]
+          },
+          "series": [
+            {
+              "name": "Samtalestøtte (innlogget)",
+              "type": "bar",
+              "data": [
+                182,
+                234,
+                290,
+                100,
+                131,
+                88,
+                345
+              ]
+            },
+            {
+              "name": "Sykefraværsstatistikk",
+              "type": "bar",
+              "data": [
+                187,
+                234,
+                310,
+                121,
+                134,
+                181,
+                651
+              ]
             }
           ]
         }

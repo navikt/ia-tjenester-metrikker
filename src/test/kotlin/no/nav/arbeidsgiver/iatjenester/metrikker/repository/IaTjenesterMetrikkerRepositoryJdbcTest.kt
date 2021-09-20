@@ -66,7 +66,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
 
     @Test
     fun `hentInnloggetIaTjenesterMetrikker`() {
-        opprettInnloggetIaTjenester(
+        opprettInnloggetIaTjenesterFraDatoer(
             listOf(
                 Date.valueOf(now().minusDays(3)),
                 Date.valueOf(now().minusDays(3))
@@ -86,10 +86,18 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
 
     @Test
     fun `hentInnloggetIaTjenesterMetrikker fra en vis dato`() {
+        val iaTjenesteMetrikk = IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk(
+            "987654321",
+            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            IaTjenesterMetrikkerRepository.Næringskode5Siffer("12345", "Test 5 siffer"),
+            "12",
+            "0576",
+            "Oslo",
+            now().atStartOfDay()
+        )
         opprettInnloggetIaTjenester(
             listOf(
-                Date.valueOf(now().minusDays(3)),
-                Date.valueOf(now().minusYears(1))
+                iaTjenesteMetrikk
             )
         )
 
@@ -102,6 +110,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
             )
 
         assertThat(uinnloggetMetrikker.size).isEqualTo(1)
+        assertThat(uinnloggetMetrikker.get(0)).isEqualTo(iaTjenesteMetrikk)
     }
 
     @Test
@@ -150,7 +159,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
     }
 
 
-    private fun opprettUinnloggetIaTjenester(dates: List<Date> ) {
+    private fun opprettUinnloggetIaTjenester(dates: List<Date>) {
         dates.forEachIndexed() { index, date ->
             dataSource.connection.opprettUinnloggetIaTjeneste(
                 UinnloggetIaTjenesteRad(
@@ -164,7 +173,34 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         }
     }
 
-    private fun opprettInnloggetIaTjenester(dates: List<Date> ) {
+    private fun opprettInnloggetIaTjenester(
+        mottatteInnloggetIATjenester: List<IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk>
+    ) {
+        mottatteInnloggetIATjenester.forEachIndexed() { index, mottattIATjeneste ->
+            dataSource.connection.opprettInnloggetIaTjeneste(
+                IaTjenesteRad(
+                    id = index + 1,
+                    type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
+                    kilde = mottattIATjeneste.kilde,
+                    orgnr = mottattIATjeneste.orgnr,
+                    næringKode5Siffer = mottattIATjeneste.næringskode5Siffer.kode,
+                    næring2SifferBeskrivelse = mottattIATjeneste.næringskode2SifferBeskrivelse,
+                    tjeneste_mottakkelsesdato = Timestamp.valueOf(now().atStartOfDay()),
+                    antallAnsatte = 5 + index,
+                    næringskode5SifferBeskrivelse = mottattIATjeneste.næringskode5Siffer.beskrivelse,
+                    SSBSektorKode = "",
+                    SSBSektorKodeBeskrivelse = "",
+                    fylkesnummer = "",
+                    fylke = "",
+                    kommunenummer = mottattIATjeneste.kommunenummer,
+                    kommune = mottattIATjeneste.kommune,
+                    opprettet = Date.valueOf(now())
+                )
+            )
+        }
+    }
+
+    private fun opprettInnloggetIaTjenesterFraDatoer(dates: List<Date>) {
         dates.forEachIndexed() { index, date ->
             dataSource.connection.opprettInnloggetIaTjeneste(
                 IaTjenesteRad(
