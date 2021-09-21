@@ -1,12 +1,14 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.til
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
+import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk
 import java.time.LocalDate
 import java.time.Month
 
 class MottattIaTjenesterDatagrunnlag(
-    innloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk>,
+    innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
     uinnloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk>,
     fraDato: LocalDate,
     tilDato: LocalDate
@@ -25,6 +27,17 @@ class MottattIaTjenesterDatagrunnlag(
             gjeldendeMåneder,
             beregnAntallMetrikkerPerDag(uinnloggetMetrikker)
         )
+
+    val bransjeListe: List<ArbeidstilsynetBransje> =
+        ArbeidstilsynetBransje
+            .values()
+            .toList()
+            .filterNot { it == ArbeidstilsynetBransje.ANDRE_BRANSJER }
+            .sortedBy { it.name }
+
+    val antallInnloggetMetrikkerPerBransje: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
+        beregnAntallMetrikkerPerBransje(bransjeListe, fjernDupliserteMetrikkerSammeDag(innloggetMetrikker))
+
 
     val totalInnloggetMetrikker: Int = innloggetMetrikker.size
     val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
@@ -45,8 +58,8 @@ class MottattIaTjenesterDatagrunnlag(
     }
 
     fun fjernDupliserteMetrikkerSammeDag(
-        mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk>
-    ): List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk> {
+        mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
+    ): List<MottattInnloggetIaTjenesteMetrikk> {
         return mottattIaTjenesteMetrikker.distinctBy {
             Pair(it.orgnr, it.tidspunkt.toLocalDate())
         }
@@ -56,6 +69,28 @@ class MottattIaTjenesterDatagrunnlag(
         mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
     ): Map<LocalDate, Int> {
         return mottattIaTjenesteMetrikker.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
+    }
+
+    fun beregnAntallMetrikkerPerBransje(
+        bransjeListe: List<ArbeidstilsynetBransje>,
+        mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
+    ): Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> {
+
+        val alleBransjerPerKildeNullstilt: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
+            bransjeListe.map { Pair(Kilde.SAMTALESTØTTE, it) }
+                .map { it to 0 }
+                .toMap() +
+                    bransjeListe.map { Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, it) }
+                        .map { it to 0 }
+                        .toMap()
+
+        val alleBransjerPerKildeMedAntallMetrikker: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
+            mottattIaTjenesteMetrikker
+                .groupingBy { Pair(it.kilde, it.getMetadata().bransje) }
+                .eachCount()
+                .filterNot { it.key.second == ArbeidstilsynetBransje.ANDRE_BRANSJER }
+
+        return alleBransjerPerKildeNullstilt + alleBransjerPerKildeMedAntallMetrikker
     }
 
     fun gjeldendeMåneder() = gjeldendeMåneder

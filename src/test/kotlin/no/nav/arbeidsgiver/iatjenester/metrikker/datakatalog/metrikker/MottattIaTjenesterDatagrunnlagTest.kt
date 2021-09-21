@@ -39,6 +39,126 @@ internal class MottattIaTjenesterDatagrunnlagTest {
     }
 
     @Test
+    fun `beregn antall metrikker per bransje med hensyn på duplikater`() {
+        val _1_MAI = LocalDate.of(2021, Month.MAY, 1)
+
+        val innloggetMetrikkerTest = listOf(
+            MottattInnloggetIaTjenesteMetrikk(
+                "999999999",
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                Næringskode5Siffer("88911", "Barnehager"),
+                "Helse- og sosialtjenester  ",
+                "0576",
+                "Oslo",
+                _1_MAI.atStartOfDay()
+            ),
+            MottattInnloggetIaTjenesteMetrikk(
+                "999999999",
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                Næringskode5Siffer("88911", "Barnehager"),
+                "Helse- og sosialtjenester  ",
+                "0576",
+                "Oslo",
+                _1_MAI.atStartOfDay()
+            ),
+            MottattInnloggetIaTjenesteMetrikk(
+                "888888888",
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                Næringskode5Siffer("88911", "Barnehager"),
+                "Helse- og sosialtjenester  ",
+                "0576",
+                "Oslo",
+                _1_MAI.atStartOfDay()
+            ),
+        )
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = innloggetMetrikkerTest,
+            uinnloggetMetrikker = emptyList(),
+            _1_JANUAR_2021,
+            _21_JUNI_2021
+        )
+
+        val resultat: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> = datagrunnlag.antallInnloggetMetrikkerPerBransje
+
+        Assertions.assertThat(resultat.keys.filter { it.first == Kilde.SAMTALESTØTTE }.size)
+            .isEqualTo(datagrunnlag.bransjeListe.size)
+        Assertions.assertThat(resultat.keys.filter { it.first == Kilde.SYKEFRAVÆRSSTATISTIKK }.size)
+            .isEqualTo(datagrunnlag.bransjeListe.size)
+        Assertions.assertThat(resultat[Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, ArbeidstilsynetBransje.BARNEHAGER)])
+            .isEqualTo(2)
+    }
+
+    @Test
+    fun `beregn antall metrikker per bransje, untatt ANDRE_BRANSJER med 0 for de bransjene uten metrikk`() {
+        val _1_MAI = LocalDate.of(2021, Month.MAY, 1)
+        val _5_JUNI = LocalDate.of(2021, Month.JUNE, 5)
+
+        val innloggetMetrikkerTest = listOf(
+            MottattInnloggetIaTjenesteMetrikk(
+                "999999999",
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                Næringskode5Siffer("88911", "Barnehager"),
+                "Helse- og sosialtjenester  ",
+                "0576",
+                "Oslo",
+                _1_MAI.atStartOfDay()
+            ),
+            MottattInnloggetIaTjenesteMetrikk(
+                "999999999", Kilde.SAMTALESTØTTE,
+                Næringskode5Siffer("88911", "Barnehager"),
+                "Helse- og sosialtjenester  ",
+                "0576",
+                "Oslo",
+                _5_JUNI.atStartOfDay()
+            ),
+            MottattInnloggetIaTjenesteMetrikk(
+                "988888888",
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                Næringskode5Siffer("88911", "Barnehager"),
+                "Helse- og sosialtjenester  ",
+                "0576",
+                "Oslo",
+                _1_MAI.atStartOfDay()
+            ),
+            MottattInnloggetIaTjenesteMetrikk(
+                "977777777",
+                Kilde.SAMTALESTØTTE,
+                IaTjenesterMetrikkerRepository.Næringskode5Siffer("42210", "Bygging av vann- og kloakkanlegg"),
+                "Anleggsvirksomhet",
+                "0576",
+                "Oslo",
+                LocalDate.now().atStartOfDay()
+            ),
+            MottattInnloggetIaTjenesteMetrikk(
+                "966666666",
+                Kilde.SAMTALESTØTTE,
+                IaTjenesterMetrikkerRepository.Næringskode5Siffer("45512", "Detaljhandel med biler"),
+                "Varehandel, reparasjon av motorvogner",
+                "0576",
+                "Oslo",
+                _5_JUNI.atStartOfDay()
+            )
+        )
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = innloggetMetrikkerTest,
+            uinnloggetMetrikker = emptyList(),
+            _1_JANUAR_2021,
+            _21_JUNI_2021
+        )
+
+        val resultat: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> = datagrunnlag.antallInnloggetMetrikkerPerBransje
+
+        Assertions.assertThat(resultat[Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, ArbeidstilsynetBransje.BARNEHAGER)])
+            .isEqualTo(2)
+        Assertions.assertThat(resultat[Pair(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.BARNEHAGER)])
+            .isEqualTo(1)
+        Assertions.assertThat(resultat[Pair(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.ANLEGG)])
+            .isEqualTo(1)
+        Assertions.assertThat(resultat[Pair(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.ANDRE_BRANSJER)])
+            .isNull()
+    }
+
+    @Test
     fun `beregn antall innlogget metrikker per dag for innlogget ia-tjenester`() {
         val _1_MAI = LocalDate.of(2021, Month.MAY, 1)
         val _5_JUNI = LocalDate.of(2021, Month.JUNE, 5)

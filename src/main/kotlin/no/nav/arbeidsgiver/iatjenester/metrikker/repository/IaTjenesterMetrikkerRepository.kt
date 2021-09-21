@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesteUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
@@ -103,8 +104,8 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         abstract val tidspunkt: LocalDateTime
     }
 
-    data class VirksomhetMetadata(val todo: String)
     data class Næringskode5Siffer(val kode: String, val beskrivelse: String)
+    data class Næringskode2Siffer(val kode: String, val beskrivelse: String)
 
     data class MottattInnloggetIaTjenesteMetrikk(
         val orgnr: String,

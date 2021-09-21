@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -41,35 +42,43 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         )
     )
 
-    private fun lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerNæring2SifferEllerBransje(
+    private fun lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(
         datagrunnlag: MottattIaTjenesterDatagrunnlag
     ): EchartSpec {
         return EchartSpec(
             "",
+            // TODO: legg til 'title' og 'description'
             Option(
                 Legend(
                     listOf(
-                        "Samtalestøtte (uinnlogget)",
-                        "Sykefraværsstatistikk (innlogget)"
+                        "Samtalestøtte (innlogget)",
+                        "Sykefraværsstatistikk"
                     )
                 ),
                 Xaxis(
                     "category",
-                    data = datagrunnlag.gjeldendeMåneder()
-                        .map { month -> month.getDisplayName(TextStyle.SHORT, NORSK_BOKMÅL) }
+                    data = datagrunnlag.bransjeListe.map { it.name }
                 ),
                 Yaxis("value"),
                 Tooltip("item"),
                 listOf(
                     Serie(
-                        "Samtalestøtte (uinnlogget)",
-                        datagrunnlag.antallUinnloggetMetrikkerPerMåned.values.toList(),
+                        "Samtalestøtte (innlogget)",
+                        datagrunnlag
+                            .antallInnloggetMetrikkerPerBransje
+                            .filter { it.key.first == Kilde.SAMTALESTØTTE }
+                            .values
+                            .toList(),
                         "bar",
                         "Samtalestøtte"
                     ),
                     Serie(
-                        "Sykefraværsstatistikk (innlogget)",
-                        datagrunnlag.antallInnloggetMetrikkerPerMåned.values.toList(),
+                        "Sykefraværsstatistikk",
+                        datagrunnlag
+                            .antallInnloggetMetrikkerPerBransje
+                            .filter { it.key.first == Kilde.SYKEFRAVÆRSSTATISTIKK }
+                            .values
+                            .toList(),
                         "bar",
                         "Sykefraværsstatistikk"
                     )
