@@ -124,7 +124,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
         datakatalogStatistikkMedDato.run()
 
-        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(2)
+        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(3)
         Assertions.assertThat(produsertDatapakke.views[0].spec).isInstanceOf(MarkdownSpec::class.java)
 
         val echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec

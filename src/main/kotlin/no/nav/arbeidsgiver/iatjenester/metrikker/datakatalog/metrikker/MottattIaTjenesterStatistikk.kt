@@ -39,6 +39,22 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             description = "Antall digitale IA-tjenester mottatt per applikasjon per måned",
             specType = SpecType.echart,
             spec = lagEchartSpecForMottatteDigitaleIATjenesterPerMåned(datagrunnlag),
+        ),
+        View(
+            title = "Mottatte digitale IA-tjenester per næring 2 siffer eller bransje (${
+                datagrunnlag.gjeldendeMåneder.first().getDisplayName(
+                    TextStyle.SHORT,
+                    NORSK_BOKMÅL
+                )
+            } - ${
+                datagrunnlag.gjeldendeMåneder.last().getDisplayName(
+                    TextStyle.SHORT,
+                    NORSK_BOKMÅL
+                )
+            } ${datagrunnlag.gjelendeÅr})",
+            description = "Antall digitale IA-tjenester mottatt per applikasjon fordelt per bransje i bransjeprogram",
+            specType = SpecType.echart,
+            spec = lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(datagrunnlag),
         )
     )
 
@@ -55,11 +71,19 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                         "Sykefraværsstatistikk"
                     )
                 ),
+                Grid(
+                    left = "3%",
+                    right = "4%",
+                    bottom = "3%",
+                    containLabel = true
+                ),
                 Xaxis(
+                    "value"
+                ),
+                Yaxis(
                     "category",
                     data = datagrunnlag.bransjeListe.map { it.name }
                 ),
-                Yaxis("value"),
                 Tooltip("item"),
                 listOf(
                     Serie(
