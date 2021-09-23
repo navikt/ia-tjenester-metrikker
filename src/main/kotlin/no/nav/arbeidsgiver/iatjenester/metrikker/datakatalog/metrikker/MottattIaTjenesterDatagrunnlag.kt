@@ -1,6 +1,5 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidstilsynetBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.til
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
@@ -78,7 +77,7 @@ class MottattIaTjenesterDatagrunnlag(
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
     ): Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> {
 
-        val alleBransjerPerKildeNullstilt: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
+        val alleBransjerPerKilde: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
             bransjeListe.map { Pair(Kilde.SAMTALESTØTTE, it) }
                 .map { it to 0 }
                 .toMap() +
@@ -92,7 +91,7 @@ class MottattIaTjenesterDatagrunnlag(
                 .eachCount()
                 .filterNot { it.key.second == ArbeidstilsynetBransje.ANDRE_BRANSJER }
 
-        return alleBransjerPerKildeNullstilt + alleBransjerPerKildeMedAntallMetrikker
+        return alleBransjerPerKilde + alleBransjerPerKildeMedAntallMetrikker
     }
 
     fun gjeldendeMåneder() = gjeldendeMåneder
