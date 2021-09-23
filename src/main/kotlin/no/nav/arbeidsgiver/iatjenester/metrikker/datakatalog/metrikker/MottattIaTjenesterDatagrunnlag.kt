@@ -88,7 +88,7 @@ class MottattIaTjenesterDatagrunnlag(
 
         val alleBransjerPerKildeMedAntallMetrikker: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
             mottattIaTjenesteMetrikker
-                .groupingBy { Pair(it.kilde, it.getMetadata().næring.getArbeidstilsynetBransje()) }
+                .groupingBy { Pair(it.kilde, it.næring.getArbeidstilsynetBransje()) }
                 .eachCount()
                 .filterNot { it.key.second == ArbeidstilsynetBransje.ANDRE_BRANSJER }
 
@@ -96,13 +96,5 @@ class MottattIaTjenesterDatagrunnlag(
     }
 
     fun gjeldendeMåneder() = gjeldendeMåneder
-
-    fun MottattInnloggetIaTjenesteMetrikk.getMetadata(): VirksomhetMetadata {
-
-        return VirksomhetMetadata(
-            orgnr,
-            næring
-        )
-    }
 }
 
