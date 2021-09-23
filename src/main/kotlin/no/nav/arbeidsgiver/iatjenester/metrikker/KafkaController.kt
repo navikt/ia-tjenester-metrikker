@@ -1,8 +1,8 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

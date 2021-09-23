@@ -8,8 +8,8 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettInnl
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettUinnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.UinnloggetIaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.mockserver.MockServer
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server

@@ -1,9 +1,8 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIaTjenesteUtils
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate

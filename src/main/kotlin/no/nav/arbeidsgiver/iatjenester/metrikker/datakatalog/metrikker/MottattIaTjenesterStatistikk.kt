@@ -1,7 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
