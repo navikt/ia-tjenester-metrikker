@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
@@ -103,14 +104,10 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         abstract val tidspunkt: LocalDateTime
     }
 
-    data class Næringskode5Siffer(val kode: String, val beskrivelse: String)
-    data class Næringskode2Siffer(val kode: String, val beskrivelse: String)
-
     data class MottattInnloggetIaTjenesteMetrikk(
         val orgnr: String,
         val kilde: Kilde,
-        val næringskode5Siffer: Næringskode5Siffer,
-        val næringskode2SifferBeskrivelse: String,
+        val næring: Næring,
         val kommunenummer: String,
         val kommune: String,
         override val tidspunkt: LocalDateTime
@@ -153,11 +150,10 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                 MottattInnloggetIaTjenesteMetrikk(
                     rs.getString("orgnr"),
                     Kilde.valueOf(rs.getString("kilde_applikasjon")),
-                    Næringskode5Siffer(
+                    Næring(
                         rs.getString("naering_kode_5siffer"),
-                        rs.getString("naering_kode5siffer_beskrivelse")
-                    ),
-                    rs.getString("naering_2siffer_beskrivelse"),
+                        rs.getString("naering_kode5siffer_beskrivelse"),
+                        rs.getString("naering_2siffer_beskrivelse")),
                     rs.getString("kommunenummer"),
                     rs.getString("kommune"),
                     rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()

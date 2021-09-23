@@ -10,6 +10,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.getAlleUinn
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettInnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettUinnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.UinnloggetIaTjenesteRad
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import org.assertj.core.api.Assertions.assertThat
@@ -89,8 +90,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         val iaTjenesteMetrikk = IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk(
             "987654321",
             Kilde.SYKEFRAVÆRSSTATISTIKK,
-            IaTjenesterMetrikkerRepository.Næringskode5Siffer("12345", "Test 5 siffer"),
-            "12",
+            Næring("12345", "Test 5 siffer", "Test 2 siffer"),
             "0576",
             "Oslo",
             now().atStartOfDay()
@@ -183,11 +183,11 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
                     kilde = mottattIATjeneste.kilde,
                     orgnr = mottattIATjeneste.orgnr,
-                    næringKode5Siffer = mottattIATjeneste.næringskode5Siffer.kode,
-                    næring2SifferBeskrivelse = mottattIATjeneste.næringskode2SifferBeskrivelse,
+                    næringKode5Siffer = mottattIATjeneste.næring.kode5Siffer,
+                    næring2SifferBeskrivelse = mottattIATjeneste.næring.kode2SifferBeskrivelse,
                     tjeneste_mottakkelsesdato = Timestamp.valueOf(now().atStartOfDay()),
                     antallAnsatte = 5 + index,
-                    næringskode5SifferBeskrivelse = mottattIATjeneste.næringskode5Siffer.beskrivelse,
+                    næringskode5SifferBeskrivelse = mottattIATjeneste.næring.kode5SifferBeskrivelse,
                     SSBSektorKode = "",
                     SSBSektorKodeBeskrivelse = "",
                     fylkesnummer = "",

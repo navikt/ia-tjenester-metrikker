@@ -1,5 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidstilsynetBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.til
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
@@ -86,7 +88,7 @@ class MottattIaTjenesterDatagrunnlag(
 
         val alleBransjerPerKildeMedAntallMetrikker: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
             mottattIaTjenesteMetrikker
-                .groupingBy { Pair(it.kilde, it.getMetadata().bransje) }
+                .groupingBy { Pair(it.kilde, it.getMetadata().næring.getArbeidstilsynetBransje()) }
                 .eachCount()
                 .filterNot { it.key.second == ArbeidstilsynetBransje.ANDRE_BRANSJER }
 
@@ -94,5 +96,13 @@ class MottattIaTjenesterDatagrunnlag(
     }
 
     fun gjeldendeMåneder() = gjeldendeMåneder
+
+    fun MottattInnloggetIaTjenesteMetrikk.getMetadata(): VirksomhetMetadata {
+
+        return VirksomhetMetadata(
+            orgnr,
+            næring
+        )
+    }
 }
 

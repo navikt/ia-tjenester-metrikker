@@ -1,5 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidstilsynetBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.*
@@ -46,8 +48,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             MottattInnloggetIaTjenesteMetrikk(
                 "999999999",
                 Kilde.SYKEFRAVÆRSSTATISTIKK,
-                Næringskode5Siffer("88911", "Barnehager"),
-                "Helse- og sosialtjenester  ",
+                Næring("88911", "Barnehager","Helse- og sosialtjenester"),
                 "0576",
                 "Oslo",
                 _1_MAI.atStartOfDay()
@@ -55,8 +56,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             MottattInnloggetIaTjenesteMetrikk(
                 "999999999",
                 Kilde.SYKEFRAVÆRSSTATISTIKK,
-                Næringskode5Siffer("88911", "Barnehager"),
-                "Helse- og sosialtjenester  ",
+                Næring("88911", "Barnehager","Helse- og sosialtjenester"),
                 "0576",
                 "Oslo",
                 _1_MAI.atStartOfDay()
@@ -64,8 +64,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             MottattInnloggetIaTjenesteMetrikk(
                 "888888888",
                 Kilde.SYKEFRAVÆRSSTATISTIKK,
-                Næringskode5Siffer("88911", "Barnehager"),
-                "Helse- og sosialtjenester  ",
+                Næring("88911", "Barnehager","Helse- og sosialtjenester"),
                 "0576",
                 "Oslo",
                 _1_MAI.atStartOfDay()
@@ -97,16 +96,14 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             MottattInnloggetIaTjenesteMetrikk(
                 "999999999",
                 Kilde.SYKEFRAVÆRSSTATISTIKK,
-                Næringskode5Siffer("88911", "Barnehager"),
-                "Helse- og sosialtjenester  ",
+                Næring("88911", "Barnehager", "Helse- og sosialtjenester"),
                 "0576",
                 "Oslo",
                 _1_MAI.atStartOfDay()
             ),
             MottattInnloggetIaTjenesteMetrikk(
                 "999999999", Kilde.SAMTALESTØTTE,
-                Næringskode5Siffer("88911", "Barnehager"),
-                "Helse- og sosialtjenester  ",
+                Næring("88911", "Barnehager", "Helse- og sosialtjenester"),
                 "0576",
                 "Oslo",
                 _5_JUNI.atStartOfDay()
@@ -114,8 +111,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             MottattInnloggetIaTjenesteMetrikk(
                 "988888888",
                 Kilde.SYKEFRAVÆRSSTATISTIKK,
-                Næringskode5Siffer("88911", "Barnehager"),
-                "Helse- og sosialtjenester  ",
+                Næring("88911", "Barnehager", "Helse- og sosialtjenester"),
                 "0576",
                 "Oslo",
                 _1_MAI.atStartOfDay()
@@ -123,8 +119,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             MottattInnloggetIaTjenesteMetrikk(
                 "977777777",
                 Kilde.SAMTALESTØTTE,
-                IaTjenesterMetrikkerRepository.Næringskode5Siffer("42210", "Bygging av vann- og kloakkanlegg"),
-                "Anleggsvirksomhet",
+                Næring("42210", "Bygging av vann- og kloakkanlegg", "Anleggsvirksomhet"),
                 "0576",
                 "Oslo",
                 LocalDate.now().atStartOfDay()
@@ -132,8 +127,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             MottattInnloggetIaTjenesteMetrikk(
                 "966666666",
                 Kilde.SAMTALESTØTTE,
-                IaTjenesterMetrikkerRepository.Næringskode5Siffer("45512", "Detaljhandel med biler"),
-                "Varehandel, reparasjon av motorvogner",
+                Næring("45512", "Detaljhandel med biler", "Varehandel, reparasjon av motorvogner"),
                 "0576",
                 "Oslo",
                 _5_JUNI.atStartOfDay()
@@ -167,8 +161,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             MottattInnloggetIaTjenesteMetrikk(
                 "999999999",
                 Kilde.SYKEFRAVÆRSSTATISTIKK,
-                Næringskode5Siffer("88911", "Barnehager"),
-                "Helse- og sosialtjenester  ",
+                Næring("88911", "Barnehager", "Helse- og sosialtjenester"),
                 "0576",
                 "Oslo",
                 _1_MAI.atStartOfDay()
@@ -176,8 +169,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             MottattInnloggetIaTjenesteMetrikk(
                 "999999999",
                 Kilde.SYKEFRAVÆRSSTATISTIKK,
-                Næringskode5Siffer("88911", "Barnehager"),
-                "Helse- og sosialtjenester  ",
+                Næring("88911", "Barnehager", "Helse- og sosialtjenester"),
                 "0576",
                 "Oslo",
                 _1_MAI.atStartOfDay().plusHours(4)
@@ -185,15 +177,14 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             MottattInnloggetIaTjenesteMetrikk(
                 "888888888",
                 Kilde.SYKEFRAVÆRSSTATISTIKK,
-                Næringskode5Siffer("88911", "Barnehager"),
-                "Helse- og sosialtjenester  ",
+                Næring("88911", "Barnehager", "Helse- og sosialtjenester"),
                 "0576",
                 "Oslo",
                 _1_MAI.atStartOfDay().plusHours(4)
             ),
             MottattInnloggetIaTjenesteMetrikk(
-                "999999999", Kilde.SYKEFRAVÆRSSTATISTIKK, Næringskode5Siffer("88911", "Barnehager"),
-                "Helse- og sosialtjenester  ",
+                "999999999", Kilde.SYKEFRAVÆRSSTATISTIKK,
+                Næring("88911", "Barnehager", "Helse- og sosialtjenester"),
                 "0576",
                 "Oslo",
                 _5_JUNI.atStartOfDay()
