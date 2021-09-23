@@ -1,6 +1,17 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.EchartSpec
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Grid
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Legend
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MarkdownSpec
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Option
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Serie
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.SpecType
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -63,7 +74,6 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
     ): EchartSpec {
         return EchartSpec(
             "",
-            // TODO: legg til 'title' og 'description'
             Option(
                 Legend(
                     listOf(
@@ -151,19 +161,6 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             "## Samtalestøtte (uinnlogget)\n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
                     "## Sykefraværsstatistikk (innlogget)\n **${datagrunnlag.totalInnloggetMetrikker}** \n " +
                     "### Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
-        )
-    }
-
-    // TODO lag en PR på denne og legg til en View med specType = SpecType.markdown, title = "Hva er en digital IA-tjeneste?", uten description
-    private fun lagHvaErEnDigitatlIaTjenesteSpec(): MarkdownSpec {
-        return MarkdownSpec(
-            "I samtalestøtte registreres en digital IA-tjeneste når brukeren\n" +
-                    " 1. finner informasjon om når eller hvordan de skal gjennomføre en samtale\n " +
-                    " 2. benytter seg av veiledningen til systematisk arbeid\n " +
-                    "\n" +
-                    "I sykefraværsstatistikk registreres en digital IA-tjeneste dersom brukerene\n" +
-                    " 1. ser sine og bransjens/næringens sykefraværtall og/eller\n " +
-                    " 2. trykker seg videre til en ressurs inne på siden eller ut til eksterne lenker\n "
         )
     }
 }
