@@ -4,12 +4,13 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.til
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk
+import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk
 import java.time.LocalDate
 import java.time.Month
 
 class MottattIaTjenesterDatagrunnlag(
     innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
-    uinnloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk>,
+    uinnloggetMetrikker: List<MottattUinnloggetIaTjenesteMetrikk>,
     fraDato: LocalDate,
     tilDato: LocalDate
 ) {

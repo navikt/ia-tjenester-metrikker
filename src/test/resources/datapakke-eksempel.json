@@ -106,12 +106,13 @@
           "yAxis": {
             "type": "category",
             "data": [
-              "Sykehjem.",
-              "Anlegg",
-              "Bygg",
+              "Transport",
               "Sykehus",
+              "Sykehjem",
+              "Næringsmiddelindustri",
+              "Bygg",
               "Barnehager",
-              "Fiske fangst og akvakultur.",
+              "Anlegg",
               "Andre næringer"
             ]
           },
@@ -123,6 +124,7 @@
                 182,
                 234,
                 290,
+                230,
                 100,
                 131,
                 88,
@@ -136,6 +138,7 @@
                 187,
                 234,
                 310,
+                221,
                 121,
                 134,
                 181,
