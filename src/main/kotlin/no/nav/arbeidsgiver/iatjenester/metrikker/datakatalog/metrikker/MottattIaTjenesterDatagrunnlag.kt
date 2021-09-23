@@ -54,7 +54,7 @@ class MottattIaTjenesterDatagrunnlag(
         val metrikkerPerMåned: Map<Month, Collection<Int>> =
             måneder.map { it to metrikkerPerDag.filter { (key, _) -> key.month == it }.values }.toMap()
         val antallMetrikkerPerMåned: Map<Month, Int> =
-            metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumBy { it } }
+            metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumOf { it } }
 
         return antallMetrikkerPerMåned
     }
