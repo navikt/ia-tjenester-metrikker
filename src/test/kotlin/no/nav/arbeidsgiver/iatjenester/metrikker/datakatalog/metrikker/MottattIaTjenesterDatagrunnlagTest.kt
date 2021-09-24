@@ -3,7 +3,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidstilsynetBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.*
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -77,7 +76,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             _21_JUNI_2021
         )
 
-        val resultat: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> = datagrunnlag.antallInnloggetMetrikkerPerBransje
+        val resultat: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> = datagrunnlag.mottatteIaTjenesterInnloggetPerBransjePerKilde
 
         Assertions.assertThat(resultat.keys.filter { it.first == Kilde.SAMTALESTØTTE }.size)
             .isEqualTo(datagrunnlag.bransjeListe.size)
@@ -140,7 +139,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             _21_JUNI_2021
         )
 
-        val resultat: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> = datagrunnlag.antallInnloggetMetrikkerPerBransje
+        val resultat: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> = datagrunnlag.mottatteIaTjenesterInnloggetPerBransjePerKilde
 
         Assertions.assertThat(resultat[Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, ArbeidstilsynetBransje.BARNEHAGER)])
             .isEqualTo(2)

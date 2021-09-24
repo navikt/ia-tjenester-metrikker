@@ -37,8 +37,8 @@ class MottattIaTjenesterDatagrunnlag(
             .filterNot { it == ArbeidstilsynetBransje.ANDRE_BRANSJER }
             .sortedBy { it.name }
 
-    val antallInnloggetMetrikkerPerBransje: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
-        beregnAntallMetrikkerPerBransje(bransjeListe, fjernDupliserteMetrikkerSammeDag(innloggetMetrikker))
+    val mottatteIaTjenesterInnloggetPerBransjePerKilde: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
+        beregnAntallMottatteIaTjenesterPerBransje(bransjeListe, fjernDupliserteMetrikkerSammeDag(innloggetMetrikker))
 
 
     val totalInnloggetMetrikker: Int = innloggetMetrikker.size
@@ -73,7 +73,7 @@ class MottattIaTjenesterDatagrunnlag(
         return mottattIaTjenesteMetrikker.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
     }
 
-    fun beregnAntallMetrikkerPerBransje(
+    fun beregnAntallMottatteIaTjenesterPerBransje(
         bransjeListe: List<ArbeidstilsynetBransje>,
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
     ): Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> {

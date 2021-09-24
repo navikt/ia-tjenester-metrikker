@@ -99,7 +99,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                     Serie(
                         "Samtalestøtte (innlogget)",
                         datagrunnlag
-                            .antallInnloggetMetrikkerPerBransje
+                            .mottatteIaTjenesterInnloggetPerBransjePerKilde
                             .filter { it.key.first == Kilde.SAMTALESTØTTE }
                             .values
                             .toList(),
@@ -109,7 +109,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                     Serie(
                         "Sykefraværsstatistikk",
                         datagrunnlag
-                            .antallInnloggetMetrikkerPerBransje
+                            .mottatteIaTjenesterInnloggetPerBransjePerKilde
                             .filter { it.key.first == Kilde.SYKEFRAVÆRSSTATISTIKK }
                             .values
                             .toList(),
