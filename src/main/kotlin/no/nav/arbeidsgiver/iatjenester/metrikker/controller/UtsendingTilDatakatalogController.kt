@@ -1,8 +1,7 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.controller.uinnlogget
+package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogStatistikk
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid

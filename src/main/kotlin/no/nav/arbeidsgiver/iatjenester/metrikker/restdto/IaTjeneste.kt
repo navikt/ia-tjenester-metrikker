@@ -1,11 +1,10 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.domene
+package no.nav.arbeidsgiver.iatjenester.metrikker.restdto
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer
 import java.time.ZonedDateTime
-import java.util.*
 
 interface IaTjeneste {
     var tjenesteMottakkelsesdato: ZonedDateTime

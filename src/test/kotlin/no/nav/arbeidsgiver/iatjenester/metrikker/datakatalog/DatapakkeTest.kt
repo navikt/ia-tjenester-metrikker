@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class DatapakkeTest {
 
     @Test
-    fun `Felter xAxis og yAxis i Option skal ha en stor 'X'`() {
+    fun `Felter xAxis og yAxis i Option sstarter med en liten bokstav`() {
         val option = Option(
             legend = Legend(listOf("item1")),
             xAxis = Xaxis("The X axis", listOf("field 1", "field2", "field3")),

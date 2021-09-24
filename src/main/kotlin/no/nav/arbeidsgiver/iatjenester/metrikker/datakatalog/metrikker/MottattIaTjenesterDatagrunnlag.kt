@@ -1,13 +1,17 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidstilsynetBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.til
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
+import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk
+import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk
 import java.time.LocalDate
 import java.time.Month
 
 class MottattIaTjenesterDatagrunnlag(
-    innloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>,
-    uinnloggetMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>,
+    innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
+    uinnloggetMetrikker: List<MottattUinnloggetIaTjenesteMetrikk>,
     fraDato: LocalDate,
     tilDato: LocalDate
 ) {
@@ -26,6 +30,17 @@ class MottattIaTjenesterDatagrunnlag(
             beregnAntallMetrikkerPerDag(uinnloggetMetrikker)
         )
 
+    val bransjeListe: List<ArbeidstilsynetBransje> =
+        ArbeidstilsynetBransje
+            .values()
+            .toList()
+            .filterNot { it == ArbeidstilsynetBransje.ANDRE_BRANSJER }
+            .sortedBy { it.name }
+
+    val mottatteIaTjenesterInnloggetPerBransjePerKilde: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
+        beregnAntallMottatteIaTjenesterPerBransje(bransjeListe, fjernDupliserteMetrikkerSammeDag(innloggetMetrikker))
+
+
     val totalInnloggetMetrikker: Int = innloggetMetrikker.size
     val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
     val totalUnikeBedrifterPerDag: Int =
@@ -39,14 +54,14 @@ class MottattIaTjenesterDatagrunnlag(
         val metrikkerPerMåned: Map<Month, Collection<Int>> =
             måneder.map { it to metrikkerPerDag.filter { (key, _) -> key.month == it }.values }.toMap()
         val antallMetrikkerPerMåned: Map<Month, Int> =
-            metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumBy { it } }
+            metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumOf { it } }
 
         return antallMetrikkerPerMåned
     }
 
     fun fjernDupliserteMetrikkerSammeDag(
-        mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
-    ): List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk> {
+        mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
+    ): List<MottattInnloggetIaTjenesteMetrikk> {
         return mottattIaTjenesteMetrikker.distinctBy {
             Pair(it.orgnr, it.tidspunkt.toLocalDate())
         }
@@ -56,6 +71,28 @@ class MottattIaTjenesterDatagrunnlag(
         mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
     ): Map<LocalDate, Int> {
         return mottattIaTjenesteMetrikker.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
+    }
+
+    fun beregnAntallMottatteIaTjenesterPerBransje(
+        bransjeListe: List<ArbeidstilsynetBransje>,
+        mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
+    ): Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> {
+
+        val alleBransjerPerKilde: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
+            bransjeListe.map { Pair(Kilde.SAMTALESTØTTE, it) }
+                .map { it to 0 }
+                .toMap() +
+                    bransjeListe.map { Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, it) }
+                        .map { it to 0 }
+                        .toMap()
+
+        val alleBransjerPerKildeMedAntallMetrikker: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
+            mottattIaTjenesteMetrikker
+                .groupingBy { Pair(it.kilde, it.næring.getArbeidstilsynetBransje()) }
+                .eachCount()
+                .filterNot { it.key.second == ArbeidstilsynetBransje.ANDRE_BRANSJER }
+
+        return alleBransjerPerKilde + alleBransjerPerKildeMedAntallMetrikker
     }
 
     fun gjeldendeMåneder() = gjeldendeMåneder

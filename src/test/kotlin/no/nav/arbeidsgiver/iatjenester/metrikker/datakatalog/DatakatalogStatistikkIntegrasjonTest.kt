@@ -8,8 +8,8 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettInnl
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettUinnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.UinnloggetIaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.mockserver.MockServer
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -124,7 +124,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
         datakatalogStatistikkMedDato.run()
 
-        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(2)
+        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(3)
         Assertions.assertThat(produsertDatapakke.views[0].spec).isInstanceOf(MarkdownSpec::class.java)
 
         val echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec

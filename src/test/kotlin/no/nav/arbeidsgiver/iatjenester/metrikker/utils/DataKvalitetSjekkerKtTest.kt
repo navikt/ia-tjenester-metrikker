@@ -1,8 +1,8 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.TypeIATjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import org.junit.Assert
 import org.junit.jupiter.api.*
 import org.mockito.ArgumentCaptor

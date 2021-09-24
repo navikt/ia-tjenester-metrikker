@@ -1,34 +1,44 @@
 {
-  "title": "IA tjenester-metrikker",
+  "title": "Digitale IA-tjenester",
   "type": "datapackage",
-  "description": "Mottatte ia-tjenester-metrikker fra sykefraværsstatistikk og samtalestøtte",
-  "name": "ia-tjenester-metrikker-i-dev-miljø",
+  "description": "Mottatte digitale ia-tjenester-metrikker",
+  "name": "ia-tjenester-metrikker-statistikk",
   "uri": "",
   "url": "",
-  "team": "teamIA",
+  "team": "Team IA",
   "views": [
     {
-      "title": "Mottatte ia-tjenester per applikasjon",
-      "name": "Antall mottatt ia-tjenester",
-      "description": "Mottatte ia-tjenester fra digitale tjenester i Nav",
+      "title": "Mottatte digitale IA-tjenester",
+      "description": "Antall digitale IA-tjenester siden 1. mars",
       "specType": "markdown",
       "spec": {
         "markdown": "## Samtalestøtte \n **12550**\n ## Sykefraværsstatistikk\n **4569** \n ### Antall bedrifter \n **1664**"
       }
     },
     {
-      "title": "Mottatte ia-tjenester-metrikker per måned",
-      "description": "Antall ia-tjenester mottat per applikasjon: Sykefraværsstatistikk (blå) og Samtalestøtte (grønn)",
+      "title": "Mottatte digitale IA-tjenester per måned (mar. - sep. 2021)",
+      "description": "Antall digitale IA-tjenester mottatt per applikasjon per måned",
       "specType": "echart",
       "spec": {
         "url": "",
         "option": {
           "legend": {
-            "data": ["Innlogget", "Uinlogget"]
+            "data": [
+              "Samtalestøtte (uinnlogget)",
+              "Sykefraværsstatistikk (innlogget)"
+            ]
           },
           "xAxis": {
             "type": "category",
-            "data": ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun"]
+            "data": [
+              "mar.",
+              "apr.",
+              "mai",
+              "jun.",
+              "jul.",
+              "aug.",
+              "sep."
+            ]
           },
           "yAxis": {
             "type": "value"
@@ -38,16 +48,102 @@
           },
           "series": [
             {
-              "name": "Innlogget",
-              "data": [0, 240, 650, 570, 530, 495],
-              "type": "bar",
-              "title": "Sykefraværsstatistikk"
-            },
-            {
-              "name": "Uinlogget",
-              "data": [0, 346, 950, 1165, 1234, 1100],
+              "name": "Samtalestøtte (uinnlogget)",
+              "data": [
+                0,
+                240,
+                650,
+                570,
+                530,
+                495,
+                345
+              ],
               "type": "bar",
               "title": "Samtalestøtte"
+            },
+            {
+              "name": "Sykefraværsstatistikk (innlogget)",
+              "data": [
+                0,
+                346,
+                950,
+                1165,
+                1234,
+                1100,
+                999
+              ],
+              "type": "bar",
+              "title": "Sykefraværsstatistikk"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Mottatte digitale IA-tjenester per næring 2 siffer eller bransje",
+      "description": "Antall digitale IA-tjenester siden 1. mars",
+      "specType": "echart",
+      "spec": {
+        "option": {
+          "tooltip": {
+            "trigger": "item"
+          },
+          "legend": {
+            "data": [
+              "Samtalestøtte (innlogget)",
+              "Sykefraværsstatistikk"
+            ]
+          },
+          "grid": {
+            "left": "3%",
+            "right": "4%",
+            "bottom": "3%",
+            "containLabel": true
+          },
+          "xAxis": {
+            "type": "value"
+          },
+          "yAxis": {
+            "type": "category",
+            "data": [
+              "Transport",
+              "Sykehus",
+              "Sykehjem",
+              "Næringsmiddelindustri",
+              "Bygg",
+              "Barnehager",
+              "Anlegg",
+              "Andre næringer"
+            ]
+          },
+          "series": [
+            {
+              "name": "Samtalestøtte (innlogget)",
+              "type": "bar",
+              "data": [
+                182,
+                234,
+                290,
+                230,
+                100,
+                131,
+                88,
+                345
+              ]
+            },
+            {
+              "name": "Sykefraværsstatistikk",
+              "type": "bar",
+              "data": [
+                187,
+                234,
+                310,
+                221,
+                121,
+                134,
+                181,
+                651
+              ]
             }
           ]
         }

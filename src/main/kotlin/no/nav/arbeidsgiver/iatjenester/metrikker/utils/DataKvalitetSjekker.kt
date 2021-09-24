@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
 
 private val MAKSIMUM_KOMMUNE_NR = 5444
 private val MAKSIMUM_FYLKE_NR = 54
