@@ -37,8 +37,11 @@ class MottattIaTjenesterDatagrunnlag(
             .filterNot { it == ArbeidstilsynetBransje.ANDRE_BRANSJER }
             .sortedBy { it.name }
 
-    val mottatteIaTjenesterInnloggetPerBransjePerKilde: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
-        beregnAntallMottatteIaTjenesterPerBransje(bransjeListe, fjernDupliserteMetrikkerSammeDag(innloggetMetrikker))
+    val mottatteIaTjenesterInnloggetPerBransjeOgKilde: MottatteIaTjenesterPerBransjeOgKilde =
+        beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
+            bransjeListe,
+            fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
+        )
 
 
     val totalInnloggetMetrikker: Int = innloggetMetrikker.size
@@ -73,28 +76,30 @@ class MottattIaTjenesterDatagrunnlag(
         return mottattIaTjenesteMetrikker.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
     }
 
-    fun beregnAntallMottatteIaTjenesterPerBransje(
+    fun beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
         bransjeListe: List<ArbeidstilsynetBransje>,
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
-    ): Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> {
+    ): MottatteIaTjenesterPerBransjeOgKilde {
 
-        val alleBransjerPerKilde: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
-            bransjeListe.map { Pair(Kilde.SAMTALESTØTTE, it) }
+        val alleBransjerPerBransjeOgKilde: MottatteIaTjenesterPerBransjeOgKilde =
+            bransjeListe.map { BransjePerKilde(Kilde.SAMTALESTØTTE, it) }
                 .map { it to 0 }
                 .toMap() +
                     bransjeListe.map { Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, it) }
                         .map { it to 0 }
                         .toMap()
 
-        val alleBransjerPerKildeMedAntallMetrikker: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> =
+        val alleBransjerPerBransjeOgKildeMedAntallMetrikker: MottatteIaTjenesterPerBransjeOgKilde =
             mottattIaTjenesteMetrikker
-                .groupingBy { Pair(it.kilde, it.næring.getArbeidstilsynetBransje()) }
+                .groupingBy { BransjePerKilde(it.kilde, it.næring.getArbeidstilsynetBransje()) }
                 .eachCount()
                 .filterNot { it.key.second == ArbeidstilsynetBransje.ANDRE_BRANSJER }
 
-        return alleBransjerPerKilde + alleBransjerPerKildeMedAntallMetrikker
+        return alleBransjerPerBransjeOgKilde + alleBransjerPerBransjeOgKildeMedAntallMetrikker
     }
 
     fun gjeldendeMåneder() = gjeldendeMåneder
 }
 
+typealias BransjePerKilde = Pair<Kilde, ArbeidstilsynetBransje>
+typealias MottatteIaTjenesterPerBransjeOgKilde = Map<BransjePerKilde, Int>

@@ -76,13 +76,13 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             _21_JUNI_2021
         )
 
-        val resultat: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> = datagrunnlag.mottatteIaTjenesterInnloggetPerBransjePerKilde
+        val resultat: MottatteIaTjenesterPerBransjeOgKilde = datagrunnlag.mottatteIaTjenesterInnloggetPerBransjeOgKilde
 
         Assertions.assertThat(resultat.keys.filter { it.first == Kilde.SAMTALESTØTTE }.size)
             .isEqualTo(datagrunnlag.bransjeListe.size)
         Assertions.assertThat(resultat.keys.filter { it.first == Kilde.SYKEFRAVÆRSSTATISTIKK }.size)
             .isEqualTo(datagrunnlag.bransjeListe.size)
-        Assertions.assertThat(resultat[Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, ArbeidstilsynetBransje.BARNEHAGER)])
+        Assertions.assertThat(resultat[BransjePerKilde(Kilde.SYKEFRAVÆRSSTATISTIKK, ArbeidstilsynetBransje.BARNEHAGER)])
             .isEqualTo(2)
     }
 
@@ -139,15 +139,15 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             _21_JUNI_2021
         )
 
-        val resultat: Map<Pair<Kilde, ArbeidstilsynetBransje>, Int> = datagrunnlag.mottatteIaTjenesterInnloggetPerBransjePerKilde
+        val resultat: MottatteIaTjenesterPerBransjeOgKilde = datagrunnlag.mottatteIaTjenesterInnloggetPerBransjeOgKilde
 
-        Assertions.assertThat(resultat[Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, ArbeidstilsynetBransje.BARNEHAGER)])
+        Assertions.assertThat(resultat[BransjePerKilde(Kilde.SYKEFRAVÆRSSTATISTIKK, ArbeidstilsynetBransje.BARNEHAGER)])
             .isEqualTo(2)
-        Assertions.assertThat(resultat[Pair(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.BARNEHAGER)])
+        Assertions.assertThat(resultat[BransjePerKilde(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.BARNEHAGER)])
             .isEqualTo(1)
-        Assertions.assertThat(resultat[Pair(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.ANLEGG)])
+        Assertions.assertThat(resultat[BransjePerKilde(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.ANLEGG)])
             .isEqualTo(1)
-        Assertions.assertThat(resultat[Pair(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.ANDRE_BRANSJER)])
+        Assertions.assertThat(resultat[BransjePerKilde(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.ANDRE_BRANSJER)])
             .isNull()
     }
 
