@@ -1,7 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import java.time.LocalDateTime
 
 data class Datapakke(
     val title: String,
@@ -16,10 +15,15 @@ data class Datapakke(
 
 data class View(
     val title: String,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     val description: String,
     val specType: SpecType,
     val spec: Spec
-)
+) {
+    constructor(
+        title: String, specType: SpecType, spec: Spec
+    ) : this(title, "", specType, spec)
+}
 
 enum class SpecType {
     markdown,
@@ -27,12 +31,12 @@ enum class SpecType {
 }
 
 interface Spec
-data class EchartSpec (
+data class EchartSpec(
     val url: String,
     val option: Option
 ) : Spec
 
-data class MarkdownSpec (
+data class MarkdownSpec(
     val markdown: String
 ) : Spec
 
@@ -46,7 +50,7 @@ data class Option(
     val yAxis: Yaxis,
     val tooltip: Tooltip,
     val series: List<Serie>
-){
+) {
     constructor(legend: Legend, xAxis: Xaxis, yAxis: Yaxis, tooltip: Tooltip, series: List<Serie>) :
             this(legend, null, xAxis, yAxis, tooltip, series)
 }

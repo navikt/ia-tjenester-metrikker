@@ -105,14 +105,14 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         opprettTestDataIDB(namedParameterJdbcTemplate)
 
         datakatalogStatistikkMedTilDatoSomVarierer.run()
-        var echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
+        var echartSpec: EchartSpec = produsertDatapakke.views[2].spec as EchartSpec
 
         Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun."))
 
         idag =  LocalDate.of(2021, Month.JULY, 1)
         datakatalogStatistikkMedTilDatoSomVarierer.run()
-        echartSpec = produsertDatapakke.views[1].spec as EchartSpec
+        echartSpec = produsertDatapakke.views[2].spec as EchartSpec
 
         Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
@@ -124,10 +124,11 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
         datakatalogStatistikkMedDato.run()
 
-        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(3)
+        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(4)
         Assertions.assertThat(produsertDatapakke.views[0].spec).isInstanceOf(MarkdownSpec::class.java)
+        Assertions.assertThat(produsertDatapakke.views[1].spec).isInstanceOf(MarkdownSpec::class.java)
 
-        val echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
+        val echartSpec: EchartSpec = produsertDatapakke.views[2].spec as EchartSpec
         Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
         Assertions.assertThat(echartSpec.option.series[0].name).isEqualTo("Samtalestøtte (uinnlogget)")
@@ -163,25 +164,25 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         opprettInnloggetIaTjenester(
             listOf(
                 Date.valueOf(målingFra),
-                Date.valueOf(målingFra.plusMonths(1).plusDays(3)),
-                Date.valueOf(målingFra.plusMonths(1).plusDays(12)),
-                Date.valueOf(målingFra.plusMonths(1).plusDays(14)),
-                Date.valueOf(målingFra.plusMonths(2).plusDays(1)),
-                Date.valueOf(målingFra.plusMonths(3).plusDays(2)),
-                Date.valueOf(målingFra.plusMonths(4).plusDays(3)),
-                Date.valueOf(målingFra.plusMonths(6).plusDays(1)),
+                Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(3)),
+                Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(12)),
+                Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(14)),
+                Date.valueOf(målingFra.plusMonths(2).withDayOfMonth(1)),
+                Date.valueOf(målingFra.plusMonths(3).withDayOfMonth(22)),
+                Date.valueOf(målingFra.plusMonths(4).withDayOfMonth(13)),
+                Date.valueOf(målingFra.plusMonths(6).withDayOfMonth(15)),
             )
         )
 
         opprettUinnloggetIaTjenester(
             listOf(
-                Date.valueOf(målingFra.plusMonths(1).plusDays(3)),
-                Date.valueOf(målingFra.plusMonths(2).plusDays(12)),
-                Date.valueOf(målingFra.plusMonths(2).plusDays(14)),
-                Date.valueOf(målingFra.plusMonths(3).plusDays(1)),
-                Date.valueOf(målingFra.plusMonths(3).plusDays(22)),
-                Date.valueOf(målingFra.plusMonths(4).plusDays(3)),
-                Date.valueOf(målingFra.plusMonths(4).plusDays(3)),
+                Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(3)),
+                Date.valueOf(målingFra.plusMonths(2).withDayOfMonth(12)),
+                Date.valueOf(målingFra.plusMonths(2).withDayOfMonth(14)),
+                Date.valueOf(målingFra.plusMonths(3).withDayOfMonth(1)),
+                Date.valueOf(målingFra.plusMonths(3).withDayOfMonth(22)),
+                Date.valueOf(målingFra.plusMonths(4).withDayOfMonth(3)),
+                Date.valueOf(målingFra.plusMonths(4).withDayOfMonth(3)),
             )
         )
     }

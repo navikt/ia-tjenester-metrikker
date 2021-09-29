@@ -25,6 +25,11 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
 
     override fun views() = listOf(
         View(
+            title = "Om mottatte digitale IA-tjenester",
+            specType = SpecType.markdown,
+            spec = lagForklaringMarkdownSpec(),
+        ),
+        View(
             title = "Mottatte digitale IA-tjenester",
             description = "Antall digitale IA-tjenester siden ${startDato.dayOfMonth}. ${
                 startDato.month.getDisplayName(
@@ -33,26 +38,16 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 )
             }",
             specType = SpecType.markdown,
-            spec = lagMarkdownSpec(datagrunnlag),
+            spec = lagMottatteDigitaleIATjenesterMarkdownSpec(datagrunnlag),
         ),
         View(
-            title = "Mottatte digitale IA-tjenester per måned (${
-                datagrunnlag.gjeldendeMåneder.first().getDisplayName(
-                    TextStyle.SHORT,
-                    NORSK_BOKMÅL
-                )
-            } - ${
-                datagrunnlag.gjeldendeMåneder.last().getDisplayName(
-                    TextStyle.SHORT,
-                    NORSK_BOKMÅL
-                )
-            } ${datagrunnlag.gjelendeÅr})",
+            title = "Mottatte digitale IA-tjenester ",
             description = "Antall digitale IA-tjenester mottatt per applikasjon per måned",
             specType = SpecType.echart,
             spec = lagEchartSpecForMottatteDigitaleIATjenesterPerMåned(datagrunnlag),
         ),
         View(
-            title = "Mottatte digitale IA-tjenester per næring 2 siffer eller bransje (${
+            title = "Mottatte digitale IA-tjenester per bransje (${
                 datagrunnlag.gjeldendeMåneder.first().getDisplayName(
                     TextStyle.SHORT,
                     NORSK_BOKMÅL
@@ -156,9 +151,22 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         )
     }
 
-    private fun lagMarkdownSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): MarkdownSpec {
+    private fun lagForklaringMarkdownSpec(): MarkdownSpec {
         return MarkdownSpec(
-            "## Samtalestøtte (uinnlogget)\n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
+            "#### Statistikken viser antall digitale IA-tjenester fra NAV fra tjenestene\n" +
+                    " - Samtalestøtte til arbeidsgiver (krever ikke innlogging)\n" +
+                    " - Sykefraværsstatistikk til arbeidsgiver (krever innlogging) \n" +
+                    "####  En digital IA-tjeneste telles når en bruker har benyttet seg av innholdet på en nettside.\n" +
+                    "Som hovedregel betyr dette at brukeren har: klikket på noe, skrevet noe eller åpnet noe på siden. Det er ikke tilstrekkelig at en bruker har åpnet nettsiden.\n" +
+                    "####  Hvordan telles leverte digitale IA-tjenester når samtalestøtten blir klikket på inne i sykefraværsstatistikken?\n" +
+                    "Det telles ikke levert IA-tjeneste fra sykefraværsstatistikk, men det registreres digital IA-tjeneste i samtalestøtten dersom brukeren benytter seg av innholdet.\n" +
+                    "<br/><br/> \n"
+        )
+    }
+
+    private fun lagMottatteDigitaleIATjenesterMarkdownSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): MarkdownSpec {
+        return MarkdownSpec(
+                    "## Samtalestøtte (uinnlogget)\n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
                     "## Sykefraværsstatistikk (innlogget)\n **${datagrunnlag.totalInnloggetMetrikker}** \n " +
                     "### Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
         )

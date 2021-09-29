@@ -53,7 +53,7 @@ class DatakatalogStatistikk(
         Datapakke(
             title = "Digitale IA-tjenester",
             type = "datapackage",
-            description = "Mottatte digitale ia-tjenester-metrikker",
+            description = "",
             views = views,
             name = "ia-tjenester-metrikker-statistikk",
             uri = "",
@@ -80,9 +80,10 @@ class DatakatalogStatistikk(
 }
 
 infix fun LocalDate.til(tilDato: LocalDate): List<Month> {
-    val førstDagIHverMåned: List<LocalDate> = ChronoUnit.MONTHS.between(this, tilDato)
+    val startDato: LocalDate = this.withDayOfMonth(1)
+    val alleFørsteDagIHverMåned: List<LocalDate> = ChronoUnit.MONTHS.between(startDato, tilDato)
         .let { antallMåneder ->
             (0..antallMåneder).map { this.plusMonths(it) }
         }
-    return førstDagIHverMåned.map { it.month }
+    return alleFørsteDagIHverMåned.map { it.month }
 }
