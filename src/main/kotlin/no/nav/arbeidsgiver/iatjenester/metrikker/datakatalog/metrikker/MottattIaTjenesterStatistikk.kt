@@ -26,7 +26,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
     override fun views() = listOf(
         View(
             title = "Mottatte digitale IA-tjenester",
-            description = "Antall digitale IA-tjenester siden 1. ${
+            description = "Antall digitale IA-tjenester siden ${startDato.dayOfMonth}. ${
                 startDato.month.getDisplayName(
                     TextStyle.FULL,
                     NORSK_BOKMÅL
