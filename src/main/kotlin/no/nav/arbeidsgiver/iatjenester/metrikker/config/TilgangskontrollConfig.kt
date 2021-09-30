@@ -10,7 +10,7 @@ enum class AltinnService(val id: String) {
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "tilgangskontroll")
-data class TilgangskontrollConfigProperties(
+data class TilgangskontrollConfig(
     var altinnServices: Map<String, ServiceIAltinnKonfig>
 )
 

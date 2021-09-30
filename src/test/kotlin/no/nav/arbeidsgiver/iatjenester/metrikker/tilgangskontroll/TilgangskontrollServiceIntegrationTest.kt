@@ -9,7 +9,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.TEST_FNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.testTokenForTestFNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnService
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import no.nav.security.token.support.core.context.TokenValidationContext
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.core.jwt.JwtToken
@@ -41,7 +41,7 @@ internal class TilgangskontrollServiceIntegrationTest {
     private lateinit var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
 
     @Autowired
-    private lateinit var iaServiceIAltinnKonfig: TilgangskontrollConfigProperties
+    private lateinit var iaServiceIAltinnKonfig: TilgangskontrollConfig
 
     @Autowired
     private lateinit var altinnrettigheterProxyKlient: AltinnrettigheterProxyKlient

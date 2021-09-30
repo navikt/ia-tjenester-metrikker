@@ -7,13 +7,13 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceCode
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceEdition
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnService
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import org.springframework.stereotype.Component
 
 @Component
 class TilgangskontrollService(
     private val klient: AltinnrettigheterProxyKlient,
-    private val tilgangsconfig: TilgangskontrollConfigProperties,
+    private val tilgangsconfig: TilgangskontrollConfig,
     private val tilgangskontrollUtils: TilgangskontrollUtils
 ) {
 
