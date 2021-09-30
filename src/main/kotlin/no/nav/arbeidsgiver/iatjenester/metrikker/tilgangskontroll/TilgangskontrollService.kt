@@ -17,17 +17,19 @@ class TilgangskontrollService(
     private val tilgangskontrollUtils: TilgangskontrollUtils
 ) {
 
-    fun hentInnloggetBruker(tjeneste: AltinnServiceKey): Either<TilgangskontrollException, InnloggetBruker> {
+    fun hentInnloggetBruker(serviceKey: AltinnServiceKey): Either<TilgangskontrollException, InnloggetBruker> {
 
         if (tilgangskontrollUtils.erInnloggetSelvbetjeningBruker() as Boolean) {
             val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetSelvbetjeningBruker()
+
+            val currentAltinnServiceConfig = tilgangsconfig.altinnServices.getValue(serviceKey)
 
             innloggetSelvbetjeningBruker.organisasjoner =
                 klient.hentOrganisasjoner(
                     SelvbetjeningToken(tilgangskontrollUtils.selvbetjeningToken.tokenAsString),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                    ServiceCode(tilgangsconfig.altinnServices[tjeneste]!!.serviceCode),
-                    ServiceEdition(tilgangsconfig.altinnServices[tjeneste]!!.serviceEdition),
+                    ServiceCode(currentAltinnServiceConfig.serviceCode),
+                    ServiceEdition(currentAltinnServiceConfig.serviceEdition),
                     false
                 ).map {
                     AltinnOrganisasjon(
