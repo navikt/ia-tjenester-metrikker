@@ -27,9 +27,13 @@ altinn-proxy:
   apiGwKey: ${ALTINN_APIGW_APIKEY}
 
 tilgangskontroll:
-  ia-service-i-altinn:
-    servicecode: 3403
-    serviceedition: 2
+  altinntjenester:
+    ia-service-i-altinn:
+      servicecode: 3403
+      serviceedition: 2
+    oppfolgingsplan-service-i-altinn:
+      servicecode: 5062
+      serviceedition: 1
 
 datakatalog:
   rootUrl: https://datakatalog-api.intern.nav.no/v1/datapackage/
