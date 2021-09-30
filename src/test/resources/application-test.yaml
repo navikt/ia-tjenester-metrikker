@@ -32,11 +32,11 @@ altinn-proxy:
   apiGwKey: "test-API-GW-key"
 
 tilgangskontroll:
-  altinntjenester:
-    ia-service-i-altinn:
+  altinn-services:
+    ia:
       servicecode: 3403
       serviceedition: 1
-    oppfolgingsplan-service-i-altinn:
+    oppfolgingsplan:
       servicecode: 5062
       serviceedition: 1
 

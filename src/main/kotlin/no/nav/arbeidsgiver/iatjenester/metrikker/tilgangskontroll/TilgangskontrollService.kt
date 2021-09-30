@@ -6,13 +6,9 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.SelvbetjeningTok
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceCode
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceEdition
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnService
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfigProperties
 import org.springframework.stereotype.Component
-
-enum class AltinnServiceId(val value: String) {
-    IA_SERVICE("ia-service-i-altinn"),
-    OPPFPLAN("oppfolgingsplan-service-i-altinn")
-}
 
 @Component
 class TilgangskontrollService(
@@ -21,7 +17,7 @@ class TilgangskontrollService(
     private val tilgangskontrollUtils: TilgangskontrollUtils
 ) {
 
-    fun hentInnloggetBruker(altinnServiceId: AltinnServiceId): Either<TilgangskontrollException, InnloggetBruker> {
+    fun hentInnloggetBruker(tjeneste: AltinnService): Either<TilgangskontrollException, InnloggetBruker> {
 
         if (tilgangskontrollUtils.erInnloggetSelvbetjeningBruker() as Boolean) {
             val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetSelvbetjeningBruker()
@@ -30,8 +26,8 @@ class TilgangskontrollService(
                 klient.hentOrganisasjoner(
                     SelvbetjeningToken(tilgangskontrollUtils.selvbetjeningToken.tokenAsString),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                    ServiceCode(tilgangsconfig.altinntjenester[altinnServiceId.value]!!.serviceCode),
-                    ServiceEdition(tilgangsconfig.altinntjenester[altinnServiceId.value]!!.serviceEdition),
+                    ServiceCode(tilgangsconfig.altinnServices[tjeneste.id]!!.serviceCode),
+                    ServiceEdition(tilgangsconfig.altinnServices[tjeneste.id]!!.serviceEdition),
                     false
                 ).map {
                     AltinnOrganisasjon(

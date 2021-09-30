@@ -3,15 +3,15 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.config
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 
-enum class AltinnServiceId(val value: String) {
-    IA_SERVICE("ia-service-i-altinn"),
-    OPPFPLAN("oppfolgingsplan-service-i-altinn")
+enum class AltinnService(val id: String) {
+    IA("ia"),
+    OPPFOLGINGSPLAN("oppfolgingsplan")
 }
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "tilgangskontroll")
 data class TilgangskontrollConfigProperties(
-    var altinntjenester: Map<String, ServiceIAltinnKonfig>
+    var altinnServices: Map<String, ServiceIAltinnKonfig>
 )
 
 data class ServiceIAltinnKonfig(val serviceCode: String, val serviceEdition: String)

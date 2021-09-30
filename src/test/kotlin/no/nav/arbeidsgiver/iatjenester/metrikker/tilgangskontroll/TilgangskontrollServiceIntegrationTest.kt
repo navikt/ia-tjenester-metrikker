@@ -8,8 +8,8 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.Altin
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.TEST_FNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.testTokenForTestFNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnService
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.AltinnServiceId.IA_SERVICE
 import no.nav.security.token.support.core.context.TokenValidationContext
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.core.jwt.JwtToken
@@ -111,7 +111,7 @@ internal class TilgangskontrollServiceIntegrationTest {
             )
         )
 
-        val actualInnloggetBruker = tilgangskontrollService.hentInnloggetBruker(IA_SERVICE)
+        val actualInnloggetBruker = tilgangskontrollService.hentInnloggetBruker(AltinnService.IA)
 
         Assertions.assertThat(actualInnloggetBruker.orNull()!!.fnr).isEqualTo(expectedInnloggetBruker.fnr)
         Assertions.assertThat(actualInnloggetBruker.orNull()!!.organisasjoner)
@@ -126,7 +126,7 @@ internal class TilgangskontrollServiceIntegrationTest {
     fun `Kaster Exception dersom hverken AltinnProxy eller Altinn svarer`() {
 
         Assertions.assertThatExceptionOfType(AltinnrettigheterProxyKlientFallbackException::class.java).isThrownBy {
-            tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBruker(IA_SERVICE)
+            tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBruker(AltinnService.IA)
         }
     }
 }

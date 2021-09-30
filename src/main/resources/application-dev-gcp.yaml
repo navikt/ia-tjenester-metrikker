@@ -25,8 +25,8 @@ altinn-proxy:
   apiGwKey: ${ALTINN_APIGW_APIKEY}
 
 tilgangskontroll:
-  altinntjenester:
-    ia-service:
+  altinn-services:
+    ia:
       servicecode: 3403
       serviceedition: 1
     oppfolgingsplan:
