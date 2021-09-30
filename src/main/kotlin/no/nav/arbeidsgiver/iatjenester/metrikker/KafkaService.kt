@@ -2,7 +2,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker
 
 import com.google.gson.Gson
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.OutboundKafkaProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.context.annotation.Profile
 import org.springframework.kafka.core.KafkaTemplate

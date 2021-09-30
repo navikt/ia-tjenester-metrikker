@@ -3,7 +3,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.service
 import arrow.core.Either
 import com.zaxxer.hikari.HikariDataSource
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test

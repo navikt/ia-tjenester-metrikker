@@ -1,9 +1,9 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
 import arrow.core.Either
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.IaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component

@@ -1,8 +1,8 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.controller.uinnlogget
+package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import arrow.core.Either
 import no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.UinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid

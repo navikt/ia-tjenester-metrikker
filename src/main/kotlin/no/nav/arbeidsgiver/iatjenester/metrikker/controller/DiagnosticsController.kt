@@ -1,4 +1,4 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.controller.uinnlogget
+package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.ResponseEntity
