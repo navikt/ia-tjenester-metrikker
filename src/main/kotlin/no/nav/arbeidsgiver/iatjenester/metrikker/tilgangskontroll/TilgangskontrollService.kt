@@ -6,7 +6,7 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.SelvbetjeningTok
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceCode
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceEdition
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnService
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import org.springframework.stereotype.Component
 
@@ -17,7 +17,7 @@ class TilgangskontrollService(
     private val tilgangskontrollUtils: TilgangskontrollUtils
 ) {
 
-    fun hentInnloggetBruker(tjeneste: AltinnService): Either<TilgangskontrollException, InnloggetBruker> {
+    fun hentInnloggetBruker(tjeneste: AltinnServiceKey): Either<TilgangskontrollException, InnloggetBruker> {
 
         if (tilgangskontrollUtils.erInnloggetSelvbetjeningBruker() as Boolean) {
             val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetSelvbetjeningBruker()
@@ -26,8 +26,8 @@ class TilgangskontrollService(
                 klient.hentOrganisasjoner(
                     SelvbetjeningToken(tilgangskontrollUtils.selvbetjeningToken.tokenAsString),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                    ServiceCode(tilgangsconfig.altinnServices[tjeneste.id]!!.serviceCode),
-                    ServiceEdition(tilgangsconfig.altinnServices[tjeneste.id]!!.serviceEdition),
+                    ServiceCode(tilgangsconfig.altinnServices[tjeneste]!!.serviceCode),
+                    ServiceEdition(tilgangsconfig.altinnServices[tjeneste]!!.serviceEdition),
                     false
                 ).map {
                     AltinnOrganisasjon(

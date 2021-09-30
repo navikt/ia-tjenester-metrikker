@@ -2,7 +2,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller.innlogget
 
 import arrow.core.Either
 import arrow.core.flatMap
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnService
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
 import no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
@@ -49,7 +49,7 @@ class IaTjenesterMetrikkerInnloggetController(
         val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
 
         val brukerSjekk = tilgangskontrollService
-            .hentInnloggetBruker(AltinnService.IA)
+            .hentInnloggetBruker(AltinnServiceKey.IA)
             .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
         when(brukerSjekk) {
