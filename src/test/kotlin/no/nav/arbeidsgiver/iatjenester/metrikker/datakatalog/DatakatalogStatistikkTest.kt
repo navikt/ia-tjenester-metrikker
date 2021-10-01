@@ -13,9 +13,9 @@ internal class DatakatalogStatistikkTest {
         val fraDato = LocalDate.of(2021, 1, 1)
         val tilDato = LocalDate.of(2021, 4, 1)
 
-        Assertions.assertThat((fraDato til fraDato)).isEqualTo(listOf(Month.JANUARY))
-        Assertions.assertThat((tilDato til tilDato)).isEqualTo(listOf(Month.APRIL))
-        Assertions.assertThat((fraDato til tilDato))
+        Assertions.assertThat((fraDato månederTil fraDato)).isEqualTo(listOf(Month.JANUARY))
+        Assertions.assertThat((tilDato månederTil tilDato)).isEqualTo(listOf(Month.APRIL))
+        Assertions.assertThat((fraDato månederTil tilDato))
             .isEqualTo(listOf(Month.JANUARY, Month.FEBRUARY, Month.MARCH, Month.APRIL))
     }
 
@@ -24,9 +24,9 @@ internal class DatakatalogStatistikkTest {
         val fraDato = LocalDate.of(2021, 1, 17)
         val tilDato = LocalDate.of(2021, 4, 1)
 
-        Assertions.assertThat((fraDato til fraDato)).isEqualTo(listOf(Month.JANUARY))
-        Assertions.assertThat((tilDato til tilDato)).isEqualTo(listOf(Month.APRIL))
-        Assertions.assertThat((fraDato til tilDato))
+        Assertions.assertThat((fraDato månederTil fraDato)).isEqualTo(listOf(Month.JANUARY))
+        Assertions.assertThat((tilDato månederTil tilDato)).isEqualTo(listOf(Month.APRIL))
+        Assertions.assertThat((fraDato månederTil tilDato))
             .isEqualTo(listOf(Month.JANUARY, Month.FEBRUARY, Month.MARCH, Month.APRIL))
     }
 
@@ -36,9 +36,9 @@ internal class DatakatalogStatistikkTest {
         val fraDato = LocalDate.of(2021, 1, 17)
         val tilDato = LocalDate.of(2021, 4, 30)
 
-        Assertions.assertThat((fraDato til fraDato)).isEqualTo(listOf(Month.JANUARY))
-        Assertions.assertThat((tilDato til tilDato)).isEqualTo(listOf(Month.APRIL))
-        Assertions.assertThat((fraDato til tilDato))
+        Assertions.assertThat((fraDato månederTil fraDato)).isEqualTo(listOf(Month.JANUARY))
+        Assertions.assertThat((tilDato månederTil tilDato)).isEqualTo(listOf(Month.APRIL))
+        Assertions.assertThat((fraDato månederTil tilDato))
             .isEqualTo(listOf(Month.JANUARY, Month.FEBRUARY, Month.MARCH, Month.APRIL))
     }
 

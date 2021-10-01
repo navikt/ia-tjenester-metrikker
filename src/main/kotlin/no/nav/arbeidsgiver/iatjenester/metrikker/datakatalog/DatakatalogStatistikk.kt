@@ -6,6 +6,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIa
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDate.now
 import java.time.Month
@@ -79,7 +80,7 @@ class DatakatalogStatistikk(
         }
 }
 
-infix fun LocalDate.til(tilDato: LocalDate): List<Month> {
+infix fun LocalDate.månederTil(tilDato: LocalDate): List<Month> {
     val startDato: LocalDate = this.withDayOfMonth(1)
     val alleFørsteDagIHverMåned: List<LocalDate> = ChronoUnit.MONTHS.between(startDato, tilDato)
         .let { antallMåneder ->
