@@ -28,7 +28,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/tilgangskontroll-config'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/tekst-endringer-sept-2021'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -98,7 +98,7 @@ jobs:
   deploy-to-labs-gcp:
     name: Deploy to labs-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/tilgangskontroll-config'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/tekst-endringer-sept-2021'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2

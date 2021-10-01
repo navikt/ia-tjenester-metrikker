@@ -6,6 +6,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIa
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDate.now
 import java.time.Month
@@ -22,7 +23,7 @@ class DatakatalogStatistikk(
     private var tilDato: LocalDate = dagensDato()
 
     fun startDato(): LocalDate {
-        return LocalDate.of(2021, Month.MARCH, 1)
+        return LocalDate.of(2021, Month.MARCH, 17)
     }
 
     fun dagensDato(): LocalDate {
@@ -53,7 +54,7 @@ class DatakatalogStatistikk(
         Datapakke(
             title = "Digitale IA-tjenester",
             type = "datapackage",
-            description = "Mottatte digitale ia-tjenester-metrikker",
+            description = "",
             views = views,
             name = "ia-tjenester-metrikker-statistikk",
             uri = "",
@@ -79,10 +80,11 @@ class DatakatalogStatistikk(
         }
 }
 
-infix fun LocalDate.til(tilDato: LocalDate): List<Month> {
-    val førstDagIHverMåned: List<LocalDate> = ChronoUnit.MONTHS.between(this, tilDato)
+infix fun LocalDate.månederTil(tilDato: LocalDate): List<Month> {
+    val startDato: LocalDate = this.withDayOfMonth(1)
+    val alleFørsteDagIHverMåned: List<LocalDate> = ChronoUnit.MONTHS.between(startDato, tilDato)
         .let { antallMåneder ->
             (0..antallMåneder).map { this.plusMonths(it) }
         }
-    return førstDagIHverMåned.map { it.month }
+    return alleFørsteDagIHverMåned.map { it.month }
 }
