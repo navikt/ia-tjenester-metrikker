@@ -3,7 +3,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.OutboundKafkaProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Profile
         DBConfigProperties::class,
         OutboundKafkaProperties::class,
         AltinnConfigProperties::class,
-        TilgangskontrollConfigProperties::class
+        TilgangskontrollConfig::class
     ]
 )
 @EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])

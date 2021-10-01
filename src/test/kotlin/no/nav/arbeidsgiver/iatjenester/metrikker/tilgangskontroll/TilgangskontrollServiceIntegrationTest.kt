@@ -8,7 +8,8 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.Altin
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.TEST_FNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.testTokenForTestFNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.IaServiceIAltinnKonfig
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import no.nav.security.token.support.core.context.TokenValidationContext
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.core.jwt.JwtToken
@@ -40,7 +41,7 @@ internal class TilgangskontrollServiceIntegrationTest {
     private lateinit var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
 
     @Autowired
-    private lateinit var iaServiceIAltinnKonfig: IaServiceIAltinnKonfig
+    private lateinit var iaServiceIAltinnKonfig: TilgangskontrollConfig
 
     @Autowired
     private lateinit var altinnrettigheterProxyKlient: AltinnrettigheterProxyKlient
@@ -110,7 +111,7 @@ internal class TilgangskontrollServiceIntegrationTest {
             )
         )
 
-        val actualInnloggetBruker = tilgangskontrollService.hentInnloggetBruker()
+        val actualInnloggetBruker = tilgangskontrollService.hentInnloggetBruker(AltinnServiceKey.IA)
 
         Assertions.assertThat(actualInnloggetBruker.orNull()!!.fnr).isEqualTo(expectedInnloggetBruker.fnr)
         Assertions.assertThat(actualInnloggetBruker.orNull()!!.organisasjoner)
@@ -125,7 +126,7 @@ internal class TilgangskontrollServiceIntegrationTest {
     fun `Kaster Exception dersom hverken AltinnProxy eller Altinn svarer`() {
 
         Assertions.assertThatExceptionOfType(AltinnrettigheterProxyKlientFallbackException::class.java).isThrownBy {
-            tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBruker()
+            tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBruker(AltinnServiceKey.IA)
         }
     }
 }

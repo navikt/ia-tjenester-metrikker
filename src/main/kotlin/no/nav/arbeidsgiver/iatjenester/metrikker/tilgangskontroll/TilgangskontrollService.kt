@@ -6,28 +6,30 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.SelvbetjeningTok
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceCode
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceEdition
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.IaServiceIAltinnKonfig
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import org.springframework.stereotype.Component
-
 
 @Component
 class TilgangskontrollService(
     private val klient: AltinnrettigheterProxyKlient,
-    private val iaServiceIAltinnKonfig: IaServiceIAltinnKonfig,
+    private val tilgangsconfig: TilgangskontrollConfig,
     private val tilgangskontrollUtils: TilgangskontrollUtils
 ) {
 
-    fun hentInnloggetBruker(): Either<TilgangskontrollException, InnloggetBruker> {
+    fun hentInnloggetBruker(serviceKey: AltinnServiceKey): Either<TilgangskontrollException, InnloggetBruker> {
 
         if (tilgangskontrollUtils.erInnloggetSelvbetjeningBruker() as Boolean) {
             val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetSelvbetjeningBruker()
+
+            val currentAltinnServiceConfig = tilgangsconfig.altinnServices.getValue(serviceKey)
 
             innloggetSelvbetjeningBruker.organisasjoner =
                 klient.hentOrganisasjoner(
                     SelvbetjeningToken(tilgangskontrollUtils.selvbetjeningToken.tokenAsString),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                    ServiceCode(iaServiceIAltinnKonfig.serviceCode),
-                    ServiceEdition(iaServiceIAltinnKonfig.serviceEdition),
+                    ServiceCode(currentAltinnServiceConfig.serviceCode),
+                    ServiceEdition(currentAltinnServiceConfig.serviceEdition),
                     false
                 ).map {
                     AltinnOrganisasjon(

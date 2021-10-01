@@ -28,7 +28,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/antall-ia-tjenester-fordelt-paa-næring-eller-bransje'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/tilgangskontroll-config'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -98,7 +98,7 @@ jobs:
   deploy-to-labs-gcp:
     name: Deploy to labs-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/antall-ia-tjenester-fordelt-paa-næring-eller-bransje'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/tilgangskontroll-config'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
