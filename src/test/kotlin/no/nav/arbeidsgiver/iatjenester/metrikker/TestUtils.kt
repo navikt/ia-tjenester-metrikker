@@ -1,9 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.*
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Fnr
 import java.sql.Connection
 import java.sql.Date
@@ -83,6 +80,18 @@ class TestUtils {
               "næringskode5SifferBeskrivelse":"Trygdeordninger underlagt offentlig orvaltning",
               "ssbSektorKode":"6500",
               "ssbSektorKodeBeskrivelse":"Offentlig sektor",
+              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
+            }
+        """.trimIndent()
+        }
+
+        fun vilkårligForenkletInnloggetIaTjenesteAsString (): String {
+            return """
+            {
+              "orgnr":"${ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN}",
+              "altinnRettighet":"${AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE.name}",
+              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "type":"DIGITAL_IA_TJENESTE",
               "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
             }
         """.trimIndent()

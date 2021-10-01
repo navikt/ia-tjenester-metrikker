@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.realistiskkInnloggetIaTjenesteAsString
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligForenkletInnloggetIaTjenesteAsString
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligInnloggetIaTjenesteAsString
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligUinnloggetIaTjenesteAsString
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
@@ -106,6 +107,26 @@ class IaTjenesterMetrikkerControllerTest {
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/innlogget/mottatt-iatjeneste"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build(),
+            BodyHandlers.ofString()
+        )
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(201)
+        val body: JsonNode = objectMapper.readTree(response.body())
+        Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
+    }
+
+    @Test
+    fun `Innlogget endepunkt forenklet-mottatt-ia-tjeneste returnerer 201 OK dersom token er gyldig`() {
+        val requestBody: String = vilkårligForenkletInnloggetIaTjenesteAsString()
+
+        val gyldigToken = issueToken("selvbetjening", "01079812345", audience = "aud-localhost")
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/innlogget/forenklet/mottatt-iatjeneste"))
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))

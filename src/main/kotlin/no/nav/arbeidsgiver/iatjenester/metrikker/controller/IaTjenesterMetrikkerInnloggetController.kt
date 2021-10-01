@@ -3,8 +3,8 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 import arrow.core.Either
 import arrow.core.flatMap
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
-import no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjenesteKunOrgnr
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollService
@@ -52,7 +52,7 @@ class IaTjenesterMetrikkerInnloggetController(
             .hentInnloggetBruker(AltinnServiceKey.IA)
             .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
-        when(brukerSjekk) {
+        when (brukerSjekk) {
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(brukerSjekk.value.message, brukerSjekk.value)
@@ -61,11 +61,12 @@ class IaTjenesterMetrikkerInnloggetController(
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Forbidden)
             }
-            else -> {}
+            else -> {
+            }
         }
 
         val iaSjekk = iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjeneste)
-        when(iaSjekk) {
+        when (iaSjekk) {
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(iaSjekk.value.message, iaSjekk.value)
@@ -74,8 +75,54 @@ class IaTjenesterMetrikkerInnloggetController(
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.BadRequest)
             }
-            else -> {}
+            else -> {
+            }
         }
+
+        clearNavCallid()
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(ResponseStatus.Created)
+    }
+
+    @PostMapping(
+        value = ["/forenklet/mottatt-iatjeneste"],
+        consumes = ["application/json"],
+        produces = ["application/json"]
+    )
+    fun leggTilNyIaMottattTjenesteForInnloggetKlient(
+        @RequestHeader headers: HttpHeaders,
+        @RequestBody innloggetIaTjenesteKunOrgnr: InnloggetIaTjenesteKunOrgnr
+    ): ResponseEntity<ResponseStatus> {
+        setNavCallid(headers)
+        log("IaTjenesterMetrikkerInnloggetController")
+            .info("Mottatt forenklet IA tjeneste (innlogget) fra ${innloggetIaTjenesteKunOrgnr.kilde.name}")
+
+        if (!sjekkDataKvalitet(innloggetIaTjenesteKunOrgnr)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ResponseStatus.BadRequest)
+        }
+
+        val orgnr = Orgnr(innloggetIaTjenesteKunOrgnr.orgnr)
+        val brukerSjekk = tilgangskontrollService
+            .hentInnloggetBruker(innloggetIaTjenesteKunOrgnr.altinnRettighet)
+            .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
+
+        when (brukerSjekk) {
+            is Either.Left -> {
+                log("IaTjenesterMetrikkerInnloggetController")
+                    .warn(brukerSjekk.value.message, brukerSjekk.value)
+                clearNavCallid()
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(ResponseStatus.Forbidden)
+            }
+            else -> {
+            }
+        }
+        log("IaTjenesteMetrikkerInnloggetBruker, mottok hendelse fra forenklet innlogget iatjeneste")
+            .info(innloggetIaTjenesteKunOrgnr.altinnRettighet.name)
 
         clearNavCallid()
         return ResponseEntity.status(HttpStatus.CREATED)

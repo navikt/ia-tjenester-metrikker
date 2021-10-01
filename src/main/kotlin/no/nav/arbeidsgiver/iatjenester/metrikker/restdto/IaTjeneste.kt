@@ -11,6 +11,19 @@ interface IaTjeneste {
     var type: TypeIATjeneste
     var kilde: Kilde
 }
+enum class AltinnRettighet {
+    SYKEFRAVÆRSSTATISTIKK_FOR_VIRKSOMHETER,
+    ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE
+}
+data class InnloggetIaTjenesteKunOrgnr (
+    var orgnr: String,
+    var altinnRettighet :AltinnRettighet,
+    override var type: TypeIATjeneste,
+    override var kilde: Kilde,
+    @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
+    @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    override var tjenesteMottakkelsesdato: ZonedDateTime,
+    ):IaTjeneste
 
 data class InnloggetIaTjeneste(
     var orgnr: String,

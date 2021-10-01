@@ -51,6 +51,15 @@ class MockServer @Autowired constructor(
             )
         )
 
+        mockWithParameters(
+            wireMockServer,
+            "$altinnProxyPathToV2Organisasjoner",
+            mapOf(
+                "serviceCode" to WireMock.equalTo("5062"),
+                "serviceEdition" to WireMock.equalTo("1")
+            )
+        )
+
         mockDatakatalog(
             wireMockServer,
             "/lokal_datakatalog/ikke_en_ekte_datapakke_id"

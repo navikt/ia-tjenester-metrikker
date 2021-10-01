@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjenesteKunOrgnr
 
 private val MAKSIMUM_KOMMUNE_NR = 5444
 private val MAKSIMUM_FYLKE_NR = 54
@@ -71,4 +72,13 @@ fun sjekkDataKvalitet(innloggetIaTjeneste: InnloggetIaTjeneste)
     }
 
     return true
+}
+
+fun sjekkDataKvalitet (innloggetIaTjenesteKunOrgnr: InnloggetIaTjenesteKunOrgnr): Boolean {
+    if (innloggetIaTjenesteKunOrgnr.orgnr.length != 9) {
+        log("IaTjenesterMetrikkerInnloggetController")
+            .warn("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering")
+        return false
+    }
+return true
 }
