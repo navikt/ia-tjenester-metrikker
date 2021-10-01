@@ -1,17 +1,17 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.config
 
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.ConstructorBinding
 
-@Configuration
-class TilgangskontrollConfig(private val tilgangskontrollConfigProperties: TilgangskontrollConfigProperties) {
-
-    @Bean fun altinnIaServiceKonfig(): IaServiceIAltinnKonfig {
-        return IaServiceIAltinnKonfig(
-            tilgangskontrollConfigProperties.serviceCode,
-            tilgangskontrollConfigProperties.serviceEdition
-        )
-    }
+enum class AltinnServiceKey(val id: String) {
+    IA("ia"),
+    OPPFOLGINGSPLAN("oppfolgingsplan")
 }
 
-data class IaServiceIAltinnKonfig (val serviceCode: String, val serviceEdition: String)
+@ConstructorBinding
+@ConfigurationProperties(prefix = "tilgangskontroll")
+data class TilgangskontrollConfig(
+    var altinnServices: Map<AltinnServiceKey, AltinnServiceConfig>
+)
+
+data class AltinnServiceConfig(val serviceCode: String, val serviceEdition: String)

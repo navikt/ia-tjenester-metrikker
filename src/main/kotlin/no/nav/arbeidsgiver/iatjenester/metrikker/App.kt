@@ -17,7 +17,7 @@ import org.springframework.boot.runApplication
         OutboundKafkaProperties::class,
         SecurityConfig::class,
         AltinnConfigProperties::class,
-        TilgangskontrollConfigProperties::class,
+        TilgangskontrollConfig::class,
         DatakatalogConfigProperties::class
     ]
 )
