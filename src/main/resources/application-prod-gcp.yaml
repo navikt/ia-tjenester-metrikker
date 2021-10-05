@@ -26,6 +26,9 @@ altinn-proxy:
   altinnApiKey: ${ALTINN_APIKEY}
   apiGwKey: ${ALTINN_APIGW_APIKEY}
 
+enhetsregisteret:
+  url: "https://data.brreg.no/enhetsregisteret/api/"
+
 tilgangskontroll:
   altinn-services:
     ia:
