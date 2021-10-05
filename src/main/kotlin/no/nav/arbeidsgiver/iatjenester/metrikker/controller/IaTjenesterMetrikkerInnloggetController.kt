@@ -2,7 +2,11 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import arrow.core.Either
 import arrow.core.flatMap
+import arrow.core.right
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
+import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
+import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretOpplysningerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjenesteKunOrgnr
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
@@ -28,7 +32,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/innlogget")
 class IaTjenesterMetrikkerInnloggetController(
     private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService,
-    private val tilgangskontrollService: TilgangskontrollService
+    private val tilgangskontrollService: TilgangskontrollService,
+    private val enhetsregisteretOpplysningerService: EnhetsregisteretOpplysningerService
 ) {
 
     @PostMapping(value = ["/mottatt-iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
@@ -123,6 +128,17 @@ class IaTjenesterMetrikkerInnloggetController(
         }
         log("IaTjenesteMetrikkerInnloggetBruker, mottok hendelse fra forenklet innlogget iatjeneste")
             .info(innloggetIaTjenesteKunOrgnr.altinnRettighet.name)
+
+        val opplysningerForUnderenhet: Either<EnhetsregisteretException, Underenhet> =
+            enhetsregisteretOpplysningerService.hentOpplysninger(orgnr)
+
+        if (opplysningerForUnderenhet.isLeft()) {
+            clearNavCallid()
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ResponseStatus.Accepted)
+        }
+        // opprett i DB
 
         clearNavCallid()
         return ResponseEntity.status(HttpStatus.CREATED)

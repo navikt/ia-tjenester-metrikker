@@ -7,7 +7,9 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +21,8 @@ import java.net.URL
 @Profile("local", "test")
 @Component
 class MockServer @Autowired constructor(
-    private val altinnConfigProperties: AltinnConfigProperties
+    private val altinnConfigProperties: AltinnConfigProperties,
+    private val enhetsregisteretProperties: EnhetsregisteretProperties
 ) : InitializingBean {
 
     @Value("\${wiremock.port}")
@@ -42,22 +45,40 @@ class MockServer @Autowired constructor(
         )
 
         val altinnProxyPathToV2Organisasjoner = URL(altinnConfigProperties.proxyUrl).path + "v2/organisasjoner"
-        mockWithParameters(
+        mockAltinnResponseWithParameters(
             wireMockServer,
             "$altinnProxyPathToV2Organisasjoner",
             mapOf(
                 "serviceCode" to WireMock.equalTo("3403"),
                 "serviceEdition" to WireMock.equalTo("1")
-            )
+            ),
+            ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN
         )
 
-        mockWithParameters(
+        mockAltinnResponseWithParameters(
             wireMockServer,
             "$altinnProxyPathToV2Organisasjoner",
             mapOf(
                 "serviceCode" to WireMock.equalTo("5062"),
                 "serviceEdition" to WireMock.equalTo("1")
-            )
+            ),
+            ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN
+        )
+
+        mockAltinnResponseWithParameters(
+            wireMockServer,
+            "$altinnProxyPathToV2Organisasjoner",
+            mapOf(
+                "serviceCode" to WireMock.equalTo("5062"),
+                "serviceEdition" to WireMock.equalTo("1")
+            ),
+            ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET
+        )
+        val pathTilEnhetsregisteret = URL(enhetsregisteretProperties.url).path + "underenheter/$ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET"
+        mockEnhetsregisteretResponseUtenNæringskode(
+            wireMockServer,
+            "$pathTilEnhetsregisteret",
+            ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET
         )
 
         mockDatakatalog(
@@ -73,10 +94,11 @@ class MockServer @Autowired constructor(
         this.verify()
     }
 
-    private fun mockWithParameters(
+    private fun mockAltinnResponseWithParameters(
         server: WireMockServer,
         basePath: String,
-        parameters: Map<String, StringValuePattern>
+        parameters: Map<String, StringValuePattern>,
+        orgnr: String
     ) {
         server.stubFor(
             WireMock.get(WireMock.urlPathEqualTo(basePath))
@@ -93,12 +115,39 @@ class MockServer @Autowired constructor(
                                         "Name": "BALLSTAD OG HORTEN",
                                         "Type": "Enterprise",
                                         "ParentOrganizationNumber": null,
-                                        "OrganizationNumber": "$ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN",
+                                        "OrganizationNumber": "$orgnr",
                                         "OrganizationForm": "AS",
                                         "Status": "Active"
                                       }
                                     ]
                                 """.trimIndent()
+                        )
+                )
+        )
+    }
+
+    private fun mockEnhetsregisteretResponseUtenNæringskode(
+        server: WireMockServer,
+        basePath: String,
+        orgnr: String
+    ) {
+        server.stubFor(
+            WireMock.get(WireMock.urlPathEqualTo(basePath))
+                .withHeader("Accept", WireMock.containing("application/json"))
+                .willReturn(
+                    WireMock.aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("""{
+                            "organisasjonsnummer": "$orgnr",
+                            "navn": "Bedrift uten næringskode",
+                            "naeringskode1": {},
+                            "institusjonellSektorkode": {
+                              "kode": "6100",
+                              "beskrivelse": "Statsforvaltningen"
+                            },
+                            "antallAnsatte": 6
+                          }""".trimIndent()
                         )
                 )
         )

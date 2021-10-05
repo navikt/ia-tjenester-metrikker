@@ -17,7 +17,8 @@ import java.io.IOException
 @Configuration
 class EnhetsregisteretClient(val restTemplate: RestTemplate, val  enhetsregisteretUrl: String) {
     private val objectMapper = jacksonObjectMapper()
-    fun hentInformasjonOmEnhet(orgnrTilEnhet: Orgnr): OverordnetEnhet? {
+
+    fun hentInformasjonOmEnhet(orgnrTilEnhet: Orgnr): OverordnetEnhet {
         val url =  enhetsregisteretUrl + "enheter/" + orgnrTilEnhet.verdi
         try {
             val respons = restTemplate.getForObject(url, String::class.java)
@@ -29,7 +30,7 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val  enhetsregister
         }
     }
 
-    fun hentInformasjonOmUnderenhet(orgnrTilUnderenhet: Orgnr): Underenhet? {
+    fun hentInformasjonOmUnderenhet(orgnrTilUnderenhet: Orgnr): Underenhet {
         try {
             val url =enhetsregisteretUrl + "underenheter/" + orgnrTilUnderenhet.verdi
             val respons = restTemplate.getForObject(url, String::class.java)

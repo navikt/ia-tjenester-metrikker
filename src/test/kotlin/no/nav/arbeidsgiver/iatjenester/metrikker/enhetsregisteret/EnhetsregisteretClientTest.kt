@@ -167,18 +167,18 @@ class EnhetsregisteretClientTest {
     @SneakyThrows
     private fun gyldigEnhetRespons(orgnr: String): ObjectNode {
         val str = """{
-  "organisasjonsnummer": "$orgnr",
-  "navn": "NAV ARBEID OG YTELSER",
-  "naeringskode1": {
-    "beskrivelse": "Trygdeordninger underlagt offentlig forvaltning",
-    "kode": "84.300"
-  },
-  "institusjonellSektorkode": {
-    "kode": "6100",
-    "beskrivelse": "Statsforvaltningen"
-  },
-  "antallAnsatte": 40
-}"""
+              "organisasjonsnummer": "$orgnr",
+              "navn": "NAV ARBEID OG YTELSER",  
+              "naeringskode1": {
+                "beskrivelse": "Trygdeordninger underlagt offentlig forvaltning",
+                "kode": "84.300"
+              },
+              "institusjonellSektorkode": {
+                  "kode": "6100",
+                  "beskrivelse": "Statsforvaltningen"
+              },
+              "antallAnsatte": 40
+        }"""
         return objectMapper.readTree(str) as ObjectNode
     }
 

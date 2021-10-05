@@ -13,6 +13,7 @@ class TestUtils {
     companion object {
 
         val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
+        val ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET: String = "833445566"
         val TEST_FNR: Fnr = Fnr("01019912345")
 
         fun testTokenForTestFNR(): String {
@@ -85,10 +86,10 @@ class TestUtils {
         """.trimIndent()
         }
 
-        fun vilkårligForenkletInnloggetIaTjenesteAsString (): String {
+        fun vilkårligForenkletInnloggetIaTjenesteAsString(orgnr: String): String {
             return """
             {
-              "orgnr":"${ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN}",
+              "orgnr":"$orgnr",
               "altinnRettighet":"${AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE.name}",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
