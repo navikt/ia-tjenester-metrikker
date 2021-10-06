@@ -27,9 +27,7 @@ class MockServer @Autowired constructor(
 
     @Value("\${wiremock.port}")
     var wiremockPort: Int = 8484
-
     private val MOCK_SERVER_VERBOSE_CONSOLE_LOGGING_ENABLED = false;
-
     lateinit var wireMockServer: WireMockServer
 
     override fun afterPropertiesSet() {
@@ -66,11 +64,15 @@ class MockServer @Autowired constructor(
         )
 
 
-        val pathTilEnhetsregisteret = URL(enhetsregisteretProperties.url).path + "underenheter/$ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET"
-        mockEnhetsregisteretResponseUtenNæringskode(
+        mockEnhetsregisteretResponse(
             wireMockServer,
-            "$pathTilEnhetsregisteret",
-            ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET
+            ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET,
+            ""
+        )
+        mockEnhetsregisteretResponse(
+            wireMockServer,
+            ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN,
+            ""
         )
 
         mockDatakatalog(
@@ -90,8 +92,21 @@ class MockServer @Autowired constructor(
         server: WireMockServer,
         basePath: String,
         parameters: Map<String, StringValuePattern>,
-        orgnr: String
+        orgnrListe: List<String>
     ) {
+        val listeAvBedrifterBrukerenHarTilgangTil = """[
+            ${orgnrListe.joinToString(separator = ",") { 
+            """{
+                  "Name": "BALLSTAD OG HORTEN",
+                  "Type": "Enterprise",
+                  "ParentOrganizationNumber": null,
+                  "OrganizationNumber": "$it",
+                  "OrganizationForm": "AS",
+                  "Status": "Active"
+                  }"""
+            }
+        }]""".trimIndent()
+
         server.stubFor(
             WireMock.get(WireMock.urlPathEqualTo(basePath))
                 .withHeader("Accept", WireMock.containing("application/json"))
@@ -101,59 +116,20 @@ class MockServer @Autowired constructor(
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(
-                            """
-                                    [
-                                      {
-                                        "Name": "BALLSTAD OG HORTEN",
-                                        "Type": "Enterprise",
-                                        "ParentOrganizationNumber": null,
-                                        "OrganizationNumber": "$orgnr",
-                                        "OrganizationForm": "AS",
-                                        "Status": "Active"
-                                      }
-                                    ]
-                                """.trimIndent()
-                        )
-                )
-        )
-    }
-    private fun mockAltinnResponseWithParameters(
-        server: WireMockServer,
-        basePath: String,
-        parameters: Map<String, StringValuePattern>,
-        orgnrList: List<String>
-    ) {
-        server.stubFor(
-            WireMock.get(WireMock.urlPathEqualTo(basePath))
-                .withHeader("Accept", WireMock.containing("application/json"))
-                .withQueryParams(parameters)
-                .willReturn(
-                    WireMock.aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(
-                            """
-                                    [
-                                      ${orgnrList.map {   """{
-                                "Name": "BALLSTAD OG HORTEN",
-                                "Type": "Enterprise",
-                                "ParentOrganizationNumber": null,
-                                "OrganizationNumber": "$it",
-                                "OrganizationForm": "AS",
-                                "Status": "Active"
-                            }"""}}
-                                   ]
-                                """.trimIndent()
+                            listeAvBedrifterBrukerenHarTilgangTil
                         )
                 )
         )
     }
 
-    private fun mockEnhetsregisteretResponseUtenNæringskode(
+    private fun mockEnhetsregisteretResponse(
         server: WireMockServer,
-        basePath: String,
-        orgnr: String
+        orgnr: String,
+        næringskode: String
     ) {
+        val basePath = URL(enhetsregisteretProperties.url).path +
+                "underenheter/$orgnr"
+
         server.stubFor(
             WireMock.get(WireMock.urlPathEqualTo(basePath))
                 .withHeader("Accept", WireMock.containing("application/json"))
@@ -164,7 +140,7 @@ class MockServer @Autowired constructor(
                         .withBody("""{
                             "organisasjonsnummer": "$orgnr",
                             "navn": "Bedrift uten næringskode",
-                            "naeringskode1": {},
+                            "naeringskode1": {$næringskode},
                             "institusjonellSektorkode": {
                               "kode": "6100",
                               "beskrivelse": "Statsforvaltningen"
