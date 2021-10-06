@@ -2,7 +2,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import arrow.core.Either
 import arrow.core.flatMap
-import arrow.core.right
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
@@ -130,9 +129,12 @@ class IaTjenesterMetrikkerInnloggetController(
             .info(innloggetIaTjenesteKunOrgnr.altinnRettighet.name)
 
         val opplysningerForUnderenhet: Either<EnhetsregisteretException, Underenhet> =
-            enhetsregisteretOpplysningerService.hentOpplysninger(orgnr)
+            enhetsregisteretOpplysningerService.hentOpplysningerForUnderenhet(orgnr)
 
         if (opplysningerForUnderenhet.isLeft()) {
+            val errorMelding = opplysningerForUnderenhet.fold(
+                {itLeft -> itLeft.message}, { "No Error" })
+            log.warn("Kunne ikke hente opplysninger for underenhet i enhetsregisteret. Feilmelding er: '$errorMelding'")
             clearNavCallid()
             return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .contentType(MediaType.APPLICATION_JSON)

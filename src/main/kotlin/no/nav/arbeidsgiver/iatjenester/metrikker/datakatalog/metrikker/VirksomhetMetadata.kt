@@ -8,14 +8,17 @@ class VirksomhetMetadata(
     val næring: Næring
 )
 
-data class Næringskode5Siffer(var kode: String, val beskrivelse: String) {
+data class Næringskode5Siffer(var kode: String?, val beskrivelse: String) {
     init {
-        if (kode == null) {
+        if (kode.isNullOrBlank()) {
             throw IllegalArgumentException("Kode for næring kan IKKE være null")
         }
-        val næringskodeUtenPunktum: String = kode.replace(".", "")
+        val næringskodeUtenPunktum: String = kode!!.replace(".", "")
+
         if (erGyldigNæringskode(næringskodeUtenPunktum)) {
             this.kode = næringskodeUtenPunktum
+        } else {
+            throw IllegalArgumentException("Kode for næring skal være 5 siffer")
         }
     }
 

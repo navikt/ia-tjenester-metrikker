@@ -8,6 +8,7 @@ import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemp
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.OVERORDNETENHENT_ORGNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
@@ -67,12 +68,14 @@ class MockServer @Autowired constructor(
         mockEnhetsregisteretResponse(
             wireMockServer,
             ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET,
+            OVERORDNETENHENT_ORGNR,
             ""
         )
         mockEnhetsregisteretResponse(
             wireMockServer,
             ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN,
-            ""
+            OVERORDNETENHENT_ORGNR,
+            """{"kode": "86.234", "beskrivelse":"En random kode"}"""
         )
 
         mockDatakatalog(
@@ -124,11 +127,12 @@ class MockServer @Autowired constructor(
 
     private fun mockEnhetsregisteretResponse(
         server: WireMockServer,
-        orgnr: String,
+        orgnrUnderenhet: String,
+        orgnrOverordnetEnhet: String,
         næringskode: String
     ) {
         val basePath = URL(enhetsregisteretProperties.url).path +
-                "underenheter/$orgnr"
+                "underenheter/$orgnrUnderenhet"
 
         server.stubFor(
             WireMock.get(WireMock.urlPathEqualTo(basePath))
@@ -138,14 +142,15 @@ class MockServer @Autowired constructor(
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""{
-                            "organisasjonsnummer": "$orgnr",
+                            "organisasjonsnummer": "$orgnrUnderenhet",
                             "navn": "Bedrift uten næringskode",
-                            "naeringskode1": {$næringskode},
+                            "naeringskode1": $næringskode,
                             "institusjonellSektorkode": {
                               "kode": "6100",
                               "beskrivelse": "Statsforvaltningen"
                             },
-                            "antallAnsatte": 6
+                            "antallAnsatte": 6, 
+                            "overordnetEnhet": "$orgnrOverordnetEnhet"
                           }""".trimIndent()
                         )
                 )

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 @Component
 class EnhetsregisteretOpplysningerService(private val enhetsregisteretClient: EnhetsregisteretClient) {
 
-    fun hentOpplysninger(orgnr: Orgnr): Either<EnhetsregisteretException, Underenhet> {
+    fun hentOpplysningerForUnderenhet(orgnr: Orgnr): Either<EnhetsregisteretException, Underenhet> {
 
         return try {
             val underenhet: Underenhet = enhetsregisteretClient.hentInformasjonOmUnderenhet(orgnr)
