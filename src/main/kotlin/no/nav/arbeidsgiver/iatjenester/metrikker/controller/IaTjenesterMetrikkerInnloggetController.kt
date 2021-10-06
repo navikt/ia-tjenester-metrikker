@@ -3,6 +3,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 import arrow.core.Either
 import arrow.core.flatMap
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretOpplysningerService
@@ -10,6 +11,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjenesteKunOrgnr
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
+import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollException
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollService
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
@@ -113,33 +115,53 @@ class IaTjenesterMetrikkerInnloggetController(
             .hentInnloggetBruker(innloggetIaTjenesteKunOrgnr.altinnRettighet)
             .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
-        when (brukerSjekk) {
-            is Either.Left -> {
-                log("IaTjenesterMetrikkerInnloggetController")
-                    .warn(brukerSjekk.value.message, brukerSjekk.value)
+        brukerSjekk.fold(
+            { itLeft ->
+                log("IaTjenesterMetrikkerInnloggetController").warn(itLeft.message, itLeft)
                 clearNavCallid()
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Forbidden)
-            }
-            else -> {
-            }
-        }
+            }, {}
+        )
+
         log("IaTjenesteMetrikkerInnloggetBruker, mottok hendelse fra forenklet innlogget iatjeneste")
             .info(innloggetIaTjenesteKunOrgnr.altinnRettighet.name)
 
         val opplysningerForUnderenhet: Either<EnhetsregisteretException, Underenhet> =
             enhetsregisteretOpplysningerService.hentOpplysningerForUnderenhet(orgnr)
 
-        if (opplysningerForUnderenhet.isLeft()) {
-            val errorMelding = opplysningerForUnderenhet.fold(
-                {itLeft -> itLeft.message}, { "No Error" })
-            log.warn("Kunne ikke hente opplysninger for underenhet i enhetsregisteret. Feilmelding er: '$errorMelding'")
-            clearNavCallid()
-            return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(ResponseStatus.Accepted)
-        }
+        opplysningerForUnderenhet.fold(
+            { itLeft ->
+                log.warn(
+                    "Kunne ikke hente opplysninger for underenhet i enhetsregisteret. " +
+                            "Feilmelding er: '${itLeft.message}'"
+                )
+                clearNavCallid()
+                return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(ResponseStatus.Accepted)
+            }, {}
+        )
+
+        val opplysningerForOverordnetEnhet: Either<EnhetsregisteretException, OverordnetEnhet> =
+            enhetsregisteretOpplysningerService.hentOpplysningerForOverordnetEnhet(
+                opplysningerForUnderenhet.findOrNull { it.overordnetEnhetOrgnr.verdi.length == 9 }?.overordnetEnhetOrgnr
+            )
+
+        opplysningerForOverordnetEnhet.fold(
+            { itLeft ->
+                log.warn(
+                    "Kunne ikke hente opplysninger for overordnetEnhet i enhetsregisteret. " +
+                            "Feilmelding er: '${itLeft.message}'"
+                )
+                clearNavCallid()
+                return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(ResponseStatus.Accepted)
+            }, {}
+        )
+
         // opprett i DB
 
         clearNavCallid()

@@ -12,7 +12,7 @@ class TestUtils {
 
     companion object {
 
-        val OVERORDNETENHENT_ORGNR: String = "987654321"
+        val OVERORDNETENHET_ORGNR: String = "987654321"
         val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
         val ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET: String = "833445566"
 
