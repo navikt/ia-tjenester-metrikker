@@ -52,7 +52,7 @@ class MockServer @Autowired constructor(
                 "serviceCode" to WireMock.equalTo("3403"),
                 "serviceEdition" to WireMock.equalTo("1")
             ),
-            ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN
+           listOf( ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
         )
 
         mockAltinnResponseWithParameters(
@@ -62,18 +62,10 @@ class MockServer @Autowired constructor(
                 "serviceCode" to WireMock.equalTo("5062"),
                 "serviceEdition" to WireMock.equalTo("1")
             ),
-            ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN
+            listOf( ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN, ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET)
         )
 
-        mockAltinnResponseWithParameters(
-            wireMockServer,
-            "$altinnProxyPathToV2Organisasjoner",
-            mapOf(
-                "serviceCode" to WireMock.equalTo("5062"),
-                "serviceEdition" to WireMock.equalTo("1")
-            ),
-            ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET
-        )
+
         val pathTilEnhetsregisteret = URL(enhetsregisteretProperties.url).path + "underenheter/$ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET"
         mockEnhetsregisteretResponseUtenNæringskode(
             wireMockServer,
@@ -120,6 +112,37 @@ class MockServer @Autowired constructor(
                                         "Status": "Active"
                                       }
                                     ]
+                                """.trimIndent()
+                        )
+                )
+        )
+    }
+    private fun mockAltinnResponseWithParameters(
+        server: WireMockServer,
+        basePath: String,
+        parameters: Map<String, StringValuePattern>,
+        orgnrList: List<String>
+    ) {
+        server.stubFor(
+            WireMock.get(WireMock.urlPathEqualTo(basePath))
+                .withHeader("Accept", WireMock.containing("application/json"))
+                .withQueryParams(parameters)
+                .willReturn(
+                    WireMock.aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(
+                            """
+                                    [
+                                      ${orgnrList.map {   """{
+                                "Name": "BALLSTAD OG HORTEN",
+                                "Type": "Enterprise",
+                                "ParentOrganizationNumber": null,
+                                "OrganizationNumber": "$it",
+                                "OrganizationForm": "AS",
+                                "Status": "Active"
+                            }"""}}
+                                   ]
                                 """.trimIndent()
                         )
                 )
