@@ -36,9 +36,11 @@ data class OverordnetEnhet(
 
 data class Underenhet(
     override var orgnr: Orgnr,
-    val overordnetEnhetOrgnr: Orgnr,
     override val navn: String,
     override val næringskode: Næringskode5Siffer,
+    val overordnetEnhetOrgnr: Orgnr,
+    val kommune: Kommune,
+    val fylke: Fylke,
     val antallAnsatte: Int
 ) : Virksomhet
 

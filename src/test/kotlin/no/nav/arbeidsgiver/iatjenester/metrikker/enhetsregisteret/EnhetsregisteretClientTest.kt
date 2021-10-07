@@ -7,25 +7,18 @@ import lombok.SneakyThrows
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
-import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.assertj.core.api.Assertions.assertThat
 
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
-import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.TestPropertySource
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate
 
@@ -152,15 +145,26 @@ class EnhetsregisteretClientTest {
     @SneakyThrows
     private fun gyldigUnderenhetRespons(orgnr: String): ObjectNode {
         val str = """{
-  "organisasjonsnummer": "$orgnr",
-  "navn": "NAV ARBEID OG YTELSER AVD OSLO",
-  "naeringskode1": {
-    "beskrivelse": "Trygdeordninger underlagt offentlig forvaltning",
-    "kode": "84.300"
-  },
-  "antallAnsatte": 40,
-  "overordnetEnhet": "999263550"
-}"""
+              "organisasjonsnummer": "$orgnr",
+              "navn": "NAV ARBEID OG YTELSER AVD OSLO",
+              "naeringskode1": {
+                "beskrivelse": "Trygdeordninger underlagt offentlig forvaltning",
+                "kode": "84.300"
+              },
+              "antallAnsatte": 40,
+              "overordnetEnhet": "999263550",
+              "beliggenhetsadresse": {
+                "land": "Norge",
+                "landkode": "NO",
+                "postnummer": "3036",
+                "poststed": "DRAMMEN",
+                "adresse": [
+                  "Testenekjørerveien 13"
+                ],
+                "kommune": "DRAMMEN",
+                "kommunenummer": "3005"
+              }
+            }"""
         return objectMapper.readTree(str) as ObjectNode
     }
 

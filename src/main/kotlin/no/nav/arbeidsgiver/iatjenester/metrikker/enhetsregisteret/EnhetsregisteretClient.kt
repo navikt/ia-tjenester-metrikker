@@ -3,6 +3,8 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.InstitusjonellSektorkode
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Kommune
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.KommunerOgFylker.Companion.mapTilFylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
@@ -84,13 +86,21 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val  enhetsregister
     private fun mapTilUnderenhet(jsonResponseFraEnhetsregisteret: String?): Underenhet {
         try {
             val enhetJson = objectMapper.readTree(jsonResponseFraEnhetsregisteret)
-            val næringskodeJson = enhetJson.get("naeringskode1")
+            val næringskodeJson = enhetJson["naeringskode1"]
                 ?: throw IngenNæringException("Feil ved kall til Enhetsregisteret. Ingen næring for virksomhet.")
+
+            val beliggenhetsadresseJson = enhetJson["beliggenhetsadresse"]
+            val kommune = Kommune(
+                beliggenhetsadresseJson["kommune"].textValue(),
+                beliggenhetsadresseJson["kommunenummer"].textValue()
+            )
             return Underenhet(
                 Orgnr(enhetJson["organisasjonsnummer"].textValue()),
-                Orgnr(enhetJson["overordnetEnhet"].textValue()),
                 enhetJson["navn"].textValue(),
                 objectMapper.treeToValue(næringskodeJson, Næringskode5Siffer::class.java),
+                Orgnr(enhetJson["overordnetEnhet"].textValue()),
+                kommune,
+                mapTilFylke(kommune),
                 enhetJson["antallAnsatte"].intValue()
             )
         } catch (e: IOException) {

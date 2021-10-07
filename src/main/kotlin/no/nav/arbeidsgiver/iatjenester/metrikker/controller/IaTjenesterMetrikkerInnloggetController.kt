@@ -179,10 +179,10 @@ class IaTjenesterMetrikkerInnloggetController(
                                 ),
                                 SSBSektorKode = overordnetEnhet.institusjonellSektorkode.kode,
                                 SSBSektorKodeBeskrivelse = overordnetEnhet.institusjonellSektorkode.beskrivelse,
-                                fylkesnummer = "TODO",
-                                fylke = "TODO",
-                                kommunenummer = "TODO",
-                                kommune = "TODO"
+                                fylkesnummer = underenhet.fylke.nummer,
+                                fylke = underenhet.fylke.navn,
+                                kommunenummer = underenhet.kommune.nummer,
+                                kommune = underenhet.kommune.navn
                             )
                         )
                     }
