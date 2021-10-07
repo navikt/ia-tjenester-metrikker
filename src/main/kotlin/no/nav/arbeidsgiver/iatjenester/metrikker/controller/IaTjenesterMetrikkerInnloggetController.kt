@@ -3,6 +3,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 import arrow.core.Either
 import arrow.core.flatMap
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Næringsbeskrivelser
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
@@ -10,6 +11,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.Enhetsregister
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjenesteKunOrgnr
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
+import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.InnloggetBruker
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollException
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollService
@@ -22,7 +24,12 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @Protected
 @RestController
@@ -58,37 +65,19 @@ class IaTjenesterMetrikkerInnloggetController(
             .hentInnloggetBruker(AltinnServiceKey.IA)
             .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
-        when (brukerSjekk) {
+        return when (brukerSjekk) {
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(brukerSjekk.value.message, brukerSjekk.value)
                 clearNavCallid()
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Forbidden)
             }
-            else -> {
+            is Either.Right -> {
+                opprettMottattIaTjenesteMetrikk(innloggetIaTjeneste)
             }
         }
-
-        val iaSjekk = iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjeneste)
-        when (iaSjekk) {
-            is Either.Left -> {
-                log("IaTjenesterMetrikkerInnloggetController")
-                    .warn(iaSjekk.value.message, iaSjekk.value)
-                clearNavCallid()
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(ResponseStatus.BadRequest)
-            }
-            else -> {
-            }
-        }
-
-        clearNavCallid()
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ResponseStatus.Created)
     }
 
     @PostMapping(
@@ -111,65 +100,117 @@ class IaTjenesterMetrikkerInnloggetController(
         }
 
         val orgnr = Orgnr(innloggetIaTjenesteKunOrgnr.orgnr)
-        val brukerSjekk = tilgangskontrollService
+        val innloggetBruker: Either<TilgangskontrollException, InnloggetBruker> = tilgangskontrollService
             .hentInnloggetBruker(innloggetIaTjenesteKunOrgnr.altinnRettighet)
             .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
-        brukerSjekk.fold(
-            { itLeft ->
-                log("IaTjenesterMetrikkerInnloggetController").warn(itLeft.message, itLeft)
+        return innloggetBruker.fold(
+            { tilgangskontrollException ->
+                log("IaTjenesterMetrikkerInnloggetController").warn(
+                    tilgangskontrollException.message,
+                    tilgangskontrollException
+                )
                 clearNavCallid()
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Forbidden)
-            }, {}
-        )
-
-        log("IaTjenesteMetrikkerInnloggetBruker, mottok hendelse fra forenklet innlogget iatjeneste")
-            .info(innloggetIaTjenesteKunOrgnr.altinnRettighet.name)
-
-        val opplysningerForUnderenhet: Either<EnhetsregisteretException, Underenhet> =
-            enhetsregisteretOpplysningerService.hentOpplysningerForUnderenhet(orgnr)
-
-        opplysningerForUnderenhet.fold(
-            { itLeft ->
-                log.warn(
-                    "Kunne ikke hente opplysninger for underenhet i enhetsregisteret. " +
-                            "Feilmelding er: '${itLeft.message}'"
+            }, {
+                byggIaTjenesteMetrikk(innloggetIaTjenesteKunOrgnr).fold(
+                    { enhetsregisteretException ->
+                        log("IaTjenesterMetrikkerInnloggetController").warn(
+                            enhetsregisteretException.message,
+                            enhetsregisteretException
+                        )
+                        clearNavCallid()
+                        ResponseEntity.status(HttpStatus.ACCEPTED)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(ResponseStatus.Accepted)
+                    }, { innloggetIaTjeneste -> opprettMottattIaTjenesteMetrikk(innloggetIaTjeneste) }
                 )
-                clearNavCallid()
-                return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(ResponseStatus.Accepted)
-            }, {}
+            }
         )
-
-        val opplysningerForOverordnetEnhet: Either<EnhetsregisteretException, OverordnetEnhet> =
-            enhetsregisteretOpplysningerService.hentOpplysningerForOverordnetEnhet(
-                opplysningerForUnderenhet.findOrNull { it.overordnetEnhetOrgnr.verdi.length == 9 }?.overordnetEnhetOrgnr
-            )
-
-        opplysningerForOverordnetEnhet.fold(
-            { itLeft ->
-                log.warn(
-                    "Kunne ikke hente opplysninger for overordnetEnhet i enhetsregisteret. " +
-                            "Feilmelding er: '${itLeft.message}'"
-                )
-                clearNavCallid()
-                return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(ResponseStatus.Accepted)
-            }, {}
-        )
-
-        // opprett i DB
-
-        clearNavCallid()
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ResponseStatus.Created)
     }
 
+
+    private fun byggIaTjenesteMetrikk(
+        innloggetIaTjenesteKunOrgnr: InnloggetIaTjenesteKunOrgnr
+    ): Either<EnhetsregisteretException, InnloggetIaTjeneste> {
+        log.info(
+            "Mottatt IaTjenester metrikk (forenklet) av tpye '${innloggetIaTjenesteKunOrgnr.type}' " +
+                    "fra kilde '${innloggetIaTjenesteKunOrgnr.kilde}' " +
+                    "med rettighet '${innloggetIaTjenesteKunOrgnr.altinnRettighet.name}'"
+        )
+
+        val opplysningerForUnderenhet: Either<EnhetsregisteretException, Underenhet> =
+            enhetsregisteretOpplysningerService.hentOpplysningerForUnderenhet(Orgnr(innloggetIaTjenesteKunOrgnr.orgnr))
+
+        return opplysningerForUnderenhet.fold(
+            { enhetsregisteretException ->
+                log.warn(
+                    "Kunne ikke hente opplysninger for underenhet i enhetsregisteret. " +
+                            "Feilmelding er: '${enhetsregisteretException.message}'"
+                )
+                return Either.Left(enhetsregisteretException)
+            }, { underenhet ->
+                val opplysningerForOverordnetEnhet: Either<EnhetsregisteretException, OverordnetEnhet> =
+                    enhetsregisteretOpplysningerService.hentOpplysningerForOverordnetEnhet(
+                        underenhet.overordnetEnhetOrgnr
+                    )
+
+                opplysningerForOverordnetEnhet.fold(
+                    { enhetsregisteretException ->
+                        log.warn(
+                            "Kunne ikke hente opplysninger for overordnetEnhet i enhetsregisteret. " +
+                                    "Feilmelding er: '${enhetsregisteretException.message}'"
+                        )
+                        Either.Left(enhetsregisteretException)
+                    }, { overordnetEnhet ->
+                        Either.Right(
+                            InnloggetIaTjeneste(
+                                orgnr = innloggetIaTjenesteKunOrgnr.orgnr,
+                                næringKode5Siffer = underenhet.næringskode.kode!!,
+                                type = innloggetIaTjenesteKunOrgnr.type,
+                                kilde = innloggetIaTjenesteKunOrgnr.kilde,
+                                tjenesteMottakkelsesdato = innloggetIaTjenesteKunOrgnr.tjenesteMottakkelsesdato,
+                                antallAnsatte = underenhet.antallAnsatte,
+                                næringskode5SifferBeskrivelse = underenhet.næringskode.beskrivelse,
+                                næring2SifferBeskrivelse = Næringsbeskrivelser.mapTilNæringsbeskrivelse(
+                                    underenhet.næringskode.kode!!
+                                ),
+                                SSBSektorKode = overordnetEnhet.institusjonellSektorkode.kode,
+                                SSBSektorKodeBeskrivelse = overordnetEnhet.institusjonellSektorkode.beskrivelse,
+                                fylkesnummer = "TODO",
+                                fylke = "TODO",
+                                kommunenummer = "TODO",
+                                kommune = "TODO"
+                            )
+                        )
+                    }
+                )
+            }
+        )
+    }
+
+    private fun opprettMottattIaTjenesteMetrikk(innloggetIaTjeneste: InnloggetIaTjeneste): ResponseEntity<ResponseStatus> {
+
+        return when (val iaSjekk = iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjeneste)) {
+            is Either.Left -> {
+                log("IaTjenesterMetrikkerInnloggetController")
+                    .warn(iaSjekk.value.message, iaSjekk.value)
+                clearNavCallid()
+                ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(ResponseStatus.BadRequest)
+            }
+            is Either.Right -> {
+                clearNavCallid()
+                ResponseEntity.status(HttpStatus.CREATED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(ResponseStatus.Created)
+
+            }
+        }
+    }
 }
 
 

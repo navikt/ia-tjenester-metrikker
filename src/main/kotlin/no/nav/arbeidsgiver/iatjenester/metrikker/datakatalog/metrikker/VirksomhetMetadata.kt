@@ -1,12 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
-
-class VirksomhetMetadata(
-    val orgnr: String,
-    val næring: Næring
-)
 
 data class Næringskode5Siffer(var kode: String?, val beskrivelse: String) {
     init {
@@ -52,3 +46,5 @@ data class InstitusjonellSektorkode(
     val kode: String,
     val beskrivelse: String
 )
+
+
