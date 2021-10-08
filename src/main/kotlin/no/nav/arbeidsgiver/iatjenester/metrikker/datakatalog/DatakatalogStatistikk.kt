@@ -90,7 +90,7 @@ class DatakatalogStatistikk(
                     tilDato
                 )
             ).let {
-                datapakke(it.views())
+                opprettDatapakke(it.opprettViews())
             }
         }
 }

@@ -1,29 +1,18 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.EchartSpec
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Grid
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Legend
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MarkdownSpec
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Option
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Serie
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.SpecType
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import java.time.LocalDate
 import java.time.format.TextStyle
-import java.util.Locale
+import java.util.*
 
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) : DatakatalogData {
 
-    var NORSK_BOKMÅL = Locale("no", "NO", "NB")
-    var startDato: LocalDate = datagrunnlag.startDate
+    private var NORSK_BOKMÅL = Locale("no", "NO", "NB")
+    private var startDato: LocalDate = datagrunnlag.startDate
 
-    override fun lagViews() = listOf(
+    override fun opprettViews() = listOf(
         View(
             title = "Mottatte digitale IA-tjenester",
             description = "Antall digitale IA-tjenester siden ${startDato.dayOfMonth}. ${
@@ -52,7 +41,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                     TextStyle.SHORT,
                     NORSK_BOKMÅL
                 )
-            } ${datagrunnlag.gjelendeÅr})",
+            } ${datagrunnlag.gjeldendeÅr})",
             description = "Antall digitale IA-tjenester mottatt per applikasjon fordelt per bransje i bransjeprogram",
             specType = SpecType.echart,
             spec = lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(datagrunnlag),
