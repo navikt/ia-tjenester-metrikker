@@ -1,6 +1,8 @@
 # ia-tjenester-metrikker
 
-Applikasjon i GCP som lagrer metrikker om IA tjenester.
+Applikasjon som mottar og lagrer metrikker om IA-tjenester. Oppdaterer daglig Datakatalogen med friske tall (
+[prod](https://data.intern.nav.no/datapakke/76cbb88ca1cd3d335810aec71c587aa1#)
+| [dev](https://data.dev.intern.nav.no/datapakke/219e562d893afbc8307b5f4e8b210baa#) )
 
 ## Kjøre lokalt
 Fra IntelliJ: 
