@@ -1,25 +1,32 @@
 # ia-tjenester-metrikker
 
-Applikasjon som mottar og lagrer metrikker om IA-tjenester. Oppdaterer daglig Datakatalogen med friske tall (
-[prod](https://data.intern.nav.no/datapakke/76cbb88ca1cd3d335810aec71c587aa1#)
-| [dev](https://data.dev.intern.nav.no/datapakke/219e562d893afbc8307b5f4e8b210baa#) )
+Applikasjon som mottar og lagrer metrikker fra andre IA-applikasjoner.
+
+Oppdaterer [Datakatalogen](https://data.intern.nav.no/datapakke/76cbb88ca1cd3d335810aec71c587aa1#) med friske tall
+daglig (kl. 07:55) via en cron-jobb.
 
 ## Kjøre lokalt
-Fra IntelliJ: 
- - sett opp profile til `local` i `run configuration`
- - start `main()` funksjon i `LokalApp.kt`
 
-### Dokumentasjon
+Fra IntelliJ, trykk "Edit Configurations", "Add new configuration" og velg `Spring Boot`
+
+- Sett "profile": `local`
+- Sett "Main class" til `no.nav.arbeidsgiver.iatjenester.metrikker.LokalApp`
+
+### API-Dokumentasjon
+
 API dok finner du her: http://localhost:8080/ia-tjenester-metrikker/swagger-ui.html
 
-#### Datapakke til datakatalogen
-##### Opprettelse av en datapakke
+### Datapakke til datakatalogen
 
-Datapakker er opprettet i dev og prod. Om det skulle gjøres på nytt, bruk filen `datapakke-init.json` for å opprette en ny datapakke som følgende (ta var på id-en i response): 
+Datapakker er opprettet i [dev](https://data.dev.intern.nav.no/datapakke/219e562d893afbc8307b5f4e8b210baa#) og
+[prod](https://data.intern.nav.no/datapakke/76cbb88ca1cd3d335810aec71c587aa1#). Om det skulle gjøres på nytt, bruk filen
+`datapakke-init.json` for å opprette en ny datapakke som følgende (OBS: ta vare på id-en i response):
 
-`curl -X 'POST' -d @src/test/resources/datapakke-init.json 'https://{utl til datakatalog-api}/v1/datapackage'`
-##### Cron jobb som sender data til datakatalog
-Hver dag kjøres en cron jobb som henter `ìa-tjenester-metrikker` og sender dem til datakatalog kl. 7:55
+```
+curl -X 'POST' -d @src/test/resources/datapakke-init.json 'https://{utl til datakatalog-api}/v1/datapackage'
+```
+
+Endepunktet `ia-tjeneste-metrikker/utsending/datapakke` kan kalles manuelt for å oppdatere Datakatalogen i dev.
 
 ### Hente en lokal selvbetjenening-idtoken for å kjøre Postman mot innlogget endepunkt
 
@@ -27,7 +34,7 @@ Start applikasjon og kjør i terminal (Mac med python 2):
 
 `curl --location --request GET 'http://localhost:8080/ia-tjenester-metrikker/local/cookie?issuerId=selvbetjening&audience=aud-localhost&subject=12345678910&cookiename=selvbetjening-idtoken' | python -c "import sys, json; print json.load(sys.stdin)['value']" | tr -d '\n' | pbcopy`
 
-Da er `selvbetjening-token` kopiert i clipboard og kan limes inn direkte etter `Authorization: Bearer ` i f.eks Postman. 
+Da er `selvbetjening-token` kopiert i clipboard og kan limes inn direkte etter `Authorization: Bearer ` i f.eks Postman.
 
 ### Dette kan du sjekke lokalt
 
@@ -41,10 +48,6 @@ I terminal kjør
  - URL: `jdbc:h2:mem:local-db`
  - user name: `sa`
  - password: _blank_
-
-
-# Hvordan fungerer appen
-Applikasjonen tar imot _metrikker_ fra andre IA applikasjoner og persistere dem  
 
 ## GCP konfig
 Applikasjon trenger `ALTINN_APIKEY` og `ALTINN_APIGW_APIKEY` for å kunne gjøre oppslag til `altinn-rettigheter-proxy` eller eventuelt direkte til Altinn ved fallback kall.
