@@ -23,12 +23,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
     var NORSK_BOKMÅL = Locale("no", "NO", "NB")
     var startDato: LocalDate = datagrunnlag.startDate
 
-    override fun views() = listOf(
-        View(
-            title = "Om mottatte digitale IA-tjenester",
-            specType = SpecType.markdown,
-            spec = lagForklaringMarkdownSpec(),
-        ),
+    override fun lagViews() = listOf(
         View(
             title = "Mottatte digitale IA-tjenester",
             description = "Antall digitale IA-tjenester siden ${startDato.dayOfMonth}. ${
@@ -148,19 +143,6 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                     )
                 )
             )
-        )
-    }
-
-    private fun lagForklaringMarkdownSpec(): MarkdownSpec {
-        return MarkdownSpec(
-            "#### Statistikken viser antall digitale IA-tjenester fra NAV fra tjenestene\n" +
-                    " - Samtalestøtte til arbeidsgiver (krever ikke innlogging)\n" +
-                    " - Sykefraværsstatistikk til arbeidsgiver (krever innlogging) \n" +
-                    "####  En digital IA-tjeneste telles når en bruker har benyttet seg av innholdet på en nettside.\n" +
-                    "Som hovedregel betyr dette at brukeren har: klikket på noe, skrevet noe eller åpnet noe på siden. Det er ikke tilstrekkelig at en bruker har åpnet nettsiden.\n" +
-                    "####  Hvordan telles leverte digitale IA-tjenester når samtalestøtten blir klikket på inne i sykefraværsstatistikken?\n" +
-                    "Det telles ikke levert IA-tjeneste fra sykefraværsstatistikk, men det registreres digital IA-tjeneste i samtalestøtten dersom brukeren benytter seg av innholdet.\n" +
-                    "<br/><br/> \n"
         )
     }
 

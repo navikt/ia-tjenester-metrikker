@@ -6,7 +6,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.MottattIa
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDate.now
 import java.time.Month
@@ -50,17 +49,33 @@ class DatakatalogStatistikk(
         log.info("Har gjennomført jobb som sender statistikk til datakatalogen")
     }
 
-    private fun datapakke(views: List<View>): Datapakke =
-        Datapakke(
+    private fun opprettDatapakke(views: List<View>): Datapakke {
+        val description = """
+            __Statistikken på denne siden viser antall digitale IA-tjenester fra følgende tjenester:__
+            - Samtalestøtte til arbeidsgiver (krever ikke innlogging) 
+            - Sykefraværsstatistikk til arbeidsgiver (krever innlogging)
+            
+            __En digital IA-tjeneste telles når en bruker har benyttet seg av innholdet.__
+            
+            Som hovedregel betyr dette at brukeren har *klikket på noe*, *skrevet noe* eller *åpnet noe* på siden. 
+            Det er ikke tilstrekkelig å brukeren kun har besøkt forsiden. 
+        
+            Unntak:
+            - Hvis brukeren klikker på link til Samtalestøtten inne fra Sykefraværsstatistikk, så vil dette *ikke* telle 
+            som en levert IA-tjeneste fra Sykefraværsstatistikk. 
+            """.trimIndent()
+
+        return Datapakke(
             title = "Digitale IA-tjenester",
             type = "datapackage",
-            description = "",
+            description = description,
             views = views,
             name = "ia-tjenester-metrikker-statistikk",
             uri = "",
             url = "",
             team = "Team IA"
         )
+    }
 
     private fun byggDatapakke(): Datapakke = (Pair(
         iaTjenesterMetrikkerRepository.hentUinnloggetMetrikker(fraDato),
