@@ -28,7 +28,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/tekst-endringer-sept-2021'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/nytt-endepunkt-for-innlogget-samtalestotte'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
