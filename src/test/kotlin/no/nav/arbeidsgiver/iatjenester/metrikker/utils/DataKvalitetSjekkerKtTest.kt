@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import org.junit.Assert
@@ -92,8 +92,8 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getGyldigTestInnloggetIATjeneste(): InnloggetIaTjeneste {
-        return InnloggetIaTjeneste(
+    fun getGyldigTestInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
+        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             "999999999",
             "85000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -111,8 +111,8 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getUgyldigOrgNrTestInnloggetIATjeneste(): InnloggetIaTjeneste {
-        return InnloggetIaTjeneste(
+    fun getUgyldigOrgNrTestInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
+        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             "959595",
             "85000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -130,8 +130,8 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getUgyldigNæringskode5SifferInnloggetIATjeneste(): InnloggetIaTjeneste {
-        return InnloggetIaTjeneste(
+    fun getUgyldigNæringskode5SifferInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
+        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "85525000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -149,8 +149,8 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getUgyldigFylkesnummerInnloggetIATjeneste(): InnloggetIaTjeneste {
-        return InnloggetIaTjeneste(
+    fun getUgyldigFylkesnummerInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
+        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "25000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -168,8 +168,8 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getUgyldigKommuneNrInnloggetIATjeneste(): InnloggetIaTjeneste {
-        return InnloggetIaTjeneste(
+    fun getUgyldigKommuneNrInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
+        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "25000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -187,8 +187,8 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getUgyldigSSBSektorkodeInnloggetIATjeneste(): InnloggetIaTjeneste {
-        return InnloggetIaTjeneste(
+    fun getUgyldigSSBSektorkodeInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
+        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "25000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -206,14 +206,14 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getForLangNæringskode5SifferBeskrivelseInnloggetIATjeneste(): InnloggetIaTjeneste {
+    fun getForLangNæringskode5SifferBeskrivelseInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
         var i = 0
         var tekst = ""
         do {
             tekst += "K"
             i++
         } while (i <= 513)
-        return InnloggetIaTjeneste(
+        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "25000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,

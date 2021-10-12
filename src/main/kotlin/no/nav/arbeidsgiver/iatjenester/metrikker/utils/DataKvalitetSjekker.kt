@@ -1,39 +1,39 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjenesteKunOrgnr
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
 
 private val MAKSIMUM_KOMMUNE_NR = 5444
 private val MAKSIMUM_FYLKE_NR = 54
 private val MAKSIMUM_SSBSEKTORKODE = 9000
 private val MAKSIMUM_ANTALL_KARAKTERERTILLATT = 512
 
-fun sjekkDataKvalitet(innloggetIaTjeneste: InnloggetIaTjeneste)
+fun sjekkDataKvalitet(innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata)
         : Boolean {
-    if (innloggetIaTjeneste.orgnr.length != 9) {
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.orgnr.length != 9) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjeneste.næringKode5Siffer.length != 5 ||
-        innloggetIaTjeneste.næringKode5Siffer.toIntOrNull() == null
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.næringKode5Siffer.length != 5 ||
+        innloggetIaTjenesteMedVirksomhetGrunndata.næringKode5Siffer.toIntOrNull() == null
     ) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("Ugyldig næringskode5siffer mottatt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjeneste.kommunenummer.toIntOrNull() == null ||
-        innloggetIaTjeneste.kommunenummer.toInt() > MAKSIMUM_KOMMUNE_NR
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.kommunenummer.toIntOrNull() == null ||
+        innloggetIaTjenesteMedVirksomhetGrunndata.kommunenummer.toInt() > MAKSIMUM_KOMMUNE_NR
     ) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("Ugyldig kommunenummer mottatt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjeneste.SSBSektorKode.toIntOrNull() == null ||
-        innloggetIaTjeneste.SSBSektorKode.toInt() > MAKSIMUM_SSBSEKTORKODE
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.SSBSektorKode.toIntOrNull() == null ||
+        innloggetIaTjenesteMedVirksomhetGrunndata.SSBSektorKode.toInt() > MAKSIMUM_SSBSEKTORKODE
     ) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("Ugyldig SSB sektorkode mottatt fra innlogget tjeneste, avslutter registrering")
@@ -41,31 +41,31 @@ fun sjekkDataKvalitet(innloggetIaTjeneste: InnloggetIaTjeneste)
     }
 
     if (
-        innloggetIaTjeneste.næringskode5SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
+        innloggetIaTjenesteMedVirksomhetGrunndata.næringskode5SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for næringskode 5 siffer felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjeneste.næring2SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.næring2SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for næringskode 2siffer felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjeneste.SSBSektorKodeBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.SSBSektorKodeBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for SSB sektorkode felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjeneste.fylke.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.fylke.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for fylke felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjeneste.kommune.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.kommune.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for kommune felt fra innlogget tjeneste, avslutter registrering")
         return false
@@ -74,8 +74,8 @@ fun sjekkDataKvalitet(innloggetIaTjeneste: InnloggetIaTjeneste)
     return true
 }
 
-fun sjekkDataKvalitet (innloggetIaTjenesteKunOrgnr: InnloggetIaTjenesteKunOrgnr): Boolean {
-    if (innloggetIaTjenesteKunOrgnr.orgnr.length != 9) {
+fun sjekkDataKvalitet (innloggetIaTjeneste: InnloggetMottattIaTjeneste): Boolean {
+    if (innloggetIaTjeneste.orgnr.length != 9) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering")
         return false

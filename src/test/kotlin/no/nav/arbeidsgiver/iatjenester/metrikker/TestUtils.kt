@@ -30,7 +30,7 @@ class TestUtils {
             return "$mockOAuth2Header.$localhostOnlyJasonPayload.$signature"
         }
 
-        fun vilkårligIaTjeneste(): InnloggetIaTjeneste = InnloggetIaTjeneste(
+        fun vilkårligIaTjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata = InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             "987654321",
             "12345",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -47,7 +47,7 @@ class TestUtils {
             "Gjerdrum"
         )
 
-        fun vilkårligUinnloggetIaTjeneste(): UinnloggetIaTjeneste = UinnloggetIaTjeneste(
+        fun vilkårligUinnloggetIaTjeneste(): UinnloggetMottattIaTjeneste = UinnloggetMottattIaTjeneste(
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
             Kilde.SYKEFRAVÆRSSTATISTIKK,
             ZonedDateTime.now(),

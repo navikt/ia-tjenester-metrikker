@@ -1,9 +1,9 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
 import arrow.core.Either
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
@@ -12,15 +12,15 @@ import java.time.LocalDateTime.now
 @Component
 class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository) {
 
-    fun sjekkOgOpprett(innloggetIaTjeneste: InnloggetIaTjeneste): Either<IaTjenesterMetrikkerValideringException, IaTjeneste> {
-        val iaTjenesteSjekkResultat = sjekk(innloggetIaTjeneste)
+    fun sjekkOgOpprett(innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
+        val iaTjenesteSjekkResultat = sjekk(innloggetIaTjenesteMedVirksomhetGrunndata)
 
         if(iaTjenesteSjekkResultat is Either.Right) {
-            iaTjenesterMetrikkerRepository.opprett(innloggetIaTjeneste)
+            iaTjenesterMetrikkerRepository.opprett(innloggetIaTjenesteMedVirksomhetGrunndata)
             log("sjekkOgOpprett()").info(
-                "IA Tjeneste av type '${innloggetIaTjeneste.type.name}' " +
-                        "fra kilde '${innloggetIaTjeneste.kilde.name}' " +
-                        "og sektor '${innloggetIaTjeneste.SSBSektorKodeBeskrivelse}' " +
+                "IA Tjeneste av type '${innloggetIaTjenesteMedVirksomhetGrunndata.type.name}' " +
+                        "fra kilde '${innloggetIaTjenesteMedVirksomhetGrunndata.kilde.name}' " +
+                        "og sektor '${innloggetIaTjenesteMedVirksomhetGrunndata.SSBSektorKodeBeskrivelse}' " +
                         "opprettet"
             )
         }
@@ -28,7 +28,7 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
         return iaTjenesteSjekkResultat
     }
 
-    fun sjekkOgOpprett(uinnloggetIaTjeneste: UinnloggetIaTjeneste): Either<IaTjenesterMetrikkerValideringException, IaTjeneste> {
+    fun sjekkOgOpprett(uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val iaTjenesteSjekkResultat = sjekk(uinnloggetIaTjeneste)
 
         if(iaTjenesteSjekkResultat is Either.Right) {
@@ -44,15 +44,15 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
     }
 
 
-    private fun sjekk(iaTjeneste: IaTjeneste): Either<IaTjenesterMetrikkerValideringException, IaTjeneste> {
+    private fun sjekk(mottattIaTjeneste: MottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val muligDeltaMellomServerneiMinutter: Long = 1
 
-        return if (iaTjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
+        return if (mottattIaTjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
                 .isAfter(now().plusMinutes(muligDeltaMellomServerneiMinutter))
         ) {
             Either.Left(IaTjenesterMetrikkerValideringException("tjenesteMottakkelsesdato kan ikke være i fremtiden"))
         } else {
-            Either.Right(iaTjeneste)
+            Either.Right(mottattIaTjeneste)
         }
     }
 }
