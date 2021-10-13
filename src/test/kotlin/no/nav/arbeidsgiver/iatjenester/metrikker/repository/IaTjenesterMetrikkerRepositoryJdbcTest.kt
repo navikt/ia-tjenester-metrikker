@@ -93,6 +93,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
             Næring("12345", "Test 5 siffer", "Test 2 siffer"),
             "0576",
             "Oslo",
+            "Oslo",
             now().atStartOfDay()
         )
         opprettInnloggetIaTjenester(

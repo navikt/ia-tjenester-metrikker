@@ -4,7 +4,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
-import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
@@ -110,6 +109,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         val næring: Næring,
         val kommunenummer: String,
         val kommune: String,
+        val fylke: String,
         override val tidspunkt: LocalDateTime
     ) : MottattIaTjenesteMetrikk()
 
@@ -118,46 +118,49 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
 
 
     fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattUinnloggetIaTjenesteMetrikk> =
-        namedParameterJdbcTemplate.query("""
+        namedParameterJdbcTemplate.query(
+            """
                 select tjeneste_mottakkelsesdato, kilde_applikasjon 
                 from metrikker_ia_tjenester_uinnlogget 
                 where tjeneste_mottakkelsesdato >= :startDato
                 """,
-            MapSqlParameterSource().addValue("startDato", startDato),
-            RowMapper { rs: ResultSet, _: Int ->
-                MottattUinnloggetIaTjenesteMetrikk(
-                    Kilde.valueOf(rs.getString("kilde_applikasjon")),
-                    rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
-                )
-            }
-        )
+            MapSqlParameterSource().addValue("startDato", startDato)
+        ) { rs: ResultSet, _: Int ->
+            MottattUinnloggetIaTjenesteMetrikk(
+                Kilde.valueOf(rs.getString("kilde_applikasjon")),
+                rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
+            )
+        }
 
     fun hentInnloggetMetrikker(startDato: LocalDate): List<MottattInnloggetIaTjenesteMetrikk> =
-        namedParameterJdbcTemplate.query("""
+        namedParameterJdbcTemplate.query(
+            """
             select orgnr,
               tjeneste_mottakkelsesdato, 
               kilde_applikasjon, 
               naering_kode_5siffer, 
               naering_kode5siffer_beskrivelse, 
               naering_2siffer_beskrivelse, 
-              kommunenummer, 
-              kommune
+              kommunenummer,
+              kommune,
+              fylke
             from metrikker_ia_tjenester_innlogget 
             where tjeneste_mottakkelsesdato >= :startDato
             """,
-            MapSqlParameterSource().addValue("startDato", startDato),
-            RowMapper { rs: ResultSet, _: Int ->
-                MottattInnloggetIaTjenesteMetrikk(
-                    rs.getString("orgnr"),
-                    Kilde.valueOf(rs.getString("kilde_applikasjon")),
-                    Næring(
-                        rs.getString("naering_kode_5siffer"),
-                        rs.getString("naering_kode5siffer_beskrivelse"),
-                        rs.getString("naering_2siffer_beskrivelse")),
-                    rs.getString("kommunenummer"),
-                    rs.getString("kommune"),
-                    rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
-                )
-            }
-        )
+            MapSqlParameterSource().addValue("startDato", startDato)
+        ) { rs: ResultSet, _: Int ->
+            MottattInnloggetIaTjenesteMetrikk(
+                rs.getString("orgnr"),
+                Kilde.valueOf(rs.getString("kilde_applikasjon")),
+                Næring(
+                    rs.getString("naering_kode_5siffer"),
+                    rs.getString("naering_kode5siffer_beskrivelse"),
+                    rs.getString("naering_2siffer_beskrivelse")
+                ),
+                rs.getString("kommunenummer"),
+                rs.getString("kommune"),
+                rs.getString("fylke"),
+                rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
+            )
+        }
 }

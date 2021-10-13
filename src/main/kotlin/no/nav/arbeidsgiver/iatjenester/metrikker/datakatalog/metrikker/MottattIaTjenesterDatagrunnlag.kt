@@ -19,6 +19,9 @@ class MottattIaTjenesterDatagrunnlag(
     val gjeldendeÅr = fraDato.year
     val gjeldendeMåneder: List<Month> = fraDato månederTil tilDato
 
+//    val mottatteIaTjenesterPerFylke: Map<String, Int> = innloggede
+
+
     val antallInnloggetMetrikkerPerMåned: Map<Month, Int> =
         beregnAntallMetrikkerPerMåned(
             gjeldendeMåneder,
@@ -55,14 +58,12 @@ class MottattIaTjenesterDatagrunnlag(
         metrikkerPerDag: Map<LocalDate, Int>
     ): Map<Month, Int> {
         val metrikkerPerMåned: Map<Month, Collection<Int>> =
-            måneder.map { it to metrikkerPerDag.filter { (key, _) -> key.month == it }.values }.toMap()
-        val antallMetrikkerPerMåned: Map<Month, Int> =
-            metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumOf { it } }
+            måneder.associateWith { metrikkerPerDag.filter { (key, _) -> key.month == it }.values }
 
-        return antallMetrikkerPerMåned
+        return metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumOf { it } }
     }
 
-    fun fjernDupliserteMetrikkerSammeDag(
+    private fun fjernDupliserteMetrikkerSammeDag(
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
     ): List<MottattInnloggetIaTjenesteMetrikk> {
         return mottattIaTjenesteMetrikker.distinctBy {
@@ -70,24 +71,20 @@ class MottattIaTjenesterDatagrunnlag(
         }
     }
 
-    fun beregnAntallMetrikkerPerDag(
+    private fun beregnAntallMetrikkerPerDag(
         mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
     ): Map<LocalDate, Int> {
         return mottattIaTjenesteMetrikker.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
     }
 
-    fun beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
+    private fun beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
         bransjeListe: List<ArbeidstilsynetBransje>,
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
     ): MottatteIaTjenesterPerBransjeOgKilde {
 
         val alleBransjerPerBransjeOgKilde: MottatteIaTjenesterPerBransjeOgKilde =
-            bransjeListe.map { BransjePerKilde(Kilde.SAMTALESTØTTE, it) }
-                .map { it to 0 }
-                .toMap() +
-                    bransjeListe.map { Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, it) }
-                        .map { it to 0 }
-                        .toMap()
+            bransjeListe.map { BransjePerKilde(Kilde.SAMTALESTØTTE, it) }.associateWith { 0 } +
+                    bransjeListe.map { Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, it) }.associateWith { 0 }
 
         val alleBransjerPerBransjeOgKildeMedAntallMetrikker: MottatteIaTjenesterPerBransjeOgKilde =
             mottattIaTjenesteMetrikker
@@ -97,8 +94,6 @@ class MottattIaTjenesterDatagrunnlag(
 
         return alleBransjerPerBransjeOgKilde + alleBransjerPerBransjeOgKildeMedAntallMetrikker
     }
-
-    fun gjeldendeMåneder() = gjeldendeMåneder
 }
 
 typealias BransjePerKilde = Pair<Kilde, ArbeidstilsynetBransje>
