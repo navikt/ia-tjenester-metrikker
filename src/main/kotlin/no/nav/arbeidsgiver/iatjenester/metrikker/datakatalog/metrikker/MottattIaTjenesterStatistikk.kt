@@ -112,7 +112,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 ),
                 Xaxis(
                     "category",
-                    data = datagrunnlag.gjeldendeMåneder()
+                    data = datagrunnlag.gjeldendeMåneder
                         .map { month -> month.getDisplayName(TextStyle.SHORT, NORSK_BOKMÅL) }
                 ),
                 Yaxis("value"),
@@ -135,9 +135,60 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         )
     }
 
+    private fun lagHistogramOverMottatteDigitaleIATjenesterPerFylke(datagrunnlag: MottattIaTjenesterDatagrunnlag): EchartSpec {
+        return EchartSpec(
+            "",
+            Option(
+                Legend(
+                    listOf(
+                        "Samtalestøtte (innlogget)",
+                        "Sykefraværsstatistikk"
+                    )
+                ),
+//                Grid(
+//                    left = "3%",
+//                    right = "4%",
+//                    bottom = "3%",
+//                    containLabel = true
+//                ),
+                Xaxis(
+                    "value"
+                ),
+                Yaxis(
+                    "category",
+                    data = datagrunnlag.bransjeListe.map { it.name }
+                ),
+                Tooltip("item"),
+                listOf(
+                    Serie(
+                        "Samtalestøtte (innlogget)",
+                        datagrunnlag
+                            .mottatteIaTjenesterInnloggetPerBransjeOgKilde
+                            .filter { it.key.first == Kilde.SAMTALESTØTTE }
+                            .values
+                            .toList(),
+                        "bar",
+                        "Samtalestøtte"
+                    ),
+                    Serie(
+                        "Sykefraværsstatistikk",
+                        datagrunnlag
+                            .mottatteIaTjenesterInnloggetPerBransjeOgKilde
+                            .filter { it.key.first == Kilde.SYKEFRAVÆRSSTATISTIKK }
+                            .values
+                            .toList(),
+                        "bar",
+                        "Sykefraværsstatistikk"
+                    )
+                )
+            )
+        )
+    }
+
+
     private fun lagMottatteDigitaleIATjenesterMarkdownSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): MarkdownSpec {
         return MarkdownSpec(
-                    "## Samtalestøtte (uinnlogget)\n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
+            "## Samtalestøtte (uinnlogget)\n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
                     "## Sykefraværsstatistikk (innlogget)\n **${datagrunnlag.totalInnloggetMetrikker}** \n " +
                     "### Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
         )
