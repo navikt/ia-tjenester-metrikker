@@ -1,8 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import arrow.core.Either
-import no.nav.arbeidsgiver.iatjenester.metrikker.controller.ResponseStatus
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid
@@ -32,7 +31,7 @@ class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerS
     @PostMapping(value = ["/mottatt-iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
     fun leggTilNyMottattIaTjeneste(
         @RequestHeader headers: HttpHeaders,
-        @RequestBody uinnloggetIaTjeneste: UinnloggetIaTjeneste
+        @RequestBody uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste
     ): ResponseEntity<ResponseStatus> {
         setNavCallid(headers)
         log("IaTjenesterMetrikkerUinnloggetController")

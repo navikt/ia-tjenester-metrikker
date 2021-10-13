@@ -35,10 +35,10 @@ import org.springframework.test.context.TestPropertySource
 @TestPropertySource(properties = ["wiremock.port=8686"])
 internal class TilgangskontrollServiceIntegrationTest {
 
-    private lateinit var dummyTilgangskontrollUtils: TilgangskontrollUtils
+    private var dummyTilgangskontrollUtils: TilgangskontrollUtils
     private lateinit var tilgangskontrollService: TilgangskontrollService
     private lateinit var tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer: TilgangskontrollService
-    private lateinit var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
+    private var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
 
     @Autowired
     private lateinit var iaServiceIAltinnKonfig: TilgangskontrollConfig

@@ -1,9 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.*
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Fnr
 import java.sql.Connection
 import java.sql.Date
@@ -15,7 +12,10 @@ class TestUtils {
 
     companion object {
 
+        val OVERORDNETENHET_ORGNR: String = "987654321"
         val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
+        val ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET: String = "833445566"
+
         val TEST_FNR: Fnr = Fnr("01019912345")
 
         fun testTokenForTestFNR(): String {
@@ -30,7 +30,7 @@ class TestUtils {
             return "$mockOAuth2Header.$localhostOnlyJasonPayload.$signature"
         }
 
-        fun vilkårligIaTjeneste(): InnloggetIaTjeneste = InnloggetIaTjeneste(
+        fun vilkårligIaTjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata = InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             "987654321",
             "12345",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -47,7 +47,7 @@ class TestUtils {
             "Gjerdrum"
         )
 
-        fun vilkårligUinnloggetIaTjeneste(): UinnloggetIaTjeneste = UinnloggetIaTjeneste(
+        fun vilkårligUinnloggetIaTjeneste(): UinnloggetMottattIaTjeneste = UinnloggetMottattIaTjeneste(
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
             Kilde.SYKEFRAVÆRSSTATISTIKK,
             ZonedDateTime.now(),
@@ -83,6 +83,18 @@ class TestUtils {
               "næringskode5SifferBeskrivelse":"Trygdeordninger underlagt offentlig orvaltning",
               "ssbSektorKode":"6500",
               "ssbSektorKodeBeskrivelse":"Offentlig sektor",
+              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
+            }
+        """.trimIndent()
+        }
+
+        fun vilkårligForenkletInnloggetIaTjenesteAsString(orgnr: String): String {
+            return """
+            {
+              "orgnr":"$orgnr",
+              "altinnRettighet":"${AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE.name}",
+              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "type":"DIGITAL_IA_TJENESTE",
               "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
             }
         """.trimIndent()
