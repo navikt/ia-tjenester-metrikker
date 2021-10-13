@@ -13,7 +13,7 @@ import java.time.LocalDateTime.now
 class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository) {
 
     fun sjekkOgOpprett(innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
-        val iaTjenesteSjekkResultat = sjekk(innloggetIaTjenesteMedVirksomhetGrunndata)
+        val iaTjenesteSjekkResultat = validerMottakelsesdato(innloggetIaTjenesteMedVirksomhetGrunndata)
 
         if(iaTjenesteSjekkResultat is Either.Right) {
             iaTjenesterMetrikkerRepository.opprett(innloggetIaTjenesteMedVirksomhetGrunndata)
@@ -29,7 +29,7 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
     }
 
     fun sjekkOgOpprett(uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
-        val iaTjenesteSjekkResultat = sjekk(uinnloggetIaTjeneste)
+        val iaTjenesteSjekkResultat = validerMottakelsesdato(uinnloggetIaTjeneste)
 
         if(iaTjenesteSjekkResultat is Either.Right) {
             iaTjenesterMetrikkerRepository.opprett(uinnloggetIaTjeneste)
@@ -44,11 +44,11 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
     }
 
 
-    private fun sjekk(mottattIaTjeneste: MottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
-        val muligDeltaMellomServerneiMinutter: Long = 1
+    private fun validerMottakelsesdato(mottattIaTjeneste: MottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
+        val muligTidsforskjellMellomServerneiMinutter: Long = 1
 
         return if (mottattIaTjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
-                .isAfter(now().plusMinutes(muligDeltaMellomServerneiMinutter))
+                .isAfter(now().plusMinutes(muligTidsforskjellMellomServerneiMinutter))
         ) {
             Either.Left(IaTjenesterMetrikkerValideringException("tjenesteMottakkelsesdato kan ikke være i fremtiden"))
         } else {

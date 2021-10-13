@@ -39,14 +39,14 @@ internal class DataKvalitetSjekkerKtTest {
 
     @Test
     fun `sjekkDataKvalitet skal returnere true hvis deata er gyldig`() {
-        assertTrue(sjekkDataKvalitet(getGyldigTestInnloggetIATjeneste()))
+        assertTrue(erOrgnrGyldig(getGyldigTestInnloggetIATjeneste()))
 
     }
 
     @Test
     fun `sjekkDataKvalitet skal logge og retunere false ved ugyldig orgnr`() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
-        assertFalse(sjekkDataKvalitet(getUgyldigOrgNrTestInnloggetIATjeneste()))
+        assertFalse(erOrgnrGyldig(getUgyldigOrgNrTestInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
         val value = captor.value.toString(Charsets.UTF_8)
         Assert.assertTrue(value.contains("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering"))
@@ -55,7 +55,7 @@ internal class DataKvalitetSjekkerKtTest {
     @Test
     fun `sjekkDataKvalitet skal logge og retunere false ved ugyldig næringskode5siffer`() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
-        assertFalse(sjekkDataKvalitet(getUgyldigNæringskode5SifferInnloggetIATjeneste()))
+        assertFalse(erOrgnrGyldig(getUgyldigNæringskode5SifferInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
         val value = captor.value.toString(Charsets.UTF_8)
         Assert.assertTrue(value.contains("Ugyldig næringskode5siffer mottatt fra innlogget tjeneste, avslutter registrering"))
@@ -64,7 +64,7 @@ internal class DataKvalitetSjekkerKtTest {
     @Test
     fun `sjekkDataKvalitet skal logge og retunere false ved ugyldig kommunenr`() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
-        assertFalse(sjekkDataKvalitet(getUgyldigKommuneNrInnloggetIATjeneste()))
+        assertFalse(erOrgnrGyldig(getUgyldigKommuneNrInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
         val value = captor.value.toString(Charsets.UTF_8)
         Assert.assertTrue(value.contains("Ugyldig kommunenummer mottatt fra innlogget tjeneste, avslutter registrering"))
@@ -73,7 +73,7 @@ internal class DataKvalitetSjekkerKtTest {
     @Test
     fun `sjekkDataKvalitet skal logge og retunere false ved ugyldig SSB sektorkode`() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
-        assertFalse(sjekkDataKvalitet(getUgyldigSSBSektorkodeInnloggetIATjeneste()))
+        assertFalse(erOrgnrGyldig(getUgyldigSSBSektorkodeInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
         val value = captor.value.toString(Charsets.UTF_8)
         Assert.assertTrue(value.contains("Ugyldig SSB sektorkode mottatt fra innlogget tjeneste, avslutter registrering"))
@@ -82,7 +82,7 @@ internal class DataKvalitetSjekkerKtTest {
     @Test
     fun `sjekkDataKvalitet skal logge og retunere false ved for lang næringskode5Siffer beskrivelse`() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
-        assertFalse(sjekkDataKvalitet(getForLangNæringskode5SifferBeskrivelseInnloggetIATjeneste()))
+        assertFalse(erOrgnrGyldig(getForLangNæringskode5SifferBeskrivelseInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
         val value = captor.value.toString(Charsets.UTF_8)
         Assert.assertTrue(

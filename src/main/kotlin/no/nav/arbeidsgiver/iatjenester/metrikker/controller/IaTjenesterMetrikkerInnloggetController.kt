@@ -3,11 +3,11 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 import arrow.core.Either
 import arrow.core.flatMap
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Næringsbeskrivelser
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringsbeskrivelser
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
-import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretOpplysningerService
+import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretService
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
@@ -18,7 +18,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Tilgangskontro
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.sjekkDataKvalitet
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.erOrgnrGyldig
 import no.nav.security.token.support.core.api.Protected
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController
 class IaTjenesterMetrikkerInnloggetController(
     private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService,
     private val tilgangskontrollService: TilgangskontrollService,
-    private val enhetsregisteretOpplysningerService: EnhetsregisteretOpplysningerService
+    private val enhetsregisteretService: EnhetsregisteretService
 ) {
 
     @PostMapping(value = ["/mottatt-iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
@@ -53,7 +53,7 @@ class IaTjenesterMetrikkerInnloggetController(
         log("IaTjenesterMetrikkerInnloggetController")
             .info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjenesteMedVirksomhetGrunndata.kilde.name}")
 
-        if (!sjekkDataKvalitet(innloggetIaTjenesteMedVirksomhetGrunndata)) {
+        if (!erOrgnrGyldig(innloggetIaTjenesteMedVirksomhetGrunndata)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResponseStatus.BadRequest)
@@ -93,7 +93,7 @@ class IaTjenesterMetrikkerInnloggetController(
         log("IaTjenesterMetrikkerInnloggetController")
             .info("Mottatt forenklet IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
 
-        if (!sjekkDataKvalitet(innloggetIaTjeneste)) {
+        if (!erOrgnrGyldig(innloggetIaTjeneste)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResponseStatus.BadRequest)
@@ -142,7 +142,7 @@ class IaTjenesterMetrikkerInnloggetController(
         )
 
         val opplysningerForUnderenhet: Either<EnhetsregisteretException, Underenhet> =
-            enhetsregisteretOpplysningerService.hentOpplysningerForUnderenhet(Orgnr(innloggetIaTjeneste.orgnr))
+            enhetsregisteretService.hentUnderenhet(Orgnr(innloggetIaTjeneste.orgnr))
 
         return opplysningerForUnderenhet.fold(
             { enhetsregisteretException ->
@@ -153,7 +153,7 @@ class IaTjenesterMetrikkerInnloggetController(
                 return Either.Left(enhetsregisteretException)
             }, { underenhet ->
                 val opplysningerForOverordnetEnhet: Either<EnhetsregisteretException, OverordnetEnhet> =
-                    enhetsregisteretOpplysningerService.hentOpplysningerForOverordnetEnhet(
+                    enhetsregisteretService.hentOverordnetEnhet(
                         underenhet.overordnetEnhetOrgnr
                     )
 

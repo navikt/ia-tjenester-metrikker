@@ -4,11 +4,10 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjene
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
 
 private val MAKSIMUM_KOMMUNE_NR = 5444
-private val MAKSIMUM_FYLKE_NR = 54
 private val MAKSIMUM_SSBSEKTORKODE = 9000
 private val MAKSIMUM_ANTALL_KARAKTERERTILLATT = 512
 
-fun sjekkDataKvalitet(innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata)
+fun erOrgnrGyldig(innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata)
         : Boolean {
     if (innloggetIaTjenesteMedVirksomhetGrunndata.orgnr.length != 9) {
         log("IaTjenesterMetrikkerInnloggetController")
@@ -74,7 +73,7 @@ fun sjekkDataKvalitet(innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottat
     return true
 }
 
-fun sjekkDataKvalitet (innloggetIaTjeneste: InnloggetMottattIaTjeneste): Boolean {
+fun erOrgnrGyldig(innloggetIaTjeneste: InnloggetMottattIaTjeneste): Boolean {
     if (innloggetIaTjeneste.orgnr.length != 9) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering")

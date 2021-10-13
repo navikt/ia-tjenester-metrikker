@@ -2,12 +2,12 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.InstitusjonellSektorkode
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Kommune
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.KommunerOgFylker.Companion.mapTilFylke
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.mapTilFylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.HttpServerErrorException
@@ -17,27 +17,27 @@ import java.io.IOException
 
 
 @Configuration
-class EnhetsregisteretClient(val restTemplate: RestTemplate, val  enhetsregisteretUrl: String) {
+class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregisteretUrl: String) {
     private val objectMapper = jacksonObjectMapper()
 
-    fun hentInformasjonOmEnhet(orgnrTilEnhet: Orgnr): OverordnetEnhet {
-        val url =  enhetsregisteretUrl + "enheter/" + orgnrTilEnhet.verdi
+    fun hentOverordnetEnhet(orgnrTilEnhet: Orgnr): OverordnetEnhet {
+        val url = enhetsregisteretUrl + "enheter/" + orgnrTilEnhet.verdi
         try {
             val respons = restTemplate.getForObject(url, String::class.java)
             val overordnetEnhet: OverordnetEnhet = mapTilEnhet(respons)
-            validerReturnertOrgnr(orgnrTilEnhet, overordnetEnhet.orgnr)
+            validerReturnertOrgnrLikInnsendtOrgnr(orgnrTilEnhet, overordnetEnhet.orgnr)
             return overordnetEnhet
         } catch (e: RestClientException) {
             throw EnhetsregisteretException("Feil ved kall til Enhetsregisteret", e)
         }
     }
 
-    fun hentInformasjonOmUnderenhet(orgnrTilUnderenhet: Orgnr): Underenhet {
+    fun hentUnderenhet(orgnrTilUnderenhet: Orgnr): Underenhet {
         try {
-            val url =enhetsregisteretUrl + "underenheter/" + orgnrTilUnderenhet.verdi
+            val url = enhetsregisteretUrl + "underenheter/" + orgnrTilUnderenhet.verdi
             val respons = restTemplate.getForObject(url, String::class.java)
             val underenhet: Underenhet = mapTilUnderenhet(respons)
-            validerReturnertOrgnr(orgnrTilUnderenhet, underenhet.orgnr)
+            validerReturnertOrgnrLikInnsendtOrgnr(orgnrTilUnderenhet, underenhet.orgnr)
             return underenhet
         } catch (hsee: HttpServerErrorException) {
             throw EnhetsregisteretIkkeTilgjengeligException("Enhetsregisteret svarer ikke", hsee)
@@ -46,6 +46,7 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val  enhetsregister
         }
     }
 
+
     private fun mapTilEnhet(jsonResponseFraEnhetsregisteret: String?): OverordnetEnhet {
         try {
             val enhetJson = objectMapper.readTree(jsonResponseFraEnhetsregisteret)
@@ -53,8 +54,8 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val  enhetsregister
             val sektorJson = enhetJson["institusjonellSektorkode"]
             val orgnr = Orgnr(enhetJson["organisasjonsnummer"].textValue())
             val navn = enhetJson["navn"].textValue()
-            val næringskode:Næringskode5Siffer = objectMapper.readValue(næringskodeJson.toString())
-            val institusjonellSektorkode:InstitusjonellSektorkode = objectMapper.readValue(sektorJson.toString())
+            val næringskode: Næringskode5Siffer = objectMapper.readValue(næringskodeJson.toString())
+            val institusjonellSektorkode: InstitusjonellSektorkode = objectMapper.readValue(sektorJson.toString())
             val antallAnsatte = enhetJson["antallAnsatte"].intValue()
             return OverordnetEnhet(
                 orgnr,
@@ -63,20 +64,26 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val  enhetsregister
                 institusjonellSektorkode,
                 antallAnsatte
             )
-        } catch (e: IOException) {
-            throw EnhetsregisteretMappingException("Feil ved kall til Enhetsregisteret. Kunne ikke parse respons.", e)
-        } catch (e: NullPointerException) {
-            throw EnhetsregisteretMappingException("Feil ved kall til Enhetsregisteret. Kunne ikke parse respons.", e)
-        } catch (e: IllegalArgumentException) {
-            throw EnhetsregisteretMappingException("Feil ved kall til Enhetsregisteret. Kunne ikke parse respons.", e)
+        } catch (e: Exception) {
+            when (e) {
+                is IOException, is NullPointerException, is IllegalArgumentException -> {
+                    throw EnhetsregisteretMappingException(
+                        "Feil ved kall til Enhetsregisteret. Kunne ikke parse respons til overordnet enhet.",
+                        e
+                    )
+                }
+                else -> {
+                    throw e
+                }
+            }
         }
     }
 
-    private fun validerReturnertOrgnr(opprinneligOrgnr: Orgnr, returnertOrgnr: Orgnr) {
-        if (!opprinneligOrgnr.equals(returnertOrgnr)) {
+    private fun validerReturnertOrgnrLikInnsendtOrgnr(innsendtOrgnr: Orgnr, returnertOrgnr: Orgnr) {
+        if (!innsendtOrgnr.equals(returnertOrgnr)) {
             throw IllegalStateException(
-                ("Orgnr hentet fra Enhetsregisteret samsvarer ikke med det medsendte orgnr. Request: "
-                        + opprinneligOrgnr.verdi
+                ("Orgnr hentet fra Enhetsregisteret samsvarer ikke med det innsendte orgnr. Request: "
+                        + innsendtOrgnr.verdi
                         ) + ", response: "
                         + returnertOrgnr.verdi
             )
@@ -103,10 +110,18 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val  enhetsregister
                 mapTilFylke(kommune),
                 enhetJson["antallAnsatte"].intValue()
             )
-        } catch (e: IOException) {
-            throw EnhetsregisteretMappingException("Feil ved kall til Enhetsregisteret. Kunne ikke parse respons.", e)
-        } catch (e: NullPointerException) {
-            throw EnhetsregisteretMappingException("Feil ved kall til Enhetsregisteret. Kunne ikke parse respons.", e)
+        } catch (e: Exception) {
+            when (e) {
+                is IOException, is NullPointerException -> {
+                    throw EnhetsregisteretMappingException(
+                        "Feil ved kall til Enhetsregisteret. Kunne ikke parse respons til underenhet.",
+                        e
+                    )
+                }
+                else -> {
+                    throw e
+                }
+            }
         }
     }
 }

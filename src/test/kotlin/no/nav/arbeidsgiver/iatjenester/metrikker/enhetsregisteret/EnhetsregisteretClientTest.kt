@@ -36,7 +36,7 @@ class EnhetsregisteretClientTest {
     @Test
     fun hentInformasjonOmEnhet__skal_hente_riktige_felter() {
         mockRespons(gyldigEnhetRespons("999263550"))
-        val overordnetEnhet: OverordnetEnhet? = enhetsregisteretClient!!.hentInformasjonOmEnhet(Orgnr("999263550"))
+        val overordnetEnhet: OverordnetEnhet? = enhetsregisteretClient!!.hentOverordnetEnhet(Orgnr("999263550"))
         assertThat(overordnetEnhet?.orgnr?.verdi).isEqualTo("999263550")
         assertThat(overordnetEnhet?.navn).isEqualTo("NAV ARBEID OG YTELSER")
         assertThat(overordnetEnhet?.næringskode?.kode).isEqualTo("84300")
@@ -59,7 +59,7 @@ class EnhetsregisteretClientTest {
             HttpServerErrorException(HttpStatus.BAD_GATEWAY)
         )
         assertThrows(EnhetsregisteretException::class.java) {
-            enhetsregisteretClient!!.hentInformasjonOmEnhet(
+            enhetsregisteretClient!!.hentOverordnetEnhet(
                 Orgnr("971800534")
             )
         }
@@ -71,7 +71,7 @@ class EnhetsregisteretClientTest {
         responsMedManglendeFelt.remove("institusjonellSektorkode")
         mockRespons(responsMedManglendeFelt)
         assertThrows(EnhetsregisteretMappingException::class.java) {
-            enhetsregisteretClient!!.hentInformasjonOmEnhet(
+            enhetsregisteretClient!!.hentOverordnetEnhet(
                 Orgnr("971800534")
             )
         }
@@ -83,13 +83,13 @@ class EnhetsregisteretClientTest {
         mockRespons(responsMedFeilOrgnr)
         assertThrows(
             IllegalStateException::class.java
-        ) { enhetsregisteretClient!!.hentInformasjonOmEnhet(Orgnr("777777777")) }
+        ) { enhetsregisteretClient!!.hentOverordnetEnhet(Orgnr("777777777")) }
     }
 
     @Test
     fun hentInformasjonOmUnderenhet__skal_hente_riktige_felter() {
         mockRespons(gyldigUnderenhetRespons("971800534"))
-        val underenhet: Underenhet? = enhetsregisteretClient!!.hentInformasjonOmUnderenhet(Orgnr("971800534"))
+        val underenhet: Underenhet? = enhetsregisteretClient!!.hentUnderenhet(Orgnr("971800534"))
         assertThat(underenhet?.orgnr?.verdi).isEqualTo("971800534")
         assertThat(underenhet?.overordnetEnhetOrgnr?.verdi).isEqualTo("999263550")
         assertThat(underenhet?.navn).isEqualTo("NAV ARBEID OG YTELSER AVD OSLO")
@@ -112,7 +112,7 @@ class EnhetsregisteretClientTest {
         )
         assertThrows(
             EnhetsregisteretIkkeTilgjengeligException::class.java
-        ) { enhetsregisteretClient!!.hentInformasjonOmUnderenhet(Orgnr("971800534")) }
+        ) { enhetsregisteretClient!!.hentUnderenhet(Orgnr("971800534")) }
     }
 
     @Test
@@ -122,7 +122,7 @@ class EnhetsregisteretClientTest {
         mockRespons(responsMedManglendeFelt)
         assertThrows(
             EnhetsregisteretMappingException::class.java
-        ) { enhetsregisteretClient!!.hentInformasjonOmUnderenhet(Orgnr("971800534")) }
+        ) { enhetsregisteretClient!!.hentUnderenhet(Orgnr("971800534")) }
     }
 
     @Test
@@ -131,7 +131,7 @@ class EnhetsregisteretClientTest {
         mockRespons(responsMedFeilOrgnr)
         assertThrows(
             IllegalStateException::class.java
-        ) { enhetsregisteretClient!!.hentInformasjonOmUnderenhet(Orgnr("777777777")) }
+        ) { enhetsregisteretClient!!.hentUnderenhet(Orgnr("777777777")) }
     }
 
     @SneakyThrows
