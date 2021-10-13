@@ -1,9 +1,9 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -18,11 +18,11 @@ import java.time.LocalDateTime
 class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
 
-    fun opprett(iatjeneste: InnloggetIaTjeneste) {
+    fun opprett(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
         insertIaTjeneste(iatjeneste)
     }
 
-    fun opprett(uinnloggetIatjeneste: UinnloggetIaTjeneste) {
+    fun opprett(uinnloggetIatjeneste: UinnloggetMottattIaTjeneste) {
         namedParameterJdbcTemplate.update(
             """
                 INSERT INTO metrikker_ia_tjenester_uinnlogget(
@@ -46,7 +46,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         )
     }
 
-    private fun insertIaTjeneste(iatjeneste: InnloggetIaTjeneste) {
+    private fun insertIaTjeneste(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
         namedParameterJdbcTemplate.update(
             """
                 INSERT INTO metrikker_ia_tjenester_innlogget(

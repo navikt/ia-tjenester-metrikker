@@ -8,8 +8,8 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Overordne
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretOpplysningerService
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjenesteKunOrgnr
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.InnloggetBruker
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
@@ -47,19 +47,19 @@ class IaTjenesterMetrikkerInnloggetController(
     @PostMapping(value = ["/mottatt-iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
     fun leggTilNyIaMottattTjenesteForInnloggetKlient(
         @RequestHeader headers: HttpHeaders,
-        @RequestBody innloggetIaTjeneste: InnloggetIaTjeneste
+        @RequestBody innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata
     ): ResponseEntity<ResponseStatus> {
         setNavCallid(headers)
         log("IaTjenesterMetrikkerInnloggetController")
-            .info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
+            .info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjenesteMedVirksomhetGrunndata.kilde.name}")
 
-        if (!sjekkDataKvalitet(innloggetIaTjeneste)) {
+        if (!sjekkDataKvalitet(innloggetIaTjenesteMedVirksomhetGrunndata)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResponseStatus.BadRequest)
         }
 
-        val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
+        val orgnr = Orgnr(innloggetIaTjenesteMedVirksomhetGrunndata.orgnr)
 
         val brukerSjekk = tilgangskontrollService
             .hentInnloggetBruker(AltinnServiceKey.IA)
@@ -75,7 +75,7 @@ class IaTjenesterMetrikkerInnloggetController(
                     .body(ResponseStatus.Forbidden)
             }
             is Either.Right -> {
-                opprettMottattIaTjenesteMetrikk(innloggetIaTjeneste)
+                opprettMottattIaTjenesteMetrikk(innloggetIaTjenesteMedVirksomhetGrunndata)
             }
         }
     }
@@ -87,21 +87,21 @@ class IaTjenesterMetrikkerInnloggetController(
     )
     fun leggTilNyIaMottattTjenesteForInnloggetKlient(
         @RequestHeader headers: HttpHeaders,
-        @RequestBody innloggetIaTjenesteKunOrgnr: InnloggetIaTjenesteKunOrgnr
+        @RequestBody innloggetIaTjeneste: InnloggetMottattIaTjeneste
     ): ResponseEntity<ResponseStatus> {
         setNavCallid(headers)
         log("IaTjenesterMetrikkerInnloggetController")
-            .info("Mottatt forenklet IA tjeneste (innlogget) fra ${innloggetIaTjenesteKunOrgnr.kilde.name}")
+            .info("Mottatt forenklet IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
 
-        if (!sjekkDataKvalitet(innloggetIaTjenesteKunOrgnr)) {
+        if (!sjekkDataKvalitet(innloggetIaTjeneste)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResponseStatus.BadRequest)
         }
 
-        val orgnr = Orgnr(innloggetIaTjenesteKunOrgnr.orgnr)
+        val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
         val innloggetBruker: Either<TilgangskontrollException, InnloggetBruker> = tilgangskontrollService
-            .hentInnloggetBruker(innloggetIaTjenesteKunOrgnr.altinnRettighet)
+            .hentInnloggetBruker(innloggetIaTjeneste.altinnRettighet)
             .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
         return innloggetBruker.fold(
@@ -115,7 +115,7 @@ class IaTjenesterMetrikkerInnloggetController(
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Forbidden)
             }, {
-                byggIaTjenesteMetrikk(innloggetIaTjenesteKunOrgnr).fold(
+                byggIaTjenesteMetrikk(innloggetIaTjeneste).fold(
                     { enhetsregisteretException ->
                         log("IaTjenesterMetrikkerInnloggetController").warn(
                             enhetsregisteretException.message,
@@ -133,16 +133,16 @@ class IaTjenesterMetrikkerInnloggetController(
 
 
     private fun byggIaTjenesteMetrikk(
-        innloggetIaTjenesteKunOrgnr: InnloggetIaTjenesteKunOrgnr
-    ): Either<EnhetsregisteretException, InnloggetIaTjeneste> {
+        innloggetIaTjeneste: InnloggetMottattIaTjeneste
+    ): Either<EnhetsregisteretException, InnloggetMottattIaTjenesteMedVirksomhetGrunndata> {
         log.info(
-            "Mottatt IaTjenester metrikk (forenklet) av tpye '${innloggetIaTjenesteKunOrgnr.type}' " +
-                    "fra kilde '${innloggetIaTjenesteKunOrgnr.kilde}' " +
-                    "med rettighet '${innloggetIaTjenesteKunOrgnr.altinnRettighet.name}'"
+            "Mottatt IaTjenester metrikk (med virksomhet metadata) av tpye '${innloggetIaTjeneste.type}' " +
+                    "fra kilde '${innloggetIaTjeneste.kilde}' " +
+                    "med rettighet '${innloggetIaTjeneste.altinnRettighet.name}'"
         )
 
         val opplysningerForUnderenhet: Either<EnhetsregisteretException, Underenhet> =
-            enhetsregisteretOpplysningerService.hentOpplysningerForUnderenhet(Orgnr(innloggetIaTjenesteKunOrgnr.orgnr))
+            enhetsregisteretOpplysningerService.hentOpplysningerForUnderenhet(Orgnr(innloggetIaTjeneste.orgnr))
 
         return opplysningerForUnderenhet.fold(
             { enhetsregisteretException ->
@@ -166,12 +166,12 @@ class IaTjenesterMetrikkerInnloggetController(
                         Either.Left(enhetsregisteretException)
                     }, { overordnetEnhet ->
                         Either.Right(
-                            InnloggetIaTjeneste(
-                                orgnr = innloggetIaTjenesteKunOrgnr.orgnr,
+                            InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+                                orgnr = innloggetIaTjeneste.orgnr,
                                 næringKode5Siffer = underenhet.næringskode.kode!!,
-                                type = innloggetIaTjenesteKunOrgnr.type,
-                                kilde = innloggetIaTjenesteKunOrgnr.kilde,
-                                tjenesteMottakkelsesdato = innloggetIaTjenesteKunOrgnr.tjenesteMottakkelsesdato,
+                                type = innloggetIaTjeneste.type,
+                                kilde = innloggetIaTjeneste.kilde,
+                                tjenesteMottakkelsesdato = innloggetIaTjeneste.tjenesteMottakkelsesdato,
                                 antallAnsatte = underenhet.antallAnsatte,
                                 næringskode5SifferBeskrivelse = underenhet.næringskode.beskrivelse,
                                 næring2SifferBeskrivelse = Næringsbeskrivelser.mapTilNæringsbeskrivelse(
@@ -191,9 +191,12 @@ class IaTjenesterMetrikkerInnloggetController(
         )
     }
 
-    private fun opprettMottattIaTjenesteMetrikk(innloggetIaTjeneste: InnloggetIaTjeneste): ResponseEntity<ResponseStatus> {
+    private fun opprettMottattIaTjenesteMetrikk(
+        innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+    ): ResponseEntity<ResponseStatus> {
 
-        return when (val iaSjekk = iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjeneste)) {
+        return when (val iaSjekk =
+            iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjenesteMedVirksomhetGrunndata)) {
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(iaSjekk.value.message, iaSjekk.value)
