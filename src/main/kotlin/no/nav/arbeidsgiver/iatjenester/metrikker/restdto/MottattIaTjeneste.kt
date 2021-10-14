@@ -6,13 +6,48 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer
 import java.time.ZonedDateTime
 
-interface IaTjeneste {
+enum class Kilde {
+    SYKEFRAVÆRSSTATISTIKK,
+    SAMTALESTØTTE,
+    DIALOG
+}
+
+enum class TypeIATjeneste {
+    DIGITAL_IA_TJENESTE,
+    RÅDGIVNING
+}
+
+enum class AltinnRettighet {
+    SYKEFRAVÆRSSTATISTIKK_FOR_VIRKSOMHETER,
+    ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE
+}
+
+interface MottattIaTjeneste {
     var tjenesteMottakkelsesdato: ZonedDateTime
     var type: TypeIATjeneste
     var kilde: Kilde
 }
 
-data class InnloggetIaTjeneste(
+data class UinnloggetMottattIaTjeneste(
+    override var type: TypeIATjeneste,
+    override var kilde: Kilde,
+    @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
+    @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    override var tjenesteMottakkelsesdato: ZonedDateTime,
+) : MottattIaTjeneste
+
+
+data class InnloggetMottattIaTjeneste(
+    var orgnr: String,
+    var altinnRettighet: AltinnRettighet,
+    override var type: TypeIATjeneste,
+    override var kilde: Kilde,
+    @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
+    @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    override var tjenesteMottakkelsesdato: ZonedDateTime,
+) : MottattIaTjeneste
+
+data class InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
     var orgnr: String,
     var næringKode5Siffer: String,
     override var type: TypeIATjeneste,
@@ -33,24 +68,4 @@ data class InnloggetIaTjeneste(
     var fylke: String,
     var kommunenummer: String,
     var kommune: String
-) : IaTjeneste
-
-data class UinnloggetIaTjeneste(
-    override var type: TypeIATjeneste,
-    override var kilde: Kilde,
-    @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
-    @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    override var tjenesteMottakkelsesdato: ZonedDateTime,
-) : IaTjeneste
-
-
-enum class Kilde {
-    SYKEFRAVÆRSSTATISTIKK,
-    SAMTALESTØTTE,
-    DIALOG
-}
-
-enum class TypeIATjeneste {
-    DIGITAL_IA_TJENESTE,
-    RÅDGIVNING
-}
+) : MottattIaTjeneste

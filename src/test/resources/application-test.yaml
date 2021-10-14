@@ -31,6 +31,9 @@ altinn-proxy:
   altinnApiKey: "test-altinn-API-key"
   apiGwKey: "test-API-GW-key"
 
+enhetsregisteret:
+  url: "http://localhost:${wiremock.port}/enhetsregisteret/"
+
 tilgangskontroll:
   altinn-services:
     ia:

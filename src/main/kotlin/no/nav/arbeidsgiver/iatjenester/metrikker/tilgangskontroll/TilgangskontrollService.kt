@@ -8,6 +8,7 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceEdition
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.AltinnRettighet
 import org.springframework.stereotype.Component
 
 @Component
@@ -16,6 +17,15 @@ class TilgangskontrollService(
     private val tilgangsconfig: TilgangskontrollConfig,
     private val tilgangskontrollUtils: TilgangskontrollUtils
 ) {
+
+    fun hentInnloggetBruker(altinnRettighet: AltinnRettighet): Either<TilgangskontrollException, InnloggetBruker> {
+        when (altinnRettighet) {
+            AltinnRettighet.SYKEFRAVÆRSSTATISTIKK_FOR_VIRKSOMHETER ->
+                return hentInnloggetBruker(AltinnServiceKey.IA)
+            AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE ->
+                return hentInnloggetBruker(AltinnServiceKey.OPPFOLGINGSPLAN)
+        }
+    }
 
     fun hentInnloggetBruker(serviceKey: AltinnServiceKey): Either<TilgangskontrollException, InnloggetBruker> {
 

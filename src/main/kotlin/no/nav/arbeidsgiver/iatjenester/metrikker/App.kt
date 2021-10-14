@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.*
+import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
@@ -18,7 +19,8 @@ import org.springframework.boot.runApplication
         SecurityConfig::class,
         AltinnConfigProperties::class,
         TilgangskontrollConfig::class,
-        DatakatalogConfigProperties::class
+        DatakatalogConfigProperties::class,
+        EnhetsregisteretProperties::class
     ]
 )
 class App
