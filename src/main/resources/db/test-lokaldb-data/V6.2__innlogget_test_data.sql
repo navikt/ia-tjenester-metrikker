@@ -27,9 +27,8 @@ VALUES  (
             'Kommuneforvaltningen',
             'IKKE_TILGJENGELIG',
             'IKKE_TILGJENGELIG',
-            1532,
-            'GISKE'
-        );
+            '1532',
+            'GISKE');
 
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
@@ -60,9 +59,8 @@ VALUES  (
             'Private aksjeselskaper mv.',
             'IKKE_TILGJENGELIG',
             'IKKE_TILGJENGELIG',
-            1148,
-            'KARMØY'
-        );
+            '1149',
+            'KARMØY');
 
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
@@ -81,20 +79,19 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     kommune
 )
 VALUES  ('988888888',
-            88911,
-            'DIGITAL_IA_TJENESTE',
-            'SYKEFRAVÆRSSTATISTIKK',
-            '2021-09-15 21:22:59',
-            19,
-            'Barnehager',
-            'Helse- og sosialtjenester',
-            2100,
-            'Private aksjeselskaper mv.',
-            'IKKE_TILGJENGELIG',
-            'IKKE_TILGJENGELIG',
-            1148,
-            'KARMØY'
-        );
+         88911,
+         'DIGITAL_IA_TJENESTE',
+         'SYKEFRAVÆRSSTATISTIKK',
+         '2021-09-15 21:22:59',
+         19,
+         'Barnehager',
+         'Helse- og sosialtjenester',
+         2100,
+         'Private aksjeselskaper mv.',
+         'IKKE_TILGJENGELIG',
+         'IKKE_TILGJENGELIG',
+         '1149',
+         'KARMØY');
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
     naering_kode_5siffer,
@@ -123,9 +120,8 @@ VALUES  ('988888888',
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
          'IKKE_TILGJENGELIG',
-         1148,
-         'KARMØY'
-        );
+         '1149',
+         'KARMØY');
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
     naering_kode_5siffer,
@@ -154,9 +150,8 @@ VALUES  ('977777777',
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
          'IKKE_TILGJENGELIG',
-         0661,
-         'OSLO'
-        );
+         '0301',
+         'OSLO');
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
     naering_kode_5siffer,
@@ -185,9 +180,8 @@ VALUES  ('966666666',
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
          'IKKE_TILGJENGELIG',
-         9010,
-         'TROMSØ'
-        );
+         '5401',
+         'TROMSØ');
 
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
@@ -217,6 +211,5 @@ VALUES  ('955555555',
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
          'IKKE_TILGJENGELIG',
-         2040,
-         'KLØFTA'
-        );
+         '1828',
+         'NESNA');
