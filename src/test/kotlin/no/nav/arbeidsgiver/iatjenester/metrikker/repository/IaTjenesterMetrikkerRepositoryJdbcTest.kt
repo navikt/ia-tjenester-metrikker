@@ -115,7 +115,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
 
     @Test
     fun `opprett() lagrer en UinnloggetIaTjeneste i DB`() {
-        IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).opprett(
+        IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).persister(
             TestUtils.vilkårligUinnloggetIaTjeneste()
         )
 
@@ -132,7 +132,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
     @Test
     fun `opprett() lagrer en IaTjeneste i DB`() {
 
-        IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).opprett(
+        IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).persister(
             TestUtils.vilkårligIaTjeneste()
         )
 

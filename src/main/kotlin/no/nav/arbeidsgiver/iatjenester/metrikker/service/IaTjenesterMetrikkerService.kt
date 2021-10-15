@@ -1,10 +1,12 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
 import arrow.core.Either
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Kommune
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.mapTilFylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime.now
@@ -12,15 +14,23 @@ import java.time.LocalDateTime.now
 @Component
 class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository) {
 
-    fun sjekkOgOpprett(innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
-        val iaTjenesteSjekkResultat = validerMottakelsesdato(innloggetIaTjenesteMedVirksomhetGrunndata)
+    fun sjekkOgPersister(innloggetIaTjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
+        val iaTjenesteSjekkResultat = validerMottakelsesdato(innloggetIaTjeneste)
 
-        if(iaTjenesteSjekkResultat is Either.Right) {
-            iaTjenesterMetrikkerRepository.opprett(innloggetIaTjenesteMedVirksomhetGrunndata)
+        if (iaTjenesteSjekkResultat is Either.Right) {
+
+            innloggetIaTjeneste.fylke = mapTilFylke(
+                Kommune(
+                    innloggetIaTjeneste.kommunenummer,
+                    innloggetIaTjeneste.kommune
+                )
+            ).navn
+
+            iaTjenesterMetrikkerRepository.persister(innloggetIaTjeneste)
             log("sjekkOgOpprett()").info(
-                "IA Tjeneste av type '${innloggetIaTjenesteMedVirksomhetGrunndata.type.name}' " +
-                        "fra kilde '${innloggetIaTjenesteMedVirksomhetGrunndata.kilde.name}' " +
-                        "og sektor '${innloggetIaTjenesteMedVirksomhetGrunndata.SSBSektorKodeBeskrivelse}' " +
+                "IA Tjeneste av type '${innloggetIaTjeneste.type.name}' " +
+                        "fra kilde '${innloggetIaTjeneste.kilde.name}' " +
+                        "og sektor '${innloggetIaTjeneste.SSBSektorKodeBeskrivelse}' " +
                         "opprettet"
             )
         }
@@ -28,11 +38,11 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
         return iaTjenesteSjekkResultat
     }
 
-    fun sjekkOgOpprett(uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
+    fun sjekkOgPersister(uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val iaTjenesteSjekkResultat = validerMottakelsesdato(uinnloggetIaTjeneste)
 
-        if(iaTjenesteSjekkResultat is Either.Right) {
-            iaTjenesterMetrikkerRepository.opprett(uinnloggetIaTjeneste)
+        if (iaTjenesteSjekkResultat is Either.Right) {
+            iaTjenesterMetrikkerRepository.persister(uinnloggetIaTjeneste)
             log("sjekkOgOpprett()").info(
                 "IA Tjeneste (uinnlogget) av type '${uinnloggetIaTjeneste.type.name}' " +
                         "fra kilde '${uinnloggetIaTjeneste.kilde.name}' " +

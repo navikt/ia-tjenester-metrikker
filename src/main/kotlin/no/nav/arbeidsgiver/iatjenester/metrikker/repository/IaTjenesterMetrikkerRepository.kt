@@ -18,11 +18,11 @@ import java.time.LocalDateTime
 class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
 
-    fun opprett(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
+    fun persister(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
         insertIaTjeneste(iatjeneste)
     }
 
-    fun opprett(uinnloggetIatjeneste: UinnloggetMottattIaTjeneste) {
+    fun persister(uinnloggetIatjeneste: UinnloggetMottattIaTjeneste) {
         namedParameterJdbcTemplate.update(
             """
                 INSERT INTO metrikker_ia_tjenester_uinnlogget(

@@ -8,28 +8,23 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Overordne
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretService
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.InnloggetBruker
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollException
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollService
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.erOrgnrGyldig
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.erOrgnrGyldig
 import no.nav.security.token.support.core.api.Protected
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @Protected
 @RestController
@@ -196,7 +191,7 @@ class IaTjenesterMetrikkerInnloggetController(
     ): ResponseEntity<ResponseStatus> {
 
         return when (val iaSjekk =
-            iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjenesteMedVirksomhetGrunndata)) {
+            iaTjenesterMetrikkerService.sjekkOgPersister(innloggetIaTjenesteMedVirksomhetGrunndata)) {
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(iaSjekk.value.message, iaSjekk.value)

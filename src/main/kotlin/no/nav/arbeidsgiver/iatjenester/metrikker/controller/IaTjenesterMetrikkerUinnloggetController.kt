@@ -3,20 +3,15 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 import arrow.core.Either
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
 import no.nav.security.token.support.core.api.Unprotected
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
 
 @Unprotected
@@ -37,7 +32,7 @@ class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerS
         log("IaTjenesterMetrikkerUinnloggetController")
             .info("Mottatt IA tjeneste (uinnlogget) fra ${uinnloggetIaTjeneste.kilde.name}")
 
-        val iaSjekk = iaTjenesterMetrikkerService.sjekkOgOpprett(uinnloggetIaTjeneste)
+        val iaSjekk = iaTjenesterMetrikkerService.sjekkOgPersister(uinnloggetIaTjeneste)
         when(iaSjekk){
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
