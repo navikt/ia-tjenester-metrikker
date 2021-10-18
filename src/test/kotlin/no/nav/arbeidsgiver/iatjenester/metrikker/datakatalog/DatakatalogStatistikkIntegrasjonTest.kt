@@ -91,8 +91,8 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
 
     @Test
-    fun `Henter ny data ved månedsskifte`() {
-        var idag =  LocalDate.of(2021, Month.JUNE, 1)
+    fun `Test at oppdaterte data hentes ved månedsskifte`() {
+        var idag = LocalDate.of(2021, Month.JUNE, 1)
 
         val datakatalogStatistikkMedTilDatoSomVarierer = object : DatakatalogStatistikk(
             iaTjenesterMetrikkerRepository,
@@ -105,14 +105,14 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         opprettTestDataIDB(namedParameterJdbcTemplate)
 
         datakatalogStatistikkMedTilDatoSomVarierer.run()
-        var echartSpec: EchartSpec = produsertDatapakke.views[2].spec as EchartSpec
+        var echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
 
         Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun."))
 
         idag =  LocalDate.of(2021, Month.JULY, 1)
         datakatalogStatistikkMedTilDatoSomVarierer.run()
-        echartSpec = produsertDatapakke.views[2].spec as EchartSpec
+        echartSpec = produsertDatapakke.views[1].spec as EchartSpec
 
         Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))

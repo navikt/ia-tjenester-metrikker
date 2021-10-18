@@ -86,7 +86,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
     }
 
     @Test
-    fun `hentInnloggetIaTjenesterMetrikker fra en vis dato`() {
+    fun `hentInnloggetIaTjenesterMetrikker fra en viss dato`() {
         val iaTjenesteMetrikk = IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk(
             "987654321",
             Kilde.SYKEFRAVÆRSSTATISTIKK,
@@ -190,7 +190,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     næringskode5SifferBeskrivelse = mottattIATjeneste.næring.kode5SifferBeskrivelse,
                     SSBSektorKode = "",
                     SSBSektorKodeBeskrivelse = "",
-                    fylke = "",
+                    fylke = mottattIATjeneste.fylke,
                     kommunenummer = mottattIATjeneste.kommunenummer,
                     kommune = mottattIATjeneste.kommune,
                     opprettet = Date.valueOf(now())
