@@ -10,17 +10,14 @@ import java.time.LocalDate
 import java.time.Month
 
 class MottattIaTjenesterDatagrunnlag(
-    innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
-    uinnloggetMetrikker: List<MottattUinnloggetIaTjenesteMetrikk>,
-    fraDato: LocalDate,
-    tilDato: LocalDate
+    val innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
+    val uinnloggetMetrikker: List<MottattUinnloggetIaTjenesteMetrikk>,
+    val fraDato: LocalDate,
+    val tilDato: LocalDate
 ) {
     val startDate: LocalDate = fraDato
     val gjeldendeÅr = fraDato.year
     val gjeldendeMåneder: List<Month> = fraDato månederTil tilDato
-
-//    val mottatteIaTjenesterPerFylke: Map<String, Int> = innloggede
-
 
     val antallInnloggetMetrikkerPerMåned: Map<Month, Int> =
         beregnAntallMetrikkerPerMåned(
@@ -52,6 +49,12 @@ class MottattIaTjenesterDatagrunnlag(
     val totalUnikeBedrifterPerDag: Int =
         beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)).values.sum()
 
+    fun beregnInnloggedeIaTjenesterPerFylke(fraApp: Kilde): Collection<Int> =
+        innloggetMetrikker
+            .filter { it.kilde == fraApp }
+            .groupingBy { it.fylke }
+            .eachCount()
+            .values
 
     fun beregnAntallMetrikkerPerMåned(
         måneder: List<Month>,

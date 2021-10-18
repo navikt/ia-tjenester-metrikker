@@ -1,13 +1,26 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.EchartSpec
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Grid
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Legend
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MarkdownSpec
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Option
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Serie
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.SpecType
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.*
 
 
-class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) : DatakatalogData {
+class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) :
+        DatakatalogData {
 
     private var NORSK_BOKMÅL = Locale("no", "NO", "NB")
     private var startDato: LocalDate = datagrunnlag.startDate
@@ -45,6 +58,22 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             description = "Antall digitale IA-tjenester mottatt per applikasjon fordelt per bransje i bransjeprogram",
             specType = SpecType.echart,
             spec = lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(datagrunnlag),
+        ),
+        View(
+            title = "Mottatte digitale IA-tjenester per fylke (${
+                datagrunnlag.gjeldendeMåneder.first().getDisplayName(
+                    TextStyle.SHORT,
+                    NORSK_BOKMÅL
+                )
+            } - ${
+                datagrunnlag.gjeldendeMåneder.last().getDisplayName(
+                    TextStyle.SHORT,
+                    NORSK_BOKMÅL
+                )
+            } ${datagrunnlag.gjeldendeÅr})",
+            description = "Antall digitale IA-tjenester mottatt per applikasjon fordelt på fylke.",
+            specType = SpecType.echart,
+            spec = lagHistogramOverMottatteDigitaleIATjenesterPerFylke(datagrunnlag),
         )
     )
 
@@ -79,7 +108,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                         "Samtalestøtte (innlogget)",
                         datagrunnlag
                             .mottatteIaTjenesterInnloggetPerBransjeOgKilde
-                            .filter { it.key.first == Kilde.SAMTALESTØTTE }
+                            .filter { it.key.first == SAMTALESTØTTE }
                             .values
                             .toList(),
                         "bar",
@@ -89,7 +118,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                         "Sykefraværsstatistikk",
                         datagrunnlag
                             .mottatteIaTjenesterInnloggetPerBransjeOgKilde
-                            .filter { it.key.first == Kilde.SYKEFRAVÆRSSTATISTIKK }
+                            .filter { it.key.first == SYKEFRAVÆRSSTATISTIKK }
                             .values
                             .toList(),
                         "bar",
@@ -162,21 +191,17 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 listOf(
                     Serie(
                         "Samtalestøtte (innlogget)",
-                        datagrunnlag
-                            .mottatteIaTjenesterInnloggetPerBransjeOgKilde
-                            .filter { it.key.first == Kilde.SAMTALESTØTTE }
-                            .values
-                            .toList(),
+                        datagrunnlag.beregnInnloggedeIaTjenesterPerFylke(
+                            fraApp = SAMTALESTØTTE
+                        ),
                         "bar",
                         "Samtalestøtte"
                     ),
                     Serie(
                         "Sykefraværsstatistikk",
-                        datagrunnlag
-                            .mottatteIaTjenesterInnloggetPerBransjeOgKilde
-                            .filter { it.key.first == Kilde.SYKEFRAVÆRSSTATISTIKK }
-                            .values
-                            .toList(),
+                        datagrunnlag.beregnInnloggedeIaTjenesterPerFylke(
+                            fraApp = SYKEFRAVÆRSSTATISTIKK
+                        ),
                         "bar",
                         "Sykefraværsstatistikk"
                     )

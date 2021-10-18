@@ -90,7 +90,7 @@ data class Yaxis(
 
 data class Serie(
     val name: String,
-    val data: List<*>,
+    val data: Collection<*>,
     val type: String,
     val title: String
 )
