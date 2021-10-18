@@ -2,7 +2,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker
 
 import com.google.gson.Gson
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.OutboundKafkaProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.context.annotation.Profile
 import org.springframework.kafka.core.KafkaTemplate
@@ -14,8 +14,8 @@ class KafkaService(private var kafkaTemplate: KafkaTemplate<String, String>, pri
 
     val gson = Gson()
 
-    fun send(innloggetIaTjeneste: InnloggetIaTjeneste){
-        val futureResult = kafkaTemplate.send(outboundKafkaProperties.topic, gson.toJson(innloggetIaTjeneste))
+    fun send(innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata){
+        val futureResult = kafkaTemplate.send(outboundKafkaProperties.topic, gson.toJson(innloggetIaTjenesteMedVirksomhetGrunndata))
         futureResult.addCallback(
             {log.info("Melding sendt på topic")},
             {log.error("Feil oppstod ved sending av melding", it)}

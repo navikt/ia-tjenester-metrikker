@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.realistiskkInnloggetIaTjenesteAsString
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligForenkletInnloggetIaTjenesteAsString
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligInnloggetIaTjenesteAsString
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligUinnloggetIaTjenesteAsString
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
@@ -27,6 +28,8 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -116,6 +119,47 @@ class IaTjenesterMetrikkerControllerTest {
         Assertions.assertThat(response.statusCode()).isEqualTo(201)
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
+    }
+
+    @Test
+    fun `Innlogget endepunkt forenklet-mottatt-ia-tjeneste returnerer 201 OK dersom token er gyldig`() {
+        val requestBody: String = vilkårligForenkletInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
+
+        val gyldigToken = issueToken("selvbetjening", "01079812345", audience = "aud-localhost")
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/innlogget/forenklet/mottatt-iatjeneste"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build(),
+            BodyHandlers.ofString()
+        )
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(201)
+        val body: JsonNode = objectMapper.readTree(response.body())
+        Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
+    }
+
+    @Test
+    fun `Innlogget endepunkt forenklet-mottatt-ia-tjeneste returnerer 202 Accepted dersom request er OK men metrikk ikke kunne lagres`() {
+        val requestBody: String =
+            vilkårligForenkletInnloggetIaTjenesteAsString(ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET)
+
+        val gyldigToken = issueToken("selvbetjening", "01079812345", audience = "aud-localhost")
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:$port/ia-tjenester-metrikker/innlogget/forenklet/mottatt-iatjeneste"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build(),
+            BodyHandlers.ofString()
+        )
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(202)
+        val body: JsonNode = objectMapper.readTree(response.body())
+        Assertions.assertThat(body.get("status").asText()).isEqualTo("accepted")
     }
 
     @Test

@@ -1,9 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.*
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Fnr
 import java.sql.Connection
 import java.sql.Date
@@ -15,7 +12,10 @@ class TestUtils {
 
     companion object {
 
+        val OVERORDNETENHET_ORGNR: String = "987654321"
         val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
+        val ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET: String = "833445566"
+
         val TEST_FNR: Fnr = Fnr("01019912345")
 
         fun testTokenForTestFNR(): String {
@@ -30,7 +30,7 @@ class TestUtils {
             return "$mockOAuth2Header.$localhostOnlyJasonPayload.$signature"
         }
 
-        fun vilkårligIaTjeneste(): InnloggetIaTjeneste = InnloggetIaTjeneste(
+        fun vilkårligIaTjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata = InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             "987654321",
             "12345",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -41,13 +41,12 @@ class TestUtils {
             "En beskrivelse for næring kode 2 siffer",
             "21000",
             "Beskrivelse ssb sektor kode",
-            "30",
             "Viken",
             "0234",
             "Gjerdrum"
         )
 
-        fun vilkårligUinnloggetIaTjeneste(): UinnloggetIaTjeneste = UinnloggetIaTjeneste(
+        fun vilkårligUinnloggetIaTjeneste(): UinnloggetMottattIaTjeneste = UinnloggetMottattIaTjeneste(
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
             Kilde.SYKEFRAVÆRSSTATISTIKK,
             ZonedDateTime.now(),
@@ -75,7 +74,6 @@ class TestUtils {
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
               "fylke":"Troms og Finnmark",
-              "fylkesnummer":"54",
               "kommune":"Sør-Varanger",
               "kommunenummer":"5444",
               "næring2SifferBeskrivelse":"Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
@@ -83,6 +81,18 @@ class TestUtils {
               "næringskode5SifferBeskrivelse":"Trygdeordninger underlagt offentlig orvaltning",
               "ssbSektorKode":"6500",
               "ssbSektorKodeBeskrivelse":"Offentlig sektor",
+              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
+            }
+        """.trimIndent()
+        }
+
+        fun vilkårligForenkletInnloggetIaTjenesteAsString(orgnr: String): String {
+            return """
+            {
+              "orgnr":"$orgnr",
+              "altinnRettighet":"${AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE.name}",
+              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "type":"DIGITAL_IA_TJENESTE",
               "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
             }
         """.trimIndent()
@@ -96,7 +106,6 @@ class TestUtils {
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
               "fylke":"IKKE_TILGJENGELIG",
-              "fylkesnummer":"IKKE_TILGJENGELIG",
               "kommune":"OSLO",
               "kommunenummer":"0301",
               "næring2SifferBeskrivelse":"Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
@@ -176,12 +185,11 @@ class TestUtils {
                          naering_kode5siffer_beskrivelse,
                          ssb_sektor_kode,
                          ssb_sektor_kode_beskrivelse,
-                         fylkesnummer, 
                          fylke,
                          kommunenummer, 
                          kommune,
                          tjeneste_mottakkelsesdato
-                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
+                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
                 ).run {
                     setString(1, rad.type.name)
                     setString(2, rad.kilde.name)
@@ -192,11 +200,10 @@ class TestUtils {
                     setString(7, rad.næringskode5SifferBeskrivelse)
                     setString(8, rad.SSBSektorKode)
                     setString(9, rad.SSBSektorKodeBeskrivelse)
-                    setString(10, rad.fylkesnummer)
-                    setString(11, rad.fylke)
-                    setString(12, rad.kommunenummer)
-                    setString(13, rad.kommune)
-                    setTimestamp(14, rad.tjeneste_mottakkelsesdato)
+                    setString(10, rad.fylke)
+                    setString(11, rad.kommunenummer)
+                    setString(12, rad.kommune)
+                    setTimestamp(13, rad.tjeneste_mottakkelsesdato)
                     executeUpdate()
                 }
             }
@@ -230,7 +237,6 @@ class TestUtils {
                 næring2SifferBeskrivelse = getString("naering_2siffer_beskrivelse"),
                 SSBSektorKode = getString("ssb_sektor_kode"),
                 SSBSektorKodeBeskrivelse = getString("ssb_sektor_kode_beskrivelse"),
-                fylkesnummer = getString("fylkesnummer"),
                 fylke = getString("fylke"),
                 kommunenummer = getString("kommunenummer"),
                 kommune = getString("kommune"),
@@ -262,7 +268,6 @@ data class IaTjenesteRad(
     val næring2SifferBeskrivelse: String,
     val SSBSektorKode: String,
     val SSBSektorKodeBeskrivelse: String,
-    val fylkesnummer: String,
     val fylke: String,
     val kommunenummer: String,
     val kommune: String,

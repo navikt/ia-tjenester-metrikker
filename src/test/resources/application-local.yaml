@@ -26,12 +26,16 @@ no.nav.security.jwt:
     selvbetjening:
       discoveryurl: http://localhost:${mock-oauth2-server.port}/selvbetjening/.well-known/openid-configuration
       accepted_audience: aud-localhost
+      cookiename: selvbetjening-idtoken
 
 altinn-proxy:
   proxyUrl: http://localhost:${wiremock.port}/proxy/
   fallbackUrl: http://localhost:${wiremock.port}/altinn/
   altinnApiKey: "local-altinn-API-key"
   apiGwKey: "local-API-GW-key"
+
+enhetsregisteret:
+  url: "http://localhost:${wiremock.port}/enhetsregisteret/"
 
 tilgangskontroll:
   altinn-services:

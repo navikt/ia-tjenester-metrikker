@@ -1,7 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetIaTjeneste
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -14,14 +14,15 @@ import java.time.LocalDateTime
 
 @Transactional
 @Repository
-class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
+class IaTjenesterMetrikkerRepository(
+    private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
+) {
 
-
-    fun opprett(iatjeneste: InnloggetIaTjeneste) {
+    fun persister(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
         insertIaTjeneste(iatjeneste)
     }
 
-    fun opprett(uinnloggetIatjeneste: UinnloggetIaTjeneste) {
+    fun persister(uinnloggetIatjeneste: UinnloggetMottattIaTjeneste) {
         namedParameterJdbcTemplate.update(
             """
                 INSERT INTO metrikker_ia_tjenester_uinnlogget(
@@ -45,7 +46,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         )
     }
 
-    private fun insertIaTjeneste(iatjeneste: InnloggetIaTjeneste) {
+    private fun insertIaTjeneste(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
         namedParameterJdbcTemplate.update(
             """
                 INSERT INTO metrikker_ia_tjenester_innlogget(
@@ -59,7 +60,6 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                 naering_2siffer_beskrivelse,
                 ssb_sektor_kode,
                 ssb_sektor_kode_beskrivelse,
-                fylkesnummer,
                 fylke,
                 kommunenummer,
                 kommune
@@ -75,7 +75,6 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                   :naering_2siffer_beskrivelse,
                   :ssb_sektor_kode,
                   :ssb_sektor_kode_beskrivelse,
-                  :fylkesnummer,
                   :fylke,
                   :kommunenummer,
                   :kommune
@@ -86,13 +85,18 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                 .addValue("naering_kode_5siffer", iatjeneste.næringKode5Siffer)
                 .addValue("form_av_tjeneste", iatjeneste.type.name)
                 .addValue("kilde_applikasjon", iatjeneste.kilde.name)
-                .addValue("tjeneste_mottakkelsesdato", iatjeneste.tjenesteMottakkelsesdato.toLocalDateTime())
+                .addValue(
+                    "tjeneste_mottakkelsesdato",
+                    iatjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
+                )
                 .addValue("antall_ansatte", iatjeneste.antallAnsatte)
-                .addValue("naering_kode5siffer_beskrivelse", iatjeneste.næringskode5SifferBeskrivelse)
+                .addValue(
+                    "naering_kode5siffer_beskrivelse",
+                    iatjeneste.næringskode5SifferBeskrivelse
+                )
                 .addValue("naering_2siffer_beskrivelse", iatjeneste.næring2SifferBeskrivelse)
                 .addValue("ssb_sektor_kode", iatjeneste.SSBSektorKode)
                 .addValue("ssb_sektor_kode_beskrivelse", iatjeneste.SSBSektorKodeBeskrivelse)
-                .addValue("fylkesnummer", iatjeneste.fylkesnummer)
                 .addValue("fylke", iatjeneste.fylke)
                 .addValue("kommunenummer", iatjeneste.kommunenummer)
                 .addValue("kommune", iatjeneste.kommune)
@@ -113,8 +117,11 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         override val tidspunkt: LocalDateTime
     ) : MottattIaTjenesteMetrikk()
 
-    data class MottattUinnloggetIaTjenesteMetrikk(val kilde: Kilde, override val tidspunkt: LocalDateTime) :
-        MottattIaTjenesteMetrikk()
+    data class MottattUinnloggetIaTjenesteMetrikk(
+        val kilde: Kilde,
+        override val tidspunkt: LocalDateTime
+    ) :
+            MottattIaTjenesteMetrikk()
 
 
     fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattUinnloggetIaTjenesteMetrikk> =
@@ -156,6 +163,7 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                     rs.getString("naering_kode_5siffer"),
                     rs.getString("naering_kode5siffer_beskrivelse"),
                     rs.getString("naering_2siffer_beskrivelse")
+
                 ),
                 rs.getString("kommunenummer"),
                 rs.getString("kommune"),

@@ -1,0 +1,1 @@
+alter table METRIKKER_IA_TJENESTER_INNLOGGET drop column fylkesnummer;

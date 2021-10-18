@@ -9,7 +9,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -26,10 +25,8 @@ VALUES  (
             6500,
             'Kommuneforvaltningen',
             'IKKE_TILGJENGELIG',
-            'IKKE_TILGJENGELIG',
-            1532,
-            'GISKE'
-        );
+            '1532',
+            'GISKE');
 
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
@@ -42,7 +39,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -59,10 +55,8 @@ VALUES  (
             2100,
             'Private aksjeselskaper mv.',
             'IKKE_TILGJENGELIG',
-            'IKKE_TILGJENGELIG',
-            1148,
-            'KARMØY'
-        );
+            '1149',
+            'KARMØY');
 
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
@@ -75,26 +69,23 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
 )
 VALUES  ('988888888',
-            88911,
-            'DIGITAL_IA_TJENESTE',
-            'SYKEFRAVÆRSSTATISTIKK',
-            '2021-09-15 21:22:59',
-            19,
-            'Barnehager',
-            'Helse- og sosialtjenester',
-            2100,
-            'Private aksjeselskaper mv.',
-            'IKKE_TILGJENGELIG',
-            'IKKE_TILGJENGELIG',
-            1148,
-            'KARMØY'
-        );
+         88911,
+         'DIGITAL_IA_TJENESTE',
+         'SYKEFRAVÆRSSTATISTIKK',
+         '2021-09-15 21:22:59',
+         19,
+         'Barnehager',
+         'Helse- og sosialtjenester',
+         2100,
+         'Private aksjeselskaper mv.',
+         'IKKE_TILGJENGELIG',
+         '1149',
+         'KARMØY');
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
     naering_kode_5siffer,
@@ -106,7 +97,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -122,10 +112,8 @@ VALUES  ('988888888',
          2100,
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
-         'IKKE_TILGJENGELIG',
-         1148,
-         'KARMØY'
-        );
+         '1149',
+         'KARMØY');
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
     naering_kode_5siffer,
@@ -137,7 +125,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -153,10 +140,8 @@ VALUES  ('977777777',
          2100,
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
-         'IKKE_TILGJENGELIG',
-         0661,
-         'OSLO'
-        );
+         '0301',
+         'OSLO');
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
     naering_kode_5siffer,
@@ -168,7 +153,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -184,10 +168,8 @@ VALUES  ('966666666',
          2100,
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
-         'IKKE_TILGJENGELIG',
-         9010,
-         'TROMSØ'
-        );
+         '5401',
+         'TROMSØ');
 
 INSERT INTO metrikker_ia_tjenester_innlogget(
     orgnr,
@@ -200,7 +182,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -216,7 +197,5 @@ VALUES  ('955555555',
          2100,
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
-         'IKKE_TILGJENGELIG',
-         2040,
-         'KLØFTA'
-        );
+         '1828',
+         'NESNA');
