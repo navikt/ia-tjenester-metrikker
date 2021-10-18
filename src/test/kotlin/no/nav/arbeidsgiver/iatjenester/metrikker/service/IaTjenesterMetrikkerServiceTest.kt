@@ -25,8 +25,6 @@ internal class IaTjenesterMetrikkerServiceTest {
             iaTjenesterMetrikkerRepository
                 .persister(any<InnloggetMottattIaTjenesteMedVirksomhetGrunndata>())
         } returns Unit
-
-        IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository)
     }
 
     @Test

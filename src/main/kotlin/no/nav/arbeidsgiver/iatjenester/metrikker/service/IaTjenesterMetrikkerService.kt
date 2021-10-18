@@ -27,7 +27,7 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
             ).navn
 
             iaTjenesterMetrikkerRepository.persister(innloggetIaTjeneste)
-            log("sjekkOgOpprett()").info(
+            log("sjekkOgPersister()").info(
                 "IA Tjeneste av type '${innloggetIaTjeneste.type.name}' " +
                         "fra kilde '${innloggetIaTjeneste.kilde.name}' " +
                         "og sektor '${innloggetIaTjeneste.SSBSektorKodeBeskrivelse}' " +
@@ -43,7 +43,7 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
 
         if (iaTjenesteSjekkResultat is Either.Right) {
             iaTjenesterMetrikkerRepository.persister(uinnloggetIaTjeneste)
-            log("sjekkOgOpprett()").info(
+            log("sjekkOgPersister()").info(
                 "IA Tjeneste (uinnlogget) av type '${uinnloggetIaTjeneste.type.name}' " +
                         "fra kilde '${uinnloggetIaTjeneste.kilde.name}' " +
                         "opprettet"
