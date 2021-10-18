@@ -24,7 +24,12 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @Protected
 @RestController
@@ -39,10 +44,15 @@ class IaTjenesterMetrikkerInnloggetController(
     private val enhetsregisteretService: EnhetsregisteretService
 ) {
 
-    @PostMapping(value = ["/mottatt-iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
+    @PostMapping(
+        value = ["/mottatt-iatjeneste"],
+        consumes = ["application/json"],
+        produces = ["application/json"]
+    )
     fun leggTilNyIaMottattTjenesteForInnloggetKlient(
         @RequestHeader headers: HttpHeaders,
-        @RequestBody innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+        @RequestBody
+        innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata
     ): ResponseEntity<ResponseStatus> {
         setNavCallid(headers)
         log("IaTjenesterMetrikkerInnloggetController")
@@ -95,9 +105,10 @@ class IaTjenesterMetrikkerInnloggetController(
         }
 
         val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
-        val innloggetBruker: Either<TilgangskontrollException, InnloggetBruker> = tilgangskontrollService
-            .hentInnloggetBruker(innloggetIaTjeneste.altinnRettighet)
-            .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
+        val innloggetBruker: Either<TilgangskontrollException, InnloggetBruker> =
+            tilgangskontrollService
+                .hentInnloggetBruker(innloggetIaTjeneste.altinnRettighet)
+                .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
         return innloggetBruker.fold(
             { tilgangskontrollException ->
@@ -120,7 +131,8 @@ class IaTjenesterMetrikkerInnloggetController(
                         ResponseEntity.status(HttpStatus.ACCEPTED)
                             .contentType(MediaType.APPLICATION_JSON)
                             .body(ResponseStatus.Accepted)
-                    }, { innloggetIaTjeneste -> opprettMottattIaTjenesteMetrikk(innloggetIaTjeneste) }
+                    },
+                    { innloggetIaTjeneste -> opprettMottattIaTjenesteMetrikk(innloggetIaTjeneste) }
                 )
             }
         )

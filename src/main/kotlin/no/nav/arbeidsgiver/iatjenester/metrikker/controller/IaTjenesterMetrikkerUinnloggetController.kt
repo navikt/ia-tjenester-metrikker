@@ -11,7 +11,12 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 
 @Unprotected
@@ -23,7 +28,11 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/uinnlogget")
 class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService) {
 
-    @PostMapping(value = ["/mottatt-iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
+    @PostMapping(
+        value = ["/mottatt-iatjeneste"],
+        consumes = ["application/json"],
+        produces = ["application/json"]
+    )
     fun leggTilNyMottattIaTjeneste(
         @RequestHeader headers: HttpHeaders,
         @RequestBody uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste
@@ -33,7 +42,7 @@ class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerS
             .info("Mottatt IA tjeneste (uinnlogget) fra ${uinnloggetIaTjeneste.kilde.name}")
 
         val iaSjekk = iaTjenesterMetrikkerService.sjekkOgPersister(uinnloggetIaTjeneste)
-        when(iaSjekk){
+        when (iaSjekk) {
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(iaSjekk.value.message, iaSjekk.value)
@@ -42,7 +51,8 @@ class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerS
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.BadRequest)
             }
-            else -> {}
+            else -> {
+            }
         }
 
         clearNavCallid()
