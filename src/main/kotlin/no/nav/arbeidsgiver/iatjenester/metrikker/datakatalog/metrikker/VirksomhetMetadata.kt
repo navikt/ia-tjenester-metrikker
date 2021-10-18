@@ -2,9 +2,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
-import java.time.LocalDate
-import java.time.Month
-import java.time.temporal.ChronoUnit
 
 
 interface Virksomhet {
@@ -39,13 +36,13 @@ data class Kommune(val nummer: String, val navn: String)
 
 fun mapTilFylke(kommune: Kommune): Fylke {
 
-    val utleddFylkenummer: String =
-        if (kommune.nummer.isNullOrBlank() || kommune.nummer.length != 5)
+    val utledetFylkesnummer: String =
+        if (kommune.nummer.length != 4)
             "IKKE_GYLDIG_KOMMUNENUMMER"
         else
             kommune.nummer.substring(0, 2)
 
-    return when (utleddFylkenummer) {
+    return when (utledetFylkesnummer) {
         "42" -> Fylke("42", "Agder")
         "34" -> Fylke("34", "Innlandet")
         "15" -> Fylke("15", "Møre og Romsdal")
@@ -57,6 +54,7 @@ fun mapTilFylke(kommune: Kommune): Fylke {
         "38" -> Fylke("38", "Vestfold og Telemark")
         "46" -> Fylke("46", "Vestland")
         "30" -> Fylke("30", "Viken")
+
         else -> Fylke("UKJENT", "UKJENT")
     }
 }
