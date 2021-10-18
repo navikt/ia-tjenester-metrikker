@@ -104,7 +104,6 @@ internal class DataKvalitetSjekkerKtTest {
             "sosial og omsørgstjeneste uten bo tilbud",
             "3001",
             "Offenltig",
-            "54",
             "Oslo",
             "5444",
             "Oslo"
@@ -123,7 +122,6 @@ internal class DataKvalitetSjekkerKtTest {
             "sosial og omsørgstjeneste uten bo tilbud",
             "3001",
             "Offenltig",
-            "54",
             "Oslo",
             "5444",
             "Oslo"
@@ -142,28 +140,8 @@ internal class DataKvalitetSjekkerKtTest {
             "feil næring beskrivelse for 2 siffer",
             "9001",
             "feil ssbsektor kode",
-            "55",
             "Feil fylke ",
             "5445",
-            "Feil kommune"
-        )
-    }
-
-    fun getUgyldigFylkesnummerInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
-        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
-            "123456789",
-            "25000",
-            TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
-            ZonedDateTime.now(),
-            0,
-            "besk",
-            "besk",
-            "9000",
-            "besk",
-            "55",
-            "Feil fylke ",
-            "544",
             "Feil kommune"
         )
     }
@@ -180,7 +158,6 @@ internal class DataKvalitetSjekkerKtTest {
             "besk",
             "9000",
             "besk",
-            "54",
             "fylke ",
             "5445",
             "Feil kommune"
@@ -199,7 +176,6 @@ internal class DataKvalitetSjekkerKtTest {
             "besk",
             "9001",
             "besk",
-            "54",
             "fylke ",
             "5444",
             "Feil kommune"
@@ -224,7 +200,6 @@ internal class DataKvalitetSjekkerKtTest {
             "besk",
             "9000",
             "besk",
-            "54",
             "fylke ",
             "5444",
             "Feil kommune"

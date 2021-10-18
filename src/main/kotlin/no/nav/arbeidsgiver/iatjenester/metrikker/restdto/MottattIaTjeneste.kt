@@ -64,7 +64,6 @@ data class InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
     @get:JsonProperty("ssbSektorKodeBeskrivelse")
     @param:JsonProperty("ssbSektorKodeBeskrivelse")
     var SSBSektorKodeBeskrivelse: String,
-    var fylkesnummer: String,
     var fylke: String,
     var kommunenummer: String,
     var kommune: String

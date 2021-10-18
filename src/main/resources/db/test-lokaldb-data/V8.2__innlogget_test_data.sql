@@ -9,7 +9,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -26,7 +25,6 @@ VALUES  (
             6500,
             'Kommuneforvaltningen',
             'IKKE_TILGJENGELIG',
-            'IKKE_TILGJENGELIG',
             '1532',
             'GISKE');
 
@@ -41,7 +39,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -58,7 +55,6 @@ VALUES  (
             2100,
             'Private aksjeselskaper mv.',
             'IKKE_TILGJENGELIG',
-            'IKKE_TILGJENGELIG',
             '1149',
             'KARMØY');
 
@@ -73,7 +69,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -89,7 +84,6 @@ VALUES  ('988888888',
          2100,
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
-         'IKKE_TILGJENGELIG',
          '1149',
          'KARMØY');
 INSERT INTO metrikker_ia_tjenester_innlogget(
@@ -103,7 +97,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -119,7 +112,6 @@ VALUES  ('988888888',
          2100,
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
-         'IKKE_TILGJENGELIG',
          '1149',
          'KARMØY');
 INSERT INTO metrikker_ia_tjenester_innlogget(
@@ -133,7 +125,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -149,7 +140,6 @@ VALUES  ('977777777',
          2100,
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
-         'IKKE_TILGJENGELIG',
          '0301',
          'OSLO');
 INSERT INTO metrikker_ia_tjenester_innlogget(
@@ -163,7 +153,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -179,7 +168,6 @@ VALUES  ('966666666',
          2100,
          'Private aksjeselskaper mv.',
          'IKKE_TILGJENGELIG',
-         'IKKE_TILGJENGELIG',
          '5401',
          'TROMSØ');
 
@@ -194,7 +182,6 @@ INSERT INTO metrikker_ia_tjenester_innlogget(
     naering_2siffer_beskrivelse,
     ssb_sektor_kode,
     ssb_sektor_kode_beskrivelse,
-    fylkesnummer,
     fylke,
     kommunenummer,
     kommune
@@ -209,7 +196,6 @@ VALUES  ('955555555',
          'Helse- og sosialtjenester',
          2100,
          'Private aksjeselskaper mv.',
-         'IKKE_TILGJENGELIG',
          'IKKE_TILGJENGELIG',
          '1828',
          'NESNA');

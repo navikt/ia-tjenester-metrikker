@@ -61,7 +61,6 @@ class IaTjenesterMetrikkerRepository(
                 naering_2siffer_beskrivelse,
                 ssb_sektor_kode,
                 ssb_sektor_kode_beskrivelse,
-                fylkesnummer,
                 fylke,
                 kommunenummer,
                 kommune
@@ -77,7 +76,6 @@ class IaTjenesterMetrikkerRepository(
                   :naering_2siffer_beskrivelse,
                   :ssb_sektor_kode,
                   :ssb_sektor_kode_beskrivelse,
-                  :fylkesnummer,
                   :fylke,
                   :kommunenummer,
                   :kommune
@@ -100,7 +98,6 @@ class IaTjenesterMetrikkerRepository(
                 .addValue("naering_2siffer_beskrivelse", iatjeneste.næring2SifferBeskrivelse)
                 .addValue("ssb_sektor_kode", iatjeneste.SSBSektorKode)
                 .addValue("ssb_sektor_kode_beskrivelse", iatjeneste.SSBSektorKodeBeskrivelse)
-                .addValue("fylkesnummer", iatjeneste.fylkesnummer)
                 .addValue("fylke", iatjeneste.fylke)
                 .addValue("kommunenummer", iatjeneste.kommunenummer)
                 .addValue("kommune", iatjeneste.kommune)

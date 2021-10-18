@@ -151,7 +151,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.næring2SifferBeskrivelse).isEqualTo("En beskrivelse for næring kode 2 siffer")
         assertThat(iaTjenesteRad.SSBSektorKode).isEqualTo("21000")
         assertThat(iaTjenesteRad.SSBSektorKodeBeskrivelse).isEqualTo("Beskrivelse ssb sektor kode")
-        assertThat(iaTjenesteRad.fylkesnummer).isEqualTo("30")
         assertThat(iaTjenesteRad.fylke).isEqualTo("Viken")
         assertThat(iaTjenesteRad.kommunenummer).isEqualTo("0234")
         assertThat(iaTjenesteRad.kommune).isEqualTo("Gjerdrum")
@@ -190,7 +189,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     næringskode5SifferBeskrivelse = mottattIATjeneste.næring.kode5SifferBeskrivelse,
                     SSBSektorKode = "",
                     SSBSektorKodeBeskrivelse = "",
-                    fylkesnummer = "",
                     fylke = "",
                     kommunenummer = mottattIATjeneste.kommunenummer,
                     kommune = mottattIATjeneste.kommune,
@@ -215,7 +213,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     næringskode5SifferBeskrivelse = "",
                     SSBSektorKode = "",
                     SSBSektorKodeBeskrivelse = "",
-                    fylkesnummer = "",
                     fylke = "",
                     kommunenummer = "",
                     kommune = "",
