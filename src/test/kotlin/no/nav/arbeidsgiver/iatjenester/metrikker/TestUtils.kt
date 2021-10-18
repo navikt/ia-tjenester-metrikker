@@ -189,7 +189,7 @@ class TestUtils {
                          kommunenummer, 
                          kommune,
                          tjeneste_mottakkelsesdato
-                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
+                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
                 ).run {
                     setString(1, rad.type.name)
                     setString(2, rad.kilde.name)
@@ -200,10 +200,10 @@ class TestUtils {
                     setString(7, rad.næringskode5SifferBeskrivelse)
                     setString(8, rad.SSBSektorKode)
                     setString(9, rad.SSBSektorKodeBeskrivelse)
-                    setString(11, rad.fylke)
-                    setString(12, rad.kommunenummer)
-                    setString(13, rad.kommune)
-                    setTimestamp(14, rad.tjeneste_mottakkelsesdato)
+                    setString(10, rad.fylke)
+                    setString(11, rad.kommunenummer)
+                    setString(12, rad.kommune)
+                    setTimestamp(13, rad.tjeneste_mottakkelsesdato)
                     executeUpdate()
                 }
             }
