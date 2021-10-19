@@ -8,17 +8,17 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Overordne
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretService
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.InnloggetBruker
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollException
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollService
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.erOrgnrGyldig
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.erOrgnrGyldig
 import no.nav.security.token.support.core.api.Protected
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -44,10 +44,15 @@ class IaTjenesterMetrikkerInnloggetController(
     private val enhetsregisteretService: EnhetsregisteretService
 ) {
 
-    @PostMapping(value = ["/mottatt-iatjeneste"], consumes = ["application/json"], produces = ["application/json"])
+    @PostMapping(
+        value = ["/mottatt-iatjeneste"],
+        consumes = ["application/json"],
+        produces = ["application/json"]
+    )
     fun leggTilNyIaMottattTjenesteForInnloggetKlient(
         @RequestHeader headers: HttpHeaders,
-        @RequestBody innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+        @RequestBody
+        innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata
     ): ResponseEntity<ResponseStatus> {
         setNavCallid(headers)
         log("IaTjenesterMetrikkerInnloggetController")
@@ -100,9 +105,10 @@ class IaTjenesterMetrikkerInnloggetController(
         }
 
         val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
-        val innloggetBruker: Either<TilgangskontrollException, InnloggetBruker> = tilgangskontrollService
-            .hentInnloggetBruker(innloggetIaTjeneste.altinnRettighet)
-            .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
+        val innloggetBruker: Either<TilgangskontrollException, InnloggetBruker> =
+            tilgangskontrollService
+                .hentInnloggetBruker(innloggetIaTjeneste.altinnRettighet)
+                .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
         return innloggetBruker.fold(
             { tilgangskontrollException ->
@@ -125,7 +131,8 @@ class IaTjenesterMetrikkerInnloggetController(
                         ResponseEntity.status(HttpStatus.ACCEPTED)
                             .contentType(MediaType.APPLICATION_JSON)
                             .body(ResponseStatus.Accepted)
-                    }, { innloggetIaTjeneste -> opprettMottattIaTjenesteMetrikk(innloggetIaTjeneste) }
+                    },
+                    { innloggetIaTjeneste -> opprettMottattIaTjenesteMetrikk(innloggetIaTjeneste) }
                 )
             }
         )
@@ -179,7 +186,6 @@ class IaTjenesterMetrikkerInnloggetController(
                                 ),
                                 SSBSektorKode = overordnetEnhet.institusjonellSektorkode.kode,
                                 SSBSektorKodeBeskrivelse = overordnetEnhet.institusjonellSektorkode.beskrivelse,
-                                fylkesnummer = underenhet.fylke.nummer,
                                 fylke = underenhet.fylke.navn,
                                 kommunenummer = underenhet.kommune.nummer,
                                 kommune = underenhet.kommune.navn
@@ -196,7 +202,7 @@ class IaTjenesterMetrikkerInnloggetController(
     ): ResponseEntity<ResponseStatus> {
 
         return when (val iaSjekk =
-            iaTjenesterMetrikkerService.sjekkOgOpprett(innloggetIaTjenesteMedVirksomhetGrunndata)) {
+            iaTjenesterMetrikkerService.sjekkOgPersister(innloggetIaTjenesteMedVirksomhetGrunndata)) {
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(iaSjekk.value.message, iaSjekk.value)

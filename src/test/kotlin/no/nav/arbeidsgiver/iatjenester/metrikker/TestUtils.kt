@@ -41,7 +41,6 @@ class TestUtils {
             "En beskrivelse for næring kode 2 siffer",
             "21000",
             "Beskrivelse ssb sektor kode",
-            "30",
             "Viken",
             "0234",
             "Gjerdrum"
@@ -75,7 +74,6 @@ class TestUtils {
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
               "fylke":"Troms og Finnmark",
-              "fylkesnummer":"54",
               "kommune":"Sør-Varanger",
               "kommunenummer":"5444",
               "næring2SifferBeskrivelse":"Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
@@ -108,7 +106,6 @@ class TestUtils {
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
               "fylke":"IKKE_TILGJENGELIG",
-              "fylkesnummer":"IKKE_TILGJENGELIG",
               "kommune":"OSLO",
               "kommunenummer":"0301",
               "næring2SifferBeskrivelse":"Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
@@ -188,12 +185,11 @@ class TestUtils {
                          naering_kode5siffer_beskrivelse,
                          ssb_sektor_kode,
                          ssb_sektor_kode_beskrivelse,
-                         fylkesnummer, 
                          fylke,
                          kommunenummer, 
                          kommune,
                          tjeneste_mottakkelsesdato
-                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
+                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
                 ).run {
                     setString(1, rad.type.name)
                     setString(2, rad.kilde.name)
@@ -204,11 +200,10 @@ class TestUtils {
                     setString(7, rad.næringskode5SifferBeskrivelse)
                     setString(8, rad.SSBSektorKode)
                     setString(9, rad.SSBSektorKodeBeskrivelse)
-                    setString(10, rad.fylkesnummer)
-                    setString(11, rad.fylke)
-                    setString(12, rad.kommunenummer)
-                    setString(13, rad.kommune)
-                    setTimestamp(14, rad.tjeneste_mottakkelsesdato)
+                    setString(10, rad.fylke)
+                    setString(11, rad.kommunenummer)
+                    setString(12, rad.kommune)
+                    setTimestamp(13, rad.tjeneste_mottakkelsesdato)
                     executeUpdate()
                 }
             }
@@ -242,7 +237,6 @@ class TestUtils {
                 næring2SifferBeskrivelse = getString("naering_2siffer_beskrivelse"),
                 SSBSektorKode = getString("ssb_sektor_kode"),
                 SSBSektorKodeBeskrivelse = getString("ssb_sektor_kode_beskrivelse"),
-                fylkesnummer = getString("fylkesnummer"),
                 fylke = getString("fylke"),
                 kommunenummer = getString("kommunenummer"),
                 kommune = getString("kommune"),
@@ -274,7 +268,6 @@ data class IaTjenesteRad(
     val næring2SifferBeskrivelse: String,
     val SSBSektorKode: String,
     val SSBSektorKodeBeskrivelse: String,
-    val fylkesnummer: String,
     val fylke: String,
     val kommunenummer: String,
     val kommune: String,

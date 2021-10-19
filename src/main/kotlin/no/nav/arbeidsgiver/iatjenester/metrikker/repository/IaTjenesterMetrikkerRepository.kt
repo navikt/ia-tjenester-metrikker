@@ -15,14 +15,15 @@ import java.time.LocalDateTime
 
 @Transactional
 @Repository
-class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
+class IaTjenesterMetrikkerRepository(
+    private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
+) {
 
-
-    fun opprett(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
+    fun persister(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
         insertIaTjeneste(iatjeneste)
     }
 
-    fun opprett(uinnloggetIatjeneste: UinnloggetMottattIaTjeneste) {
+    fun persister(uinnloggetIatjeneste: UinnloggetMottattIaTjeneste) {
         namedParameterJdbcTemplate.update(
             """
                 INSERT INTO metrikker_ia_tjenester_uinnlogget(
@@ -60,7 +61,6 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                 naering_2siffer_beskrivelse,
                 ssb_sektor_kode,
                 ssb_sektor_kode_beskrivelse,
-                fylkesnummer,
                 fylke,
                 kommunenummer,
                 kommune
@@ -76,7 +76,6 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                   :naering_2siffer_beskrivelse,
                   :ssb_sektor_kode,
                   :ssb_sektor_kode_beskrivelse,
-                  :fylkesnummer,
                   :fylke,
                   :kommunenummer,
                   :kommune
@@ -87,13 +86,18 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                 .addValue("naering_kode_5siffer", iatjeneste.næringKode5Siffer)
                 .addValue("form_av_tjeneste", iatjeneste.type.name)
                 .addValue("kilde_applikasjon", iatjeneste.kilde.name)
-                .addValue("tjeneste_mottakkelsesdato", iatjeneste.tjenesteMottakkelsesdato.toLocalDateTime())
+                .addValue(
+                    "tjeneste_mottakkelsesdato",
+                    iatjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
+                )
                 .addValue("antall_ansatte", iatjeneste.antallAnsatte)
-                .addValue("naering_kode5siffer_beskrivelse", iatjeneste.næringskode5SifferBeskrivelse)
+                .addValue(
+                    "naering_kode5siffer_beskrivelse",
+                    iatjeneste.næringskode5SifferBeskrivelse
+                )
                 .addValue("naering_2siffer_beskrivelse", iatjeneste.næring2SifferBeskrivelse)
                 .addValue("ssb_sektor_kode", iatjeneste.SSBSektorKode)
                 .addValue("ssb_sektor_kode_beskrivelse", iatjeneste.SSBSektorKodeBeskrivelse)
-                .addValue("fylkesnummer", iatjeneste.fylkesnummer)
                 .addValue("fylke", iatjeneste.fylke)
                 .addValue("kommunenummer", iatjeneste.kommunenummer)
                 .addValue("kommune", iatjeneste.kommune)
@@ -113,12 +117,16 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
         override val tidspunkt: LocalDateTime
     ) : MottattIaTjenesteMetrikk()
 
-    data class MottattUinnloggetIaTjenesteMetrikk(val kilde: Kilde, override val tidspunkt: LocalDateTime) :
-        MottattIaTjenesteMetrikk()
+    data class MottattUinnloggetIaTjenesteMetrikk(
+        val kilde: Kilde,
+        override val tidspunkt: LocalDateTime
+    ) :
+            MottattIaTjenesteMetrikk()
 
 
     fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattUinnloggetIaTjenesteMetrikk> =
-        namedParameterJdbcTemplate.query("""
+        namedParameterJdbcTemplate.query(
+            """
                 select tjeneste_mottakkelsesdato, kilde_applikasjon 
                 from metrikker_ia_tjenester_uinnlogget 
                 where tjeneste_mottakkelsesdato >= :startDato
@@ -153,7 +161,8 @@ class IaTjenesterMetrikkerRepository(private val namedParameterJdbcTemplate: Nam
                     Næring(
                         rs.getString("naering_kode_5siffer"),
                         rs.getString("naering_kode5siffer_beskrivelse"),
-                        rs.getString("naering_2siffer_beskrivelse")),
+                        rs.getString("naering_2siffer_beskrivelse")
+                    ),
                     rs.getString("kommunenummer"),
                     rs.getString("kommune"),
                     rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()

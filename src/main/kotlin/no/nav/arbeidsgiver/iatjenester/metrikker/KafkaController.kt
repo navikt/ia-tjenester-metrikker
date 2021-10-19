@@ -24,7 +24,6 @@ class KafkaController(var kafkaService: KafkaService) {
         "næringskode 2 beskrivelse",
         "sektorkode",
         "sektorkode beskrivelse",
-        "fylkesnummer",
         "fylke",
         "kommunenummer",
         "kommune"
