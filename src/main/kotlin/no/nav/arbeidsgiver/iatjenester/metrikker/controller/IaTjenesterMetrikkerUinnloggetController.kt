@@ -41,8 +41,7 @@ class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerS
         log("IaTjenesterMetrikkerUinnloggetController")
             .info("Mottatt IA tjeneste (uinnlogget) fra ${uinnloggetIaTjeneste.kilde.name}")
 
-        val iaSjekk = iaTjenesterMetrikkerService.sjekkOgPersister(uinnloggetIaTjeneste)
-        when (iaSjekk) {
+        when (val iaSjekk = iaTjenesterMetrikkerService.sjekkOgPersister(uinnloggetIaTjeneste)) {
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(iaSjekk.value.message, iaSjekk.value)

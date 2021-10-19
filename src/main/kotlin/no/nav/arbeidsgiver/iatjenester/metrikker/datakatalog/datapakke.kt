@@ -43,17 +43,14 @@ data class MarkdownSpec(
 data class Option(
     val legend: Legend,
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    val grid: Grid?,
+    val grid: Grid,
     @JvmField
     val xAxis: Xaxis,
     @JvmField
     val yAxis: Yaxis,
     val tooltip: Tooltip,
     val series: List<Serie>
-) {
-    constructor(legend: Legend, xAxis: Xaxis, yAxis: Yaxis, tooltip: Tooltip, series: List<Serie>) :
-            this(legend, null, xAxis, yAxis, tooltip, series)
-}
+)
 
 data class Legend(
     val data: List<String>
@@ -64,10 +61,10 @@ data class Tooltip(
 )
 
 data class Grid(
-    val left: String,
-    val right: String,
-    val bottom: String,
-    val containLabel: Boolean
+    val left: String = "0%",
+    val right: String = "0%",
+    val bottom: String = "0%",
+    val containLabel: Boolean = true
 )
 
 data class Xaxis(
@@ -92,5 +89,6 @@ data class Serie(
     val name: String,
     val data: Collection<*>,
     val type: String,
-    val title: String
+    val title: String,
+    val stack: String = ""
 )

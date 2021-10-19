@@ -11,6 +11,7 @@ internal class DatapakkeTest {
     fun `Felter xAxis og yAxis i Option sstarter med en liten bokstav`() {
         val option = Option(
             legend = Legend(listOf("item1")),
+            grid = Grid(),
             xAxis = Xaxis("The X axis", listOf("field 1", "field2", "field3")),
             yAxis = Yaxis("The Y axis"),
             tooltip = Tooltip("item"),

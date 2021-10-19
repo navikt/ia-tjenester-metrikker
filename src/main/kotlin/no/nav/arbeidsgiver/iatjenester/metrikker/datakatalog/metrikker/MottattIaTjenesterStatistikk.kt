@@ -139,6 +139,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                         "Sykefraværsstatistikk (innlogget)"
                     )
                 ),
+                Grid(),
                 Xaxis(
                     "category",
                     data = datagrunnlag.gjeldendeMåneder
@@ -159,7 +160,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                         "bar",
                         "Sykefraværsstatistikk"
                     )
-                )
+                ),
             )
         )
     }
@@ -174,18 +175,13 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                         "Sykefraværsstatistikk"
                     )
                 ),
-//                Grid(
-//                    left = "3%",
-//                    right = "4%",
-//                    bottom = "3%",
-//                    containLabel = true
-//                ),
+                Grid(),
                 Xaxis(
                     "value"
                 ),
                 Yaxis(
                     "category",
-                    data = datagrunnlag.bransjeListe.map { it.name }
+                    data = alleFylkerAlfabetisk()
                 ),
                 Tooltip("item"),
                 listOf(
@@ -195,7 +191,8 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                             fraApp = SAMTALESTØTTE
                         ),
                         "bar",
-                        "Samtalestøtte"
+                        "Samtalestøtte",
+                        "app"
                     ),
                     Serie(
                         "Sykefraværsstatistikk",
@@ -203,7 +200,8 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                             fraApp = SYKEFRAVÆRSSTATISTIKK
                         ),
                         "bar",
-                        "Sykefraværsstatistikk"
+                        "Sykefraværsstatistikk",
+                        "app"
                     )
                 )
             )

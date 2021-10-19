@@ -43,18 +43,18 @@ class MottattIaTjenesterDatagrunnlag(
             fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
         )
 
-
     val totalInnloggetMetrikker: Int = innloggetMetrikker.size
     val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
     val totalUnikeBedrifterPerDag: Int =
         beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)).values.sum()
 
     fun beregnInnloggedeIaTjenesterPerFylke(fraApp: Kilde): Collection<Int> =
-        innloggetMetrikker
-            .filter { it.kilde == fraApp }
-            .groupingBy { it.fylke }
-            .eachCount()
-            .values
+        (alleFylkerAlfabetisk().associateWith { 0 } +
+                innloggetMetrikker
+                    .filter { it.kilde == fraApp }
+                    .groupingBy { it.fylke }
+                    .eachCount()
+                ).values
 
     fun beregnAntallMetrikkerPerMåned(
         måneder: List<Month>,
