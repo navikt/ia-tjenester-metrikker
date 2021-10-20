@@ -73,7 +73,7 @@ data class InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
 ) : MottattIaTjeneste
 
 
-fun getnnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+fun getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
     innloggetIaTjeneste: InnloggetMottattIaTjeneste,
     underenhet: Underenhet,
     overordnetEnhet: OverordnetEnhet

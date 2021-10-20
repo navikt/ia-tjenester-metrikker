@@ -15,16 +15,16 @@ import java.time.ZonedDateTime.now
 internal class MottattIaTjenesteTest {
 
     @Test
-    fun getnnloggetMottattIaTjenesteMedVirksomhetGrunndata_returnerer_NOE() {
+    fun getInnloggetMottattIaTjenesteMedVirksomhetGrunndata_returnerer_objektet_som_skal_persisteresi_DB() {
 
-        val innloggetIaTjeneste: InnloggetMottattIaTjeneste = InnloggetMottattIaTjeneste(
+        val innloggetIaTjeneste = InnloggetMottattIaTjeneste(
             UNDERENHET_ORGNR,
             AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE,
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
             Kilde.SAMTALESTØTTE,
             TODAY
         )
-        val underenhet: Underenhet = Underenhet(
+        val underenhet = Underenhet(
             Orgnr(UNDERENHET_ORGNR),
             "Test bedrift",
             Næringskode5Siffer(
@@ -42,7 +42,7 @@ internal class MottattIaTjenesteTest {
             ),
             15
         )
-        val overordnetEnhet: OverordnetEnhet = OverordnetEnhet(
+        val overordnetEnhet = OverordnetEnhet(
             Orgnr(OVERORDNET_ENHET_ORGNR),
             "Test overordnet enhet",
             Næringskode5Siffer(
@@ -65,7 +65,7 @@ internal class MottattIaTjenesteTest {
             SSBSektorKodeBeskrivelse,
             fylke,
             kommunenummer,
-            kommune) = getnnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+            kommune) = getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             innloggetIaTjeneste = innloggetIaTjeneste,
             underenhet = underenhet,
             overordnetEnhet = overordnetEnhet

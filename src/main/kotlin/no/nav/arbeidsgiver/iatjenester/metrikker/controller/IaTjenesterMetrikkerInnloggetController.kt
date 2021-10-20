@@ -3,14 +3,13 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 import arrow.core.Either
 import arrow.core.flatMap
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringsbeskrivelser
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretService
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.getnnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.getInnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.InnloggetBruker
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
@@ -174,7 +173,7 @@ class IaTjenesterMetrikkerInnloggetController(
                         Either.Left(enhetsregisteretException)
                     }, { overordnetEnhet ->
                         Either.Right(
-                            getnnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+                            getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
                                 innloggetIaTjeneste,
                                 underenhet,
                                 overordnetEnhet
