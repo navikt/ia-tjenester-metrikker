@@ -147,6 +147,48 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     }
 
     @Test
+    fun `Test at generert datapakke har graf over IA-tjenester per måned`() {
+        opprettTestDataIDB(namedParameterJdbcTemplate)
+        datakatalogStatistikkMedDato.run()
+
+        val leverteIaTjenesterPerMåned: View = produsertDatapakke.views[1]
+
+        Assertions.assertThat(leverteIaTjenesterPerMåned.description)
+            .isEqualTo("Antall digitale IA-tjenester mottatt per applikasjon per måned")
+        Assertions.assertThat(leverteIaTjenesterPerMåned.title)
+            .isEqualTo("Mottatte digitale IA-tjenester ")
+
+        val dataserier = (leverteIaTjenesterPerMåned.spec as EchartSpec).option.series
+
+        Assertions.assertThat(dataserier[0].name).isEqualTo("Samtalestøtte (uinnlogget)")
+        Assertions.assertThat(dataserier[0].type).isEqualTo("bar")
+
+        Assertions.assertThat(dataserier[1].name).isEqualTo("Sykefraværsstatistikk (innlogget)")
+        Assertions.assertThat(dataserier[1].type).isEqualTo("bar")
+    }
+
+    @Test
+    fun `Test at generert datapakke har graf over IA-tjenester per bransje`() {
+        opprettTestDataIDB(namedParameterJdbcTemplate)
+        datakatalogStatistikkMedDato.run()
+
+        val leverteIaTjenesterPerBransje: View = produsertDatapakke.views[2]
+
+        Assertions.assertThat(leverteIaTjenesterPerBransje.description)
+            .isEqualTo("Antall digitale IA-tjenester mottatt per applikasjon fordelt per bransje i bransjeprogram")
+        Assertions.assertThat(leverteIaTjenesterPerBransje.title)
+            .isEqualTo("Mottatte digitale IA-tjenester per bransje (mar. - jul. 2021)")
+
+        val dataserier = (leverteIaTjenesterPerBransje.spec as EchartSpec).option.series
+
+        Assertions.assertThat(dataserier[0].name).isEqualTo("Samtalestøtte (innlogget)")
+        Assertions.assertThat(dataserier[0].type).isEqualTo("bar")
+
+        Assertions.assertThat(dataserier[1].name).isEqualTo("Sykefraværsstatistikk")
+        Assertions.assertThat(dataserier[1].type).isEqualTo("bar")
+    }
+
+    @Test
     fun `Test at generert datapakke har graf over IA-tjenester per fylke av typen stacked-bar`() {
         opprettTestDataIDB(namedParameterJdbcTemplate)
         datakatalogStatistikkMedDato.run()
