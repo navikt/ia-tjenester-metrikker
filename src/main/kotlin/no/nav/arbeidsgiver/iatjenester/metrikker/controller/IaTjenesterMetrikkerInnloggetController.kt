@@ -187,8 +187,8 @@ class IaTjenesterMetrikkerInnloggetController(
                                 SSBSektorKode = overordnetEnhet.institusjonellSektorkode.kode,
                                 SSBSektorKodeBeskrivelse = overordnetEnhet.institusjonellSektorkode.beskrivelse,
                                 fylke = underenhet.fylke.navn,
-                                kommunenummer = underenhet.kommune.nummer,
-                                kommune = underenhet.kommune.navn
+                                kommunenummer = underenhet.kommunenummer,
+                                kommune = underenhet.kommune
                             )
                         )
                     }

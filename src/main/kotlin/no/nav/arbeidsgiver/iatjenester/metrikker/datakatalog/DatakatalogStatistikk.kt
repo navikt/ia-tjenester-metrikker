@@ -51,18 +51,18 @@ class DatakatalogStatistikk(
 
     private fun opprettDatapakke(views: List<View>): Datapakke {
         val description = """
-            __Statistikken på denne siden viser antall digitale IA-tjenester fra følgende tjenester:__
+            **Statistikken på denne siden viser antall digitale IA-tjenester fra følgende tjenester:**
             - Samtalestøtte til arbeidsgiver (krever ikke innlogging) 
             - Sykefraværsstatistikk til arbeidsgiver (krever innlogging)
             
-            __En digital IA-tjeneste telles når en bruker har benyttet seg av innholdet.__
+            **En digital IA-tjeneste telles når en bruker har benyttet seg av innholdet i tjenesten.**
             
             Som hovedregel betyr dette at brukeren har *klikket på noe*, *skrevet noe* eller *åpnet noe* på siden. 
-            Det er ikke tilstrekkelig å brukeren kun har besøkt forsiden. 
+            Det er ikke tilstrekkelig at brukeren kun har besøkt forsiden. 
         
             Unntak:
-            - Hvis brukeren klikker på link til Samtalestøtten inne fra Sykefraværsstatistikk, så vil dette *ikke* telle 
-            som en levert IA-tjeneste fra Sykefraværsstatistikk. 
+            - Hvis en bruker klikker på link til samtalestøtten *inne fra sykefraværsstatistikken*, så vil dette 
+            i seg selv ikke telle som en levert IA-tjeneste. 
             """.trimIndent()
 
         return Datapakke(

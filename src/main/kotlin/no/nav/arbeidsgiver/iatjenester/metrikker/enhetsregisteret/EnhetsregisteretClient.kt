@@ -3,11 +3,10 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Fylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.InstitusjonellSektorkode
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Kommune
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.mapTilFylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.HttpServerErrorException
@@ -97,17 +96,16 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregistere
                 ?: throw IngenNæringException("Feil ved kall til Enhetsregisteret. Ingen næring for virksomhet.")
 
             val beliggenhetsadresseJson = enhetJson["beliggenhetsadresse"]
-            val kommune = Kommune(
-                beliggenhetsadresseJson["kommune"].textValue(),
-                beliggenhetsadresseJson["kommunenummer"].textValue()
-            )
+            val kommune = beliggenhetsadresseJson["kommune"].textValue()
+            val kommunenummer = beliggenhetsadresseJson["kommunenummer"].textValue()
             return Underenhet(
                 Orgnr(enhetJson["organisasjonsnummer"].textValue()),
                 enhetJson["navn"].textValue(),
                 objectMapper.treeToValue(næringskodeJson, Næringskode5Siffer::class.java),
                 Orgnr(enhetJson["overordnetEnhet"].textValue()),
                 kommune,
-                mapTilFylke(kommune),
+                kommunenummer,
+                Fylke.fraKommunenummer(kommunenummer),
                 enhetJson["antallAnsatte"].intValue()
             )
         } catch (e: Exception) {

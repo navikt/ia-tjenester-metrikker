@@ -6,179 +6,177 @@ import org.junit.jupiter.api.Test
 internal class VirksomhetMetadataKtTest {
 
     @Test
-    fun `Test at mapToFylke returnerer UKJENT for kommuner som ikke eksisterer`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Ukjent for kommunenumre som ikke eksisterer`() {
 
-        val kommuner = setOf(
-            Kommune("0000", "Bare tull"),
-            Kommune("9999", "Rulleski"),
+        val kommunenumre = setOf(
+            "0000",
+            "9999",
         )
 
-        kommuner.forEach {
-            val fylke = mapTilFylke(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("UKJENT")
-            Assertions.assertThat(fylke.nummer).isEqualTo("UKJENT")
+        kommunenumre.forEach {
+            val fylke = Fylke.fraKommunenummer(it)
+            Assertions.assertThat(fylke.navn).isEqualTo("Ukjent")
+            Assertions.assertThat(fylke.nummer).isEqualTo("Ukjent")
         }
-
     }
 
     @Test
-    fun `Test at mapToFylke returnerer IKKE_GYLDIG_KOMMUNENUMMER for kommuner som ikke har gyldig nummer`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Ukjent for kommunenumre som ikke har gyldig nummer`() {
 
-        val kommuner = setOf(
-            Kommune("", ""),
-            Kommune("9", "Rulleski"),
-            Kommune("03", "Oslo"),
-            Kommune("30", "Oslo"),
-            Kommune("030", "Oslo"),
-            Kommune("03010", "Oslo"),
+        val kommunenumre = setOf(
+            "",
+            "9",
+            "03",
+            "30",
+            "030",
+            "9999",
+            "03010",
         )
 
-        kommuner.forEach {
-            val fylke = mapTilFylke(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("UKJENT")
-            Assertions.assertThat(fylke.nummer).isEqualTo("UKJENT")
+        kommunenumre.forEach {
+            val fylke = Fylke.fraKommunenummer(it)
+            Assertions.assertThat(fylke.navn).isEqualTo("Ukjent")
+            Assertions.assertThat(fylke.nummer).isEqualTo("Ukjent")
         }
-
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Viken for tilhørende kommuner`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Viken for tilhørende kommunenumre`() {
 
-        val kommuner = setOf(
-            Kommune("3001", "Halden"),
-            Kommune("3090", "Vestby"),
-            Kommune("3005", "Drammen")
+        val kommunenumre = setOf(
+            "3001",
+            "3090",
+            "3005",
         )
 
-        kommuner.forEach {
-            val fylke = mapTilFylke(it)
+        kommunenumre.forEach {
+            val fylke = Fylke.fraKommunenummer(it)
             Assertions.assertThat(fylke.navn).isEqualTo("Viken")
             Assertions.assertThat(fylke.nummer).isEqualTo("30")
         }
-
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Oslo for Oslo kommune`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Oslo for Oslo kommune`() {
 
-        val fylke = mapTilFylke(Kommune("0301", "Oslo"))
+        val fylke = Fylke.fraKommunenummer("0301")
 
         Assertions.assertThat(fylke.navn).isEqualTo("Oslo")
         Assertions.assertThat(fylke.nummer).isEqualTo("03")
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Innlandet for tilhørende kommuner`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Innlandet for tilhørende kommunenumre`() {
 
-        val kommuner = setOf(
-            Kommune("3401", "Kongsvinger"),
-            Kommune("3405", "Lillehammer")
+        val kommunenumre = setOf(
+            "3401",
+            "3405",
         )
 
-        kommuner.forEach {
-            val fylke = mapTilFylke(it)
+        kommunenumre.forEach {
+            val fylke = Fylke.fraKommunenummer(it)
             Assertions.assertThat(fylke.navn).isEqualTo("Innlandet")
             Assertions.assertThat(fylke.nummer).isEqualTo("34")
         }
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Vestfold og Telemark for tilhørende kommuner`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Vestfold og Telemark for tilhørende kommunenumre`() {
 
-        val kommuner = setOf(
-            Kommune("3804", "Sandefjord"),
-            Kommune("3806", "Porsgrunn")
+        val kommunenumre = setOf(
+            "3804",
+            "3806",
         )
 
-        kommuner.forEach {
-            val fylke = mapTilFylke(it)
+        kommunenumre.forEach {
+            val fylke = Fylke.fraKommunenummer(it)
             Assertions.assertThat(fylke.navn).isEqualTo("Vestfold og Telemark")
             Assertions.assertThat(fylke.nummer).isEqualTo("38")
         }
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Agder for tilhørende kommuner`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Agder for tilhørende kommunenumre`() {
 
-        val kommuner = setOf(
-            Kommune("4201", "Risør"),
-            Kommune("4204", "Kristiansand")
+        val kommunenumre = setOf(
+            "4201",
+            "4204",
         )
 
-        kommuner.forEach {
-            val fylke = mapTilFylke(it)
+        kommunenumre.forEach {
+            val fylke = Fylke.fraKommunenummer(it)
             Assertions.assertThat(fylke.navn).isEqualTo("Agder")
             Assertions.assertThat(fylke.nummer).isEqualTo("42")
         }
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Rogaland for Eigersund kommune`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Rogaland for Eigersund kommune`() {
 
-        val fylke = mapTilFylke(Kommune("1101", "Eigersund"))
+        val fylke = Fylke.fraKommunenummer("1101")
 
         Assertions.assertThat(fylke.navn).isEqualTo("Rogaland")
         Assertions.assertThat(fylke.nummer).isEqualTo("11")
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Vestland for tilhørende kommuner`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Vestland for tilhørende kommunenumre`() {
 
-        val kommuner = setOf(
-            Kommune("4601", "Bergen"),
-            Kommune("4602", "Kinn")
+        val kommunenumre = setOf(
+            "4601",
+            "4602",
         )
 
-        kommuner.forEach {
-            val fylke = mapTilFylke(it)
+        kommunenumre.forEach {
+            val fylke = Fylke.fraKommunenummer(it)
             Assertions.assertThat(fylke.navn).isEqualTo("Vestland")
             Assertions.assertThat(fylke.nummer).isEqualTo("46")
         }
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Møre og Romsdal for Molde kommune`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Møre og Romsdal for Molde kommune`() {
 
-        val fylke = mapTilFylke(Kommune("1506", "Molde"))
+        val fylke = Fylke.fraKommunenummer("1506")
 
         Assertions.assertThat(fylke.navn).isEqualTo("Møre og Romsdal")
         Assertions.assertThat(fylke.nummer).isEqualTo("15")
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Nordland for Bodø kommune`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Nordland for Bodø kommune`() {
 
-        val fylke = mapTilFylke(Kommune("1804", "Bodø"))
+        val fylke = Fylke.fraKommunenummer("1804")
 
         Assertions.assertThat(fylke.navn).isEqualTo("Nordland")
         Assertions.assertThat(fylke.nummer).isEqualTo("18")
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Troms og Finnmark for tilhørende kommuner`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Troms og Finnmark for tilhørende kommunenumre`() {
 
-        val kommuner = setOf(
-            Kommune("5401", "Tromsø"),
-            Kommune("5404", "Vardø")
+        val kommunenumre = setOf(
+            "5401",
+            "5404",
         )
 
-        kommuner.forEach {
-            val fylke = mapTilFylke(it)
+        kommunenumre.forEach {
+            val fylke = Fylke.fraKommunenummer(it)
             Assertions.assertThat(fylke.navn).isEqualTo("Troms og Finnmark")
             Assertions.assertThat(fylke.nummer).isEqualTo("54")
         }
     }
 
     @Test
-    fun `Test at mapToFylke returnerer Trøndelag for tilhørende kommuner`() {
+    fun `Test at Fylke_fraKommunenummer returnerer Trøndelag for tilhørende kommunenumre`() {
 
-        val kommuner = setOf(
-            Kommune("5001", "Trondheim"),
-            Kommune("5006", "Steinkjer")
+        val kommunenumre = setOf(
+            "5001",
+            "5006",
         )
 
-        kommuner.forEach {
-            val fylke = mapTilFylke(it)
+        kommunenumre.forEach {
+            val fylke = Fylke.fraKommunenummer(it)
             Assertions.assertThat(fylke.navn).isEqualTo("Trøndelag")
             Assertions.assertThat(fylke.nummer).isEqualTo("50")
         }
