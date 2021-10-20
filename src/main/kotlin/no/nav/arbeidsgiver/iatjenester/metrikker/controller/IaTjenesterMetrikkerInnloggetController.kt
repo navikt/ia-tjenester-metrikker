@@ -10,6 +10,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.Enhetsregister
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretService
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.getnnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.InnloggetBruker
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
@@ -173,22 +174,10 @@ class IaTjenesterMetrikkerInnloggetController(
                         Either.Left(enhetsregisteretException)
                     }, { overordnetEnhet ->
                         Either.Right(
-                            InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
-                                orgnr = innloggetIaTjeneste.orgnr,
-                                næringKode5Siffer = underenhet.næringskode.kode!!,
-                                type = innloggetIaTjeneste.type,
-                                kilde = innloggetIaTjeneste.kilde,
-                                tjenesteMottakkelsesdato = innloggetIaTjeneste.tjenesteMottakkelsesdato,
-                                antallAnsatte = underenhet.antallAnsatte,
-                                næringskode5SifferBeskrivelse = underenhet.næringskode.beskrivelse,
-                                næring2SifferBeskrivelse = Næringsbeskrivelser.mapTilNæringsbeskrivelse(
-                                    underenhet.næringskode.kode!!
-                                ),
-                                SSBSektorKode = overordnetEnhet.institusjonellSektorkode.kode,
-                                SSBSektorKodeBeskrivelse = overordnetEnhet.institusjonellSektorkode.beskrivelse,
-                                fylke = underenhet.fylke.navn,
-                                kommunenummer = underenhet.kommune.nummer,
-                                kommune = underenhet.kommune.navn
+                            getnnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+                                innloggetIaTjeneste,
+                                underenhet,
+                                overordnetEnhet
                             )
                         )
                     }
