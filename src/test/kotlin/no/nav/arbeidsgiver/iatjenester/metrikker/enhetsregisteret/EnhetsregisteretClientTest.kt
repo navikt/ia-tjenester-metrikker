@@ -97,6 +97,10 @@ class EnhetsregisteretClientTest {
         assertThat(
             underenhet?.næringskode?.beskrivelse
         ).isEqualTo("Trygdeordninger underlagt offentlig forvaltning")
+        assertThat(underenhet?.kommune?.nummer).isEqualTo("3005")
+        assertThat(underenhet?.kommune?.navn).isEqualTo("DRAMMEN")
+        assertThat(underenhet?.fylke?.nummer).isEqualTo("30")
+        assertThat(underenhet?.fylke?.navn).isEqualTo("Viken")
         assertThat(underenhet?.antallAnsatte).isEqualTo(40)
     }
 

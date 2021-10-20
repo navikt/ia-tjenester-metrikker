@@ -98,8 +98,8 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregistere
 
             val beliggenhetsadresseJson = enhetJson["beliggenhetsadresse"]
             val kommune = Kommune(
-                beliggenhetsadresseJson["kommune"].textValue(),
-                beliggenhetsadresseJson["kommunenummer"].textValue()
+                beliggenhetsadresseJson["kommunenummer"].textValue(),
+                beliggenhetsadresseJson["kommune"].textValue()
             )
             return Underenhet(
                 Orgnr(enhetJson["organisasjonsnummer"].textValue()),
