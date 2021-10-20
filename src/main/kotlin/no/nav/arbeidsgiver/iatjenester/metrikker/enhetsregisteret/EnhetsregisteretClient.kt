@@ -54,14 +54,15 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregistere
             val orgnr = Orgnr(enhetJson["organisasjonsnummer"].textValue())
             val navn = enhetJson["navn"].textValue()
             val næringskode: Næringskode5Siffer = objectMapper.readValue(næringskodeJson.toString())
-            val institusjonellSektorkode: InstitusjonellSektorkode = objectMapper.readValue(sektorJson.toString())
+            val institusjonellSektorkode: InstitusjonellSektorkode =
+                objectMapper.readValue(sektorJson.toString())
             val antallAnsatte = enhetJson["antallAnsatte"].intValue()
             return OverordnetEnhet(
-                orgnr,
-                navn,
-                næringskode,
-                institusjonellSektorkode,
-                antallAnsatte
+                orgnr = orgnr,
+                navn = navn,
+                næringskode = næringskode,
+                institusjonellSektorkode = institusjonellSektorkode,
+                antallAnsatte = antallAnsatte
             )
         } catch (e: Exception) {
             when (e) {
@@ -99,14 +100,17 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregistere
             val kommune = beliggenhetsadresseJson["kommune"].textValue()
             val kommunenummer = beliggenhetsadresseJson["kommunenummer"].textValue()
             return Underenhet(
-                Orgnr(enhetJson["organisasjonsnummer"].textValue()),
-                enhetJson["navn"].textValue(),
-                objectMapper.treeToValue(næringskodeJson, Næringskode5Siffer::class.java),
-                Orgnr(enhetJson["overordnetEnhet"].textValue()),
-                kommune,
-                kommunenummer,
-                Fylke.fraKommunenummer(kommunenummer),
-                enhetJson["antallAnsatte"].intValue()
+                orgnr = Orgnr(enhetJson["organisasjonsnummer"].textValue()),
+                navn = enhetJson["navn"].textValue(),
+                næringskode = objectMapper.treeToValue(
+                    næringskodeJson,
+                    Næringskode5Siffer::class.java
+                ),
+                overordnetEnhetOrgnr = Orgnr(enhetJson["overordnetEnhet"].textValue()),
+                kommune = kommune,
+                kommunenummer = kommunenummer,
+                fylke = Fylke.fraKommunenummer(kommunenummer),
+                antallAnsatte = enhetJson["antallAnsatte"].intValue()
             )
         } catch (e: Exception) {
             when (e) {

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringsbeskrivelser
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import java.time.ZonedDateTime
 
 enum class Kilde {
@@ -68,3 +71,26 @@ data class InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
     var kommunenummer: String,
     var kommune: String
 ) : MottattIaTjeneste
+
+
+fun getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+    innloggetIaTjeneste: InnloggetMottattIaTjeneste,
+    underenhet: Underenhet,
+    overordnetEnhet: OverordnetEnhet
+) = InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+    orgnr = innloggetIaTjeneste.orgnr,
+    næringKode5Siffer = underenhet.næringskode.kode!!,
+    type = innloggetIaTjeneste.type,
+    kilde = innloggetIaTjeneste.kilde,
+    tjenesteMottakkelsesdato = innloggetIaTjeneste.tjenesteMottakkelsesdato,
+    antallAnsatte = underenhet.antallAnsatte,
+    næringskode5SifferBeskrivelse = underenhet.næringskode.beskrivelse,
+    næring2SifferBeskrivelse = Næringsbeskrivelser.mapTilNæringsbeskrivelse(
+        underenhet.næringskode.kode!!.substring(0, 2)
+    ),
+    SSBSektorKode = overordnetEnhet.institusjonellSektorkode.kode,
+    SSBSektorKodeBeskrivelse = overordnetEnhet.institusjonellSektorkode.beskrivelse,
+    fylke = underenhet.fylke.navn,
+    kommunenummer = underenhet.kommunenummer,
+    kommune = underenhet.kommune
+)

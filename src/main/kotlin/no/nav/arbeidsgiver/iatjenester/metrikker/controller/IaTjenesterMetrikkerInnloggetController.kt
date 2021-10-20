@@ -3,13 +3,13 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 import arrow.core.Either
 import arrow.core.flatMap
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringsbeskrivelser
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretService
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.getInnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.InnloggetBruker
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
@@ -173,22 +173,10 @@ class IaTjenesterMetrikkerInnloggetController(
                         Either.Left(enhetsregisteretException)
                     }, { overordnetEnhet ->
                         Either.Right(
-                            InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
-                                orgnr = innloggetIaTjeneste.orgnr,
-                                næringKode5Siffer = underenhet.næringskode.kode!!,
-                                type = innloggetIaTjeneste.type,
-                                kilde = innloggetIaTjeneste.kilde,
-                                tjenesteMottakkelsesdato = innloggetIaTjeneste.tjenesteMottakkelsesdato,
-                                antallAnsatte = underenhet.antallAnsatte,
-                                næringskode5SifferBeskrivelse = underenhet.næringskode.beskrivelse,
-                                næring2SifferBeskrivelse = Næringsbeskrivelser.mapTilNæringsbeskrivelse(
-                                    underenhet.næringskode.kode!!
-                                ),
-                                SSBSektorKode = overordnetEnhet.institusjonellSektorkode.kode,
-                                SSBSektorKodeBeskrivelse = overordnetEnhet.institusjonellSektorkode.beskrivelse,
-                                fylke = underenhet.fylke.navn,
-                                kommunenummer = underenhet.kommunenummer,
-                                kommune = underenhet.kommune
+                            getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+                                innloggetIaTjeneste,
+                                underenhet,
+                                overordnetEnhet
                             )
                         )
                     }
