@@ -66,7 +66,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         }
     }
 
-    private lateinit var målingFra :LocalDate
+    private lateinit var målingFra: LocalDate
 
 
     @BeforeAll
@@ -110,7 +110,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun."))
 
-        idag =  LocalDate.of(2021, Month.JULY, 1)
+        idag = LocalDate.of(2021, Month.JULY, 1)
         datakatalogStatistikkMedTilDatoSomVarierer.run()
         echartSpec = produsertDatapakke.views[1].spec as EchartSpec
 
@@ -125,21 +125,41 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         datakatalogStatistikkMedDato.run()
 
         Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(4)
-        Assertions.assertThat(produsertDatapakke.views[0].spec).isInstanceOf(MarkdownSpec::class.java)
-        Assertions.assertThat(produsertDatapakke.views[1].spec).isInstanceOf(MarkdownSpec::class.java)
+        Assertions.assertThat(produsertDatapakke.views[0].spec)
+            .isInstanceOf(MarkdownSpec::class.java)
 
-        val echartSpec: EchartSpec = produsertDatapakke.views[2].spec as EchartSpec
-        Assertions.assertThat(echartSpec.option.xAxis.data)
+        val leverteIaTjenesterPerMånedEchart: EchartSpec =
+            produsertDatapakke.views[1].spec as EchartSpec
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
-        Assertions.assertThat(echartSpec.option.series[0].name).isEqualTo("Samtalestøtte (uinnlogget)")
-        Assertions.assertThat(echartSpec.option.series[0].title).isEqualTo("Samtalestøtte")
-        Assertions.assertThat(echartSpec.option.series[0].data)
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].name)
+            .isEqualTo("Samtalestøtte (uinnlogget)")
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].title)
+            .isEqualTo("Samtalestøtte")
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].data)
             .isEqualTo(listOf(0, 1, 2, 2, 2))
-        Assertions.assertThat(echartSpec.option.series[1].name).isEqualTo("Sykefraværsstatistikk (innlogget)")
-        Assertions.assertThat(echartSpec.option.series[1].title)
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].name)
+            .isEqualTo("Sykefraværsstatistikk (innlogget)")
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].title)
             .isEqualTo("Sykefraværsstatistikk")
-        Assertions.assertThat(echartSpec.option.series[1].data)
-            .isEqualTo(listOf(1, 3, 1, 1, 1,))
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].data)
+            .isEqualTo(listOf(1, 3, 1, 1, 1))
+    }
+
+    @Test
+    fun `Test at generert datapakke har graf over IA-tjenester per fylke av typen stacked-bar`() {
+        opprettTestDataIDB(namedParameterJdbcTemplate)
+        datakatalogStatistikkMedDato.run()
+
+        val leverteIaTjenesterPerFylke: View = produsertDatapakke.views[3]
+
+        Assertions.assertThat(leverteIaTjenesterPerFylke.description)
+            .isEqualTo("Antall digitale IA-tjenester mottatt per applikasjon fordelt på fylke.")
+
+        val dataserier = (leverteIaTjenesterPerFylke.spec as EchartSpec).option.series
+
+        Assertions.assertThat(dataserier[0].stack).isEqualTo("app")
+        Assertions.assertThat(dataserier[1].stack).isEqualTo("app")
     }
 
     @Test
@@ -211,7 +231,10 @@ internal class DatakatalogStatistikkIntegrasjonTest {
                     orgnr = (999999900 + index).toString(),
                     næringKode5Siffer = "",
                     næring2SifferBeskrivelse = "",
-                    tjeneste_mottakkelsesdato = Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
+                    tjeneste_mottakkelsesdato = Timestamp.valueOf(
+                        date.toLocalDate()
+                            .atStartOfDay()
+                    ),
                     antallAnsatte = 5 + index,
                     næringskode5SifferBeskrivelse = "",
                     SSBSektorKode = "",
