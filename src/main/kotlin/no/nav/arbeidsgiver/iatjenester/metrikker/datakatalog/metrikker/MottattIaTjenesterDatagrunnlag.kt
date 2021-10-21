@@ -19,6 +19,8 @@ class MottattIaTjenesterDatagrunnlag(
     val gjeldendeÅr = fraDato.year
     val gjeldendeMåneder: List<Month> = fraDato månederTil tilDato
 
+    val alleFylkerAlfabetisk = alleFylkerAlfabetisk()
+
     val antallInnloggetMetrikkerPerMåned: Map<Month, Int> =
         beregnAntallMetrikkerPerMåned(
             gjeldendeMåneder,
@@ -49,9 +51,10 @@ class MottattIaTjenesterDatagrunnlag(
         beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)).values.sum()
 
     fun beregnInnloggedeIaTjenesterPerFylke(fraApp: Kilde): Collection<Int> =
-        (alleFylkerAlfabetisk().associateWith { 0 } +
+        (alleFylkerAlfabetisk.associateWith { 0 } +
                 innloggetMetrikker
                     .filter { it.kilde == fraApp }
+                    .filter { it.fylke in alleFylkerAlfabetisk }
                     .groupingBy { it.fylke }
                     .eachCount()
                 ).values
