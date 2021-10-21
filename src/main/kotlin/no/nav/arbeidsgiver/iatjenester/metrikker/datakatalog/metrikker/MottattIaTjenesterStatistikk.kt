@@ -15,6 +15,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
 import java.time.LocalDate
+import java.time.Month
 import java.time.format.TextStyle
 import java.util.*
 
@@ -22,17 +23,13 @@ import java.util.*
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) :
         DatakatalogData {
 
-    private var NORSK_BOKMÅL = Locale("no", "NO", "NB")
     private var startDato: LocalDate = datagrunnlag.startDate
 
     override fun opprettViews() = listOf(
         View(
             title = "Mottatte digitale IA-tjenester",
             description = "Antall digitale IA-tjenester siden ${startDato.dayOfMonth}. ${
-                startDato.month.getDisplayName(
-                    TextStyle.FULL,
-                    NORSK_BOKMÅL
-                )
+                startDato.month.tilNorskTekstformat(kortform = false)
             }",
             specType = SpecType.markdown,
             spec = lagMottatteDigitaleIATjenesterMarkdownSpec(datagrunnlag),
@@ -45,15 +42,9 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         ),
         View(
             title = "Mottatte digitale IA-tjenester per bransje (${
-                datagrunnlag.gjeldendeMåneder.first().getDisplayName(
-                    TextStyle.SHORT,
-                    NORSK_BOKMÅL
-                )
+                datagrunnlag.gjeldendeMåneder.first().tilNorskTekstformat()
             } - ${
-                datagrunnlag.gjeldendeMåneder.last().getDisplayName(
-                    TextStyle.SHORT,
-                    NORSK_BOKMÅL
-                )
+                datagrunnlag.gjeldendeMåneder.last().tilNorskTekstformat()
             } ${datagrunnlag.gjeldendeÅr})",
             description = "Antall digitale IA-tjenester mottatt per applikasjon fordelt per bransje i bransjeprogram",
             specType = SpecType.echart,
@@ -61,15 +52,9 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         ),
         View(
             title = "Mottatte digitale IA-tjenester per fylke (${
-                datagrunnlag.gjeldendeMåneder.first().getDisplayName(
-                    TextStyle.SHORT,
-                    NORSK_BOKMÅL
-                )
+                datagrunnlag.gjeldendeMåneder.first().tilNorskTekstformat()
             } - ${
-                datagrunnlag.gjeldendeMåneder.last().getDisplayName(
-                    TextStyle.SHORT,
-                    NORSK_BOKMÅL
-                )
+                datagrunnlag.gjeldendeMåneder.last().tilNorskTekstformat()
             } ${datagrunnlag.gjeldendeÅr})",
             description = "Antall digitale IA-tjenester mottatt per applikasjon fordelt på fylke.",
             specType = SpecType.echart,
@@ -141,9 +126,8 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 ),
                 Grid(),
                 Xaxis(
-                    "category",
-                    data = datagrunnlag.gjeldendeMåneder
-                        .map { month -> month.getDisplayName(TextStyle.SHORT, NORSK_BOKMÅL) }
+                    type = "category",
+                    data = datagrunnlag.gjeldendeMåneder.map { måned -> måned.tilNorskTekstformat() }
                 ),
                 Yaxis("value"),
                 Tooltip("item"),
@@ -208,6 +192,12 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         )
     }
 
+    private fun Month.tilNorskTekstformat(kortform: Boolean = true): String {
+        return getDisplayName(
+            if (kortform) TextStyle.SHORT else TextStyle.FULL,
+            Locale("no", "NO", "NB")
+        )
+    }
 
     private fun lagMottatteDigitaleIATjenesterMarkdownSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): MarkdownSpec {
         return MarkdownSpec(

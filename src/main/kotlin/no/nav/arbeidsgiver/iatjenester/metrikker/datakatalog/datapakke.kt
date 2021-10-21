@@ -19,11 +19,7 @@ data class View(
     val description: String,
     val specType: SpecType,
     val spec: Spec
-) {
-    constructor(
-        title: String, specType: SpecType, spec: Spec
-    ) : this(title, "", specType, spec)
-}
+)
 
 enum class SpecType {
     markdown,
@@ -70,20 +66,14 @@ data class Grid(
 data class Xaxis(
     val type: String,
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    val data: List<String>?
-) {
-    constructor(type: String) :
-            this(type, null)
-}
+    val data: List<String>? = null
+)
 
 data class Yaxis(
     val type: String,
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    val data: List<String>?
-) {
-    constructor(type: String) :
-            this(type, null)
-}
+    val data: List<String>? = null
+)
 
 data class Serie(
     val name: String,
