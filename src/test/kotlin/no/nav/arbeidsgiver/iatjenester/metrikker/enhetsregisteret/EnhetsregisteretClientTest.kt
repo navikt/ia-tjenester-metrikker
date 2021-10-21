@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 
+
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
@@ -7,10 +8,8 @@ import lombok.SneakyThrows
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.assertj.core.api.Assertions.assertThat
-
-
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -97,8 +96,8 @@ class EnhetsregisteretClientTest {
         assertThat(
             underenhet?.næringskode?.beskrivelse
         ).isEqualTo("Trygdeordninger underlagt offentlig forvaltning")
-        assertThat(underenhet?.kommune?.nummer).isEqualTo("3005")
-        assertThat(underenhet?.kommune?.navn).isEqualTo("DRAMMEN")
+        assertThat(underenhet?.kommunenummer).isEqualTo("3005")
+        assertThat(underenhet?.kommune).isEqualTo("DRAMMEN")
         assertThat(underenhet?.fylke?.nummer).isEqualTo("30")
         assertThat(underenhet?.fylke?.navn).isEqualTo("Viken")
         assertThat(underenhet?.antallAnsatte).isEqualTo(40)

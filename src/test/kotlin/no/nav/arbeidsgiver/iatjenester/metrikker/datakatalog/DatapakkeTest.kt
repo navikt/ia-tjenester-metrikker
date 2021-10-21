@@ -11,6 +11,7 @@ internal class DatapakkeTest {
     fun `Felter xAxis og yAxis i Option sstarter med en liten bokstav`() {
         val option = Option(
             legend = Legend(listOf("item1")),
+            grid = Grid(),
             xAxis = Xaxis("The X axis", listOf("field 1", "field2", "field3")),
             yAxis = Yaxis("The Y axis"),
             tooltip = Tooltip("item"),
@@ -28,30 +29,35 @@ internal class DatapakkeTest {
             markdown = "## This is a title"
         )
         val viewWithMarkdown = View(
-            title = "The title", description = "A short description", specType = SpecType.markdown, spec = spec
+            title = "The title",
+            description = "A short description",
+            specType = SpecType.markdown,
+            spec = spec
         )
 
         val json = jacksonObjectMapper().writeValueAsString(viewWithMarkdown)
 
-        Assertions.assertThat(json).isEqualTo("{" +
-                  "\"title\":\"The title\"," +
-                  "\"description\":\"A short description\"," +
-                  "\"specType\":\"markdown\"," +
-                  "\"spec\":{\"markdown\":\"## This is a title\"}" +
-                "}")
+        Assertions.assertThat(json).isEqualTo(
+            "{" +
+                    "\"title\":\"The title\"," +
+                    "\"description\":\"A short description\"," +
+                    "\"specType\":\"markdown\"," +
+                    "\"spec\":{\"markdown\":\"## This is a title\"}" +
+                    "}"
+        )
     }
 
 
     private fun expectedJsonForOption(): String {
-        return "{" +
-                "\"legend\":{\"data\":[\"item1\"]}," +
-                "\"xAxis\":{\"type\":\"The X axis\",\"data\":[\"field 1\",\"field2\",\"field3\"]}," +
-                "\"yAxis\":{\"type\":\"The Y axis\"}," +
-                "\"tooltip\":{\"trigger\":\"item\"}," +
-                "\"series\":" +
-                "[" +
-                "{\"name\":\"My serie\",\"data\":[1,2,3,4,5],\"type\":\"bar\",\"title\":\"The Serie\"}" +
-                "]" +
-                "}"
+        return """
+            {
+            "legend":{"data":["item1"]},
+            "grid":{"left":"0%","right":"0%","bottom":"0%","containLabel":true},
+            "xAxis":{"type":"The X axis","data":["field 1","field2","field3"]},
+            "yAxis":{"type":"The Y axis"},
+            "tooltip":{"trigger":"item"},
+            "series":[{"name":"My serie","data":[1,2,3,4,5],"type":"bar","title":"The Serie","stack":""}]
+            }
+        """.trimIndent().replace("\n", "")
     }
 }

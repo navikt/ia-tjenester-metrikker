@@ -3,11 +3,10 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Fylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.InstitusjonellSektorkode
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Kommune
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.mapTilFylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.HttpServerErrorException
@@ -55,14 +54,15 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregistere
             val orgnr = Orgnr(enhetJson["organisasjonsnummer"].textValue())
             val navn = enhetJson["navn"].textValue()
             val næringskode: Næringskode5Siffer = objectMapper.readValue(næringskodeJson.toString())
-            val institusjonellSektorkode: InstitusjonellSektorkode = objectMapper.readValue(sektorJson.toString())
+            val institusjonellSektorkode: InstitusjonellSektorkode =
+                objectMapper.readValue(sektorJson.toString())
             val antallAnsatte = enhetJson["antallAnsatte"].intValue()
             return OverordnetEnhet(
-                orgnr,
-                navn,
-                næringskode,
-                institusjonellSektorkode,
-                antallAnsatte
+                orgnr = orgnr,
+                navn = navn,
+                næringskode = næringskode,
+                institusjonellSektorkode = institusjonellSektorkode,
+                antallAnsatte = antallAnsatte
             )
         } catch (e: Exception) {
             when (e) {
@@ -97,18 +97,20 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregistere
                 ?: throw IngenNæringException("Feil ved kall til Enhetsregisteret. Ingen næring for virksomhet.")
 
             val beliggenhetsadresseJson = enhetJson["beliggenhetsadresse"]
-            val kommune = Kommune(
-                beliggenhetsadresseJson["kommunenummer"].textValue(),
-                beliggenhetsadresseJson["kommune"].textValue()
-            )
+            val kommune = beliggenhetsadresseJson["kommune"].textValue()
+            val kommunenummer = beliggenhetsadresseJson["kommunenummer"].textValue()
             return Underenhet(
-                Orgnr(enhetJson["organisasjonsnummer"].textValue()),
-                enhetJson["navn"].textValue(),
-                objectMapper.treeToValue(næringskodeJson, Næringskode5Siffer::class.java),
-                Orgnr(enhetJson["overordnetEnhet"].textValue()),
-                kommune,
-                mapTilFylke(kommune),
-                enhetJson["antallAnsatte"].intValue()
+                orgnr = Orgnr(enhetJson["organisasjonsnummer"].textValue()),
+                navn = enhetJson["navn"].textValue(),
+                næringskode = objectMapper.treeToValue(
+                    næringskodeJson,
+                    Næringskode5Siffer::class.java
+                ),
+                overordnetEnhetOrgnr = Orgnr(enhetJson["overordnetEnhet"].textValue()),
+                kommune = kommune,
+                kommunenummer = kommunenummer,
+                fylke = Fylke.fraKommunenummer(kommunenummer),
+                antallAnsatte = enhetJson["antallAnsatte"].intValue()
             )
         } catch (e: Exception) {
             when (e) {

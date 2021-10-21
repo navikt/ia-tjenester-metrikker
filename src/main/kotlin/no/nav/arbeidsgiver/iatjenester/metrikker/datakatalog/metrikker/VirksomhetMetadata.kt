@@ -23,38 +23,35 @@ data class Underenhet(
     override val navn: String,
     override val næringskode: Næringskode5Siffer,
     val overordnetEnhetOrgnr: Orgnr,
-    val kommune: Kommune,
+    val kommune: String,
+    val kommunenummer: String,
     val fylke: Fylke,
     val antallAnsatte: Int
 ) : Virksomhet
 
 data class InstitusjonellSektorkode(val kode: String, val beskrivelse: String)
 
-data class Fylke(val nummer: String, val navn: String)
-data class Kommune(val nummer: String, val navn: String)
+enum class Fylke(val navn: String, val nummer: String) {
+    OSLO("Oslo", "03"),
+    ROGALAND("Rogaland", "11"),
+    MØRE_OG_ROMSDAL("Møre og Romsdal", "15"),
+    NORDLAND("Nordland", "18"),
+    VIKEN("Viken", "30"),
+    INNLANDET("Innlandet", "34"),
+    VESTFOLD_OG_TELEMARK("Vestfold og Telemark", "38"),
+    AGDER("Agder", "42"),
+    VESTLAND("Vestland", "46"),
+    TRØNDELAG("Trøndelag", "50"),
+    TROMS_OG_FINNMARK("Troms og Finnmark", "54"),
 
+    UKJENT("Ukjent", "Ukjent");
 
-fun mapTilFylke(kommune: Kommune): Fylke {
-
-    val utledetFylkesnummer: String =
-        if (kommune.nummer.length != 4)
-            "IKKE_GYLDIG_KOMMUNENUMMER"
-        else
-            kommune.nummer.substring(0, 2)
-
-    return when (utledetFylkesnummer) {
-        "42" -> Fylke("42", "Agder")
-        "34" -> Fylke("34", "Innlandet")
-        "15" -> Fylke("15", "Møre og Romsdal")
-        "18" -> Fylke("18", "Nordland")
-        "03" -> Fylke("03", "Oslo")
-        "11" -> Fylke("11", "Rogaland")
-        "54" -> Fylke("54", "Troms og Finnmark")
-        "50" -> Fylke("50", "Trøndelag")
-        "38" -> Fylke("38", "Vestfold og Telemark")
-        "46" -> Fylke("46", "Vestland")
-        "30" -> Fylke("30", "Viken")
-
-        else -> Fylke("UKJENT", "UKJENT")
+    companion object {
+        fun fraKommunenummer(kommunenummer: String): Fylke {
+            if (kommunenummer.length != 4) return UKJENT
+            return values().find { it.nummer == kommunenummer.substring(0, 2) } ?: UKJENT
+        }
     }
 }
+
+fun alleFylkerAlfabetisk() = Fylke.values().sortedBy { it.navn }.map { it.navn }
