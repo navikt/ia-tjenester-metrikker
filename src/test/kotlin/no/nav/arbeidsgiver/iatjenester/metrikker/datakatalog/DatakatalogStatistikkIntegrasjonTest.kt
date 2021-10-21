@@ -66,7 +66,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         }
     }
 
-    private lateinit var målingFra :LocalDate
+    private lateinit var målingFra: LocalDate
 
 
     @BeforeAll
@@ -91,8 +91,8 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
 
     @Test
-    fun `Henter ny data ved månedsskifte`() {
-        var idag =  LocalDate.of(2021, Month.JUNE, 1)
+    fun `Oppdaterte data hentes ved månedsskifte`() {
+        var idag = LocalDate.of(2021, Month.JUNE, 1)
 
         val datakatalogStatistikkMedTilDatoSomVarierer = object : DatakatalogStatistikk(
             iaTjenesterMetrikkerRepository,
@@ -105,14 +105,14 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         opprettTestDataIDB(namedParameterJdbcTemplate)
 
         datakatalogStatistikkMedTilDatoSomVarierer.run()
-        var echartSpec: EchartSpec = produsertDatapakke.views[2].spec as EchartSpec
+        var echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
 
         Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun."))
 
-        idag =  LocalDate.of(2021, Month.JULY, 1)
+        idag = LocalDate.of(2021, Month.JULY, 1)
         datakatalogStatistikkMedTilDatoSomVarierer.run()
-        echartSpec = produsertDatapakke.views[2].spec as EchartSpec
+        echartSpec = produsertDatapakke.views[1].spec as EchartSpec
 
         Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
@@ -125,25 +125,87 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         datakatalogStatistikkMedDato.run()
 
         Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(4)
-        Assertions.assertThat(produsertDatapakke.views[0].spec).isInstanceOf(MarkdownSpec::class.java)
-        Assertions.assertThat(produsertDatapakke.views[1].spec).isInstanceOf(MarkdownSpec::class.java)
+        Assertions.assertThat(produsertDatapakke.views[0].spec)
+            .isInstanceOf(MarkdownSpec::class.java)
 
-        val echartSpec: EchartSpec = produsertDatapakke.views[2].spec as EchartSpec
-        Assertions.assertThat(echartSpec.option.xAxis.data)
+        val leverteIaTjenesterPerMånedEchart: EchartSpec =
+            produsertDatapakke.views[1].spec as EchartSpec
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
-        Assertions.assertThat(echartSpec.option.series[0].name).isEqualTo("Samtalestøtte (uinnlogget)")
-        Assertions.assertThat(echartSpec.option.series[0].title).isEqualTo("Samtalestøtte")
-        Assertions.assertThat(echartSpec.option.series[0].data)
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].name)
+            .isEqualTo("Samtalestøtte (uinnlogget)")
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].title)
+            .isEqualTo("Samtalestøtte")
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].data)
             .isEqualTo(listOf(0, 1, 2, 2, 2))
-        Assertions.assertThat(echartSpec.option.series[1].name).isEqualTo("Sykefraværsstatistikk (innlogget)")
-        Assertions.assertThat(echartSpec.option.series[1].title)
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].name)
+            .isEqualTo("Sykefraværsstatistikk (innlogget)")
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].title)
             .isEqualTo("Sykefraværsstatistikk")
-        Assertions.assertThat(echartSpec.option.series[1].data)
-            .isEqualTo(listOf(1, 3, 1, 1, 1,))
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].data)
+            .isEqualTo(listOf(1, 3, 1, 1, 1))
     }
 
     @Test
-    fun `kjør DatakatalogStatistikk og send data til lokal mock datakatalog`() {
+    fun `Generert datapakke har graf over IA-tjenester per måned`() {
+        opprettTestDataIDB(namedParameterJdbcTemplate)
+        datakatalogStatistikkMedDato.run()
+
+        val leverteIaTjenesterPerMåned: View = produsertDatapakke.views[1]
+
+        Assertions.assertThat(leverteIaTjenesterPerMåned.description)
+            .isEqualTo("Antall digitale IA-tjenester mottatt per applikasjon per måned")
+        Assertions.assertThat(leverteIaTjenesterPerMåned.title)
+            .isEqualTo("Mottatte digitale IA-tjenester ")
+
+        val dataserier = (leverteIaTjenesterPerMåned.spec as EchartSpec).option.series
+
+        Assertions.assertThat(dataserier[0].name).isEqualTo("Samtalestøtte (uinnlogget)")
+        Assertions.assertThat(dataserier[0].type).isEqualTo("bar")
+
+        Assertions.assertThat(dataserier[1].name).isEqualTo("Sykefraværsstatistikk (innlogget)")
+        Assertions.assertThat(dataserier[1].type).isEqualTo("bar")
+    }
+
+    @Test
+    fun `Generert datapakke har graf over IA-tjenester per bransje`() {
+        opprettTestDataIDB(namedParameterJdbcTemplate)
+        datakatalogStatistikkMedDato.run()
+
+        val leverteIaTjenesterPerBransje: View = produsertDatapakke.views[2]
+
+        Assertions.assertThat(leverteIaTjenesterPerBransje.description)
+            .isEqualTo("Antall digitale IA-tjenester mottatt per applikasjon fordelt per bransje i bransjeprogram")
+        Assertions.assertThat(leverteIaTjenesterPerBransje.title)
+            .isEqualTo("Mottatte digitale IA-tjenester per bransje (mar. - jul. 2021)")
+
+        val dataserier = (leverteIaTjenesterPerBransje.spec as EchartSpec).option.series
+
+        Assertions.assertThat(dataserier[0].name).isEqualTo("Samtalestøtte (innlogget)")
+        Assertions.assertThat(dataserier[0].type).isEqualTo("bar")
+
+        Assertions.assertThat(dataserier[1].name).isEqualTo("Sykefraværsstatistikk")
+        Assertions.assertThat(dataserier[1].type).isEqualTo("bar")
+    }
+
+    @Test
+    fun `Generert datapakke har graf over IA-tjenester per fylke av typen stacked-bar`() {
+        opprettTestDataIDB(namedParameterJdbcTemplate)
+        datakatalogStatistikkMedDato.run()
+
+        val leverteIaTjenesterPerFylke: View = produsertDatapakke.views[3]
+
+        Assertions.assertThat(leverteIaTjenesterPerFylke.description)
+            .isEqualTo("Antall digitale IA-tjenester mottatt per applikasjon fordelt på fylke.")
+
+        val dataserier = (leverteIaTjenesterPerFylke.spec as EchartSpec).option.series
+
+        Assertions.assertThat(dataserier[0].stack).isEqualTo("app")
+        Assertions.assertThat(dataserier[1].stack).isEqualTo("app")
+    }
+
+    @Test
+    fun `Kjør DatakatalogStatistikk og send data til lokal mock datakatalog`() {
         opprettTestDataIDB(namedParameterJdbcTemplate)
 
         datakatalogStatistikkSomSenderTilLokalMockServer.run()
@@ -211,7 +273,10 @@ internal class DatakatalogStatistikkIntegrasjonTest {
                     orgnr = (999999900 + index).toString(),
                     næringKode5Siffer = "",
                     næring2SifferBeskrivelse = "",
-                    tjeneste_mottakkelsesdato = Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
+                    tjeneste_mottakkelsesdato = Timestamp.valueOf(
+                        date.toLocalDate()
+                            .atStartOfDay()
+                    ),
                     antallAnsatte = 5 + index,
                     næringskode5SifferBeskrivelse = "",
                     SSBSektorKode = "",

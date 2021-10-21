@@ -1,8 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
 import arrow.core.Either
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Kommune
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.mapTilFylke
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Fylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjeneste
@@ -19,12 +18,8 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
 
         if (iaTjenesteSjekkResultat is Either.Right) {
 
-            innloggetIaTjeneste.fylke = mapTilFylke(
-                Kommune(
-                    innloggetIaTjeneste.kommunenummer,
-                    innloggetIaTjeneste.kommune
-                )
-            ).navn
+            innloggetIaTjeneste.fylke =
+                Fylke.fraKommunenummer(innloggetIaTjeneste.kommunenummer).navn
 
             iaTjenesterMetrikkerRepository.persister(innloggetIaTjeneste)
             log("sjekkOgPersister()").info(

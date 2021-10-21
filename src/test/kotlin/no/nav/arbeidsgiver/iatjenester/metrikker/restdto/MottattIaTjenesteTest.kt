@@ -3,7 +3,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.restdto
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Fylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.InstitusjonellSektorkode
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Kommune
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
@@ -25,32 +24,30 @@ internal class MottattIaTjenesteTest {
             TODAY
         )
         val underenhet = Underenhet(
-            Orgnr(UNDERENHET_ORGNR),
-            "Test bedrift",
-            Næringskode5Siffer(
+            orgnr = Orgnr(UNDERENHET_ORGNR),
+            navn = "Test bedrift",
+            næringskode = Næringskode5Siffer(
                 "88911",
                 "Barnehager"
             ),
-            Orgnr(OVERORDNET_ENHET_ORGNR),
-            Kommune(
-                "3005",
-                "DRAMMEN"
-            ),
-            Fylke(
-                "03",
-                "Viken"
-            ),
-            15
+            overordnetEnhetOrgnr = Orgnr(OVERORDNET_ENHET_ORGNR),
+            kommune = "DRAMMEN",
+            kommunenummer = "3005",
+            fylke = Fylke.VIKEN,
+            antallAnsatte = 15
         )
         val overordnetEnhet = OverordnetEnhet(
-            Orgnr(OVERORDNET_ENHET_ORGNR),
-            "Test overordnet enhet",
-            Næringskode5Siffer(
+            orgnr = Orgnr(OVERORDNET_ENHET_ORGNR),
+            navn = "Test overordnet enhet",
+            næringskode = Næringskode5Siffer(
                 "88912",
                 "Barneparker og dagmammaer"
             ),
-            InstitusjonellSektorkode("2100", "Private aksjeselskaper mv."),
-            156
+            institusjonellSektorkode = InstitusjonellSektorkode(
+                "2100",
+                "Private aksjeselskaper mv."
+            ),
+            antallAnsatte = 156
         )
 
         val (orgnr,
@@ -87,8 +84,8 @@ internal class MottattIaTjenesteTest {
     }
 
     companion object {
-        val OVERORDNET_ENHET_ORGNR: String = "999999999"
-        val UNDERENHET_ORGNR: String = "888888888"
+        const val OVERORDNET_ENHET_ORGNR: String = "999999999"
+        const val UNDERENHET_ORGNR: String = "888888888"
         val TODAY: ZonedDateTime = now()
     }
 }
