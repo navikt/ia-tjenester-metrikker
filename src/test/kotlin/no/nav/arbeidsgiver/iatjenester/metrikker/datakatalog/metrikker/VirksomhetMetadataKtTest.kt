@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 internal class VirksomhetMetadataKtTest {
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Ukjent for kommunenumre som ikke eksisterer`() {
+    fun `Fylke_fraKommunenummer returnerer Ukjent for kommunenumre som ikke eksisterer`() {
 
         val kommunenumre = setOf(
             "0000",
@@ -21,7 +21,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Ukjent for kommunenumre som ikke har gyldig nummer`() {
+    fun `Fylke_fraKommunenummer returnerer Ukjent for kommunenumre som ikke har gyldig nummer`() {
 
         val kommunenumre = setOf(
             "",
@@ -41,7 +41,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Viken for tilhørende kommunenumre`() {
+    fun `Fylke_fraKommunenummer returnerer Viken for tilhørende kommunenumre`() {
 
         val kommunenumre = setOf(
             "3001",
@@ -57,7 +57,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Oslo for Oslo kommune`() {
+    fun `Fylke_fraKommunenummer returnerer Oslo for Oslo kommune`() {
 
         val fylke = Fylke.fraKommunenummer("0301")
 
@@ -66,7 +66,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Innlandet for tilhørende kommunenumre`() {
+    fun `Fylke_fraKommunenummer returnerer Innlandet for tilhørende kommunenumre`() {
 
         val kommunenumre = setOf(
             "3401",
@@ -81,7 +81,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Vestfold og Telemark for tilhørende kommunenumre`() {
+    fun `Fylke_fraKommunenummer returnerer Vestfold og Telemark for tilhørende kommunenumre`() {
 
         val kommunenumre = setOf(
             "3804",
@@ -96,7 +96,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Agder for tilhørende kommunenumre`() {
+    fun `Fylke_fraKommunenummer returnerer Agder for tilhørende kommunenumre`() {
 
         val kommunenumre = setOf(
             "4201",
@@ -111,7 +111,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Rogaland for Eigersund kommune`() {
+    fun `Fylke_fraKommunenummer returnerer Rogaland for Eigersund kommune`() {
 
         val fylke = Fylke.fraKommunenummer("1101")
 
@@ -120,7 +120,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Vestland for tilhørende kommunenumre`() {
+    fun `Fylke_fraKommunenummer returnerer Vestland for tilhørende kommunenumre`() {
 
         val kommunenumre = setOf(
             "4601",
@@ -135,7 +135,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Møre og Romsdal for Molde kommune`() {
+    fun `Fylke_fraKommunenummer returnerer Møre og Romsdal for Molde kommune`() {
 
         val fylke = Fylke.fraKommunenummer("1506")
 
@@ -144,7 +144,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Nordland for Bodø kommune`() {
+    fun `Fylke_fraKommunenummer returnerer Nordland for Bodø kommune`() {
 
         val fylke = Fylke.fraKommunenummer("1804")
 
@@ -153,7 +153,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Troms og Finnmark for tilhørende kommunenumre`() {
+    fun `Fylke_fraKommunenummer returnerer Troms og Finnmark for tilhørende kommunenumre`() {
 
         val kommunenumre = setOf(
             "5401",
@@ -168,7 +168,7 @@ internal class VirksomhetMetadataKtTest {
     }
 
     @Test
-    fun `Test at Fylke_fraKommunenummer returnerer Trøndelag for tilhørende kommunenumre`() {
+    fun `Fylke_fraKommunenummer returnerer Trøndelag for tilhørende kommunenumre`() {
 
         val kommunenumre = setOf(
             "5001",

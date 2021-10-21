@@ -29,7 +29,7 @@ internal class IaTjenesterMetrikkerServiceTest {
 
     @Test
     @Throws(Exception::class)
-    fun `Tester at sjekkOgPersister validerer gyldig IA-tjeneste OK`() {
+    fun `sjekkOgPersister validerer gyldig IA-tjeneste OK`() {
 
         val sjekkOgOpprett =
             IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository)
@@ -55,7 +55,7 @@ internal class IaTjenesterMetrikkerServiceTest {
     }
 
     @Test
-    fun `Test at fylke blir utledet fra kommunenummer før innlogget IA-tjeneste persisteres`() {
+    fun `Fylke blir utledet fra kommunenummer før innlogget IA-tjeneste persisteres`() {
         val levertIaTjenesteFraInnlandet =
             TestUtils.vilkårligIaTjeneste().apply { kommunenummer = "3403" }
 

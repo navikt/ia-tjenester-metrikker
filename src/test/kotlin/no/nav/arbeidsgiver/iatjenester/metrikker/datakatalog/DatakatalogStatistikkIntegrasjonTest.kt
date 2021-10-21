@@ -91,7 +91,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
 
     @Test
-    fun `Test at oppdaterte data hentes ved månedsskifte`() {
+    fun `Oppdaterte data hentes ved månedsskifte`() {
         var idag = LocalDate.of(2021, Month.JUNE, 1)
 
         val datakatalogStatistikkMedTilDatoSomVarierer = object : DatakatalogStatistikk(
@@ -147,7 +147,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     }
 
     @Test
-    fun `Test at generert datapakke har graf over IA-tjenester per måned`() {
+    fun `Generert datapakke har graf over IA-tjenester per måned`() {
         opprettTestDataIDB(namedParameterJdbcTemplate)
         datakatalogStatistikkMedDato.run()
 
@@ -168,7 +168,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     }
 
     @Test
-    fun `Test at generert datapakke har graf over IA-tjenester per bransje`() {
+    fun `Generert datapakke har graf over IA-tjenester per bransje`() {
         opprettTestDataIDB(namedParameterJdbcTemplate)
         datakatalogStatistikkMedDato.run()
 
@@ -189,7 +189,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     }
 
     @Test
-    fun `Test at generert datapakke har graf over IA-tjenester per fylke av typen stacked-bar`() {
+    fun `Generert datapakke har graf over IA-tjenester per fylke av typen stacked-bar`() {
         opprettTestDataIDB(namedParameterJdbcTemplate)
         datakatalogStatistikkMedDato.run()
 
@@ -205,7 +205,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     }
 
     @Test
-    fun `kjør DatakatalogStatistikk og send data til lokal mock datakatalog`() {
+    fun `Kjør DatakatalogStatistikk og send data til lokal mock datakatalog`() {
         opprettTestDataIDB(namedParameterJdbcTemplate)
 
         datakatalogStatistikkSomSenderTilLokalMockServer.run()
