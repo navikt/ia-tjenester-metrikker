@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class FylkerTest {
 
     @Test
-    fun `alleFylkerAlfabetisk returnerer navnet på alle alle fylker i alfabetisk rekkefølge`() {
+    fun `alleFylkerAlfabetisk returnerer navnet på fylker i alfabetisk rekkefølge`() {
         val fylker = alleFylkerAlfabetisk()
 
         assertThat(fylker.first() == "Agder")
