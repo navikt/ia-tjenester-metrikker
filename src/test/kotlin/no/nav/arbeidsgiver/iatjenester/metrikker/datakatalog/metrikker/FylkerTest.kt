@@ -1,9 +1,22 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import org.assertj.core.api.Assertions
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Fylke
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class VirksomhetMetadataKtTest {
+internal class FylkerTest {
+
+    @Test
+    fun `alleFylkerAlfabetisk returnerer navnet på fylker i alfabetisk rekkefølge`() {
+        val fylker = alleFylkerAlfabetisk()
+
+        assertThat(fylker.first() == "Agder")
+        assertThat(fylker[1] == "Innlandet")
+        assertThat(fylker[2] == "Vestfold og Telemark")
+        // ...
+        assertThat(fylker.last() == "Viken")
+    }
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Ukjent for kommunenumre som ikke eksisterer`() {
@@ -15,8 +28,8 @@ internal class VirksomhetMetadataKtTest {
 
         kommunenumre.forEach {
             val fylke = Fylke.fraKommunenummer(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("Ukjent")
-            Assertions.assertThat(fylke.nummer).isEqualTo("Ukjent")
+            assertThat(fylke.navn).isEqualTo("Ukjent")
+            assertThat(fylke.nummer).isEqualTo("Ukjent")
         }
     }
 
@@ -35,8 +48,8 @@ internal class VirksomhetMetadataKtTest {
 
         kommunenumre.forEach {
             val fylke = Fylke.fraKommunenummer(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("Ukjent")
-            Assertions.assertThat(fylke.nummer).isEqualTo("Ukjent")
+            assertThat(fylke.navn).isEqualTo("Ukjent")
+            assertThat(fylke.nummer).isEqualTo("Ukjent")
         }
     }
 
@@ -51,8 +64,8 @@ internal class VirksomhetMetadataKtTest {
 
         kommunenumre.forEach {
             val fylke = Fylke.fraKommunenummer(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("Viken")
-            Assertions.assertThat(fylke.nummer).isEqualTo("30")
+            assertThat(fylke.navn).isEqualTo("Viken")
+            assertThat(fylke.nummer).isEqualTo("30")
         }
     }
 
@@ -61,8 +74,8 @@ internal class VirksomhetMetadataKtTest {
 
         val fylke = Fylke.fraKommunenummer("0301")
 
-        Assertions.assertThat(fylke.navn).isEqualTo("Oslo")
-        Assertions.assertThat(fylke.nummer).isEqualTo("03")
+        assertThat(fylke.navn).isEqualTo("Oslo")
+        assertThat(fylke.nummer).isEqualTo("03")
     }
 
     @Test
@@ -75,8 +88,8 @@ internal class VirksomhetMetadataKtTest {
 
         kommunenumre.forEach {
             val fylke = Fylke.fraKommunenummer(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("Innlandet")
-            Assertions.assertThat(fylke.nummer).isEqualTo("34")
+            assertThat(fylke.navn).isEqualTo("Innlandet")
+            assertThat(fylke.nummer).isEqualTo("34")
         }
     }
 
@@ -90,8 +103,8 @@ internal class VirksomhetMetadataKtTest {
 
         kommunenumre.forEach {
             val fylke = Fylke.fraKommunenummer(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("Vestfold og Telemark")
-            Assertions.assertThat(fylke.nummer).isEqualTo("38")
+            assertThat(fylke.navn).isEqualTo("Vestfold og Telemark")
+            assertThat(fylke.nummer).isEqualTo("38")
         }
     }
 
@@ -105,8 +118,8 @@ internal class VirksomhetMetadataKtTest {
 
         kommunenumre.forEach {
             val fylke = Fylke.fraKommunenummer(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("Agder")
-            Assertions.assertThat(fylke.nummer).isEqualTo("42")
+            assertThat(fylke.navn).isEqualTo("Agder")
+            assertThat(fylke.nummer).isEqualTo("42")
         }
     }
 
@@ -115,8 +128,8 @@ internal class VirksomhetMetadataKtTest {
 
         val fylke = Fylke.fraKommunenummer("1101")
 
-        Assertions.assertThat(fylke.navn).isEqualTo("Rogaland")
-        Assertions.assertThat(fylke.nummer).isEqualTo("11")
+        assertThat(fylke.navn).isEqualTo("Rogaland")
+        assertThat(fylke.nummer).isEqualTo("11")
     }
 
     @Test
@@ -129,8 +142,8 @@ internal class VirksomhetMetadataKtTest {
 
         kommunenumre.forEach {
             val fylke = Fylke.fraKommunenummer(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("Vestland")
-            Assertions.assertThat(fylke.nummer).isEqualTo("46")
+            assertThat(fylke.navn).isEqualTo("Vestland")
+            assertThat(fylke.nummer).isEqualTo("46")
         }
     }
 
@@ -139,8 +152,8 @@ internal class VirksomhetMetadataKtTest {
 
         val fylke = Fylke.fraKommunenummer("1506")
 
-        Assertions.assertThat(fylke.navn).isEqualTo("Møre og Romsdal")
-        Assertions.assertThat(fylke.nummer).isEqualTo("15")
+        assertThat(fylke.navn).isEqualTo("Møre og Romsdal")
+        assertThat(fylke.nummer).isEqualTo("15")
     }
 
     @Test
@@ -148,8 +161,8 @@ internal class VirksomhetMetadataKtTest {
 
         val fylke = Fylke.fraKommunenummer("1804")
 
-        Assertions.assertThat(fylke.navn).isEqualTo("Nordland")
-        Assertions.assertThat(fylke.nummer).isEqualTo("18")
+        assertThat(fylke.navn).isEqualTo("Nordland")
+        assertThat(fylke.nummer).isEqualTo("18")
     }
 
     @Test
@@ -162,8 +175,8 @@ internal class VirksomhetMetadataKtTest {
 
         kommunenumre.forEach {
             val fylke = Fylke.fraKommunenummer(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("Troms og Finnmark")
-            Assertions.assertThat(fylke.nummer).isEqualTo("54")
+            assertThat(fylke.navn).isEqualTo("Troms og Finnmark")
+            assertThat(fylke.nummer).isEqualTo("54")
         }
     }
 
@@ -177,8 +190,8 @@ internal class VirksomhetMetadataKtTest {
 
         kommunenumre.forEach {
             val fylke = Fylke.fraKommunenummer(it)
-            Assertions.assertThat(fylke.navn).isEqualTo("Trøndelag")
-            Assertions.assertThat(fylke.nummer).isEqualTo("50")
+            assertThat(fylke.navn).isEqualTo("Trøndelag")
+            assertThat(fylke.nummer).isEqualTo("50")
         }
     }
 }

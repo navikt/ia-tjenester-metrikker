@@ -12,6 +12,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
 import java.time.LocalDate

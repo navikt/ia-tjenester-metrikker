@@ -1,7 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
 import arrow.core.Either
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Fylke
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Fylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjeneste

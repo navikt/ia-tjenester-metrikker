@@ -1,7 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.restdto
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Fylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Fylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.InstitusjonellSektorkode
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
