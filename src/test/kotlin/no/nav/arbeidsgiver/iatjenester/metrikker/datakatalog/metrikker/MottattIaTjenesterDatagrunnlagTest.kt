@@ -34,6 +34,11 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         tidspunkt: LocalDateTime = _1_MAI.atStartOfDay()
     ) = MottattInnloggetIaTjenesteMetrikk(orgnr, kilde, næring, kommunenummer, kommune, fylke, tidspunkt)
 
+    private fun dummyUinnloggetMetrikk(
+        kilde: Kilde= Kilde.SAMTALESTØTTE,
+        tidspunkt: LocalDateTime = _1_MAI.atStartOfDay()
+    )= MottattUinnloggetIaTjenesteMetrikk(kilde, tidspunkt)
+
     @Test
     fun `beregn antall innlogget metrikker per måned summerer antall mottatt metrikker per måned`() {
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
@@ -57,6 +62,48 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         Assertions.assertThat(resultat[Month.FEBRUARY]).isEqualTo(24)
         Assertions.assertThat(resultat[Month.MARCH]).isEqualTo(5)
         Assertions.assertThat(resultat[Month.APRIL]).isEqualTo(44)
+    }
+
+    @Test
+    fun `beregn totalt innlogget metrikker per App returnere 0 hvis listen er empty`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = emptyList(),
+            uinnloggetMetrikker = emptyList(),
+            fraDato = _1_JANUAR_2021,
+            tilDato = _21_JUNI_2021
+        )
+
+        Assertions.assertThat(
+            datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SAMTALESTØTTE)
+        ).isEqualTo(0)
+        Assertions.assertThat(
+            datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK)
+        ).isEqualTo(0)
+    }
+
+    @Test
+    fun `beregn totalt innlogget metrikker per App returnere riktige tall`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = listOf(dummyInnloggetMetrikk()),
+            uinnloggetMetrikker = emptyList(),
+            fraDato = _1_JANUAR_2021,
+            tilDato = _21_JUNI_2021
+        )
+
+        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SAMTALESTØTTE)).isEqualTo(0)
+        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK)).isEqualTo(1)
+    }
+    @Test
+    fun `beregn totalt innlogget metrikker per App returnere 0 hvis vi ikke har innloggetmetrikker`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = emptyList(),
+            uinnloggetMetrikker = listOf(dummyUinnloggetMetrikk()),
+            fraDato = _1_JANUAR_2021,
+            tilDato = _21_JUNI_2021
+        )
+
+        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SAMTALESTØTTE)).isEqualTo(0)
+        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK)).isEqualTo(0)
     }
 
 

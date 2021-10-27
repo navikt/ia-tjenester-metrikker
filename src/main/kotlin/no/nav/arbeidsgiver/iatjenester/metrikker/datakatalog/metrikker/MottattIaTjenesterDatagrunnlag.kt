@@ -46,10 +46,12 @@ class MottattIaTjenesterDatagrunnlag(
             fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
         )
 
-    val totalInnloggetMetrikker: Int = innloggetMetrikker.size
     val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
     val totalUnikeBedrifterPerDag: Int =
         beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)).values.sum()
+
+    fun totalInnloggetMetrikkerPerApp(fraApp: Kilde): Int =
+        innloggetMetrikker.filter { it.kilde == fraApp }.size
 
     fun beregnInnloggedeIaTjenesterPerFylke(fraApp: Kilde): Collection<Int> =
         (alleFylkerAlfabetisk.associateWith { 0 } +
