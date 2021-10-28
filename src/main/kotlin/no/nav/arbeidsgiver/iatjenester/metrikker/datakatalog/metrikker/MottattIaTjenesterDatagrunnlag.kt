@@ -62,6 +62,7 @@ class MottattIaTjenesterDatagrunnlag(
                     .eachCount()
                 ).values
 
+    //TODO refakturere til filter og grouppingBy uten å bruke Kay
     fun beregnAntallMetrikkerPerMåned(
         måneder: List<Month>,
         metrikkerPerDag: Map<LocalDate, Int>

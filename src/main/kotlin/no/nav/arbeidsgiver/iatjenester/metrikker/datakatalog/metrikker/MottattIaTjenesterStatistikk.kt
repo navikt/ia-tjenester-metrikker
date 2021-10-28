@@ -124,7 +124,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 listOf(
                     Serie(
                         "Samtalestøtte (uinnlogget)",
-                        datagrunnlag.antallUinnloggetMetrikkerPerMåned.values.toList(),
+                        datagrunnlag.antallUinnloggetMetrikkerPerMåned.values,
                         "bar",
                         "Samtalestøtte",
                         stack = "Samtalestøtte"

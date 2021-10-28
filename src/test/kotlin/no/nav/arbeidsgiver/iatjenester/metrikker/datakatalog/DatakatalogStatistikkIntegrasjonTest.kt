@@ -136,13 +136,23 @@ internal class DatakatalogStatistikkIntegrasjonTest {
             .isEqualTo("Samtalestøtte (uinnlogget)")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].title)
             .isEqualTo("Samtalestøtte")
-        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].data)
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].data.toList())
             .isEqualTo(listOf(0, 1, 2, 2, 2))
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].stack)
+            .isEqualTo("Samtalestøtte")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].name)
-            .isEqualTo("Sykefraværsstatistikk (innlogget)")
+            .isEqualTo("Samtalestøtte (innlogget)")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].title)
+            .isEqualTo("Samtalestøtte")
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].data.toList())
+            .isEqualTo(listOf(0, 0, 0, 0, 0))
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].stack)
+            .isEqualTo("Samtalestøtte")
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[2].name)
+            .isEqualTo("Sykefraværsstatistikk (innlogget)")
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[2].title)
             .isEqualTo("Sykefraværsstatistikk")
-        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].data)
+        Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[2].data.toList())
             .isEqualTo(listOf(1, 3, 1, 1, 1))
     }
 
@@ -163,8 +173,11 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         Assertions.assertThat(dataserier[0].name).isEqualTo("Samtalestøtte (uinnlogget)")
         Assertions.assertThat(dataserier[0].type).isEqualTo("bar")
 
-        Assertions.assertThat(dataserier[1].name).isEqualTo("Sykefraværsstatistikk (innlogget)")
+        Assertions.assertThat(dataserier[1].name).isEqualTo("Samtalestøtte (innlogget)")
         Assertions.assertThat(dataserier[1].type).isEqualTo("bar")
+
+        Assertions.assertThat(dataserier[2].name).isEqualTo("Sykefraværsstatistikk (innlogget)")
+        Assertions.assertThat(dataserier[2].type).isEqualTo("bar")
     }
 
     @Test
