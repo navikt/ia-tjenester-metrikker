@@ -1,18 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.EchartSpec
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Grid
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Legend
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MarkdownSpec
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Option
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Serie
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.SpecType
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
 import java.time.LocalDate
@@ -22,7 +10,7 @@ import java.util.*
 
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) :
-        DatakatalogData {
+    DatakatalogData {
 
     private var startDato: LocalDate = datagrunnlag.startDate
 
@@ -122,7 +110,8 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Legend(
                     listOf(
                         "Samtalestøtte (uinnlogget)",
-                        "Sykefraværsstatistikk (innlogget)"
+                        "Samtalestøtte (innlogget)",
+                        "Sykefraværsstatistikk (innlogget)",
                     )
                 ),
                 Grid(),
@@ -137,11 +126,24 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                         "Samtalestøtte (uinnlogget)",
                         datagrunnlag.antallUinnloggetMetrikkerPerMåned.values.toList(),
                         "bar",
-                        "Samtalestøtte"
+                        "Samtalestøtte",
+                        stack = "Samtalestøtte"
+                    ),
+                    Serie(
+                        "Samtalestøtte (innlogget)",
+                        datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(datagrunnlag.gjeldendeMåneder, SAMTALESTØTTE)
+                            .values,
+                        "bar",
+                        "Samtalestøtte",
+                        stack = "Samtalestøtte"
                     ),
                     Serie(
                         "Sykefraværsstatistikk (innlogget)",
-                        datagrunnlag.antallInnloggetMetrikkerPerMåned.values.toList(),
+                        datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+                            datagrunnlag.gjeldendeMåneder,
+                            SYKEFRAVÆRSSTATISTIKK
+                        )
+                            .values,
                         "bar",
                         "Sykefraværsstatistikk"
                     )
@@ -204,7 +206,11 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         return MarkdownSpec(
             "## Samtalestøtte (uinnlogget)\n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
                     "## Samtalestøtte (innlogget)\n **${datagrunnlag.totalInnloggetMetrikkerPerApp(SAMTALESTØTTE)}** \n " +
-                    "## Sykefraværsstatistikk (innlogget)\n **${datagrunnlag.totalInnloggetMetrikkerPerApp(SYKEFRAVÆRSSTATISTIKK)}** \n " +
+                    "## Sykefraværsstatistikk (innlogget)\n **${
+                        datagrunnlag.totalInnloggetMetrikkerPerApp(
+                            SYKEFRAVÆRSSTATISTIKK
+                        )
+                    }** \n " +
                     "### Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
         )
     }

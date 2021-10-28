@@ -72,6 +72,16 @@ class MottattIaTjenesterDatagrunnlag(
         return metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumOf { it } }
     }
 
+    fun beregnAntallMetrikkerPerMånedPerApp(
+        måneder: List<Month>,
+        fraApp: Kilde
+    ): Map<Month, Int> {
+        return måneder.associateWith { 0 } + innloggetMetrikker.filter { it.kilde == fraApp }
+            .filter { it.tidspunkt.month in måneder }
+            .groupingBy { it.tidspunkt.month }.eachCount()
+
+    }
+
     private fun fjernDupliserteMetrikkerSammeDag(
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
     ): List<MottattInnloggetIaTjenesteMetrikk> {

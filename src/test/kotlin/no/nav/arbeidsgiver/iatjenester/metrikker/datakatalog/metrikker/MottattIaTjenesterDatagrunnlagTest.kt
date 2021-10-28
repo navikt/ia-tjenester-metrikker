@@ -35,9 +35,9 @@ internal class MottattIaTjenesterDatagrunnlagTest {
     ) = MottattInnloggetIaTjenesteMetrikk(orgnr, kilde, næring, kommunenummer, kommune, fylke, tidspunkt)
 
     private fun dummyUinnloggetMetrikk(
-        kilde: Kilde= Kilde.SAMTALESTØTTE,
+        kilde: Kilde = Kilde.SAMTALESTØTTE,
         tidspunkt: LocalDateTime = _1_MAI.atStartOfDay()
-    )= MottattUinnloggetIaTjenesteMetrikk(kilde, tidspunkt)
+    ) = MottattUinnloggetIaTjenesteMetrikk(kilde, tidspunkt)
 
     @Test
     fun `beregn antall innlogget metrikker per måned summerer antall mottatt metrikker per måned`() {
@@ -62,6 +62,59 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         Assertions.assertThat(resultat[Month.FEBRUARY]).isEqualTo(24)
         Assertions.assertThat(resultat[Month.MARCH]).isEqualTo(5)
         Assertions.assertThat(resultat[Month.APRIL]).isEqualTo(44)
+    }
+
+    @Test
+    fun `beregnAntallMetrikkerPerMåned skal returnere riktig liste av måneder`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            listOf(
+                dummyInnloggetMetrikk(),
+                dummyInnloggetMetrikk(
+                    tidspunkt = _1_MAI.atStartOfDay()
+                ),
+                dummyInnloggetMetrikk(
+                    tidspunkt = _21_JUNI_2021.atStartOfDay()
+                ),
+            ), emptyList(), _1_JANUAR_2021,
+            _21_JUNI_2021
+        )
+        val resultat = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+            listOf(
+                Month.MAY,
+                Month.JUNE,
+                Month.JULY,
+            ), Kilde.SYKEFRAVÆRSSTATISTIKK
+        )
+        Assertions.assertThat(resultat[Month.MAY]).isEqualTo(2)
+        Assertions.assertThat(resultat[Month.JUNE]).isEqualTo(1)
+        Assertions.assertThat(resultat[Month.JULY]).isEqualTo(0)
+        Assertions.assertThat(resultat[Month.JANUARY]).isEqualTo(null)
+
+    }
+
+    @Test
+    fun `beregnAntallMetrikkerPerMåned skal returnere riktig liste for ønskede app`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            listOf(
+                dummyInnloggetMetrikk(kilde = Kilde.SAMTALESTØTTE),
+                dummyInnloggetMetrikk(
+                    tidspunkt = _1_MAI.atStartOfDay()
+                ),
+                dummyInnloggetMetrikk(
+                    kilde = Kilde.SAMTALESTØTTE,
+                    tidspunkt = _21_JUNI_2021.atStartOfDay()
+                ),
+            ), emptyList(), _1_JANUAR_2021,
+            _21_JUNI_2021
+        )
+        val resultat = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+            listOf(
+                Month.MAY,
+                Month.JUNE,
+            ), Kilde.SYKEFRAVÆRSSTATISTIKK
+        )
+        Assertions.assertThat(resultat[Month.MAY]).isEqualTo(1)
+        Assertions.assertThat(resultat[Month.JUNE]).isEqualTo(0)
     }
 
     @Test
@@ -93,6 +146,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SAMTALESTØTTE)).isEqualTo(0)
         Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK)).isEqualTo(1)
     }
+
     @Test
     fun `beregn totalt innlogget metrikker per App returnere 0 hvis vi ikke har innloggetmetrikker`() {
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
