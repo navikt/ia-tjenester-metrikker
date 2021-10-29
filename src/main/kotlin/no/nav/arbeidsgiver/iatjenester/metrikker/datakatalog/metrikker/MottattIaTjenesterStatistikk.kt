@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
 import java.time.LocalDate
@@ -124,14 +125,19 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 listOf(
                     Serie(
                         "Samtalestøtte (uinnlogget)",
-                        datagrunnlag.antallUinnloggetMetrikkerPerMåned.values,
+                        datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+                            SAMTALESTØTTE, IaTjenesteTilgjengelighet.UINNLOGGET
+                        ).values,
                         "bar",
                         "Samtalestøtte",
                         stack = "Samtalestøtte"
                     ),
                     Serie(
                         "Samtalestøtte (innlogget)",
-                        datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(datagrunnlag.gjeldendeMåneder, SAMTALESTØTTE)
+                        datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+                            SAMTALESTØTTE,
+                            IaTjenesteTilgjengelighet.INNLOGGET
+                        )
                             .values,
                         "bar",
                         "Samtalestøtte",
@@ -140,8 +146,8 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                     Serie(
                         "Sykefraværsstatistikk (innlogget)",
                         datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
-                            datagrunnlag.gjeldendeMåneder,
-                            SYKEFRAVÆRSSTATISTIKK
+                            SYKEFRAVÆRSSTATISTIKK,
+                            IaTjenesteTilgjengelighet.INNLOGGET
                         )
                             .values,
                         "bar",

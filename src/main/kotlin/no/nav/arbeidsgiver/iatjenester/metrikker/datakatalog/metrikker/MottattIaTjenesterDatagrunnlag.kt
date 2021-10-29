@@ -6,6 +6,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.månederTil
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import java.time.LocalDate
 import java.time.Month
@@ -21,17 +22,6 @@ class MottattIaTjenesterDatagrunnlag(
     val gjeldendeMåneder: List<Month> = fraDato månederTil tilDato
 
     val alleFylkerAlfabetisk = alleFylkerAlfabetisk()
-
-    val antallInnloggetMetrikkerPerMåned: Map<Month, Int> =
-        beregnAntallMetrikkerPerMåned(
-            gjeldendeMåneder,
-            beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker))
-        )
-    val antallUinnloggetMetrikkerPerMåned: Map<Month, Int> =
-        beregnAntallMetrikkerPerMåned(
-            gjeldendeMåneder,
-            beregnAntallMetrikkerPerDag(uinnloggetMetrikker)
-        )
 
     val bransjeListe: List<ArbeidstilsynetBransje> =
         ArbeidstilsynetBransje
@@ -62,24 +52,20 @@ class MottattIaTjenesterDatagrunnlag(
                     .eachCount()
                 ).values
 
-    //TODO refakturere til filter og grouppingBy uten å bruke Kay
-    fun beregnAntallMetrikkerPerMåned(
-        måneder: List<Month>,
-        metrikkerPerDag: Map<LocalDate, Int>
-    ): Map<Month, Int> {
-        val metrikkerPerMåned: Map<Month, Collection<Int>> =
-            måneder.associateWith { metrikkerPerDag.filter { (key, _) -> key.month == it }.values }
-
-        return metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumOf { it } }
-    }
 
     fun beregnAntallMetrikkerPerMånedPerApp(
-        måneder: List<Month>,
-        fraApp: Kilde
+        fraApp: Kilde,
+        innloggetEllerUinlogget: IaTjenesteTilgjengelighet
     ): Map<Month, Int> {
-        return måneder.associateWith { 0 } + innloggetMetrikker.filter { it.kilde == fraApp }
-            .filter { it.tidspunkt.month in måneder }
-            .groupingBy { it.tidspunkt.month }.eachCount()
+        val datagrunnlag =
+            if (innloggetEllerUinlogget == IaTjenesteTilgjengelighet.INNLOGGET)
+                fjernDupliserteMetrikkerSammeDag(innloggetMetrikker) else uinnloggetMetrikker
+
+        return gjeldendeMåneder.associateWith { 0 } +
+                datagrunnlag.filter { it.kilde == fraApp }
+                    .filter { it.tidspunkt.month in gjeldendeMåneder }
+                    .groupingBy { it.tidspunkt.month }
+                    .eachCount()
 
     }
 
@@ -87,7 +73,7 @@ class MottattIaTjenesterDatagrunnlag(
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
     ): List<MottattInnloggetIaTjenesteMetrikk> {
         return mottattIaTjenesteMetrikker.distinctBy {
-            Pair(it.orgnr, it.tidspunkt.toLocalDate())
+            Triple(it.orgnr, it.kilde, it.tidspunkt.toLocalDate())
         }
     }
 
