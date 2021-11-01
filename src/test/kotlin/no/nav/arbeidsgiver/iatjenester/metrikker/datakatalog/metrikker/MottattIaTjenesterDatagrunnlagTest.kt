@@ -4,6 +4,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidstilsynetBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -34,29 +35,100 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         tidspunkt: LocalDateTime = _1_MAI.atStartOfDay()
     ) = MottattInnloggetIaTjenesteMetrikk(orgnr, kilde, næring, kommunenummer, kommune, fylke, tidspunkt)
 
+    private fun dummyUinnloggetMetrikk(
+        kilde: Kilde = Kilde.SAMTALESTØTTE,
+        tidspunkt: LocalDateTime = _1_MAI.atStartOfDay()
+    ) = MottattUinnloggetIaTjenesteMetrikk(kilde, tidspunkt)
+
+
     @Test
-    fun `beregn antall innlogget metrikker per måned summerer antall mottatt metrikker per måned`() {
+    fun `beregnAntallMetrikkerPerMåned skal returnere riktig liste av måneder`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            listOf(
+                dummyInnloggetMetrikk(),
+                dummyInnloggetMetrikk(
+                    tidspunkt = _1_MAI.atStartOfDay()
+                ),
+                dummyInnloggetMetrikk(
+                    tidspunkt = _21_JUNI_2021.atStartOfDay()
+                ),
+            ), emptyList(), _1_JANUAR_2021,
+            _21_JUNI_2021
+        )
+        val resultat = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            IaTjenesteTilgjengelighet.INNLOGGET
+        )
+        Assertions.assertThat(resultat[Month.MAY]).isEqualTo(1)
+        Assertions.assertThat(resultat[Month.JUNE]).isEqualTo(1)
+        Assertions.assertThat(resultat[Month.JANUARY]).isEqualTo(0)
+
+    }
+
+    @Test
+    fun `beregnAntallMetrikkerPerMåned skal returnere riktig liste for ønskede app`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            listOf(
+                dummyInnloggetMetrikk(kilde = Kilde.SAMTALESTØTTE),
+                dummyInnloggetMetrikk(
+                    tidspunkt = _1_MAI.atStartOfDay()
+                ),
+                dummyInnloggetMetrikk(
+                    kilde = Kilde.SAMTALESTØTTE,
+                    tidspunkt = _21_JUNI_2021.atStartOfDay()
+                ),
+            ), emptyList(), _1_JANUAR_2021,
+            _21_JUNI_2021
+        )
+        val resultat = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            IaTjenesteTilgjengelighet.INNLOGGET
+        )
+        Assertions.assertThat(resultat[Month.MAY]).isEqualTo(1)
+        Assertions.assertThat(resultat[Month.JUNE]).isEqualTo(0)
+    }
+
+    @Test
+    fun `beregn totalt innlogget metrikker per App returnere 0 hvis listen er empty`() {
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
             innloggetMetrikker = emptyList(),
             uinnloggetMetrikker = emptyList(),
             fraDato = _1_JANUAR_2021,
             tilDato = _21_JUNI_2021
         )
-        val resultat =
-            datagrunnlag.beregnAntallMetrikkerPerMåned(
-                listOf(Month.FEBRUARY, Month.MARCH, Month.APRIL),
-                mapOf(
-                    LocalDate.of(2021, Month.FEBRUARY, 5) to 15,
-                    LocalDate.of(2021, Month.FEBRUARY, 6) to 9,
-                    LocalDate.of(2021, Month.MARCH, 5) to 5,
-                    LocalDate.of(2021, Month.APRIL, 5) to 44
-                )
-            )
 
-        Assertions.assertThat(resultat.keys.size).isEqualTo(3)
-        Assertions.assertThat(resultat[Month.FEBRUARY]).isEqualTo(24)
-        Assertions.assertThat(resultat[Month.MARCH]).isEqualTo(5)
-        Assertions.assertThat(resultat[Month.APRIL]).isEqualTo(44)
+        Assertions.assertThat(
+            datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SAMTALESTØTTE)
+        ).isEqualTo(0)
+        Assertions.assertThat(
+            datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK)
+        ).isEqualTo(0)
+    }
+
+    @Test
+    fun `beregn totalt innlogget metrikker per App returnere riktige tall`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = listOf(dummyInnloggetMetrikk()),
+            uinnloggetMetrikker = emptyList(),
+            fraDato = _1_JANUAR_2021,
+            tilDato = _21_JUNI_2021
+        )
+
+        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SAMTALESTØTTE)).isEqualTo(0)
+        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK)).isEqualTo(1)
+    }
+
+    @Test
+    fun `beregn totalt innlogget metrikker per App returnere 0 hvis vi ikke har innloggetmetrikker`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = emptyList(),
+            uinnloggetMetrikker = listOf(dummyUinnloggetMetrikk()),
+            fraDato = _1_JANUAR_2021,
+            tilDato = _21_JUNI_2021
+        )
+
+        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SAMTALESTØTTE)).isEqualTo(0)
+        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK)).isEqualTo(0)
     }
 
 
@@ -140,7 +212,10 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _21_JUNI_2021
         )
 
-        val resultat: Map<Month, Int> = datagrunnlag.antallInnloggetMetrikkerPerMåned
+        val resultat: Map<Month, Int> = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            IaTjenesteTilgjengelighet.INNLOGGET
+        )
 
         Assertions.assertThat(resultat.keys.size).isEqualTo(6)
         Assertions.assertThat(resultat[Month.JANUARY]).isEqualTo(0)
@@ -166,7 +241,10 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             _21_JUNI_2021
         )
 
-        val resultat: Map<Month, Int> = datagrunnlag.antallUinnloggetMetrikkerPerMåned
+        val resultat: Map<Month, Int> = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+            Kilde.SAMTALESTØTTE,
+            IaTjenesteTilgjengelighet.UINNLOGGET
+        )
 
         Assertions.assertThat(resultat.keys.size).isEqualTo(6)
         Assertions.assertThat(resultat[Month.JANUARY]).isEqualTo(0)

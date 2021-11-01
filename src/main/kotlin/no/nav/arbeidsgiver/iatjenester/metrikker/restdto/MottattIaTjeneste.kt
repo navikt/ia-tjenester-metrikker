@@ -14,7 +14,10 @@ enum class Kilde {
     SAMTALESTØTTE,
     DIALOG
 }
-
+enum class IaTjenesteTilgjengelighet {
+    INNLOGGET,
+    UINNLOGGET
+}
 enum class TypeIATjeneste {
     DIGITAL_IA_TJENESTE,
     RÅDGIVNING

@@ -1,18 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.EchartSpec
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Grid
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Legend
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MarkdownSpec
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Option
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Serie
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.SpecType
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
 import java.time.LocalDate
@@ -22,9 +11,12 @@ import java.util.*
 
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) :
-        DatakatalogData {
+    DatakatalogData {
 
     private var startDato: LocalDate = datagrunnlag.startDate
+    private val NAV_BLÅ: String = "#0067C5"
+    private val NAV_GRØNN: String = "#06893A"
+    private val NAV_ORANSJE: String = "#FF9100"
 
     override fun opprettViews() = listOf(
         View(
@@ -91,24 +83,24 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Tooltip("item"),
                 listOf(
                     Serie(
-                        "Samtalestøtte (innlogget)",
-                        datagrunnlag
+                        name = "Samtalestøtte (innlogget)",
+                        data = datagrunnlag
                             .mottatteIaTjenesterInnloggetPerBransjeOgKilde
                             .filter { it.key.first == SAMTALESTØTTE }
-                            .values
-                            .toList(),
-                        "bar",
-                        "Samtalestøtte"
+                            .values,
+                        type = "bar",
+                        title = "Samtalestøtte",
+                        itemStyle = ItemStyle(color = NAV_ORANSJE)
                     ),
                     Serie(
-                        "Sykefraværsstatistikk",
-                        datagrunnlag
+                        name = "Sykefraværsstatistikk",
+                        data = datagrunnlag
                             .mottatteIaTjenesterInnloggetPerBransjeOgKilde
                             .filter { it.key.first == SYKEFRAVÆRSSTATISTIKK }
-                            .values
-                            .toList(),
-                        "bar",
-                        "Sykefraværsstatistikk"
+                            .values,
+                        type = "bar",
+                        title = "Sykefraværsstatistikk",
+                        itemStyle = ItemStyle(color = NAV_GRØNN)
                     )
                 )
             )
@@ -122,7 +114,8 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Legend(
                     listOf(
                         "Samtalestøtte (uinnlogget)",
-                        "Sykefraværsstatistikk (innlogget)"
+                        "Samtalestøtte (innlogget)",
+                        "Sykefraværsstatistikk (innlogget)",
                     )
                 ),
                 Grid(),
@@ -134,16 +127,38 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Tooltip("item"),
                 listOf(
                     Serie(
-                        "Samtalestøtte (uinnlogget)",
-                        datagrunnlag.antallUinnloggetMetrikkerPerMåned.values.toList(),
-                        "bar",
-                        "Samtalestøtte"
+                        name = "Samtalestøtte (uinnlogget)",
+                        data =
+                        datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+                            SAMTALESTØTTE, IaTjenesteTilgjengelighet.UINNLOGGET
+                        ).values,
+                        type = "bar",
+                        title = "Samtalestøtte",
+                        stack = "Samtalestøtte",
+                        itemStyle = ItemStyle(color = NAV_BLÅ)
                     ),
                     Serie(
-                        "Sykefraværsstatistikk (innlogget)",
-                        datagrunnlag.antallInnloggetMetrikkerPerMåned.values.toList(),
-                        "bar",
-                        "Sykefraværsstatistikk"
+                        name = "Samtalestøtte (innlogget)",
+                        data = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+                            SAMTALESTØTTE,
+                            IaTjenesteTilgjengelighet.INNLOGGET
+                        ).values,
+                        type = "bar",
+                        title = "Samtalestøtte",
+                        stack = "Samtalestøtte",
+                        itemStyle = ItemStyle(color = NAV_ORANSJE)
+                    ),
+                    Serie(
+                        name = "Sykefraværsstatistikk (innlogget)",
+                        data =
+                        datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+                            SYKEFRAVÆRSSTATISTIKK,
+                            IaTjenesteTilgjengelighet.INNLOGGET
+                        )
+                            .values,
+                        type = "bar",
+                        title = "Sykefraværsstatistikk",
+                        itemStyle = ItemStyle(color = NAV_GRØNN)
                     )
                 ),
             )
@@ -171,22 +186,20 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Tooltip("item"),
                 listOf(
                     Serie(
-                        "Samtalestøtte (innlogget)",
-                        datagrunnlag.beregnInnloggedeIaTjenesterPerFylke(
-                            fraApp = SAMTALESTØTTE
-                        ),
-                        "bar",
-                        "Samtalestøtte",
-                        "app"
+                        name = "Samtalestøtte (innlogget)",
+                        data = datagrunnlag.beregnInnloggedeIaTjenesterPerFylke(fraApp = SAMTALESTØTTE),
+                        type = "bar",
+                        title = "Samtalestøtte",
+                        stack = "app",
+                        itemStyle = ItemStyle(color = NAV_ORANSJE)
                     ),
                     Serie(
-                        "Sykefraværsstatistikk",
-                        datagrunnlag.beregnInnloggedeIaTjenesterPerFylke(
-                            fraApp = SYKEFRAVÆRSSTATISTIKK
-                        ),
-                        "bar",
-                        "Sykefraværsstatistikk",
-                        "app"
+                        name = "Sykefraværsstatistikk",
+                        data = datagrunnlag.beregnInnloggedeIaTjenesterPerFylke(fraApp = SYKEFRAVÆRSSTATISTIKK),
+                        type = "bar",
+                        title = "Sykefraværsstatistikk",
+                        stack = "app",
+                        itemStyle = ItemStyle(color = NAV_GRØNN)
                     )
                 )
             )
@@ -203,8 +216,13 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
     private fun lagMottatteDigitaleIATjenesterMarkdownSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): MarkdownSpec {
         return MarkdownSpec(
             "## Samtalestøtte (uinnlogget)\n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
-                    "## Sykefraværsstatistikk (innlogget)\n **${datagrunnlag.totalInnloggetMetrikker}** \n " +
-                    "### Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
+                    "## Samtalestøtte (innlogget)\n **${datagrunnlag.totalInnloggetMetrikkerPerApp(SAMTALESTØTTE)}** \n " +
+                    "## Sykefraværsstatistikk (innlogget)\n **${
+                        datagrunnlag.totalInnloggetMetrikkerPerApp(
+                            SYKEFRAVÆRSSTATISTIKK
+                        )
+                    }** \n " +
+                    "## Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
         )
     }
 }

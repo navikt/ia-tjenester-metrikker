@@ -6,6 +6,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.månederTil
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import java.time.LocalDate
 import java.time.Month
@@ -22,17 +23,6 @@ class MottattIaTjenesterDatagrunnlag(
 
     val alleFylkerAlfabetisk = alleFylkerAlfabetisk()
 
-    val antallInnloggetMetrikkerPerMåned: Map<Month, Int> =
-        beregnAntallMetrikkerPerMåned(
-            gjeldendeMåneder,
-            beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker))
-        )
-    val antallUinnloggetMetrikkerPerMåned: Map<Month, Int> =
-        beregnAntallMetrikkerPerMåned(
-            gjeldendeMåneder,
-            beregnAntallMetrikkerPerDag(uinnloggetMetrikker)
-        )
-
     val bransjeListe: List<ArbeidstilsynetBransje> =
         ArbeidstilsynetBransje
             .values()
@@ -46,10 +36,12 @@ class MottattIaTjenesterDatagrunnlag(
             fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
         )
 
-    val totalInnloggetMetrikker: Int = innloggetMetrikker.size
     val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
     val totalUnikeBedrifterPerDag: Int =
         beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)).values.sum()
+
+    fun totalInnloggetMetrikkerPerApp(fraApp: Kilde): Int =
+        innloggetMetrikker.filter { it.kilde == fraApp }.size
 
     fun beregnInnloggedeIaTjenesterPerFylke(fraApp: Kilde): Collection<Int> =
         (alleFylkerAlfabetisk.associateWith { 0 } +
@@ -60,21 +52,28 @@ class MottattIaTjenesterDatagrunnlag(
                     .eachCount()
                 ).values
 
-    fun beregnAntallMetrikkerPerMåned(
-        måneder: List<Month>,
-        metrikkerPerDag: Map<LocalDate, Int>
-    ): Map<Month, Int> {
-        val metrikkerPerMåned: Map<Month, Collection<Int>> =
-            måneder.associateWith { metrikkerPerDag.filter { (key, _) -> key.month == it }.values }
 
-        return metrikkerPerMåned.mapValues { (_, antallMetrikker) -> antallMetrikker.sumOf { it } }
+    fun beregnAntallMetrikkerPerMånedPerApp(
+        fraApp: Kilde,
+        innloggetEllerUinlogget: IaTjenesteTilgjengelighet
+    ): Map<Month, Int> {
+        val datagrunnlag =
+            if (innloggetEllerUinlogget == IaTjenesteTilgjengelighet.INNLOGGET)
+                fjernDupliserteMetrikkerSammeDag(innloggetMetrikker) else uinnloggetMetrikker
+
+        return gjeldendeMåneder.associateWith { 0 } +
+                datagrunnlag.filter { it.kilde == fraApp }
+                    .filter { it.tidspunkt.month in gjeldendeMåneder }
+                    .groupingBy { it.tidspunkt.month }
+                    .eachCount()
+
     }
 
     private fun fjernDupliserteMetrikkerSammeDag(
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
     ): List<MottattInnloggetIaTjenesteMetrikk> {
         return mottattIaTjenesteMetrikker.distinctBy {
-            Pair(it.orgnr, it.tidspunkt.toLocalDate())
+            Triple(it.orgnr, it.kilde, it.tidspunkt.toLocalDate())
         }
     }
 
