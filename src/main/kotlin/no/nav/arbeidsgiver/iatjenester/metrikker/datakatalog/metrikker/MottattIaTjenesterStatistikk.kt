@@ -14,6 +14,9 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
     DatakatalogData {
 
     private var startDato: LocalDate = datagrunnlag.startDate
+    private val NAV_BLÅ: String = "#0067C5"
+    private val NAV_GRØNN: String = "#06893A"
+    private val NAV_ORANSJE: String = "#FF9100"
 
     override fun opprettViews() = listOf(
         View(
@@ -80,24 +83,24 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Tooltip("item"),
                 listOf(
                     Serie(
-                        "Samtalestøtte (innlogget)",
-                        datagrunnlag
+                        name = "Samtalestøtte (innlogget)",
+                        data = datagrunnlag
                             .mottatteIaTjenesterInnloggetPerBransjeOgKilde
                             .filter { it.key.first == SAMTALESTØTTE }
-                            .values
-                            .toList(),
-                        "bar",
-                        "Samtalestøtte"
+                            .values,
+                        type = "bar",
+                        title = "Samtalestøtte",
+                        itemStyle = ItemStyle(color = NAV_ORANSJE)
                     ),
                     Serie(
-                        "Sykefraværsstatistikk",
-                        datagrunnlag
+                        name = "Sykefraværsstatistikk",
+                        data = datagrunnlag
                             .mottatteIaTjenesterInnloggetPerBransjeOgKilde
                             .filter { it.key.first == SYKEFRAVÆRSSTATISTIKK }
-                            .values
-                            .toList(),
-                        "bar",
-                        "Sykefraværsstatistikk"
+                            .values,
+                        type = "bar",
+                        title = "Sykefraværsstatistikk",
+                        itemStyle = ItemStyle(color = NAV_GRØNN)
                     )
                 )
             )
@@ -124,34 +127,38 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Tooltip("item"),
                 listOf(
                     Serie(
-                        "Samtalestøtte (uinnlogget)",
+                        name = "Samtalestøtte (uinnlogget)",
+                        data =
                         datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
                             SAMTALESTØTTE, IaTjenesteTilgjengelighet.UINNLOGGET
                         ).values,
-                        "bar",
-                        "Samtalestøtte",
-                        stack = "Samtalestøtte"
+                        type = "bar",
+                        title = "Samtalestøtte",
+                        stack = "Samtalestøtte",
+                        itemStyle = ItemStyle(color = NAV_BLÅ)
                     ),
                     Serie(
-                        "Samtalestøtte (innlogget)",
-                        datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+                        name = "Samtalestøtte (innlogget)",
+                        data = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
                             SAMTALESTØTTE,
                             IaTjenesteTilgjengelighet.INNLOGGET
-                        )
-                            .values,
-                        "bar",
-                        "Samtalestøtte",
-                        stack = "Samtalestøtte"
+                        ).values,
+                        type = "bar",
+                        title = "Samtalestøtte",
+                        stack = "Samtalestøtte",
+                        itemStyle = ItemStyle(color = NAV_ORANSJE)
                     ),
                     Serie(
-                        "Sykefraværsstatistikk (innlogget)",
+                        name = "Sykefraværsstatistikk (innlogget)",
+                        data =
                         datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
                             SYKEFRAVÆRSSTATISTIKK,
                             IaTjenesteTilgjengelighet.INNLOGGET
                         )
                             .values,
-                        "bar",
-                        "Sykefraværsstatistikk"
+                        type = "bar",
+                        title = "Sykefraværsstatistikk",
+                        itemStyle = ItemStyle(color = NAV_GRØNN)
                     )
                 ),
             )
@@ -179,22 +186,20 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Tooltip("item"),
                 listOf(
                     Serie(
-                        "Samtalestøtte (innlogget)",
-                        datagrunnlag.beregnInnloggedeIaTjenesterPerFylke(
-                            fraApp = SAMTALESTØTTE
-                        ),
-                        "bar",
-                        "Samtalestøtte",
-                        "app"
+                        name = "Samtalestøtte (innlogget)",
+                        data = datagrunnlag.beregnInnloggedeIaTjenesterPerFylke(fraApp = SAMTALESTØTTE),
+                        type = "bar",
+                        title = "Samtalestøtte",
+                        stack = "app",
+                        itemStyle = ItemStyle(color = NAV_ORANSJE)
                     ),
                     Serie(
-                        "Sykefraværsstatistikk",
-                        datagrunnlag.beregnInnloggedeIaTjenesterPerFylke(
-                            fraApp = SYKEFRAVÆRSSTATISTIKK
-                        ),
-                        "bar",
-                        "Sykefraværsstatistikk",
-                        "app"
+                        name = "Sykefraværsstatistikk",
+                        data = datagrunnlag.beregnInnloggedeIaTjenesterPerFylke(fraApp = SYKEFRAVÆRSSTATISTIKK),
+                        type = "bar",
+                        title = "Sykefraværsstatistikk",
+                        stack = "app",
+                        itemStyle = ItemStyle(color = NAV_GRØNN)
                     )
                 )
             )

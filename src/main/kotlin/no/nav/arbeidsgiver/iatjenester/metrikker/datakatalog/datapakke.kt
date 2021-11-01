@@ -49,7 +49,7 @@ data class Option(
 )
 
 data class Legend(
-    val data: List<String>
+    val data: Collection<*>
 )
 
 data class Tooltip(
@@ -80,5 +80,12 @@ data class Serie(
     val data: Collection<*>,
     val type: String,
     val title: String,
-    val stack: String = ""
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val stack: String? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val itemStyle: ItemStyle? = null
+)
+
+data class ItemStyle(
+    val color: String
 )

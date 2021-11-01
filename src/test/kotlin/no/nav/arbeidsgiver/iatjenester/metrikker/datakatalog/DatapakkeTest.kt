@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 internal class DatapakkeTest {
 
     @Test
-    fun `Felter xAxis og yAxis i Option sstarter med en liten bokstav`() {
+    fun `Felter xAxis og yAxis i Option starter med en liten bokstav`() {
         val option = Option(
             legend = Legend(listOf("item1")),
             grid = Grid(),
@@ -56,7 +56,7 @@ internal class DatapakkeTest {
             "xAxis":{"type":"The X axis","data":["field 1","field2","field3"]},
             "yAxis":{"type":"The Y axis"},
             "tooltip":{"trigger":"item"},
-            "series":[{"name":"My serie","data":[1,2,3,4,5],"type":"bar","title":"The Serie","stack":""}]
+            "series":[{"name":"My serie","data":[1,2,3,4,5],"type":"bar","title":"The Serie"}]
             }
         """.trimIndent().replace("\n", "")
     }
