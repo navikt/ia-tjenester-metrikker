@@ -222,7 +222,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                             SYKEFRAVÆRSSTATISTIKK
                         )
                     }** \n " +
-                    "### Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
+                    "## Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
         )
     }
 }
