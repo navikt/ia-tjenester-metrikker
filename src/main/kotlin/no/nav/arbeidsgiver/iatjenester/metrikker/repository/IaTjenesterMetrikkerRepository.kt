@@ -105,11 +105,13 @@ class IaTjenesterMetrikkerRepository(
 
     sealed class MottattIaTjenesteMetrikk {
         abstract val tidspunkt: LocalDateTime
+        abstract val kilde: Kilde
+
     }
 
     data class MottattInnloggetIaTjenesteMetrikk(
         val orgnr: String,
-        val kilde: Kilde,
+        override val kilde: Kilde,
         val næring: Næring,
         val kommunenummer: String,
         val kommune: String,
@@ -118,10 +120,10 @@ class IaTjenesterMetrikkerRepository(
     ) : MottattIaTjenesteMetrikk()
 
     data class MottattUinnloggetIaTjenesteMetrikk(
-        val kilde: Kilde,
+        override val kilde: Kilde,
         override val tidspunkt: LocalDateTime
     ) :
-            MottattIaTjenesteMetrikk()
+        MottattIaTjenesteMetrikk()
 
 
     fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattUinnloggetIaTjenesteMetrikk> =
