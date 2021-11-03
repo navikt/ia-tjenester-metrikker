@@ -3,9 +3,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 import arrow.core.Either
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -37,7 +35,6 @@ class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerS
         @RequestHeader headers: HttpHeaders,
         @RequestBody uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste
     ): ResponseEntity<ResponseStatus> {
-        setNavCallid(headers)
         log("IaTjenesterMetrikkerUinnloggetController")
             .info("Mottatt IA tjeneste (uinnlogget) fra ${uinnloggetIaTjeneste.kilde.name}")
 
@@ -45,7 +42,6 @@ class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerS
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(iaSjekk.value.message, iaSjekk.value)
-                clearNavCallid()
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.BadRequest)
@@ -54,7 +50,6 @@ class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerS
             }
         }
 
-        clearNavCallid()
         return ResponseEntity.status(HttpStatus.CREATED)
             .contentType(MediaType.APPLICATION_JSON)
             .body(ResponseStatus.Created)

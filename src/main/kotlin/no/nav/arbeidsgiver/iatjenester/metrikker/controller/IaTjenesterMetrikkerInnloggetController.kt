@@ -15,10 +15,8 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.InnloggetBruke
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollException
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollService
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.clearNavCallid
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.erOrgnrGyldig
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.setNavCallid
 import no.nav.security.token.support.core.api.Protected
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -54,7 +52,6 @@ class IaTjenesterMetrikkerInnloggetController(
         @RequestBody
         innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata
     ): ResponseEntity<ResponseStatus> {
-        setNavCallid(headers)
         log("IaTjenesterMetrikkerInnloggetController")
             .info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjenesteMedVirksomhetGrunndata.kilde.name}")
 
@@ -74,7 +71,6 @@ class IaTjenesterMetrikkerInnloggetController(
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(brukerSjekk.value.message, brukerSjekk.value)
-                clearNavCallid()
                 ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Forbidden)
@@ -94,7 +90,6 @@ class IaTjenesterMetrikkerInnloggetController(
         @RequestHeader headers: HttpHeaders,
         @RequestBody innloggetIaTjeneste: InnloggetMottattIaTjeneste
     ): ResponseEntity<ResponseStatus> {
-        setNavCallid(headers)
         log("IaTjenesterMetrikkerInnloggetController")
             .info("Mottatt forenklet IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
 
@@ -116,7 +111,6 @@ class IaTjenesterMetrikkerInnloggetController(
                     tilgangskontrollException.message,
                     tilgangskontrollException
                 )
-                clearNavCallid()
                 ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Forbidden)
@@ -127,7 +121,6 @@ class IaTjenesterMetrikkerInnloggetController(
                             enhetsregisteretException.message,
                             enhetsregisteretException
                         )
-                        clearNavCallid()
                         ResponseEntity.status(HttpStatus.ACCEPTED)
                             .contentType(MediaType.APPLICATION_JSON)
                             .body(ResponseStatus.Accepted)
@@ -194,13 +187,11 @@ class IaTjenesterMetrikkerInnloggetController(
             is Either.Left -> {
                 log("IaTjenesterMetrikkerInnloggetController")
                     .warn(iaSjekk.value.message, iaSjekk.value)
-                clearNavCallid()
                 ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.BadRequest)
             }
             is Either.Right -> {
-                clearNavCallid()
                 ResponseEntity.status(HttpStatus.CREATED)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Created)
