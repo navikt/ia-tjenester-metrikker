@@ -68,7 +68,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0-rc1")
     implementation("com.google.code.gson:gson:2.8.7")
 
-    implementation("io.arrow-kt:arrow-core:0.13.2")
+    implementation("io.arrow-kt:arrow-core:1.0.1")
     implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("org.flywaydb:flyway-core:5.2.4")
     implementation("org.postgresql:postgresql:42.2.23")
