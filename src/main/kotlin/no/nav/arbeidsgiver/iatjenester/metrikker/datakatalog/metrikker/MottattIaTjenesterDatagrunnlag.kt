@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidstilsynetBransje
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.månederTil
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
@@ -23,11 +23,11 @@ class MottattIaTjenesterDatagrunnlag(
 
     val alleFylkerAlfabetisk = alleFylkerAlfabetisk()
 
-    val bransjeListe: List<ArbeidstilsynetBransje> =
-        ArbeidstilsynetBransje
+    val bransjeListe: List<ArbeidsmiljøportalenBransje> =
+        ArbeidsmiljøportalenBransje
             .values()
             .toList()
-            .filterNot { it == ArbeidstilsynetBransje.ANDRE_BRANSJER }
+            .filterNot { it == ArbeidsmiljøportalenBransje.ANDRE_BRANSJER }
             .sortedBy { it.name }
 
     val mottatteIaTjenesterInnloggetPerBransjeOgKilde: MottatteIaTjenesterPerBransjeOgKilde =
@@ -84,7 +84,7 @@ class MottattIaTjenesterDatagrunnlag(
     }
 
     private fun beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
-        bransjeListe: List<ArbeidstilsynetBransje>,
+        bransjeListe: List<ArbeidsmiljøportalenBransje>,
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
     ): MottatteIaTjenesterPerBransjeOgKilde {
 
@@ -96,11 +96,11 @@ class MottattIaTjenesterDatagrunnlag(
             mottattIaTjenesteMetrikker
                 .groupingBy { BransjePerKilde(it.kilde, it.næring.getArbeidstilsynetBransje()) }
                 .eachCount()
-                .filterNot { it.key.second == ArbeidstilsynetBransje.ANDRE_BRANSJER }
+                .filterNot { it.key.second == ArbeidsmiljøportalenBransje.ANDRE_BRANSJER }
 
         return alleBransjerPerBransjeOgKilde + alleBransjerPerBransjeOgKildeMedAntallMetrikker
     }
 }
 
-typealias BransjePerKilde = Pair<Kilde, ArbeidstilsynetBransje>
+typealias BransjePerKilde = Pair<Kilde, ArbeidsmiljøportalenBransje>
 typealias MottatteIaTjenesterPerBransjeOgKilde = Map<BransjePerKilde, Int>

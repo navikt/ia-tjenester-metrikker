@@ -1,6 +1,10 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidstilsynetBransje.*
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje.ANDRE_BRANSJER
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje.ANLEGG
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje.BARNEHAGER
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje.NÆRINGSMIDDELINDUSTRI
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje.TRANSPORT
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 

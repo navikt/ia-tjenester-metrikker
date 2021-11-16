@@ -1,7 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidstilsynetBransje
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
@@ -152,7 +152,12 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             .isEqualTo(datagrunnlag.bransjeListe.size)
         Assertions.assertThat(resultat.keys.filter { it.first == Kilde.SYKEFRAVÆRSSTATISTIKK }.size)
             .isEqualTo(datagrunnlag.bransjeListe.size)
-        Assertions.assertThat(resultat[BransjePerKilde(Kilde.SYKEFRAVÆRSSTATISTIKK, ArbeidstilsynetBransje.BARNEHAGER)])
+        Assertions.assertThat(
+            resultat[BransjePerKilde(
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                ArbeidsmiljøportalenBransje.BARNEHAGER
+            )]
+        )
             .isEqualTo(2)
     }
 
@@ -186,13 +191,33 @@ internal class MottattIaTjenesterDatagrunnlagTest {
 
         val resultat: MottatteIaTjenesterPerBransjeOgKilde = datagrunnlag.mottatteIaTjenesterInnloggetPerBransjeOgKilde
 
-        Assertions.assertThat(resultat[BransjePerKilde(Kilde.SYKEFRAVÆRSSTATISTIKK, ArbeidstilsynetBransje.BARNEHAGER)])
+        Assertions.assertThat(
+            resultat[BransjePerKilde(
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                ArbeidsmiljøportalenBransje.BARNEHAGER
+            )]
+        )
             .isEqualTo(2)
-        Assertions.assertThat(resultat[BransjePerKilde(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.BARNEHAGER)])
+        Assertions.assertThat(
+            resultat[BransjePerKilde(
+                Kilde.SAMTALESTØTTE,
+                ArbeidsmiljøportalenBransje.BARNEHAGER
+            )]
+        )
             .isEqualTo(1)
-        Assertions.assertThat(resultat[BransjePerKilde(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.ANLEGG)])
+        Assertions.assertThat(
+            resultat[BransjePerKilde(
+                Kilde.SAMTALESTØTTE,
+                ArbeidsmiljøportalenBransje.ANLEGG
+            )]
+        )
             .isEqualTo(1)
-        Assertions.assertThat(resultat[BransjePerKilde(Kilde.SAMTALESTØTTE, ArbeidstilsynetBransje.ANDRE_BRANSJER)])
+        Assertions.assertThat(
+            resultat[BransjePerKilde(
+                Kilde.SAMTALESTØTTE,
+                ArbeidsmiljøportalenBransje.ANDRE_BRANSJER
+            )]
+        )
             .isNull()
     }
 

@@ -8,24 +8,24 @@ data class Næring(val kode5Siffer: String, val kode5SifferBeskrivelse: String, 
 
     fun getKode2siffer(): String = if (kode5Siffer.length > 1) kode5Siffer.substring(0, 2) else ""
 
-    fun getArbeidstilsynetBransje(): ArbeidstilsynetBransje {
+    fun getArbeidstilsynetBransje(): ArbeidsmiljøportalenBransje {
         when (getKode2siffer()) {
-            "10" -> return ArbeidstilsynetBransje.NÆRINGSMIDDELINDUSTRI
-            "41" -> return ArbeidstilsynetBransje.BYGG
-            "42" -> return ArbeidstilsynetBransje.ANLEGG
+            "10" -> return ArbeidsmiljøportalenBransje.NÆRINGSMIDDELINDUSTRI
+            "41" -> return ArbeidsmiljøportalenBransje.BYGG
+            "42" -> return ArbeidsmiljøportalenBransje.ANLEGG
         }
 
         when (kode5Siffer) {
-            "88911" -> return ArbeidstilsynetBransje.BARNEHAGER
-            "86101", "86102", "86104", "86105", "86106", "86107" -> return ArbeidstilsynetBransje.SYKEHUS
-            "87101", "87102" -> return ArbeidstilsynetBransje.SYKEHJEM
-            "49100", "49311", "49391", "49392" -> return ArbeidstilsynetBransje.TRANSPORT
+            "88911" -> return ArbeidsmiljøportalenBransje.BARNEHAGER
+            "86101", "86102", "86104", "86105", "86106", "86107" -> return ArbeidsmiljøportalenBransje.SYKEHUS
+            "87101", "87102" -> return ArbeidsmiljøportalenBransje.SYKEHJEM
+            "49100", "49311", "49391", "49392" -> return ArbeidsmiljøportalenBransje.TRANSPORT
         }
 
-        return ArbeidstilsynetBransje.ANDRE_BRANSJER
+        return ArbeidsmiljøportalenBransje.ANDRE_BRANSJER
     }
 
-    enum class ArbeidstilsynetBransje {
+    enum class ArbeidsmiljøportalenBransje {
         BARNEHAGER,
         NÆRINGSMIDDELINDUSTRI,
         SYKEHUS,
@@ -60,7 +60,7 @@ class Næringsbeskrivelser {
 
     companion object {
 
-        val næringsbeskrivelser = listOf(
+        private val næringsbeskrivelser = listOf(
             Næringsbeskrivelse(
                 kode = "01",
                 beskrivelse = "Jordbruk og tjenester tilknyttet jordbruk, jakt og viltstell"
@@ -69,7 +69,10 @@ class Næringsbeskrivelser {
                 kode = "01",
                 beskrivelse = "Jordbruk og tjenester tilknyttet jordbruk, jakt og viltstell"
             ),
-            Næringsbeskrivelse(kode = "02", beskrivelse = "Skogbruk og tjenester tilknyttet skogbruk"),
+            Næringsbeskrivelse(
+                kode = "02",
+                beskrivelse = "Skogbruk og tjenester tilknyttet skogbruk"
+            ),
             Næringsbeskrivelse(kode = "03", beskrivelse = "Fiske, fangst og akvakultur"),
             Næringsbeskrivelse(kode = "05", beskrivelse = "Bryting av steinkull og brunkull"),
             Næringsbeskrivelse(kode = "06", beskrivelse = "Utvinning av råolje og naturgass"),
