@@ -48,23 +48,10 @@ class IaTjenesterMetrikkerInnloggetController(
     )
     fun leggTilNyIaMottattTjenesteForInnloggetKlient(
         @RequestHeader headers: HttpHeaders,
-        @RequestBody
-        innloggetIaTjeneste: InnloggetMottattIaTjeneste
-    ) = leggTilNyForenkletIaMottattTjenesteForInnloggetKlient(headers, innloggetIaTjeneste)
-
-
-    @Deprecated("Dette endepunktet skal fjernes, og innholdet flyttes til innlogget/mottatt-iatjeneste")
-    @PostMapping(
-        value = ["/forenklet/mottatt-iatjeneste"],
-        consumes = ["application/json"],
-        produces = ["application/json"]
-    )
-    fun leggTilNyForenkletIaMottattTjenesteForInnloggetKlient(
-        @RequestHeader headers: HttpHeaders,
         @RequestBody innloggetIaTjeneste: InnloggetMottattIaTjeneste
     ): ResponseEntity<ResponseStatus> {
         log("IaTjenesterMetrikkerInnloggetController")
-            .info("Mottatt forenklet IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
+            .info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
 
         if (!erOrgnrGyldig(innloggetIaTjeneste)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -94,9 +81,9 @@ class IaTjenesterMetrikkerInnloggetController(
                             enhetsregisteretException.message,
                             enhetsregisteretException
                         )
-                        ResponseEntity.status(HttpStatus.ACCEPTED)
+                        ResponseEntity.status(HttpStatus.OK)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .body(ResponseStatus.Accepted)
+                            .body(ResponseStatus.OK)
                     },
                     { innloggetIaTjeneste -> persisterMottattIaTjenesteMetrikk(innloggetIaTjeneste) }
                 )

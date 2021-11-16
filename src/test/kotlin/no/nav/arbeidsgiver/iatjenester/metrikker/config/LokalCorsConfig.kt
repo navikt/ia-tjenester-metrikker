@@ -19,7 +19,6 @@ class LokalCorsConfig {
                 log("main()").warn("***OBS*** Åpner CORS til http://localhost:3000, denne meldingen skal bare vises lokalt")
                 registry.addMapping("/uinnlogget/mottatt-iatjeneste").allowedOrigins("http://localhost:3000")
                 registry.addMapping("/innlogget/mottatt-iatjeneste").allowedOrigins("http://localhost:3000")
-                registry.addMapping("/innlogget/forenklet/mottatt-iatjeneste").allowedOrigins("http://localhost:3000")
             }
         }
     }
