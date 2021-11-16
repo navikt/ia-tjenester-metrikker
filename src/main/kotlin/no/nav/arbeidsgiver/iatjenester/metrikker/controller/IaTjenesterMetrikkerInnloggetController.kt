@@ -2,7 +2,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import arrow.core.Either
 import arrow.core.flatMap
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
@@ -50,43 +49,17 @@ class IaTjenesterMetrikkerInnloggetController(
     fun leggTilNyIaMottattTjenesteForInnloggetKlient(
         @RequestHeader headers: HttpHeaders,
         @RequestBody
-        innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata
-    ): ResponseEntity<ResponseStatus> {
-        log("IaTjenesterMetrikkerInnloggetController")
-            .info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjenesteMedVirksomhetGrunndata.kilde.name}")
+        innloggetIaTjeneste: InnloggetMottattIaTjeneste
+    ) = leggTilNyForenkletIaMottattTjenesteForInnloggetKlient(headers, innloggetIaTjeneste)
 
-        if (!erOrgnrGyldig(innloggetIaTjenesteMedVirksomhetGrunndata)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(ResponseStatus.BadRequest)
-        }
 
-        val orgnr = Orgnr(innloggetIaTjenesteMedVirksomhetGrunndata.orgnr)
-
-        val brukerSjekk = tilgangskontrollService
-            .hentInnloggetBruker(AltinnServiceKey.IA)
-            .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
-
-        return when (brukerSjekk) {
-            is Either.Left -> {
-                log("IaTjenesterMetrikkerInnloggetController")
-                    .warn(brukerSjekk.value.message, brukerSjekk.value)
-                ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(ResponseStatus.Forbidden)
-            }
-            is Either.Right -> {
-                opprettMottattIaTjenesteMetrikk(innloggetIaTjenesteMedVirksomhetGrunndata)
-            }
-        }
-    }
-
+    @Deprecated("Dette endepunktet skal fjernes, og innholdet flyttes til innlogget/mottatt-iatjeneste")
     @PostMapping(
         value = ["/forenklet/mottatt-iatjeneste"],
         consumes = ["application/json"],
         produces = ["application/json"]
     )
-    fun leggTilNyIaMottattTjenesteForInnloggetKlient(
+    fun leggTilNyForenkletIaMottattTjenesteForInnloggetKlient(
         @RequestHeader headers: HttpHeaders,
         @RequestBody innloggetIaTjeneste: InnloggetMottattIaTjeneste
     ): ResponseEntity<ResponseStatus> {
@@ -98,8 +71,8 @@ class IaTjenesterMetrikkerInnloggetController(
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResponseStatus.BadRequest)
         }
-
         val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
+
         val innloggetBruker: Either<TilgangskontrollException, InnloggetBruker> =
             tilgangskontrollService
                 .hentInnloggetBruker(innloggetIaTjeneste.altinnRettighet)
@@ -125,7 +98,7 @@ class IaTjenesterMetrikkerInnloggetController(
                             .contentType(MediaType.APPLICATION_JSON)
                             .body(ResponseStatus.Accepted)
                     },
-                    { innloggetIaTjeneste -> opprettMottattIaTjenesteMetrikk(innloggetIaTjeneste) }
+                    { innloggetIaTjeneste -> persisterMottattIaTjenesteMetrikk(innloggetIaTjeneste) }
                 )
             }
         )
@@ -178,7 +151,7 @@ class IaTjenesterMetrikkerInnloggetController(
         )
     }
 
-    private fun opprettMottattIaTjenesteMetrikk(
+    private fun persisterMottattIaTjenesteMetrikk(
         innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata
     ): ResponseEntity<ResponseStatus> {
 

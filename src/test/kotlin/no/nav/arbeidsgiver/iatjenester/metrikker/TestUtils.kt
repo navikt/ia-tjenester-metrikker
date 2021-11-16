@@ -1,6 +1,10 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.*
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.AltinnRettighet
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Fnr
 import java.sql.Connection
 import java.sql.Date
@@ -12,14 +16,17 @@ class TestUtils {
 
     companion object {
 
-        val OVERORDNETENHET_ORGNR: String = "987654321"
-        val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
-        val ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET: String = "833445566"
+        const val OVERORDNETENHET_ORGNR: String = "987654321"
+        const val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
+        const val ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET: String = "833445566"
+
+        const val APPLICATION_JSON = "application/json"
 
         val TEST_FNR: Fnr = Fnr("01019912345")
 
         fun testTokenForTestFNR(): String {
-            val mockOAuth2Header = "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ"
+            val mockOAuth2Header =
+                "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ"
             val localhostOnlyJasonPayload =
                 "eyJzdWIiOiIwMTAxOTkxMjM0NSIsImF1ZCI6ImF1ZC1sb2NhbGhvc3QiLCJhY3IiOi" +
                         "JMZXZlbDQiLCJuYmYiOjE2MTY0OTQwMDksImF6cCI6Ik1vY2tMb2dpbkNvbnRyb2xsZXIiLCJpc3MiOiJodH" +
@@ -52,67 +59,13 @@ class TestUtils {
             ZonedDateTime.now(),
         )
 
-        fun vilkårligUinnloggetIaTjenesteAsString(): String {
-            return """
-            {
-              "kilde":"SYKEFRAVÆRSSTATISTIKK",
-              "type":"DIGITAL_IA_TJENESTE",
-              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
-            }
-        """.trimIndent()
-        }
-
-        fun vilkårligInnloggetIaTjenesteAsString(): String {
-            return vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
-        }
-
-        fun vilkårligInnloggetIaTjenesteAsString(orgNr: String): String {
-            return """
-            {
-              "orgnr":"${orgNr}",
-              "antallAnsatte":99,
-              "kilde":"SYKEFRAVÆRSSTATISTIKK",
-              "type":"DIGITAL_IA_TJENESTE",
-              "fylke":"Troms og Finnmark",
-              "kommune":"Sør-Varanger",
-              "kommunenummer":"5444",
-              "næring2SifferBeskrivelse":"Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
-              "næringKode5Siffer":"84300",
-              "næringskode5SifferBeskrivelse":"Trygdeordninger underlagt offentlig orvaltning",
-              "ssbSektorKode":"6500",
-              "ssbSektorKodeBeskrivelse":"Offentlig sektor",
-              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
-            }
-        """.trimIndent()
-        }
-
-        fun vilkårligForenkletInnloggetIaTjenesteAsString(orgnr: String): String {
+        fun vilkårligForenkletInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String {
             return """
             {
               "orgnr":"$orgnr",
               "altinnRettighet":"${AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE.name}",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
-              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
-            }
-        """.trimIndent()
-        }
-
-        fun realistiskkInnloggetIaTjenesteAsString(): String {
-            return """
-            {
-              "orgnr":"${ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN}",
-              "antallAnsatte":99,
-              "kilde":"SYKEFRAVÆRSSTATISTIKK",
-              "type":"DIGITAL_IA_TJENESTE",
-              "fylke":"IKKE_TILGJENGELIG",
-              "kommune":"OSLO",
-              "kommunenummer":"0301",
-              "næring2SifferBeskrivelse":"Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
-              "næringKode5Siffer":"84300",
-              "næringskode5SifferBeskrivelse":"Trygdeordninger underlagt offentlig orvaltning",
-              "ssbSektorKode":"6500",
-              "ssbSektorKodeBeskrivelse":"Offentlig sektor",
               "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
             }
         """.trimIndent()
