@@ -59,7 +59,7 @@ class TestUtils {
             ZonedDateTime.now(),
         )
 
-        fun vilkårligForenkletInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String {
+        fun vilkårligInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String {
             return """
             {
               "orgnr":"$orgnr",
