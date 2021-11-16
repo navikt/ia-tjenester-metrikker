@@ -21,7 +21,7 @@ class MottattIaTjenesterDatagrunnlag(
     val gjeldendeÅr = fraDato.year
     val gjeldendeMåneder: List<Month> = fraDato månederTil tilDato
 
-    val alleFylkerAlfabetisk = alleFylkerAlfabetisk()
+    private val alleFylkerAlfabetisk = alleFylkerAlfabetisk()
 
     val bransjeListe: List<ArbeidstilsynetBransje> =
         ArbeidstilsynetBransje
