@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 
+import arrow.core.Either
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnConfig
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlientConfig
@@ -15,6 +16,7 @@ import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.core.jwt.JwtToken
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.fail
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -35,10 +37,10 @@ import org.springframework.test.context.TestPropertySource
 @TestPropertySource(properties = ["wiremock.port=8686"])
 internal class TilgangskontrollServiceIntegrationTest {
 
-    private var dummyTilgangskontrollUtils: TilgangskontrollUtils
+    private lateinit var dummyTilgangskontrollUtils: TilgangskontrollUtils
     private lateinit var tilgangskontrollService: TilgangskontrollService
     private lateinit var tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer: TilgangskontrollService
-    private var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
+    private lateinit var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
 
     @Autowired
     private lateinit var iaServiceIAltinnKonfig: TilgangskontrollConfig
@@ -122,13 +124,12 @@ internal class TilgangskontrollServiceIntegrationTest {
     }
 
     @Test
-    @Throws(Exception::class)
-    fun `Kaster Exception dersom hverken AltinnProxy eller Altinn svarer`() {
+    fun `Returnerer feil (Either Left) dersom hverken AltinnProxy eller Altinn svarer`() {
+        val result = tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBruker(AltinnServiceKey.IA)
 
-        Assertions.assertThatExceptionOfType(AltinnrettigheterProxyKlientFallbackException::class.java).isThrownBy {
-            tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBruker(AltinnServiceKey.IA)
+        when(result){
+            is Either.Left -> Assertions.assertThat(result.value).isInstanceOf(AltinnrettigheterProxyKlientFallbackException::class.java)
+            else -> fail("Returnerte ikke forventet feil")
         }
     }
 }
-
-

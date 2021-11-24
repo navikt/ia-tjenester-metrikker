@@ -21,3 +21,8 @@ spec:
       for: 10s
       description: "ia-tjenester-metrikker har logget en feil"
       action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.adeo.no/d/MwhvlzSMz/team-ia-samledashboard"
+    - alert: uvanlig mengde advarsler i ia-tjenester-metrikker
+      expr: sum(increase(logd_messages_total{log_app="ia-tjenester-metrikker",log_level="Warn"}[10m])) > 10
+      for: 10s
+      description: "ia-tjenester-metrikker har logget uvanlig menge advarsler"
+      action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.adeo.no/d/MwhvlzSMz/team-ia-samledashboard"
