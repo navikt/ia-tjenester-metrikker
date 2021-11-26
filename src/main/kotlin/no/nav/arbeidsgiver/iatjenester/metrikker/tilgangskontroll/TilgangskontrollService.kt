@@ -18,7 +18,7 @@ class TilgangskontrollService(
     private val tilgangskontrollUtils: TilgangskontrollUtils
 ) {
 
-    fun hentInnloggetBruker(altinnRettighet: AltinnRettighet): Either<TilgangskontrollException, InnloggetBruker> {
+    fun hentInnloggetBruker(altinnRettighet: AltinnRettighet): Either<Exception, InnloggetBruker> {
         when (altinnRettighet) {
             AltinnRettighet.SYKEFRAVÆRSSTATISTIKK_FOR_VIRKSOMHETER ->
                 return hentInnloggetBruker(AltinnServiceKey.IA)
@@ -27,33 +27,37 @@ class TilgangskontrollService(
         }
     }
 
-    fun hentInnloggetBruker(serviceKey: AltinnServiceKey): Either<TilgangskontrollException, InnloggetBruker> {
+    fun hentInnloggetBruker(serviceKey: AltinnServiceKey): Either<Exception, InnloggetBruker> {
 
-        if (tilgangskontrollUtils.erInnloggetSelvbetjeningBruker() as Boolean) {
-            val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetSelvbetjeningBruker()
+        try{
+            if (tilgangskontrollUtils.erInnloggetSelvbetjeningBruker() as Boolean) {
+                val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetSelvbetjeningBruker()
 
-            val currentAltinnServiceConfig = tilgangsconfig.altinnServices.getValue(serviceKey)
+                val currentAltinnServiceConfig = tilgangsconfig.altinnServices.getValue(serviceKey)
 
-            innloggetSelvbetjeningBruker.organisasjoner =
-                klient.hentOrganisasjoner(
-                    SelvbetjeningToken(tilgangskontrollUtils.selvbetjeningToken.tokenAsString),
-                    Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                    ServiceCode(currentAltinnServiceConfig.serviceCode),
-                    ServiceEdition(currentAltinnServiceConfig.serviceEdition),
-                    false
-                ).map {
-                    AltinnOrganisasjon(
-                        it.name,
-                        it.parentOrganizationNumber,
-                        it.organizationNumber,
-                        it.organizationForm,
-                        it.status!!,
-                        it.type
-                    )
-                }
-            return Either.Right(innloggetSelvbetjeningBruker)
-        } else {
-            return Either.Left(TilgangskontrollException("Innlogget bruker er ikke selvbetjeningsbruker"))
+                innloggetSelvbetjeningBruker.organisasjoner =
+                    klient.hentOrganisasjoner(
+                        SelvbetjeningToken(tilgangskontrollUtils.selvbetjeningToken.tokenAsString),
+                        Subject(innloggetSelvbetjeningBruker.fnr.asString()),
+                        ServiceCode(currentAltinnServiceConfig.serviceCode),
+                        ServiceEdition(currentAltinnServiceConfig.serviceEdition),
+                        false
+                    ).map {
+                        AltinnOrganisasjon(
+                            it.name,
+                            it.parentOrganizationNumber,
+                            it.organizationNumber,
+                            it.organizationForm,
+                            it.status!!,
+                            it.type
+                        )
+                    }
+                return Either.Right(innloggetSelvbetjeningBruker)
+            } else {
+                return Either.Left(TilgangskontrollException("Innlogget bruker er ikke selvbetjeningsbruker"))
+            }
+        } catch (exception: Exception){
+            return Either.Left(exception)
         }
     }
 

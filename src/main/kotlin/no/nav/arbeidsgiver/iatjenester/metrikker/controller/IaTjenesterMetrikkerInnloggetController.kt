@@ -40,6 +40,7 @@ class IaTjenesterMetrikkerInnloggetController(
     private val tilgangskontrollService: TilgangskontrollService,
     private val enhetsregisteretService: EnhetsregisteretService
 ) {
+    val innloggetControllerlogger = log("IaTjenesterMetrikkerInnloggetController")
 
     @PostMapping(
         value = ["/mottatt-iatjeneste"],
@@ -50,8 +51,7 @@ class IaTjenesterMetrikkerInnloggetController(
         @RequestHeader headers: HttpHeaders,
         @RequestBody innloggetIaTjeneste: InnloggetMottattIaTjeneste
     ): ResponseEntity<ResponseStatus> {
-        log("IaTjenesterMetrikkerInnloggetController")
-            .info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
+        innloggetControllerlogger.info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
 
         if (!erOrgnrGyldig(innloggetIaTjeneste)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -60,24 +60,28 @@ class IaTjenesterMetrikkerInnloggetController(
         }
         val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
 
-        val innloggetBruker: Either<TilgangskontrollException, InnloggetBruker> =
+        val innloggetBruker: Either<Exception, InnloggetBruker> =
             tilgangskontrollService
                 .hentInnloggetBruker(innloggetIaTjeneste.altinnRettighet)
                 .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
         return innloggetBruker.fold(
-            { tilgangskontrollException ->
-                log("IaTjenesterMetrikkerInnloggetController").warn(
-                    tilgangskontrollException.message,
-                    tilgangskontrollException
+            {
+                val httpStatus = when(it){
+                    is TilgangskontrollException -> { HttpStatus.FORBIDDEN }
+                    else -> { HttpStatus.INTERNAL_SERVER_ERROR }
+                }
+                innloggetControllerlogger.warn(
+                    it.message,
+                    it
                 )
-                ResponseEntity.status(HttpStatus.FORBIDDEN)
+                ResponseEntity.status(httpStatus)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Forbidden)
             }, {
                 byggIaTjenesteMetrikk(innloggetIaTjeneste).fold(
                     { enhetsregisteretException ->
-                        log("IaTjenesterMetrikkerInnloggetController").warn(
+                        innloggetControllerlogger.warn(
                             enhetsregisteretException.message,
                             enhetsregisteretException
                         )
@@ -145,8 +149,7 @@ class IaTjenesterMetrikkerInnloggetController(
         return when (val iaSjekk =
             iaTjenesterMetrikkerService.sjekkOgPersister(innloggetIaTjenesteMedVirksomhetGrunndata)) {
             is Either.Left -> {
-                log("IaTjenesterMetrikkerInnloggetController")
-                    .warn(iaSjekk.value.message, iaSjekk.value)
+                innloggetControllerlogger.warn(iaSjekk.value.message, iaSjekk.value)
                 ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.BadRequest)
