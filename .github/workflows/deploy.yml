@@ -32,7 +32,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/legge_til_Correlation-ID'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/oppgrader-log4j-api'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
