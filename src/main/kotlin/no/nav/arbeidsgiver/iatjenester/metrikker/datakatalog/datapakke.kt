@@ -23,10 +23,12 @@ data class View(
 
 enum class SpecType {
     markdown,
-    echart
+    echart,
+    datatable
 }
 
 interface Spec
+
 data class EchartSpec(
     val url: String,
     val option: Option
@@ -34,6 +36,10 @@ data class EchartSpec(
 
 data class MarkdownSpec(
     val markdown: String
+) : Spec
+
+data class DatatableSpec(
+    val data: List<*>,
 ) : Spec
 
 data class Option(
