@@ -65,8 +65,8 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("net.logstash.logback:logstash-logback-encoder:6.6")
-    implementation("org.apache.logging.log4j:log4j-api:2.16.0")
-    implementation("org.apache.logging.log4j:log4j-core:2.16.0")
+    implementation("org.apache.logging.log4j:log4j-api:2.17.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.17.0")
     implementation("org.apache.logging.log4j:log4j-to-slf4j:2.16.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0-rc1")
     implementation("com.google.code.gson:gson:2.8.7")
