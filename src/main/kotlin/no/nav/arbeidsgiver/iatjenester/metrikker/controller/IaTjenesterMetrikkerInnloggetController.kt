@@ -31,7 +31,8 @@ import org.springframework.web.bind.annotation.RestController
 @Protected
 @RestController
 @CrossOrigin(
-    origins = ["https://arbeidsgiver-q.nav.no", "https://arbeidsgiver.labs.nais.io"],
+    origins = ["https://arbeidsgiver-q.nav.no", "https://arbeidsgiver.labs.nais.io",
+        "https://arbeidsgiver-gcp.dev.nav.no", "https://arbeidsgiver.dev.nav.no"],
     allowCredentials = "true"
 )
 @RequestMapping("/innlogget")
@@ -67,9 +68,13 @@ class IaTjenesterMetrikkerInnloggetController(
 
         return innloggetBruker.fold(
             {
-                val httpStatus = when(it){
-                    is TilgangskontrollException -> { HttpStatus.FORBIDDEN }
-                    else -> { HttpStatus.INTERNAL_SERVER_ERROR }
+                val httpStatus = when (it) {
+                    is TilgangskontrollException -> {
+                        HttpStatus.FORBIDDEN
+                    }
+                    else -> {
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                    }
                 }
                 innloggetControllerlogger.warn(
                     it.message,
