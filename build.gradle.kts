@@ -96,4 +96,5 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.20.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.0-M1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.0-M1")
+    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:3.1.0")
 }
