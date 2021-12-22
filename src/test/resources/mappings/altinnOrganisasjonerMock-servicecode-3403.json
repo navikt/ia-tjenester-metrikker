@@ -1,0 +1,20 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/proxy/v2/organisasjoner",
+    "queryParameters": {
+      "service_code": {
+        "equalTo": "3403"
+      },
+      "serviceEdition": {
+        "equalTo": "1"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "path/to/myfile.xml"
+  }
+}
+
+// 811076112
