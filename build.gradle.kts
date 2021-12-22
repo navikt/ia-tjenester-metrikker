@@ -10,7 +10,7 @@ plugins {
     application
 }
 
-val navSecurityVersion = "1.3.7"
+val navSecurityVersion = "1.3.9"
 val altinnRettigheterProxyKlientVersion = "2.0.6-rc"
 val shedlockVersion = "4.25.0"
 
@@ -46,7 +46,7 @@ repositories {
     }
 }
 
-ext["nimbus-jose-jwt.version"] = "8.20" // https://nav-it.slack.com/archives/C01381BAT62/p1611056940004800
+ext["nimbus-jose-jwt.version"] = "9.15.2" // https://nav-it.slack.com/archives/C01381BAT62/p1611056940004800
 ext["okhttp3.version"] = "4.9.0" // For at token support testen kjører
 
 dependencies {
