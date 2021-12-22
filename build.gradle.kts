@@ -13,6 +13,7 @@ plugins {
 val navSecurityVersion = "1.3.9"
 val altinnRettigheterProxyKlientVersion = "2.0.6-rc"
 val shedlockVersion = "4.25.0"
+val springdoc_openApi_version = "1.6.2"
 
 
 group = "no.nav.arbeidsgiver"
@@ -54,8 +55,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springdoc:springdoc-openapi-ui:1.5.10")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.10")
+    implementation("org.springdoc:springdoc-openapi-ui:$springdoc_openApi_version")
+    implementation("org.springdoc:springdoc-openapi-kotlin:$springdoc_openApi_version")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
