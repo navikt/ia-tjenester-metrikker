@@ -1,9 +1,14 @@
 {
   "request": {
     "method": "GET",
-    "url": "/proxy/v2/organisasjoner",
+    "urlPath": "/proxy/v2/organisasjoner",
+    "headers": {
+      "Accept": {
+        "contains": "application/json"
+      }
+    },
     "queryParameters": {
-      "service_code": {
+      "serviceCode": {
         "equalTo": "3403"
       },
       "serviceEdition": {
@@ -13,8 +18,18 @@
   },
   "response": {
     "status": 200,
-    "bodyFileName": "path/to/myfile.xml"
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": [
+      {
+        "Name": "BALLSTAD OG HORTEN",
+        "Type": "Enterprise",
+        "ParentOrganizationNumber": null,
+        "OrganizationNumber": "811076112",
+        "OrganizationForm": "AS",
+        "Status": "Active"
+      }
+    ]
   }
 }
-
-// 811076112

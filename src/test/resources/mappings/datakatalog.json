@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPath": "/lokal_datakatalog/ikke_en_ekte_datapakke_id",
+    "headers": {
+      "Accept": {
+        "contains": "application/json"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "id": "ikke_en_ekte_datapakke_id",
+      "status": "Successfully updated datapackage IA tjenester-metrikker"
+    }
+  }
+}
