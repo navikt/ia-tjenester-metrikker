@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.net.URL
 
-@Profile("local", "test")
+@Profile("local")
 @Component
 class MockServer @Autowired constructor(
     private val altinnConfigProperties: AltinnConfigProperties,

@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
+import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import no.nav.arbeidsgiver.iatjenester.metrikker.IaTjenesteRad
@@ -8,7 +9,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettInnl
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettUinnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.UinnloggetIaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.mockserver.MockServer
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
@@ -20,10 +20,10 @@ import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.TestPropertySource
 import org.springframework.web.client.RestTemplate
 import java.sql.Date
 import java.sql.Timestamp
@@ -36,12 +36,8 @@ import java.time.Month
 @EnableMockOAuth2Server
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestPropertySource(properties = ["wiremock.port=8585"])
+@AutoConfigureWireMock(port = 0)
 internal class DatakatalogStatistikkIntegrasjonTest {
-
-    @Autowired
-    private lateinit var mockServer: MockServer
-
     @Autowired
     private lateinit var iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository
 
@@ -223,7 +219,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
         datakatalogStatistikkSomSenderTilLokalMockServer.run()
 
-        mockServer.wireMockServer.verify(
+        WireMock.verify(
             1,
             putRequestedFor(
                 urlEqualTo("/lokal_datakatalog/ikke_en_ekte_datapakke_id")
