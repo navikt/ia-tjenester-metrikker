@@ -11,7 +11,7 @@ plugins {
 }
 
 val navSecurityVersion = "1.3.7"
-val altinnRettigheterProxyKlientVersion = "2.0.2"
+val altinnRettigheterProxyKlientVersion = "2.0.6-rc"
 val shedlockVersion = "4.25.0"
 
 
