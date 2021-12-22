@@ -48,7 +48,7 @@ data class InnloggetMottattIaTjeneste(
     var altinnRettighet: AltinnRettighet,
     override var type: TypeIATjeneste,
     override var kilde: Kilde,
-    @get: JsonSerialize(using = ZonedDateTimeSerializer:W:class)
+    @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
     @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     override var tjenesteMottakkelsesdato: ZonedDateTime,
 ) : MottattIaTjeneste
