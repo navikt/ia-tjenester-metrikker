@@ -45,7 +45,7 @@ I terminal kjør
 #### Lokal DB instance
 Åpne følgende URL i nettleser: http://localhost:8080/ia-tjenester-metrikker/h2 
  - Driver class: `org.h2.Driver`
- - URL: `jdbc:h2:mem:local-db`
+ - URL: `jdbc:h2:mem:local-db;MODE=PostgreSQL`
  - user name: `sa`
  - password: _blank_
 

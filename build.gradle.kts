@@ -73,9 +73,9 @@ dependencies {
 
     implementation("io.arrow-kt:arrow-core:1.0.1")
     implementation("com.zaxxer:HikariCP:5.0.0")
-    implementation("org.flywaydb:flyway-core:5.2.4")
+    implementation("org.flywaydb:flyway-core:8.2.3")
     implementation("org.postgresql:postgresql:42.2.23")
-    implementation("com.h2database:h2:1.4.200")
+    implementation("com.h2database:h2:2.0.202")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.kafka:spring-kafka:2.7.5")

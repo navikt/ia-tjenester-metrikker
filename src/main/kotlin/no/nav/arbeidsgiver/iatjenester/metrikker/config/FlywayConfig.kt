@@ -10,16 +10,19 @@ import javax.sql.DataSource
 @Configuration
 class FlywayConfig(private val flywayConfigProperties: FlywayConfigProperties) {
     @Bean
-    fun flyway(dataSource: DataSource) = Flyway().apply {
-        setDataSource(dataSource)
+    fun flyway(dataSource: DataSource): Flyway {
+        val flywayConfig = Flyway
+            .configure()
+            .dataSource(dataSource)
+        if (flywayConfigProperties.locations.isNotEmpty()) {
+            flywayConfig.locations(*flywayConfigProperties.locations)
+        }
+        return flywayConfig.load()
     }
 
     @Bean
     fun flywayMigrationStrategy() =
         FlywayMigrationStrategy { flyway ->
-            if (!flywayConfigProperties.locations.isNullOrEmpty()) {
-                flyway.setLocations(*flywayConfigProperties.locations)
-            }
             flyway.migrate()
         }
 
