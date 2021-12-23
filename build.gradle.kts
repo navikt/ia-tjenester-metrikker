@@ -10,9 +10,10 @@ plugins {
     application
 }
 
-val navSecurityVersion = "1.3.7"
+val navSecurityVersion = "1.3.9"
 val altinnRettigheterProxyKlientVersion = "2.0.6-rc"
 val shedlockVersion = "4.25.0"
+val springdoc_openApi_version = "1.6.2"
 
 
 group = "no.nav.arbeidsgiver"
@@ -46,7 +47,7 @@ repositories {
     }
 }
 
-ext["nimbus-jose-jwt.version"] = "8.20" // https://nav-it.slack.com/archives/C01381BAT62/p1611056940004800
+ext["nimbus-jose-jwt.version"] = "9.15.2" // https://nav-it.slack.com/archives/C01381BAT62/p1611056940004800
 ext["okhttp3.version"] = "4.9.0" // For at token support testen kjører
 
 dependencies {
@@ -54,8 +55,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springdoc:springdoc-openapi-ui:1.5.10")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.10")
+    implementation("org.springdoc:springdoc-openapi-ui:$springdoc_openApi_version")
+    implementation("org.springdoc:springdoc-openapi-kotlin:$springdoc_openApi_version")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -68,14 +69,14 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.17.0")
     implementation("org.apache.logging.log4j:log4j-core:2.17.0")
     implementation("org.apache.logging.log4j:log4j-to-slf4j:2.16.0")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0-rc1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
     implementation("com.google.code.gson:gson:2.8.7")
 
     implementation("io.arrow-kt:arrow-core:1.0.1")
     implementation("com.zaxxer:HikariCP:5.0.0")
-    implementation("org.flywaydb:flyway-core:5.2.4")
-    implementation("org.postgresql:postgresql:42.2.23")
-    implementation("com.h2database:h2:1.4.200")
+    implementation("org.flywaydb:flyway-core:8.2.3")
+    implementation("org.postgresql:postgresql:42.3.1")
+    implementation("com.h2database:h2:2.0.202")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.kafka:spring-kafka:2.7.5")

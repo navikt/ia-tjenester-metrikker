@@ -227,7 +227,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
     companion object {
 
         private val dataSource: DataSource = HikariConfig().let { config ->
-            config.jdbcUrl = "jdbc:h2:mem:ia-tjenester-metrikker"
+            config.jdbcUrl = "jdbc:h2:mem:ia-tjenester-metrikker;MODE=PostgreSQL"
             config.username = "sa"
             config.password = ""
             config.driverClassName = "org.h2.Driver"
@@ -239,10 +239,12 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         @BeforeAll
         @JvmStatic
         fun `Start og init DB med Flyway`() {
-            val flyway = Flyway()
-            flyway.dataSource = dataSource
-            flyway.setLocations("db/migration")
-            flyway.migrate()
+            Flyway
+                .configure()
+                .dataSource(dataSource)
+                .locations("db/migration")
+                .load()
+                .migrate()
         }
 
         private fun startWebConsoleForInMemDatabase(isActivated: Boolean) {
