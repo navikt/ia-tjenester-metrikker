@@ -9,13 +9,12 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MarkdownSpec
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Option
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Serie
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.SpecType
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tabell
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.html
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.style2
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
@@ -73,7 +72,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             description = "Tabell test description",
             specType = SpecType.markdown,
             spec = MarkdownSpec(
-                markdown = style2() + html()
+                markdown = Tabell().build()
             )
         ),
     )
