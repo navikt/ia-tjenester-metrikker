@@ -1,20 +1,9 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
-class Tabell() {
+class Tabell(headers: String, rows: String) {
     private val style = style2()
-    private val headers = """
-        <th></th>
-              <th colspan=2>Sykefraværsstatistikk</th>
-              <th colspan=2>Samtalestøtte (uinnlogget)</th>
-              <th colspan=2>Samtalestøtte (innlogget)</th>
-    """.trimIndent()
-
-    private val rows = """
-        <tr class="active-row"> <td> </td> <td>2021</td> <td>2022</td> <td>2021</td> <td>2022</td> <td>2021</td> <td>2022</td> </tr> <tr> <td>Jan</td><td>Row 2, Cell 2</td> <td>Row 2, Cell 3</td> <td>Row 2, Cell 4</td> <td>Row 2, Cell 5</td> <td>Row 2, Cell 6</td> <td>Row 2, Cell 7</td> </tr> <tr> <td>Feb</td> <td>Row 2, Cell 2</td> <td>Row 2, Cell 3</td> <td>Row 2, Cell 4</td> <td>Row 2, Cell 5</td> <td>Row 2, Cell 6</td> <td>Row 2, Cell 7</td> </tr> <tr> <td>Mar</td> <td>Row 3, Cell 2</td> <td>Row 3, Cell 3</td> <td>Row 3, Cell 4</td> <td>Row 3, Cell 5</td> <td>Row 3, Cell 6</td> <td>Row 3, Cell 7</td> </tr>
-    """.trimIndent()
 
     private val html = html(headers, rows)
-
 
     fun build() = style + html
 
