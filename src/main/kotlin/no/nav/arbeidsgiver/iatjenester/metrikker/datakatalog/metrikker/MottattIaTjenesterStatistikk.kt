@@ -23,7 +23,6 @@ import java.time.Month
 import java.time.format.TextStyle
 import java.util.*
 
-
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) :
         DatakatalogData {
 
@@ -259,7 +258,19 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
               <th colspan=2>Samtalestøtte (innlogget)</th>
     """.trimIndent()
 
-    private fun rows() = """
+    private fun rows_test() = """
         <tr class="active-row"> <td> </td> <td>2021</td> <td>2022</td> <td>2021</td> <td>2022</td> <td>2021</td> <td>2022</td> </tr> <tr> <td>Jan</td><td>Row 2, Cell 2</td> <td>Row 2, Cell 3</td> <td>Row 2, Cell 4</td> <td>Row 2, Cell 5</td> <td>Row 2, Cell 6</td> <td>Row 2, Cell 7</td> </tr> <tr> <td>Feb</td> <td>Row 2, Cell 2</td> <td>Row 2, Cell 3</td> <td>Row 2, Cell 4</td> <td>Row 2, Cell 5</td> <td>Row 2, Cell 6</td> <td>Row 2, Cell 7</td> </tr> <tr> <td>Mar</td> <td>Row 3, Cell 2</td> <td>Row 3, Cell 3</td> <td>Row 3, Cell 4</td> <td>Row 3, Cell 5</td> <td>Row 3, Cell 6</td> <td>Row 3, Cell 7</td> </tr>
     """.trimIndent()
+
+    private fun rows(): String {
+        val rows = mutableListOf<String>()
+
+        for (month: Month in datagrunnlag.gjeldendeMåneder) {
+            val row = listOf(month, "1", "2", "3", "4", "5", "6")
+            rows.add(row.joinToString(prefix = "<td>", separator = "</td><td>", postfix = "</td>"))
+        }
+
+        return rows.joinToString(prefix = "<tr>", separator = "</tr><tr>", postfix = "<tr>")
+    }
 }
+

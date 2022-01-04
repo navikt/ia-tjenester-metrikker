@@ -20,9 +20,11 @@ internal class MottattIaTjenesterDatagrunnlagTest {
     private val _5_JUNI = LocalDate.of(2021, Month.JUNE, 5)
 
 
-    val anleggsvirksomhet = Næring("42210", "Bygging av vann- og kloakkanlegg", "Anleggsvirksomhet")
-    val barnehage = Næring("88911", "Barnehager", "Helse- og sosialtjenester")
-    val detaljhandelMedBiler = Næring("45512", "Detaljhandel med biler", "Varehandel, reparasjon av motorvogner")
+    private val anleggsvirksomhet =
+        Næring("42210", "Bygging av vann- og kloakkanlegg", "Anleggsvirksomhet")
+    private val barnehage = Næring("88911", "Barnehager", "Helse- og sosialtjenester")
+    private val detaljhandelMedBiler =
+        Næring("45512", "Detaljhandel med biler", "Varehandel, reparasjon av motorvogner")
 
 
     private fun dummyInnloggetMetrikk(
