@@ -265,6 +265,18 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
     private fun rows(): String {
         val rows = mutableListOf<String>()
 
+        rows.add(
+            listOf(
+                "",
+                "2021",
+                "2022",
+                "2021",
+                "2022",
+                "2021",
+                "2022"
+            ).joinToString(prefix = "<td>", separator = "</td><td>", postfix = "</td>")
+        )
+
         for (month: Month in datagrunnlag.gjeldendeMåneder) {
             val row = listOf(month, "1", "2", "3", "4", "5", "6")
             rows.add(row.joinToString(prefix = "<td>", separator = "</td><td>", postfix = "</td>"))
