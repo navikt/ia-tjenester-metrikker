@@ -155,7 +155,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         Assertions.assertThat(resultat.keys.filter { it.first == Kilde.SYKEFRAVÆRSSTATISTIKK }.size)
             .isEqualTo(datagrunnlag.bransjeListe.size)
         Assertions.assertThat(
-            resultat[BransjePerKilde(
+            resultat[BransjeOgKilde(
                 Kilde.SYKEFRAVÆRSSTATISTIKK,
                 ArbeidsmiljøportalenBransje.BARNEHAGER
             )]
@@ -191,31 +191,32 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _21_JUNI_2021
         )
 
-        val resultat: MottatteIaTjenesterPerBransjeOgKilde = datagrunnlag.mottatteIaTjenesterInnloggetPerBransjeOgKilde
+        val resultat: Map<BransjeOgKilde, Int> =
+            datagrunnlag.mottatteIaTjenesterInnloggetPerBransjeOgKilde
 
         Assertions.assertThat(
-            resultat[BransjePerKilde(
+            resultat[BransjeOgKilde(
                 Kilde.SYKEFRAVÆRSSTATISTIKK,
                 ArbeidsmiljøportalenBransje.BARNEHAGER
             )]
         )
             .isEqualTo(2)
         Assertions.assertThat(
-            resultat[BransjePerKilde(
+            resultat[BransjeOgKilde(
                 Kilde.SAMTALESTØTTE,
                 ArbeidsmiljøportalenBransje.BARNEHAGER
             )]
         )
             .isEqualTo(1)
         Assertions.assertThat(
-            resultat[BransjePerKilde(
+            resultat[BransjeOgKilde(
                 Kilde.SAMTALESTØTTE,
                 ArbeidsmiljøportalenBransje.ANLEGG
             )]
         )
             .isEqualTo(1)
         Assertions.assertThat(
-            resultat[BransjePerKilde(
+            resultat[BransjeOgKilde(
                 Kilde.SAMTALESTØTTE,
                 ArbeidsmiljøportalenBransje.ANDRE_BRANSJER
             )]

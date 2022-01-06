@@ -15,7 +15,9 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.månederOgÅrTil
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
 import java.time.LocalDate
@@ -142,7 +144,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Grid(),
                 Xaxis(
                     type = "category",
-                    data = datagrunnlag.gjeldendeMåneder.map { måned -> måned.tilNorskTekstformat() }
+                    data = datagrunnlag.gjeldendeMåneder.map { it.tilNorskTekstformat() }
                 ),
                 Yaxis("value"),
                 Tooltip("item"),
@@ -252,37 +254,63 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
     }
 
     private fun headers() = """
-        <th></th>
+        <th> </th>
               <th colspan=2>Sykefraværsstatistikk</th>
               <th colspan=2>Samtalestøtte (uinnlogget)</th>
-              <th colspan=2>Samtalestøtte (innlogget)</th>
-    """.trimIndent()
-
-    private fun rows_test() = """
-        <tr class="active-row"> <td> </td> <td>2021</td> <td>2022</td> <td>2021</td> <td>2022</td> <td>2021</td> <td>2022</td> </tr> <tr> <td>Jan</td><td>Row 2, Cell 2</td> <td>Row 2, Cell 3</td> <td>Row 2, Cell 4</td> <td>Row 2, Cell 5</td> <td>Row 2, Cell 6</td> <td>Row 2, Cell 7</td> </tr> <tr> <td>Feb</td> <td>Row 2, Cell 2</td> <td>Row 2, Cell 3</td> <td>Row 2, Cell 4</td> <td>Row 2, Cell 5</td> <td>Row 2, Cell 6</td> <td>Row 2, Cell 7</td> </tr> <tr> <td>Mar</td> <td>Row 3, Cell 2</td> <td>Row 3, Cell 3</td> <td>Row 3, Cell 4</td> <td>Row 3, Cell 5</td> <td>Row 3, Cell 6</td> <td>Row 3, Cell 7</td> </tr>
-    """.trimIndent()
+    """.trimIndent() // TODO <th colspan=2>Samtalestøtte (innlogget)</th>
 
     private fun rows(): String {
-        val rows = mutableListOf<String>()
+        val tabellrader = mutableListOf<String>()
 
-        rows.add(
+        tabellrader.add(
             listOf(
                 "",
                 "2021",
                 "2022",
                 "2021",
                 "2022",
-                "2021",
-                "2022"
-            ).joinToString(prefix = "<td>", separator = "</td><td>", postfix = "</td>")
-        )
+            ).joinToString(
+                prefix = "<td>",
+                separator = "</td><td>",
+                postfix = "</td>"
+            )
+        ) // TODO: Legg til-htnl-kode inn i Tabell-klassen
 
-        for (month: Month in datagrunnlag.gjeldendeMåneder) {
-            val row = listOf(month, "1", "2", "3", "4", "5", "6")
-            rows.add(row.joinToString(prefix = "<td>", separator = "</td><td>", postfix = "</td>"))
+        val førsteDag2021 = LocalDate.of(2021, 1, 1)
+        val sisteDag2022 = LocalDate.of(2022, 12, 31)
+
+        val kombinasjonerIDatagrunnlaget = datagrunnlag.innloggetMetrikker.groupingBy {
+            Grupperingsverdier(
+                kilde = it.kilde,
+                år = it.tidspunkt.year,
+                måned = it.tidspunkt.month,
+            )
         }
 
-        return rows.joinToString(prefix = "<tr>", separator = "</tr><tr>", postfix = "<tr>")
+        val alleKombinasjonerITabell =
+            (førsteDag2021 månederOgÅrTil sisteDag2022).flatMap { månedOgÅr ->
+                listOf(SYKEFRAVÆRSSTATISTIKK, SAMTALESTØTTE)
+                    .map { kilde -> Grupperingsverdier(kilde, månedOgÅr.år, månedOgÅr.måned) }
+            }.sortedWith(compareBy({ it.måned }, { it.kilde }))
+
+        val opptelt =
+            alleKombinasjonerITabell.associateWith { 0 } + kombinasjonerIDatagrunnlaget.eachCount()
+
+        opptelt.toList()
+            .groupBy { it.first.måned }
+            .mapValues { (_, antallLeverteTjenesterPerMåned) -> antallLeverteTjenesterPerMåned.map { it.second } }
+            .map { (måned, antallTjenesterDenMåneden) -> listOf(måned.tilNorskTekstformat()) + antallTjenesterDenMåneden }
+            .forEach { tabellrader.add(it.somHtmlRad()) }
+
+        return tabellrader.joinToString(prefix = "<tr>", separator = "</tr><tr>", postfix = "<tr>")
     }
 }
+
+fun List<Any>.somHtmlRad() = this.joinToString(
+    prefix = "<td>",
+    separator = "</td><td>",
+    postfix = "</td>"
+)
+
+data class Grupperingsverdier(val kilde: Kilde, val år: Int, val måned: Month)
 

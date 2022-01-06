@@ -30,7 +30,7 @@ class MottattIaTjenesterDatagrunnlag(
             .filterNot { it == ArbeidsmiljøportalenBransje.ANDRE_BRANSJER }
             .sortedBy { it.name }
 
-    val mottatteIaTjenesterInnloggetPerBransjeOgKilde: MottatteIaTjenesterPerBransjeOgKilde =
+    val mottatteIaTjenesterInnloggetPerBransjeOgKilde: Map<BransjeOgKilde, Int> =
         beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
             bransjeListe,
             fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
@@ -86,15 +86,15 @@ class MottattIaTjenesterDatagrunnlag(
     private fun beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
         bransjeListe: List<ArbeidsmiljøportalenBransje>,
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
-    ): MottatteIaTjenesterPerBransjeOgKilde {
+    ): Map<BransjeOgKilde, Int> {
 
-        val alleBransjerPerBransjeOgKilde: MottatteIaTjenesterPerBransjeOgKilde =
-            bransjeListe.map { BransjePerKilde(Kilde.SAMTALESTØTTE, it) }.associateWith { 0 } +
+        val alleBransjerPerBransjeOgKilde: Map<BransjeOgKilde, Int> =
+            bransjeListe.map { BransjeOgKilde(Kilde.SAMTALESTØTTE, it) }.associateWith { 0 } +
                     bransjeListe.map { Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, it) }.associateWith { 0 }
 
-        val alleBransjerPerBransjeOgKildeMedAntallMetrikker: MottatteIaTjenesterPerBransjeOgKilde =
+        val alleBransjerPerBransjeOgKildeMedAntallMetrikker: Map<BransjeOgKilde, Int> =
             mottattIaTjenesteMetrikker
-                .groupingBy { BransjePerKilde(it.kilde, it.næring.getArbeidstilsynetBransje()) }
+                .groupingBy { BransjeOgKilde(it.kilde, it.næring.getArbeidstilsynetBransje()) }
                 .eachCount()
                 .filterNot { it.key.second == ArbeidsmiljøportalenBransje.ANDRE_BRANSJER }
 
@@ -102,5 +102,4 @@ class MottattIaTjenesterDatagrunnlag(
     }
 }
 
-typealias BransjePerKilde = Pair<Kilde, ArbeidsmiljøportalenBransje>
-typealias MottatteIaTjenesterPerBransjeOgKilde = Map<BransjePerKilde, Int>
+typealias BransjeOgKilde = Pair<Kilde, ArbeidsmiljøportalenBransje>

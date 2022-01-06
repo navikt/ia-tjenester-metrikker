@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.time.LocalDate.now
 import java.time.Month
-import java.time.temporal.ChronoUnit
+import java.util.stream.Collectors
 
 
 @Component
@@ -91,11 +91,13 @@ class DatakatalogStatistikk(
         }
 }
 
-infix fun LocalDate.månederTil(tilDato: LocalDate): List<Month> {
-    val startDato: LocalDate = this.withDayOfMonth(1)
-    val alleFørsteDagIHverMåned: List<LocalDate> = ChronoUnit.MONTHS.between(startDato, tilDato)
-        .let { antallMåneder ->
-            (0..antallMåneder).map { this.plusMonths(it) }
-        }
-    return alleFørsteDagIHverMåned.map { it.month }
-}
+infix fun LocalDate.dagerTil(tilDato: LocalDate): List<LocalDate> =
+    this.datesUntil(tilDato.plusDays(1)).collect(Collectors.toList())
+
+infix fun LocalDate.månederOgÅrTil(tilDato: LocalDate): List<MånedOgÅr> =
+    (this dagerTil tilDato).map { MånedOgÅr(it.year, it.month) }.distinct()
+
+infix fun LocalDate.månederTil(tilDato: LocalDate): List<Month> =
+    (this månederOgÅrTil tilDato).map { it.måned }
+
+data class MånedOgÅr(val år: Int, val måned: Month)
