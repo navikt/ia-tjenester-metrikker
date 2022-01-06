@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatapakkeTabellBuilder
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.EchartSpec
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Grid
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.ItemStyle
@@ -9,7 +10,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MarkdownSpec
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Option
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Serie
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.SpecType
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tabell
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.TabellHeader
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
@@ -43,6 +44,14 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             spec = lagMottatteDigitaleIATjenesterMarkdownSpec(datagrunnlag),
         ),
         View(
+            title = "Tabell test 5",
+            description = "Tabell test description",
+            specType = SpecType.markdown,
+            spec = MarkdownSpec(
+                markdown = lagTabellOverLeverteIaTjenester()
+            )
+        ),
+        View(
             title = "Mottatte digitale IA-tjenester ",
             description = "Antall digitale IA-tjenester mottatt per applikasjon per måned",
             specType = SpecType.echart,
@@ -68,15 +77,21 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             specType = SpecType.echart,
             spec = lagHistogramOverMottatteDigitaleIATjenesterPerFylke(datagrunnlag),
         ),
-        View(
-            title = "Tabell test 5",
-            description = "Tabell test description",
-            specType = SpecType.markdown,
-            spec = MarkdownSpec(
-                markdown = Tabell(headers(), rows()).build()
-            )
-        ),
     )
+
+    private fun lagTabellOverLeverteIaTjenester() =
+        DatapakkeTabellBuilder(
+            headere = listOf(
+                TabellHeader(""),
+                TabellHeader("Sykefraværsstatistikk", colspan = 2),
+                TabellHeader("Samtalestøtte (innlogget)", colspan = 2)
+            )
+        )
+            .leggTilRad(listOf("", "2021", "2022", "2021", "2022"), uthevet = true)
+            .leggTilRader(leverteIaTjenesterPerMånedPerApp())
+            .leggTilRad(summerLeverteTjenesterPerAppPerÅr())
+            .build()
+
 
     private fun lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(
         datagrunnlag: MottattIaTjenesterDatagrunnlag
@@ -253,28 +268,30 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         )
     }
 
-    private fun headers() = """
-        <th> </th>
-              <th colspan=2>Sykefraværsstatistikk</th>
-              <th colspan=2>Samtalestøtte (uinnlogget)</th>
-    """.trimIndent() // TODO <th colspan=2>Samtalestøtte (innlogget)</th>
+    private fun leverteIaTjenesterPerMånedPerApp(): List<List<Any>> {
+        val tabellrader = mutableListOf<List<Any>>()
 
-    private fun rows(): String {
-        val tabellrader = mutableListOf<String>()
+        tabelldataAntallLeverteIaTjenester()
+            .toList()
+            .groupBy { it.first.måned }
+            .mapValues { (_, antallLeverteTjenesterPerMåned) -> antallLeverteTjenesterPerMåned.map { it.second } }
+            .map { (måned, antallTjenesterDenMåneden) ->
+                listOf(måned.tilNorskTekstformat()) + antallTjenesterDenMåneden
+            }
+            .forEach { tabellrader += it }
 
-        tabellrader.add(
-            listOf(
-                "",
-                "2021",
-                "2022",
-                "2021",
-                "2022",
-            ).joinToString(
-                prefix = "<td>",
-                separator = "</td><td>",
-                postfix = "</td>"
-            )
-        ) // TODO: Legg til-htnl-kode inn i Tabell-klassen
+        return tabellrader
+    }
+
+    private fun summerLeverteTjenesterPerAppPerÅr() =
+        listOf("sum") +
+                tabelldataAntallLeverteIaTjenester()
+                    .toList()
+                    .groupBy { it.first.år to it.first.kilde }
+                    .map { (_, antallLeverteTjenester) -> antallLeverteTjenester.sumOf { it.second } }
+
+
+    private fun tabelldataAntallLeverteIaTjenester(): Map<Grupperingsverdier, Int> {
 
         val førsteDag2021 = LocalDate.of(2021, 1, 1)
         val sisteDag2022 = LocalDate.of(2022, 12, 31)
@@ -293,24 +310,10 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                     .map { kilde -> Grupperingsverdier(kilde, månedOgÅr.år, månedOgÅr.måned) }
             }.sortedWith(compareBy({ it.måned }, { it.kilde }))
 
-        val opptelt =
-            alleKombinasjonerITabell.associateWith { 0 } + kombinasjonerIDatagrunnlaget.eachCount()
+        return alleKombinasjonerITabell.associateWith { 0 } + kombinasjonerIDatagrunnlaget.eachCount()
 
-        opptelt.toList()
-            .groupBy { it.first.måned }
-            .mapValues { (_, antallLeverteTjenesterPerMåned) -> antallLeverteTjenesterPerMåned.map { it.second } }
-            .map { (måned, antallTjenesterDenMåneden) -> listOf(måned.tilNorskTekstformat()) + antallTjenesterDenMåneden }
-            .forEach { tabellrader.add(it.somHtmlRad()) }
-
-        return tabellrader.joinToString(prefix = "<tr>", separator = "</tr><tr>", postfix = "<tr>")
     }
 }
-
-fun List<Any>.somHtmlRad() = this.joinToString(
-    prefix = "<td>",
-    separator = "</td><td>",
-    postfix = "</td>"
-)
 
 data class Grupperingsverdier(val kilde: Kilde, val år: Int, val måned: Month)
 

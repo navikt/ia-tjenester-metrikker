@@ -1,15 +1,39 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
-class Tabell(headers: String, rows: String) {
-    private val style = style2()
+data class TabellHeader(val navn: String, val colspan: Int = 1)
 
-    private val html = html(headers, rows)
+class DatapakkeTabellBuilder(private val headere: List<TabellHeader>) {
 
-    fun build() = style + html
+    private val rader = mutableListOf<String>()
 
+    fun leggTilRad(rad: List<Any>, uthevet: Boolean = false): DatapakkeTabellBuilder {
+        val enkeltradHtml = rad.joinToString(
+            prefix = "<td>",
+            separator = "</td><td>",
+            postfix = "</td>"
+        )
+
+        rader.add(
+            """<tr ${if (uthevet) "class=\"uthevet-rad\"" else ""}> $enkeltradHtml </tr>"""
+        )
+        return this
+    }
+
+    fun leggTilRader(rader: List<List<Any>>): DatapakkeTabellBuilder {
+        rader.forEach { leggTilRad(it) }
+        return this
+    }
+
+    private fun headereTilHtml() =
+        headere.joinToString("") { """<th colspan="${it.colspan}"> ${it.navn} </td>""" }
+
+    private fun raderTilHtml() =
+        rader.joinToString(" ").replace("/n", " ")
+
+    fun build() = style + tabellHtml(headereTilHtml(), raderTilHtml())
 }
 
-fun style2() = """
+val style = """
     <style>
         .datapakke-tabell {
             border-collapse: collapse;
@@ -43,7 +67,7 @@ fun style2() = """
             border-bottom: 2px solid #009879;
         }
         
-        .datapakke-tabell tbody tr.active-row {
+        .datapakke-tabell tbody tr.uthevet-rad {
             font-weight: bold;
             color: #009879;
         }
@@ -52,7 +76,7 @@ fun style2() = """
 
 """.trimIndent()
 
-fun html(headers: String, rows: String) = """
+fun tabellHtml(headers: String, rows: String) = """
         <table class="datapakke-tabell">
           <thead>
             <tr>
