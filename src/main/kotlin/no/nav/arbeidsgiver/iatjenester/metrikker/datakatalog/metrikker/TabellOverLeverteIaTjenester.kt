@@ -3,9 +3,11 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatapakkeTabellBuilder
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.TabellHeader
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.månederOgÅrTil
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet.INNLOGGET
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet.UINNLOGGET
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeLevertTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.tilNorskTekstformat
 import java.time.LocalDate
 import java.time.Month
@@ -29,41 +31,59 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
             .leggTilRad(summerLeverteTjenesterPerAppPerÅr(), uthevet = true)
             .build()
 
-    private fun tabelldataAntallLeverteIaTjenester(): Map<Grupperingsverdier, Int> {
+    private fun TabellverdierAntallLeverteIaTjenester(): Map<Tabellcelle, Int> {
+        val tabelldata: List<Tabellcelle> =
+            listOf(
+                datagrunnlag.leverteInnloggedeIatjenester.map {
+                    Tabellcelle(
+                        typeLevertTjeneste = TypeLevertTjeneste(it.kilde, INNLOGGET),
+                        år = it.tidspunkt.year,
+                        måned = it.tidspunkt.month
+                    )
+                },
+                datagrunnlag.uinnloggetMetrikker.map {
+                    Tabellcelle(
+                        typeLevertTjeneste = TypeLevertTjeneste(it.kilde, UINNLOGGET),
+                        år = it.tidspunkt.year,
+                        måned = it.tidspunkt.month
+                    )
+                }).flatten()
 
-        val kombinasjonerIDatagrunnlaget = datagrunnlag.innloggetMetrikker.groupingBy {
-            Grupperingsverdier(
-                kilde = it.kilde,
-                år = it.tidspunkt.year,
-                måned = it.tidspunkt.month,
-            )
-        }
+        val tabellverdierIDatagrunnlaget = tabelldata.groupingBy { it }
 
-        val alleKombinasjonerITabell =
+        val alleTabellceller =
             (tabellFraDato månederOgÅrTil tabellTilDato).flatMap { tidspunkt ->
-                listOf(SYKEFRAVÆRSSTATISTIKK, SAMTALESTØTTE)
-                    .map { kilde -> Grupperingsverdier(kilde, tidspunkt.år, tidspunkt.måned) }
-            }.sortedWith(compareBy({ it.måned }, { it.kilde }))
+                listOf(
+                    TypeLevertTjeneste(SYKEFRAVÆRSSTATISTIKK, INNLOGGET),
+                    TypeLevertTjeneste(SAMTALESTØTTE, INNLOGGET),
+                    TypeLevertTjeneste(SAMTALESTØTTE, UINNLOGGET)
+                )
+                    .map { kilde -> Tabellcelle(kilde, tidspunkt.år, tidspunkt.måned) }
+            }.sortedWith(compareBy({ it.måned }, { it.typeLevertTjeneste.kilde }))
 
-        return alleKombinasjonerITabell.associateWith { 0 } + kombinasjonerIDatagrunnlaget.eachCount()
+        return alleTabellceller.associateWith { 0 } + tabellverdierIDatagrunnlaget.eachCount()
     }
 
-    private fun leverteIaTjenesterPerMånedPerApp(): List<List<Any>> = listOf(
-        tabelldataAntallLeverteIaTjenester()
+    private fun leverteIaTjenesterPerMånedPerApp(): List<List<Any>> =
+        TabellverdierAntallLeverteIaTjenester()
             .toList()
             .groupBy { it.first.måned }
             .mapValues { (_, antallLeverteTjenesterPerMåned) -> antallLeverteTjenesterPerMåned.map { it.second } }
             .map { (måned, antallTjenesterDenMåneden) ->
                 listOf(måned.tilNorskTekstformat()) + antallTjenesterDenMåneden
             }
-    )
+
 
     private fun summerLeverteTjenesterPerAppPerÅr() =
         listOf("totalt") +
-                tabelldataAntallLeverteIaTjenester()
+                TabellverdierAntallLeverteIaTjenester()
                     .toList()
-                    .groupBy { it.first.år to it.first.kilde }
+                    .groupBy { it.first.år to it.first.typeLevertTjeneste }
                     .map { (_, antallLeverteTjenester) -> antallLeverteTjenester.sumOf { it.second } }
 
-    data class Grupperingsverdier(val kilde: Kilde, val år: Int, val måned: Month)
+    data class Tabellcelle(
+        val typeLevertTjeneste: TypeLevertTjeneste,
+        val år: Int,
+        val måned: Month,
+    )
 }

@@ -12,7 +12,7 @@ import java.time.LocalDate
 import java.time.Month
 
 class MottattIaTjenesterDatagrunnlag(
-    val innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
+    private val innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
     val uinnloggetMetrikker: List<MottattUinnloggetIaTjenesteMetrikk>,
     val fraDato: LocalDate,
     val tilDato: LocalDate
@@ -20,6 +20,7 @@ class MottattIaTjenesterDatagrunnlag(
     val startDate: LocalDate = fraDato
     val gjeldendeÅr = fraDato.year
     val gjeldendeMåneder: List<Month> = fraDato månederTil tilDato
+    val leverteInnloggedeIatjenester = fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
 
     private val alleFylkerAlfabetisk = alleFylkerAlfabetisk()
 
@@ -33,12 +34,12 @@ class MottattIaTjenesterDatagrunnlag(
     val mottatteIaTjenesterInnloggetPerBransjeOgKilde: Map<BransjeOgKilde, Int> =
         beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
             bransjeListe,
-            fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
+            leverteInnloggedeIatjenester
         )
 
     val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
     val totalUnikeBedrifterPerDag: Int =
-        beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)).values.sum()
+        beregnAntallMetrikkerPerDag(leverteInnloggedeIatjenester).values.sum()
 
     fun totalInnloggetMetrikkerPerApp(fraApp: Kilde): Int =
         innloggetMetrikker.filter { it.kilde == fraApp }.size
@@ -59,14 +60,13 @@ class MottattIaTjenesterDatagrunnlag(
     ): Map<Month, Int> {
         val datagrunnlag =
             if (innloggetEllerUinlogget == IaTjenesteTilgjengelighet.INNLOGGET)
-                fjernDupliserteMetrikkerSammeDag(innloggetMetrikker) else uinnloggetMetrikker
+                leverteInnloggedeIatjenester else uinnloggetMetrikker
 
         return gjeldendeMåneder.associateWith { 0 } +
                 datagrunnlag.filter { it.kilde == fraApp }
                     .filter { it.tidspunkt.month in gjeldendeMåneder }
                     .groupingBy { it.tidspunkt.month }
                     .eachCount()
-
     }
 
     private fun fjernDupliserteMetrikkerSammeDag(
