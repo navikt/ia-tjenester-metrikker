@@ -1,7 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatapakkeTabellBuilder
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.EchartSpec
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Grid
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.ItemStyle
@@ -10,21 +9,16 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MarkdownSpec
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Option
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Serie
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.SpecType
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.TabellHeader
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.månederOgÅrTil
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.tilNorskTekstformat
 import java.time.LocalDate
-import java.time.Month
-import java.time.format.TextStyle
-import java.util.*
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) :
         DatakatalogData {
@@ -48,7 +42,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             description = "Tabell test description",
             specType = SpecType.markdown,
             spec = MarkdownSpec(
-                markdown = lagTabellOverLeverteIaTjenester()
+                markdown = TabellOverLeverteIaTjenester(datagrunnlag).lagTabellOverLeverteIaTjenester()
             )
         ),
         View(
@@ -78,20 +72,6 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             spec = lagHistogramOverMottatteDigitaleIATjenesterPerFylke(datagrunnlag),
         ),
     )
-
-    private fun lagTabellOverLeverteIaTjenester() =
-        DatapakkeTabellBuilder(
-            headere = listOf(
-                TabellHeader(""),
-                TabellHeader("Sykefraværsstatistikk", colspan = 2),
-                TabellHeader("Samtalestøtte (innlogget)", colspan = 2)
-            )
-        )
-            .leggTilRad(listOf("", "2021", "2022", "2021", "2022"), uthevet = true)
-            .leggTilRader(leverteIaTjenesterPerMånedPerApp())
-            .leggTilRad(summerLeverteTjenesterPerAppPerÅr())
-            .build()
-
 
     private fun lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(
         datagrunnlag: MottattIaTjenesterDatagrunnlag
@@ -244,13 +224,6 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         )
     }
 
-    private fun Month.tilNorskTekstformat(kortform: Boolean = true): String {
-        return getDisplayName(
-            if (kortform) TextStyle.SHORT else TextStyle.FULL,
-            Locale("no", "NO", "NB")
-        )
-    }
-
     private fun lagMottatteDigitaleIATjenesterMarkdownSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): MarkdownSpec {
         return MarkdownSpec(
             "## Samtalestøtte (uinnlogget)\n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
@@ -267,53 +240,4 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                     "## Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
         )
     }
-
-    private fun leverteIaTjenesterPerMånedPerApp(): List<List<Any>> {
-        val tabellrader = mutableListOf<List<Any>>()
-
-        tabelldataAntallLeverteIaTjenester()
-            .toList()
-            .groupBy { it.first.måned }
-            .mapValues { (_, antallLeverteTjenesterPerMåned) -> antallLeverteTjenesterPerMåned.map { it.second } }
-            .map { (måned, antallTjenesterDenMåneden) ->
-                listOf(måned.tilNorskTekstformat()) + antallTjenesterDenMåneden
-            }
-            .forEach { tabellrader += it }
-
-        return tabellrader
-    }
-
-    private fun summerLeverteTjenesterPerAppPerÅr() =
-        listOf("sum") +
-                tabelldataAntallLeverteIaTjenester()
-                    .toList()
-                    .groupBy { it.first.år to it.first.kilde }
-                    .map { (_, antallLeverteTjenester) -> antallLeverteTjenester.sumOf { it.second } }
-
-
-    private fun tabelldataAntallLeverteIaTjenester(): Map<Grupperingsverdier, Int> {
-
-        val førsteDag2021 = LocalDate.of(2021, 1, 1)
-        val sisteDag2022 = LocalDate.of(2022, 12, 31)
-
-        val kombinasjonerIDatagrunnlaget = datagrunnlag.innloggetMetrikker.groupingBy {
-            Grupperingsverdier(
-                kilde = it.kilde,
-                år = it.tidspunkt.year,
-                måned = it.tidspunkt.month,
-            )
-        }
-
-        val alleKombinasjonerITabell =
-            (førsteDag2021 månederOgÅrTil sisteDag2022).flatMap { månedOgÅr ->
-                listOf(SYKEFRAVÆRSSTATISTIKK, SAMTALESTØTTE)
-                    .map { kilde -> Grupperingsverdier(kilde, månedOgÅr.år, månedOgÅr.måned) }
-            }.sortedWith(compareBy({ it.måned }, { it.kilde }))
-
-        return alleKombinasjonerITabell.associateWith { 0 } + kombinasjonerIDatagrunnlaget.eachCount()
-
-    }
 }
-
-data class Grupperingsverdier(val kilde: Kilde, val år: Int, val måned: Month)
-
