@@ -105,14 +105,14 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         opprettTestDataIDB(namedParameterJdbcTemplate)
 
         datakatalogStatistikkMedTilDatoSomVarierer.run()
-        var echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
+        var echartSpec: EchartSpec = produsertDatapakke.views[2].spec as EchartSpec
 
         Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun."))
 
         idag = LocalDate.of(2021, Month.JULY, 1)
         datakatalogStatistikkMedTilDatoSomVarierer.run()
-        echartSpec = produsertDatapakke.views[1].spec as EchartSpec
+        echartSpec = produsertDatapakke.views[2].spec as EchartSpec
 
         Assertions.assertThat(echartSpec.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
@@ -124,12 +124,12 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
         datakatalogStatistikkMedDato.run()
 
-        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(4)
+        Assertions.assertThat(produsertDatapakke.views.size).isEqualTo(5)
         Assertions.assertThat(produsertDatapakke.views[0].spec)
             .isInstanceOf(MarkdownSpec::class.java)
 
         val leverteIaTjenesterPerMånedEchart: EchartSpec =
-            produsertDatapakke.views[1].spec as EchartSpec
+            produsertDatapakke.views[2].spec as EchartSpec
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.xAxis.data)
             .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].name)
@@ -161,7 +161,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         opprettTestDataIDB(namedParameterJdbcTemplate)
         datakatalogStatistikkMedDato.run()
 
-        val leverteIaTjenesterPerMåned: View = produsertDatapakke.views[1]
+        val leverteIaTjenesterPerMåned: View = produsertDatapakke.views[2]
 
         Assertions.assertThat(leverteIaTjenesterPerMåned.description)
             .isEqualTo("Antall digitale IA-tjenester mottatt per applikasjon per måned")
@@ -185,7 +185,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         opprettTestDataIDB(namedParameterJdbcTemplate)
         datakatalogStatistikkMedDato.run()
 
-        val leverteIaTjenesterPerBransje: View = produsertDatapakke.views[2]
+        val leverteIaTjenesterPerBransje: View = produsertDatapakke.views[3]
 
         Assertions.assertThat(leverteIaTjenesterPerBransje.description)
             .isEqualTo("Antall digitale IA-tjenester mottatt per applikasjon fordelt per bransje i bransjeprogram")
@@ -206,7 +206,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         opprettTestDataIDB(namedParameterJdbcTemplate)
         datakatalogStatistikkMedDato.run()
 
-        val leverteIaTjenesterPerFylke: View = produsertDatapakke.views[3]
+        val leverteIaTjenesterPerFylke: View = produsertDatapakke.views[4]
 
         Assertions.assertThat(leverteIaTjenesterPerFylke.description)
             .isEqualTo("Antall digitale IA-tjenester mottatt per applikasjon fordelt på fylke.")
