@@ -20,11 +20,6 @@ enum class IaTjenesteTilgjengelighet {
     UINNLOGGET
 }
 
-data class TypeLevertTjeneste(
-    val kilde: Kilde,
-    val tilgjenglighet: IaTjenesteTilgjengelighet
-)
-
 enum class TypeIATjeneste {
     DIGITAL_IA_TJENESTE,
     RÅDGIVNING
