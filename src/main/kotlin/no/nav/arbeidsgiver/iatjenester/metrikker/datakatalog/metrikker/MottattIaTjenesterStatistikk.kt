@@ -18,38 +18,33 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengeligh
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.tilNorskTekstformat
-import java.time.LocalDate
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) :
         DatakatalogData {
 
-    private var startDato: LocalDate = datagrunnlag.startDate
     private val NAV_BLÅ: String = "#0067C5"
     private val NAV_GRØNN: String = "#06893A"
     private val NAV_ORANSJE: String = "#FF9100"
 
     override fun opprettViews() = listOf(
         View(
-            title = "Mottatte digitale IA-tjenester",
-            description = "Antall digitale IA-tjenester siden ${startDato.dayOfMonth}. ${
-                startDato.month.tilNorskTekstformat(kortform = false)
-            }",
+            title = "Antall unike bedrifter som har mottatt digitale IA-tjenester",
             specType = SpecType.markdown,
-            spec = lagMottatteDigitaleIATjenesterMarkdownSpec(datagrunnlag),
+            spec = lagAntallUnikeBedrifterMarkdown(),
         ),
         View(
-            title = "Tabell test 5",
+            title = "Mottatte digitale IA-tjenester: tabelloversikt",
             description = "Tabell test description",
             specType = SpecType.markdown,
             spec = MarkdownSpec(
-                markdown = TabellOverLeverteIaTjenester(datagrunnlag).lagTabellOverLeverteIaTjenester()
+                markdown = TabellOverLeverteIaTjenester(datagrunnlag).opprett()
             )
         ),
         View(
             title = "Mottatte digitale IA-tjenester ",
             description = "Antall digitale IA-tjenester mottatt per applikasjon per måned",
             specType = SpecType.echart,
-            spec = lagEchartSpecForMottatteDigitaleIATjenesterPerMåned(datagrunnlag),
+            spec = lagEchartSpecForMottatteDigitaleIATjenesterPerMåned(),
         ),
         View(
             title = "Mottatte digitale IA-tjenester per bransje (${
@@ -59,7 +54,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             } ${datagrunnlag.gjeldendeÅr})",
             description = "Antall digitale IA-tjenester mottatt per applikasjon fordelt per bransje i bransjeprogram",
             specType = SpecType.echart,
-            spec = lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(datagrunnlag),
+            spec = lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(),
         ),
         View(
             title = "Mottatte digitale IA-tjenester per fylke (${
@@ -69,13 +64,11 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             } ${datagrunnlag.gjeldendeÅr})",
             description = "Antall digitale IA-tjenester mottatt per applikasjon fordelt på fylke.",
             specType = SpecType.echart,
-            spec = lagHistogramOverMottatteDigitaleIATjenesterPerFylke(datagrunnlag),
+            spec = lagHistogramOverMottatteDigitaleIATjenesterPerFylke(),
         ),
     )
 
-    private fun lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(
-        datagrunnlag: MottattIaTjenesterDatagrunnlag
-    ): EchartSpec {
+    private fun lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(): EchartSpec {
         return EchartSpec(
             "",
             Option(
@@ -125,7 +118,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         )
     }
 
-    private fun lagEchartSpecForMottatteDigitaleIATjenesterPerMåned(datagrunnlag: MottattIaTjenesterDatagrunnlag): EchartSpec {
+    private fun lagEchartSpecForMottatteDigitaleIATjenesterPerMåned(): EchartSpec {
         return EchartSpec(
             "",
             Option(
@@ -183,7 +176,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         )
     }
 
-    private fun lagHistogramOverMottatteDigitaleIATjenesterPerFylke(datagrunnlag: MottattIaTjenesterDatagrunnlag): EchartSpec {
+    private fun lagHistogramOverMottatteDigitaleIATjenesterPerFylke(): EchartSpec {
         return EchartSpec(
             "",
             Option(
@@ -224,20 +217,9 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         )
     }
 
-    private fun lagMottatteDigitaleIATjenesterMarkdownSpec(datagrunnlag: MottattIaTjenesterDatagrunnlag): MarkdownSpec {
+    private fun lagAntallUnikeBedrifterMarkdown(): MarkdownSpec {
         return MarkdownSpec(
-            "## Samtalestøtte (uinnlogget)\n **${datagrunnlag.totalUinnloggetMetrikker}**\n " +
-                    "## Samtalestøtte (innlogget)\n **${
-                        datagrunnlag.totalInnloggetMetrikkerPerApp(
-                            SAMTALESTØTTE
-                        )
-                    }** \n " +
-                    "## Sykefraværsstatistikk (innlogget)\n **${
-                        datagrunnlag.totalInnloggetMetrikkerPerApp(
-                            SYKEFRAVÆRSSTATISTIKK
-                        )
-                    }** \n " +
-                    "## Antall unike bedriftsnummer \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
+            "## Antall unike bedriftsnumre \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
         )
     }
 }

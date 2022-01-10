@@ -17,7 +17,6 @@ class MottattIaTjenesterDatagrunnlag(
     val fraDato: LocalDate,
     val tilDato: LocalDate
 ) {
-    val startDate: LocalDate = fraDato
     val gjeldendeÅr = fraDato.year
     val gjeldendeMåneder: List<Month> = fraDato månederTil tilDato
     val leverteInnloggedeIatjenester = fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)

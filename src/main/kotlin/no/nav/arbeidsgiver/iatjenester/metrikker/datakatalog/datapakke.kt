@@ -16,7 +16,7 @@ data class Datapakke(
 data class View(
     val title: String,
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    val description: String,
+    val description: String = "",
     val specType: SpecType,
     val spec: Spec
 )
@@ -24,7 +24,6 @@ data class View(
 enum class SpecType {
     markdown,
     echart,
-    datatable
 }
 
 interface Spec
@@ -36,10 +35,6 @@ data class EchartSpec(
 
 data class MarkdownSpec(
     val markdown: String
-) : Spec
-
-data class DatatableSpec(
-    val data: List<*>,
 ) : Spec
 
 data class Option(

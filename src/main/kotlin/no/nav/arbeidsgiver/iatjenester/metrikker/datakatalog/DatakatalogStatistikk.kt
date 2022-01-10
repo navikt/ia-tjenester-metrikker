@@ -36,7 +36,7 @@ class DatakatalogStatistikk(
     internal fun byggOgSendDatapakke(erDebugAktivert: Boolean = false) {
         tilDato = dagensDato()
         log.info("Starter jobb som sender statistikk til datakatalogen")
-        log.info("Skal sende statistikk for målinger til og med ${tilDato}")
+        log.info("Skal sende statistikk for målinger til og med $tilDato")
 
         byggDatapakke().also {
             if (erDebugAktivert) {

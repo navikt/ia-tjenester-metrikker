@@ -19,7 +19,7 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
     private val tabellFraDato = LocalDate.of(2021, 1, 1)
     private val tabellTilDato = LocalDate.of(2022, 12, 31)
 
-    fun lagTabellOverLeverteIaTjenester() =
+    fun opprett() =
         DatapakkeTabellBuilder(
             headere = listOf(
                 TabellHeader(""),
