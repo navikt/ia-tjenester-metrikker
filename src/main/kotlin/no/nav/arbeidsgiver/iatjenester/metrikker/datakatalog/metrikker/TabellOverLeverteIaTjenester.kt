@@ -29,43 +29,15 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
             )
         )
             .leggTilRad(listOf("", "2021", "2022", "2021", "2022", "2021", "2022"), uthevet = true)
-            .leggTilRader(leverteIaTjenesterPerMånedPerApp())
-            .leggTilRad(summerLeverteTjenesterPerAppPerÅr(), uthevet = true)
+            .leggTilRader(leverteIaTjenesterPerMåned)
+            .leggTilRad(summerLeverteTjenester, uthevet = true)
             .build()
 
-    private val tabelldata: List<Tabellcelle> =
-        listOf(
-            datagrunnlag.leverteInnloggedeIatjenester.map { Tabellcelle(it, INNLOGGET) },
-            datagrunnlag.uinnloggetMetrikker.map { Tabellcelle(it, UINNLOGGET) }
-        ).flatten()
+    private val antallLeverteTjenesterPerMånedOgÅr = regnUtAntallLeverteTjenesterPerMånedOgÅr()
 
-    private val tabellcellerIDatagrunnlaget = tabelldata.groupingBy { it }
 
-    private val allePermutasjonerAvTabellceller =
-        (tabellFraDato månederOgÅrTil tabellTilDato).flatMap { tidspunkt ->
-            listOf(
-                TypeLevertTjeneste(SYKEFRAVÆRSSTATISTIKK, INNLOGGET),
-                TypeLevertTjeneste(SAMTALESTØTTE, INNLOGGET),
-                TypeLevertTjeneste(SAMTALESTØTTE, UINNLOGGET)
-            )
-                .map { kilde -> Tabellcelle(kilde, tidspunkt.år, tidspunkt.måned) }
-        }
-
-    private val alleTabellcellerSortert =
-        allePermutasjonerAvTabellceller.sortedWith(
-            compareBy(
-                { it.måned },
-                { it.typeLevertTjeneste })
-        )
-
-    val ontallLeverteIaTjenester = tellOppAntallLeverteIaTjenester()
-
-    private fun tellOppAntallLeverteIaTjenester(): Map<Tabellcelle, Int> {
-        return alleTabellcellerSortert.associateWith { 0 } + tabellcellerIDatagrunnlaget.eachCount()
-    }
-
-    private fun leverteIaTjenesterPerMånedPerApp(): List<List<Any>> =
-        ontallLeverteIaTjenester
+    private val leverteIaTjenesterPerMåned =
+        antallLeverteTjenesterPerMånedOgÅr
             .toList()
             .groupBy { it.first.måned }
             .mapValues { (_, antallLeverteTjenesterPerMåned) -> antallLeverteTjenesterPerMåned.map { it.second } }
@@ -73,24 +45,43 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
                 listOf(måned.tilNorskTekstformat()) + antallTjenesterDenMåneden
             }
 
-    private fun summerLeverteTjenesterPerAppPerÅr() =
+    private val summerLeverteTjenester =
         listOf("totalt") +
-                ontallLeverteIaTjenester
+                antallLeverteTjenesterPerMånedOgÅr
                     .toList()
                     .groupBy { it.first.år to it.first.typeLevertTjeneste }
                     .map { (_, antallLeverteTjenester) -> antallLeverteTjenester.sumOf { it.second } }
 
-    data class TypeLevertTjeneste(
-        val kilde: Kilde,
-        val tilgjenglighet: IaTjenesteTilgjengelighet,
-    ) : Comparable<TypeLevertTjeneste> {
-        override fun compareTo(other: TypeLevertTjeneste): Int = when {
-            kilde < other.kilde -> -1
-            kilde > other.kilde -> 1
-            tilgjenglighet < other.tilgjenglighet -> -1
-            tilgjenglighet > other.tilgjenglighet -> 1
-            else -> 0
-        }
+
+    private fun regnUtAntallLeverteTjenesterPerMånedOgÅr(): Map<Tabellcelle, Int> {
+
+        val tabelldata: List<Tabellcelle> =
+            listOf(
+                datagrunnlag.leverteInnloggedeIatjenester.map { Tabellcelle(it, INNLOGGET) },
+                datagrunnlag.uinnloggetMetrikker.map { Tabellcelle(it, UINNLOGGET) }
+            ).flatten()
+
+        val tabellcellerIDatagrunnlaget = tabelldata.groupingBy { it }
+
+        val alleTabellceller =
+            (tabellFraDato månederOgÅrTil tabellTilDato).flatMap { tidspunkt ->
+                listOf(
+                    TypeLevertTjeneste(SYKEFRAVÆRSSTATISTIKK, INNLOGGET),
+                    TypeLevertTjeneste(SAMTALESTØTTE, INNLOGGET),
+                    TypeLevertTjeneste(SAMTALESTØTTE, UINNLOGGET)
+                )
+                    .map { kilde -> Tabellcelle(kilde, tidspunkt.år, tidspunkt.måned) }
+            }
+
+        val alleTabellcellerSortert =
+            alleTabellceller.sortedWith(
+                compareBy(
+                    { it.måned },
+                    { it.typeLevertTjeneste }
+                )
+            )
+
+        return alleTabellcellerSortert.associateWith { 0 } + tabellcellerIDatagrunnlaget.eachCount()
     }
 
     data class Tabellcelle(
@@ -106,6 +97,19 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
             mottattTjeneste.tidspunkt.year,
             mottattTjeneste.tidspunkt.month
         )
+    }
+
+    data class TypeLevertTjeneste(
+        val kilde: Kilde,
+        val tilgjenglighet: IaTjenesteTilgjengelighet,
+    ) : Comparable<TypeLevertTjeneste> {
+        override fun compareTo(other: TypeLevertTjeneste): Int = when {
+            kilde < other.kilde -> -1
+            kilde > other.kilde -> 1
+            tilgjenglighet < other.tilgjenglighet -> -1
+            tilgjenglighet > other.tilgjenglighet -> 1
+            else -> 0
+        }
     }
 
 }
