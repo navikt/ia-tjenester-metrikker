@@ -21,7 +21,7 @@ no.nav.security.jwt.issuer:
     cookiename: selvbetjening-idtoken
 
 altinn-proxy:
-  proxyUrl: https://altinn-rettigheter-proxy.intern.nav.no/altinn-rettigheter-proxy/
+  proxyUrl: http://altinn-rettigheter-proxy.arbeidsgiver/altinn-rettigheter-proxy
   fallbackUrl: https://api-gw.oera.no/
   altinnApiKey: ${ALTINN_APIKEY}
   apiGwKey: ${ALTINN_APIGW_APIKEY}
