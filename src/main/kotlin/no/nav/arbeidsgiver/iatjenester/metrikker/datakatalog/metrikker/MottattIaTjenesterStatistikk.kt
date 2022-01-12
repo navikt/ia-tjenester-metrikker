@@ -34,7 +34,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         ),
         View(
             title = "Mottatte digitale IA-tjenester: tabelloversikt",
-            description = "Tabellen viser oversikt over alle leverte IA-tjenester i 2021 og 2022.",
+            description = "Tabellen viser oversikt over antall leverte IA-tjenester i 2021 og 2022.",
             specType = SpecType.markdown,
             spec = MarkdownSpec(
                 markdown = TabellOverLeverteIaTjenester(datagrunnlag).opprett()

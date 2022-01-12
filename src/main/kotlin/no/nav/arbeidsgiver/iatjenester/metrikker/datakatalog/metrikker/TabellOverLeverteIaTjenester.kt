@@ -29,20 +29,20 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
             )
         )
             .leggTilRad(listOf("", "2021", "2022", "2021", "2022", "2021", "2022"), uthevet = true)
-            .leggTilRader(leverteIaTjenesterPerMåned)
+            .leggTilRader(antallLeverteIaTjenesterSomTabellrader)
             .leggTilRad(summerLeverteTjenester, uthevet = true)
             .build()
 
     private val antallLeverteTjenesterPerMånedOgÅr = regnUtAntallLeverteTjenesterPerMånedOgÅr()
 
 
-    private val leverteIaTjenesterPerMåned =
+    private val antallLeverteIaTjenesterSomTabellrader =
         antallLeverteTjenesterPerMånedOgÅr
             .toList()
             .groupBy { it.first.måned }
             .mapValues { (_, antallLeverteTjenesterPerMåned) -> antallLeverteTjenesterPerMåned.map { it.second } }
-            .map { (måned, antallTjenesterDenMåneden) ->
-                listOf(måned.tilNorskTekstformat()) + antallTjenesterDenMåneden
+            .map { (måned, listeOverAntallIaTjenesterDenMåneden) ->
+                listOf(måned.tilNorskTekstformat()) + listeOverAntallIaTjenesterDenMåneden
             }
 
     private val summerLeverteTjenester =
@@ -53,7 +53,7 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
                     .map { (_, antallLeverteTjenester) -> antallLeverteTjenester.sumOf { it.second } }
 
 
-    private fun regnUtAntallLeverteTjenesterPerMånedOgÅr(): Map<Tabellcelle, Int> {
+    fun regnUtAntallLeverteTjenesterPerMånedOgÅr(): Map<Tabellcelle, Int> {
 
         val tabelldata: List<Tabellcelle> =
             listOf(
