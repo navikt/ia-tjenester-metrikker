@@ -12,14 +12,14 @@ import java.time.LocalDate
 import java.time.Month
 
 class MottattIaTjenesterDatagrunnlag(
-    val innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
+    private val innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
     val uinnloggetMetrikker: List<MottattUinnloggetIaTjenesteMetrikk>,
     val fraDato: LocalDate,
     val tilDato: LocalDate
 ) {
-    val startDate: LocalDate = fraDato
     val gjeldendeÅr = fraDato.year
     val gjeldendeMåneder: List<Month> = fraDato månederTil tilDato
+    val leverteInnloggedeIatjenester = fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
 
     private val alleFylkerAlfabetisk = alleFylkerAlfabetisk()
 
@@ -30,15 +30,15 @@ class MottattIaTjenesterDatagrunnlag(
             .filterNot { it == ArbeidsmiljøportalenBransje.ANDRE_BRANSJER }
             .sortedBy { it.name }
 
-    val mottatteIaTjenesterInnloggetPerBransjeOgKilde: MottatteIaTjenesterPerBransjeOgKilde =
+    val mottatteIaTjenesterInnloggetPerBransjeOgKilde: Map<BransjeOgKilde, Int> =
         beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
             bransjeListe,
-            fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
+            leverteInnloggedeIatjenester
         )
 
     val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
     val totalUnikeBedrifterPerDag: Int =
-        beregnAntallMetrikkerPerDag(fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)).values.sum()
+        beregnAntallMetrikkerPerDag(leverteInnloggedeIatjenester).values.sum()
 
     fun totalInnloggetMetrikkerPerApp(fraApp: Kilde): Int =
         innloggetMetrikker.filter { it.kilde == fraApp }.size
@@ -59,14 +59,13 @@ class MottattIaTjenesterDatagrunnlag(
     ): Map<Month, Int> {
         val datagrunnlag =
             if (innloggetEllerUinlogget == IaTjenesteTilgjengelighet.INNLOGGET)
-                fjernDupliserteMetrikkerSammeDag(innloggetMetrikker) else uinnloggetMetrikker
+                leverteInnloggedeIatjenester else uinnloggetMetrikker
 
         return gjeldendeMåneder.associateWith { 0 } +
                 datagrunnlag.filter { it.kilde == fraApp }
                     .filter { it.tidspunkt.month in gjeldendeMåneder }
                     .groupingBy { it.tidspunkt.month }
                     .eachCount()
-
     }
 
     private fun fjernDupliserteMetrikkerSammeDag(
@@ -86,15 +85,15 @@ class MottattIaTjenesterDatagrunnlag(
     private fun beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
         bransjeListe: List<ArbeidsmiljøportalenBransje>,
         mottattIaTjenesteMetrikker: List<MottattInnloggetIaTjenesteMetrikk>
-    ): MottatteIaTjenesterPerBransjeOgKilde {
+    ): Map<BransjeOgKilde, Int> {
 
-        val alleBransjerPerBransjeOgKilde: MottatteIaTjenesterPerBransjeOgKilde =
-            bransjeListe.map { BransjePerKilde(Kilde.SAMTALESTØTTE, it) }.associateWith { 0 } +
+        val alleBransjerPerBransjeOgKilde: Map<BransjeOgKilde, Int> =
+            bransjeListe.map { BransjeOgKilde(Kilde.SAMTALESTØTTE, it) }.associateWith { 0 } +
                     bransjeListe.map { Pair(Kilde.SYKEFRAVÆRSSTATISTIKK, it) }.associateWith { 0 }
 
-        val alleBransjerPerBransjeOgKildeMedAntallMetrikker: MottatteIaTjenesterPerBransjeOgKilde =
+        val alleBransjerPerBransjeOgKildeMedAntallMetrikker: Map<BransjeOgKilde, Int> =
             mottattIaTjenesteMetrikker
-                .groupingBy { BransjePerKilde(it.kilde, it.næring.getArbeidstilsynetBransje()) }
+                .groupingBy { BransjeOgKilde(it.kilde, it.næring.getArbeidstilsynetBransje()) }
                 .eachCount()
                 .filterNot { it.key.second == ArbeidsmiljøportalenBransje.ANDRE_BRANSJER }
 
@@ -102,5 +101,4 @@ class MottattIaTjenesterDatagrunnlag(
     }
 }
 
-typealias BransjePerKilde = Pair<Kilde, ArbeidsmiljøportalenBransje>
-typealias MottatteIaTjenesterPerBransjeOgKilde = Map<BransjePerKilde, Int>
+typealias BransjeOgKilde = Pair<Kilde, ArbeidsmiljøportalenBransje>

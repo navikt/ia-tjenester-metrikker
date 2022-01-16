@@ -16,17 +16,18 @@ data class Datapakke(
 data class View(
     val title: String,
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    val description: String,
+    val description: String = "",
     val specType: SpecType,
     val spec: Spec
 )
 
 enum class SpecType {
     markdown,
-    echart
+    echart,
 }
 
 interface Spec
+
 data class EchartSpec(
     val url: String,
     val option: Option

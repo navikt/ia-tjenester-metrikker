@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.time.LocalDate.now
 import java.time.Month
-import java.time.temporal.ChronoUnit
+import java.util.stream.Collectors
 
 
 @Component
@@ -36,7 +36,7 @@ class DatakatalogStatistikk(
     internal fun byggOgSendDatapakke(erDebugAktivert: Boolean = false) {
         tilDato = dagensDato()
         log.info("Starter jobb som sender statistikk til datakatalogen")
-        log.info("Skal sende statistikk for målinger til og med ${tilDato}")
+        log.info("Skal sende statistikk for målinger til og med $tilDato")
 
         byggDatapakke().also {
             if (erDebugAktivert) {
@@ -52,17 +52,13 @@ class DatakatalogStatistikk(
     private fun opprettDatapakke(views: List<View>): Datapakke {
         val description = """
             **Statistikken på denne siden viser antall digitale IA-tjenester fra følgende tjenester:**
-            - Samtalestøtte til arbeidsgiver (krever ikke innlogging) 
-            - Sykefraværsstatistikk til arbeidsgiver (krever innlogging)
+            - Samtalestøtte til arbeidsgiver
+            - Sykefraværsstatistikk til arbeidsgiver
             
             **En digital IA-tjeneste telles når en bruker har benyttet seg av innholdet i tjenesten.**
             
             Som hovedregel betyr dette at brukeren har *klikket på noe*, *skrevet noe* eller *åpnet noe* på siden. 
             Det er ikke tilstrekkelig at brukeren kun har besøkt forsiden. 
-        
-            Unntak:
-            - Hvis en bruker klikker på link til samtalestøtten *inne fra sykefraværsstatistikken*, så vil dette 
-            i seg selv ikke telle som en levert IA-tjeneste. 
             """.trimIndent()
 
         return Datapakke(
@@ -95,11 +91,13 @@ class DatakatalogStatistikk(
         }
 }
 
-infix fun LocalDate.månederTil(tilDato: LocalDate): List<Month> {
-    val startDato: LocalDate = this.withDayOfMonth(1)
-    val alleFørsteDagIHverMåned: List<LocalDate> = ChronoUnit.MONTHS.between(startDato, tilDato)
-        .let { antallMåneder ->
-            (0..antallMåneder).map { this.plusMonths(it) }
-        }
-    return alleFørsteDagIHverMåned.map { it.month }
-}
+infix fun LocalDate.dagerTil(tilDato: LocalDate): List<LocalDate> =
+    this.datesUntil(tilDato.plusDays(1)).collect(Collectors.toList())
+
+infix fun LocalDate.månederOgÅrTil(tilDato: LocalDate): List<MånedOgÅr> =
+    (this dagerTil tilDato).map { MånedOgÅr(it.year, it.month) }.distinct()
+
+infix fun LocalDate.månederTil(tilDato: LocalDate): List<Month> =
+    (this månederOgÅrTil tilDato).map { it.måned }
+
+data class MånedOgÅr(val år: Int, val måned: Month)
