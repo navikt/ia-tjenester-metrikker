@@ -9,7 +9,7 @@ import java.time.Month
 
 fun dummyUinnloggetMetrikk(
     kilde: Kilde = Kilde.SAMTALESTØTTE,
-    tidspunkt: LocalDateTime = _1_MAI.atStartOfDay()
+    tidspunkt: LocalDateTime = _1_MAI_2021.atStartOfDay()
 ) = MottattUinnloggetIaTjenesteMetrikk(kilde, tidspunkt)
 
 fun dummyInnloggetMetrikk(
@@ -19,7 +19,7 @@ fun dummyInnloggetMetrikk(
     kommunenummer: String = "0301",
     kommune: String = "Oslo",
     fylke: String = "Oslo",
-    tidspunkt: LocalDateTime = _1_MAI.atStartOfDay()
+    tidspunkt: LocalDateTime = _1_MAI_2021.atStartOfDay()
 ) = MottattInnloggetIaTjenesteMetrikk(
     orgnr,
     kilde,
@@ -30,11 +30,11 @@ fun dummyInnloggetMetrikk(
     tidspunkt
 )
 
-
-val _1_JANUAR_2021 = LocalDate.of(2021, Month.JANUARY, 1)
-val _21_JUNI_2021 = LocalDate.of(2021, Month.JUNE, 21)
-val _1_MAI = LocalDate.of(2021, Month.MAY, 1)
-val _5_JUNI = LocalDate.of(2021, Month.JUNE, 5)
+val _1_JANUAR_2021: LocalDate = LocalDate.of(2021, Month.JANUARY, 1)
+val _21_JUNI_2021: LocalDate = LocalDate.of(2021, Month.JUNE, 21)
+val _1_MAI_2021: LocalDate = LocalDate.of(2021, Month.MAY, 1)
+val _5_JUNI_2021: LocalDate = LocalDate.of(2021, Month.JUNE, 5)
+val _10_JAN_2022: LocalDate = LocalDate.of(2022, Month.JANUARY, 10)
 
 
 val anleggsvirksomhet =

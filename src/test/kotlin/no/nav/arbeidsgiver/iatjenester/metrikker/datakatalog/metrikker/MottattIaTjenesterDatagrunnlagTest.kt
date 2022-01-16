@@ -2,9 +2,9 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_JANUAR_2021
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_MAI
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_MAI_2021
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._21_JUNI_2021
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._5_JUNI
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._5_JUNI_2021
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.anleggsvirksomhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.detaljhandelMedBiler
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.dummyInnloggetMetrikk
@@ -24,7 +24,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
             innloggetMetrikker = listOf(
                 dummyInnloggetMetrikk(),
-                dummyInnloggetMetrikk(tidspunkt = _1_MAI.atStartOfDay()),
+                dummyInnloggetMetrikk(tidspunkt = _1_MAI_2021.atStartOfDay()),
                 dummyInnloggetMetrikk(tidspunkt = _21_JUNI_2021.atStartOfDay()),
             ),
             uinnloggetMetrikker = emptyList(),
@@ -46,7 +46,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
             listOf(
                 dummyInnloggetMetrikk(kilde = Kilde.SAMTALESTØTTE),
-                dummyInnloggetMetrikk(tidspunkt = _1_MAI.atStartOfDay()),
+                dummyInnloggetMetrikk(tidspunkt = _1_MAI_2021.atStartOfDay()),
                 dummyInnloggetMetrikk(
                     kilde = Kilde.SAMTALESTØTTE,
                     tidspunkt = _21_JUNI_2021.atStartOfDay()
@@ -143,7 +143,10 @@ internal class MottattIaTjenesterDatagrunnlagTest {
 
         val innloggetMetrikkerTest = listOf(
             dummyInnloggetMetrikk(),
-            dummyInnloggetMetrikk(kilde = Kilde.SAMTALESTØTTE, tidspunkt = _5_JUNI.atStartOfDay()),
+            dummyInnloggetMetrikk(
+                kilde = Kilde.SAMTALESTØTTE,
+                tidspunkt = _5_JUNI_2021.atStartOfDay()
+            ),
             dummyInnloggetMetrikk(orgnr = "98888888"),
             dummyInnloggetMetrikk(
                 orgnr = "97777777",
@@ -155,7 +158,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
                 orgnr = "96666666",
                 kilde = Kilde.SAMTALESTØTTE,
                 næring = detaljhandelMedBiler,
-                tidspunkt = _5_JUNI.atStartOfDay()
+                tidspunkt = _5_JUNI_2021.atStartOfDay()
             )
         )
 
@@ -204,12 +207,12 @@ internal class MottattIaTjenesterDatagrunnlagTest {
 
         val innloggetMetrikkerTest = listOf(
             dummyInnloggetMetrikk(),
-            dummyInnloggetMetrikk(tidspunkt = _1_MAI.atStartOfDay().plusHours(4)),
+            dummyInnloggetMetrikk(tidspunkt = _1_MAI_2021.atStartOfDay().plusHours(4)),
             dummyInnloggetMetrikk(
-                tidspunkt = _1_MAI.atStartOfDay().plusHours(4),
+                tidspunkt = _1_MAI_2021.atStartOfDay().plusHours(4),
                 orgnr = "88888888"
             ),
-            dummyInnloggetMetrikk(tidspunkt = _5_JUNI.atStartOfDay()),
+            dummyInnloggetMetrikk(tidspunkt = _5_JUNI_2021.atStartOfDay()),
         )
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
             innloggetMetrikker = innloggetMetrikkerTest,
@@ -235,16 +238,16 @@ internal class MottattIaTjenesterDatagrunnlagTest {
     @Test
     fun `beregn antall uinnlogget metrikker per dag for uinnlogget ia-tjenester`() {
         val uinnloggetMetrikkerTest = listOf(
-            MottattUinnloggetIaTjenesteMetrikk(Kilde.SAMTALESTØTTE, _1_MAI.atStartOfDay()),
+            MottattUinnloggetIaTjenesteMetrikk(Kilde.SAMTALESTØTTE, _1_MAI_2021.atStartOfDay()),
             MottattUinnloggetIaTjenesteMetrikk(
                 Kilde.SAMTALESTØTTE,
-                _1_MAI.atStartOfDay().plusHours(4)
+                _1_MAI_2021.atStartOfDay().plusHours(4)
             ),
             MottattUinnloggetIaTjenesteMetrikk(
                 Kilde.SAMTALESTØTTE,
-                _1_MAI.atStartOfDay().plusHours(4)
+                _1_MAI_2021.atStartOfDay().plusHours(4)
             ),
-            MottattUinnloggetIaTjenesteMetrikk(Kilde.SAMTALESTØTTE, _5_JUNI.atStartOfDay()),
+            MottattUinnloggetIaTjenesteMetrikk(Kilde.SAMTALESTØTTE, _5_JUNI_2021.atStartOfDay()),
         )
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
             innloggetMetrikker = emptyList(),
