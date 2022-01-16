@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._10_JAN_2022
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_JANUAR_2021
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._5_JUNI_2021
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.dummyInnloggetMetrikk
@@ -50,7 +51,7 @@ internal class TabellOverLeverteIaTjenesterTest {
             tabellceller[Tabellcelle(dummyUinnloggetMetrikk(), UINNLOGGET)]
         val antallInnloggedeMetrikkerFørsteJanuar2022 =
             tabellceller[Tabellcelle(
-                dummyUinnloggetMetrikk(tidspunkt = _1_JANUAR_2021.atStartOfDay()),
+                dummyUinnloggetMetrikk(tidspunkt = _10_JAN_2022.atStartOfDay()),
                 INNLOGGET
             )]
 
