@@ -37,7 +37,7 @@ class MottattIaTjenesterDatagrunnlag(
         )
 
     val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
-    fun totalUnikeBedrifterPerDag(): Map<Int, Int> =
+    val totalUnikeBedrifterPerDagFordeltPerÅr: Map<Int, Int> =
         beregnAntallMetrikkerPerÅr(leverteInnloggedeIatjenester)
 
     fun totalInnloggetMetrikkerPerApp(fraApp: Kilde): Int =

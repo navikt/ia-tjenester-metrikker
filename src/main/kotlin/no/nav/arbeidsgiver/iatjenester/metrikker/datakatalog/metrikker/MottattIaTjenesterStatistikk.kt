@@ -206,8 +206,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
 
     private fun lagAntallUnikeBedrifterMarkdown(): MarkdownSpec {
         return MarkdownSpec(
-            """## Antall unike bedriftsnumre \n **2021: ${datagrunnlag.totalUnikeBedrifterPerDag[2021]}**"
-            "## Antall unike bedriftsnumre \n **2022: ${datagrunnlag.totalUnikeBedrifterPerDag[2022]}**"""
+            "## Antall unike bedriftsnumre \n**2021: ${datagrunnlag.totalUnikeBedrifterPerDagFordeltPerÅr[2021]}**\n**2022: ${datagrunnlag.totalUnikeBedrifterPerDagFordeltPerÅr[2022]}**"
         )
     }
 }
