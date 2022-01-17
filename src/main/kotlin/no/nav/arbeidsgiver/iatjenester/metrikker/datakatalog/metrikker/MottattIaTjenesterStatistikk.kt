@@ -1,13 +1,26 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.EchartSpec
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Grid
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.ItemStyle
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Legend
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MarkdownSpec
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Option
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Serie
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.SpecType
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.tilNorskTekstformat
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) :
-    DatakatalogData {
+        DatakatalogData {
 
     private val NAV_BLÅ: String = "#0067C5"
     private val NAV_GRØNN: String = "#06893A"
@@ -15,13 +28,13 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
 
     override fun opprettViews() = listOf(
         View(
-            title = "Antall unike bedrifter som har mottatt digitale IA-tjenester",
-            specType = SpecType.markdown,
-            spec = lagAntallUnikeBedrifterMarkdown(),
-        ),
-        View(
-            title = "Mottatte digitale IA-tjenester: tabelloversikt",
-            description = "Tabellen viser oversikt over antall leverte IA-tjenester i 2021 og 2022.",
+            title = "Mottatte digitale IA-tjenester",
+            description = """                
+                **Antall daglig unike bedriftsnumre:** 
+                - **2021: ${datagrunnlag.totalUnikeBedrifterPerDagFordeltPerÅr[2021]}**
+                - **2022: ${datagrunnlag.totalUnikeBedrifterPerDagFordeltPerÅr[2022]}**
+                
+                Tabellen under viser oversikt over antall leverte IA-tjenester i 2021 og 2022 per måned:""".trimIndent(),
             specType = SpecType.markdown,
             spec = MarkdownSpec(
                 markdown = TabellOverLeverteIaTjenester(datagrunnlag).opprett()
@@ -201,12 +214,6 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                     )
                 )
             )
-        )
-    }
-
-    private fun lagAntallUnikeBedrifterMarkdown(): MarkdownSpec {
-        return MarkdownSpec(
-            "## Antall unike bedriftsnumre \n**2021: ${datagrunnlag.totalUnikeBedrifterPerDagFordeltPerÅr[2021]}**\n**2022: ${datagrunnlag.totalUnikeBedrifterPerDagFordeltPerÅr[2022]}**"
         )
     }
 }
