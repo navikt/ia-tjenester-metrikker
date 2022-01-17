@@ -37,8 +37,8 @@ class MottattIaTjenesterDatagrunnlag(
         )
 
     val totalUinnloggetMetrikker: Int = uinnloggetMetrikker.size
-    val totalUnikeBedrifterPerDag: Int =
-        beregnAntallMetrikkerPerDag(leverteInnloggedeIatjenester).values.sum()
+    fun totalUnikeBedrifterPerDag(): Map<Int, Int> =
+        beregnAntallMetrikkerPerÅr(leverteInnloggedeIatjenester)
 
     fun totalInnloggetMetrikkerPerApp(fraApp: Kilde): Int =
         innloggetMetrikker.filter { it.kilde == fraApp }.size
@@ -76,10 +76,10 @@ class MottattIaTjenesterDatagrunnlag(
         }
     }
 
-    private fun beregnAntallMetrikkerPerDag(
+    private fun beregnAntallMetrikkerPerÅr(
         mottattIaTjenesteMetrikker: List<IaTjenesterMetrikkerRepository.MottattIaTjenesteMetrikk>
-    ): Map<LocalDate, Int> {
-        return mottattIaTjenesteMetrikker.groupingBy { it.tidspunkt.toLocalDate() }.eachCount()
+    ): Map<Int, Int> {
+        return mottattIaTjenesteMetrikker.groupingBy { it.tidspunkt.toLocalDate().year }.eachCount()
     }
 
     private fun beregnAntallMottatteIaTjenesterPerBransjeOgKilde(

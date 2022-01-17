@@ -1,26 +1,13 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.DatakatalogData
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.EchartSpec
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Grid
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.ItemStyle
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Legend
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MarkdownSpec
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Option
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Serie
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.SpecType
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Tooltip
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.View
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Xaxis
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Yaxis
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.*
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.tilNorskTekstformat
 
 class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) :
-        DatakatalogData {
+    DatakatalogData {
 
     private val NAV_BLÅ: String = "#0067C5"
     private val NAV_GRØNN: String = "#06893A"
@@ -219,7 +206,8 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
 
     private fun lagAntallUnikeBedrifterMarkdown(): MarkdownSpec {
         return MarkdownSpec(
-            "## Antall unike bedriftsnumre \n **${datagrunnlag.totalUnikeBedrifterPerDag}**"
+            """## Antall unike bedriftsnumre \n **2021: ${datagrunnlag.totalUnikeBedrifterPerDag[2021]}**"
+            "## Antall unike bedriftsnumre \n **2022: ${datagrunnlag.totalUnikeBedrifterPerDag[2022]}**"""
         )
     }
 }
