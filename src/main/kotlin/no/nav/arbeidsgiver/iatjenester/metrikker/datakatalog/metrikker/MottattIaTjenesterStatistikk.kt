@@ -30,9 +30,9 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         View(
             title = "Mottatte digitale IA-tjenester",
             description = """                
-                **Antall daglig unike bedriftsnumre:** 
-                - **2021: ${datagrunnlag.totalUnikeBedrifterPerDagFordeltPerÅr[2021]}**
-                - **2022: ${datagrunnlag.totalUnikeBedrifterPerDagFordeltPerÅr[2022]}**
+                **Antall daglig bedriftsnumre:** 
+                - **2021: ${datagrunnlag.antallUnikeBedrifterPerÅr[2021]}**
+                - **2022: ${datagrunnlag.antallUnikeBedrifterPerÅr[2022]}**
                 
                 Tabellen under viser oversikt over antall leverte IA-tjenester i 2021 og 2022 per måned:""".trimIndent(),
             specType = SpecType.markdown,
