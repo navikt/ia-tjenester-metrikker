@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._10_JAN_2022
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_JANUAR_2021
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_MAI_2021
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._21_JUNI_2021
@@ -12,6 +13,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.dummyUinnloggetMetr
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -91,6 +93,85 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             .isEqualTo(0)
         Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK))
             .isEqualTo(1)
+    }
+
+    @Test
+    fun `beregn unike bedrifter`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = listOf(dummyInnloggetMetrikk()),
+            uinnloggetMetrikker = emptyList(),
+            fraDato = _1_JANUAR_2021,
+            tilDato = _21_JUNI_2021
+        )
+
+        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
+        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2022]).isEqualTo(null)
+    }
+
+    @Test
+    fun `beregn unike bedrifter skal summere opp unike numre`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = listOf(
+                dummyInnloggetMetrikk(),
+                dummyInnloggetMetrikk(orgnr = "987654321"),
+                dummyInnloggetMetrikk(),
+                dummyInnloggetMetrikk(tidspunkt = _10_JAN_2022.atStartOfDay())
+            ),
+            uinnloggetMetrikker = emptyList(),
+            fraDato = _1_JANUAR_2021,
+            tilDato = _10_JAN_2022
+        )
+
+        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(2)
+        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2022]).isEqualTo(1)
+    }
+
+    @Test
+    fun `beregn unike bedrifter skal ikke telle to treff for samme bedriftnummer for samme år`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = listOf(
+                dummyInnloggetMetrikk(),
+                dummyInnloggetMetrikk(),
+                dummyInnloggetMetrikk(tidspunkt = _5_JUNI_2021.atStartOfDay()),
+                dummyInnloggetMetrikk(tidspunkt = _10_JAN_2022.atStartOfDay())
+            ),
+            uinnloggetMetrikker = emptyList(),
+            fraDato = _1_JANUAR_2021,
+            tilDato = _10_JAN_2022
+        )
+
+        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
+    }
+
+    @Test
+    fun `beregn unike bedrifter skal ikke telle to treff for en bedrift som er innom ulike apper`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = listOf(
+                dummyInnloggetMetrikk(),
+                dummyInnloggetMetrikk(kilde = SAMTALESTØTTE),
+            ),
+            uinnloggetMetrikker = emptyList(),
+            fraDato = _1_JANUAR_2021,
+            tilDato = _10_JAN_2022
+        )
+
+        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
+    }
+
+    @Test
+    fun `beregn unike bedrifter skal telle to treff for en bedrift som er innom to ulike år`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = listOf(
+                dummyInnloggetMetrikk(),
+                dummyInnloggetMetrikk(tidspunkt = _10_JAN_2022.atStartOfDay()),
+            ),
+            uinnloggetMetrikker = emptyList(),
+            fraDato = _1_JANUAR_2021,
+            tilDato = _10_JAN_2022
+        )
+
+        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
+        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2022]).isEqualTo(1)
     }
 
     @Test
