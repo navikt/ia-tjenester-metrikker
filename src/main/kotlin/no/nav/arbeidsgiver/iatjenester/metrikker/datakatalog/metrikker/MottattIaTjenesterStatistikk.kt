@@ -30,7 +30,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
         View(
             title = "Mottatte digitale IA-tjenester",
             description = """                
-                **Antall daglig bedriftsnumre:** 
+                **Antall unike bedriftsnumre:** 
                 - **2021: ${datagrunnlag.antallUnikeBedrifterPerÅr[2021]}**
                 - **2022: ${datagrunnlag.antallUnikeBedrifterPerÅr[2022]}**
                 
