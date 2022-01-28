@@ -47,21 +47,13 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
             spec = lagEchartSpecForMottatteDigitaleIATjenesterPerMåned(),
         ),
         View(
-            title = "Mottatte digitale IA-tjenester per bransje (${
-                datagrunnlag.gjeldendeMåneder.first().tilNorskTekstformat()
-            } - ${
-                datagrunnlag.gjeldendeMåneder.last().tilNorskTekstformat()
-            } ${datagrunnlag.gjeldendeÅr})",
+            title = "Mottatte digitale IA-tjenester per bransje",
             description = "Antall digitale IA-tjenester mottatt per applikasjon fordelt per bransje i bransjeprogram",
             specType = SpecType.echart,
             spec = lagEchartSpecForMottatteDigitaleIATjenesterFordeltPerBransje(),
         ),
         View(
-            title = "Mottatte digitale IA-tjenester per fylke (${
-                datagrunnlag.gjeldendeMåneder.first().tilNorskTekstformat()
-            } - ${
-                datagrunnlag.gjeldendeMåneder.last().tilNorskTekstformat()
-            } ${datagrunnlag.gjeldendeÅr})",
+            title = "Mottatte digitale IA-tjenester per fylke",
             description = "Antall digitale IA-tjenester mottatt per applikasjon fordelt på fylke.",
             specType = SpecType.echart,
             spec = lagHistogramOverMottatteDigitaleIATjenesterPerFylke(),

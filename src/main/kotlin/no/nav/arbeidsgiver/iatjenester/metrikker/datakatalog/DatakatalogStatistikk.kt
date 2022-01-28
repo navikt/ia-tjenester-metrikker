@@ -55,6 +55,8 @@ class DatakatalogStatistikk(
             - Samtalestøtte til arbeidsgiver
             - Sykefraværsstatistikk til arbeidsgiver
             
+            Dataregistreringen startet mars 2021. 
+            
             **En digital IA-tjeneste telles når en bruker har benyttet seg av innholdet i tjenesten.**
             
             Som hovedregel betyr dette at brukeren har *klikket på noe*, *skrevet noe* eller *åpnet noe* på siden. 
