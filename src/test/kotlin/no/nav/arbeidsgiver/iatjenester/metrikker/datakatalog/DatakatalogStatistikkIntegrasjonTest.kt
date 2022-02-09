@@ -186,7 +186,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         Assertions.assertThat(leverteIaTjenesterPerBransje.description)
             .isEqualTo("Antall digitale IA-tjenester mottatt per applikasjon fordelt per bransje i bransjeprogram")
         Assertions.assertThat(leverteIaTjenesterPerBransje.title)
-            .isEqualTo("Mottatte digitale IA-tjenester per bransje (mar. - jul. 2021)")
+            .isEqualTo("Mottatte digitale IA-tjenester per bransje")
 
         val dataserier = (leverteIaTjenesterPerBransje.spec as EchartSpec).option.series
 
