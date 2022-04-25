@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer
+import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringsbeskrivelser
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
@@ -41,6 +42,7 @@ data class UinnloggetMottattIaTjeneste(
     override var kilde: Kilde,
     @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
     @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @Schema(required = true, example = "2022-04-20T10:03:44Z")
     override var tjenesteMottakkelsesdato: ZonedDateTime,
 ) : MottattIaTjeneste
 
@@ -52,6 +54,7 @@ data class InnloggetMottattIaTjeneste(
     override var kilde: Kilde,
     @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
     @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @Schema(required = true, example = "2022-04-20T10:03:44Z")
     override var tjenesteMottakkelsesdato: ZonedDateTime,
 ) : MottattIaTjeneste
 

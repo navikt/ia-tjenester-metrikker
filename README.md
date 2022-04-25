@@ -64,8 +64,8 @@ kubectl create secret generic ia-tjenester-metrikker-secrets \
 Bygg image
 `docker build -t ia-tjenester-metrikker .`
 
-Kjør container
-`docker run -d -p 8080:8080 ia-tjenester-metrikker`
+Kjør container (forutsetter .env fil med riktige miljøvariabler)
+`docker run --env-file=./.env -d -p 8080:8080 ia-tjenester-metrikker`
 
 
 # Henvendelser
