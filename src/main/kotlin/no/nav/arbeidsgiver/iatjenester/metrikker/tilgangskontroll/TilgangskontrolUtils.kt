@@ -10,16 +10,6 @@ import java.util.*
 @Component
 class TilgangskontrollUtils @Autowired constructor(private val contextHolder: TokenValidationContextHolder) {
 
-    fun erInnloggetSelvbetjeningBruker(): Any? {
-        return hentClaim(ISSUER_SELVBETJENING, "sub")
-            .map<Any> { fnrString: String? ->
-                Fnr.erGyldigFnr(
-                    fnrString!!
-                )
-            }
-            .orElse(false)
-    }
-
     fun hentInnloggetSelvbetjeningBruker(): InnloggetBruker {
         val fnr = hentClaim(ISSUER_SELVBETJENING, "sub")
             .orElseThrow<RuntimeException> { TilgangskontrollException("Finner ikke fodselsnummer til bruker.") }

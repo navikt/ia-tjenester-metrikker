@@ -67,10 +67,6 @@ internal class TilgangskontrollServiceIntegrationTest {
 
         dummyTilgangskontrollUtils =
             object : TilgangskontrollUtils(contextHolder = dummyTokenValidationContextHolder) {
-                override fun erInnloggetSelvbetjeningBruker(): Boolean {
-                    return true
-                }
-
                 override fun hentInnloggetSelvbetjeningBruker(): InnloggetBruker {
                     return InnloggetBruker(TEST_FNR)
                 }
