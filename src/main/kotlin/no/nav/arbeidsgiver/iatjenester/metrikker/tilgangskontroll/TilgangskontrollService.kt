@@ -30,13 +30,13 @@ class TilgangskontrollService(
     fun hentInnloggetBruker(serviceKey: AltinnServiceKey): Either<Exception, InnloggetBruker> {
 
         try {
-            val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetSelvbetjeningBruker()
+            val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetBruker()
 
             val currentAltinnServiceConfig = tilgangsconfig.altinnServices.getValue(serviceKey)
 
             innloggetSelvbetjeningBruker.organisasjoner =
                 klient.hentOrganisasjoner(
-                    SelvbetjeningToken(tilgangskontrollUtils.selvbetjeningToken.tokenAsString),
+                    SelvbetjeningToken(tilgangskontrollUtils.hentInnloggetJwtToken().tokenAsString),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
                     ServiceCode(currentAltinnServiceConfig.serviceCode),
                     ServiceEdition(currentAltinnServiceConfig.serviceEdition),

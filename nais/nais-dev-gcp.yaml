@@ -9,8 +9,8 @@ spec:
   image: {{image}}
   port: 8080
   ingresses:
-  {{#each ingress as |url|}}
-    - {{url}}
+  { { #each ingress as |url|}}
+      - {{url } }
   {{/each}}
   liveness:
     path: /internal/isalive
@@ -19,7 +19,7 @@ spec:
     path: /internal/isready
     initialDelay: 60
   kafka:
-    pool: {{ kafka_pool }}
+    pool: { { kafka_pool } }
   prometheus:
     enabled: true
     path: /ia-tjenester-metrikker/internal/actuator/prometheus
@@ -35,7 +35,20 @@ spec:
   envFrom:
     - configmap: loginservice-idporten
     - secret: ia-tjenester-metrikker-secrets
+  tokenx:
+    enabled: true
   accessPolicy:
+    inbound:
+      rules:
+        - application: sykefravarsstatistikk
+            namespace: arbeidsgiver
+            cluster: dev-fss
+        - application: samtalestotte-arbeidsgiver
+            namespace: arbeidsgiver
+            cluster: dev-gcp
+        - application: min-ia
+            namespace: team-ia
+            cluster: dev-gcp
     outbound:
       rules:
         - application: altinn-rettigheter-proxy

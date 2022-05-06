@@ -124,6 +124,27 @@ class IaTjenesterMetrikkerControllerTest {
     }
 
     @Test
+    fun `Innlogget endepunkt mottatt-ia-tjeneste validerer tokens fra tokenX og returnerer 201 OK dersom token er gyldig`() {
+        val requestBody: String =
+            vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
+
+        val gyldigToken = issueGyldigSelvbetjeningToken()
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create(hostAndPort() + innloggetEndepunkt))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build(),
+            BodyHandlers.ofString()
+        )
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(201)
+        val body: JsonNode = objectMapper.readTree(response.body())
+        Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
+    }
+
+    @Test
     fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 200 OK dersom noe går galt ved kall til enhetsregisteret`() {
         val requestBody: String =
             vilkårligInnloggetIaTjenesteAsString(ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET)
@@ -174,6 +195,19 @@ class IaTjenesterMetrikkerControllerTest {
             "theclientid",
             DefaultOAuth2TokenCallback(
                 "selvbetjening",
+                "01079812345",
+                listOf("aud-localhost"),
+                emptyMap(),
+                3600
+            )
+        ).serialize()
+
+    private fun issueGyldigTokenXToken() =
+        mockOAuth2Server!!.issueToken(
+            "tokenx",
+            "theclientid",
+            DefaultOAuth2TokenCallback(
+                "tokenx",
                 "01079812345",
                 listOf("aud-localhost"),
                 emptyMap(),

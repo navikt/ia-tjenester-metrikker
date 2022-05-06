@@ -21,12 +21,16 @@ import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguratio
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
+import org.springframework.core.env.Environment
+import org.springframework.core.env.Profiles
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
+import java.io.PrintStream
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -49,7 +53,6 @@ internal class TilgangskontrollServiceIntegrationTest {
     private lateinit var altinnrettigheterProxyKlient: AltinnrettigheterProxyKlient
 
 
-
     init {
         val dummyTokenValidationContextHolder: TokenValidationContextHolder = object : TokenValidationContextHolder {
             override fun getTokenValidationContext(): TokenValidationContext {
@@ -65,9 +68,15 @@ internal class TilgangskontrollServiceIntegrationTest {
             }
         }
 
+        val mockedEnvironment: Environment = Mockito.mock(Environment::class.java);
+        Mockito.`when`(mockedEnvironment.activeProfiles).thenReturn(arrayOf("prod"))
+
         dummyTilgangskontrollUtils =
-            object : TilgangskontrollUtils(contextHolder = dummyTokenValidationContextHolder) {
-                override fun hentInnloggetSelvbetjeningBruker(): InnloggetBruker {
+            object : TilgangskontrollUtils(
+                contextHolder = dummyTokenValidationContextHolder,
+                environment = mockedEnvironment
+            ) {
+                override fun hentInnloggetBruker(): InnloggetBruker {
                     return InnloggetBruker(TEST_FNR)
                 }
             }
@@ -123,8 +132,9 @@ internal class TilgangskontrollServiceIntegrationTest {
     fun `Returnerer feil (Either Left) dersom hverken AltinnProxy eller Altinn svarer`() {
         val result = tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBruker(AltinnServiceKey.IA)
 
-        when(result){
-            is Either.Left -> Assertions.assertThat(result.value).isInstanceOf(AltinnrettigheterProxyKlientFallbackException::class.java)
+        when (result) {
+            is Either.Left -> Assertions.assertThat(result.value)
+                .isInstanceOf(AltinnrettigheterProxyKlientFallbackException::class.java)
             else -> fail("Returnerte ikke forventet feil")
         }
     }
