@@ -36,7 +36,7 @@ class TilgangskontrollService(
 
             innloggetSelvbetjeningBruker.organisasjoner =
                 klient.hentOrganisasjoner(
-                    SelvbetjeningToken(tilgangskontrollUtils.hentInnloggetJwtToken().tokenAsString),
+                    SelvbetjeningToken(tilgangskontrollUtils.hentJwtToken().tokenAsString),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
                     ServiceCode(currentAltinnServiceConfig.serviceCode),
                     ServiceEdition(currentAltinnServiceConfig.serviceEdition),

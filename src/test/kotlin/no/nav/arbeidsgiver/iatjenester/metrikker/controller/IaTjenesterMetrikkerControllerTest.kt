@@ -196,6 +196,7 @@ class IaTjenesterMetrikkerControllerTest {
             DefaultOAuth2TokenCallback(
                 "selvbetjening",
                 "01079812345",
+                "JWT",
                 listOf("aud-localhost"),
                 emptyMap(),
                 3600
@@ -209,6 +210,7 @@ class IaTjenesterMetrikkerControllerTest {
             DefaultOAuth2TokenCallback(
                 "tokenx",
                 "01079812345",
+                "JWT",
                 listOf("aud-localhost"),
                 emptyMap(),
                 3600
