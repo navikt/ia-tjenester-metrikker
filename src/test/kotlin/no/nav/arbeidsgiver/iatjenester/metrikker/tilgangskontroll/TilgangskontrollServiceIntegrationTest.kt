@@ -26,11 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
-import org.springframework.core.env.Environment
-import org.springframework.core.env.Profiles
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import java.io.PrintStream
+import java.util.*
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -54,27 +52,23 @@ internal class TilgangskontrollServiceIntegrationTest {
 
 
     init {
-        val dummyTokenValidationContextHolder: TokenValidationContextHolder = object : TokenValidationContextHolder {
-            override fun getTokenValidationContext(): TokenValidationContext {
-                return object : TokenValidationContext(emptyMap()) {
-                    override fun getJwtToken(issuerName: String?): JwtToken {
-                        return JwtToken(testTokenForTestFNR())
-                    }
-                }
-            }
+        val tokenValidationContextHolderMock: TokenValidationContextHolder =
+            Mockito.mock(TokenValidationContextHolder::class.java)
 
-            override fun setTokenValidationContext(tokenValidationContext: TokenValidationContext) {
-                /* do nothing */
-            }
-        }
+        val tokenValidationContextMock: TokenValidationContext =
+            Mockito.mock(TokenValidationContext::class.java)
 
-        val mockedEnvironment: Environment = Mockito.mock(Environment::class.java);
-        Mockito.`when`(mockedEnvironment.activeProfiles).thenReturn(arrayOf("prod"))
+        Mockito.`when`(tokenValidationContextHolderMock.tokenValidationContext)
+            .thenReturn(tokenValidationContextMock)
+
+        Mockito.`when`(tokenValidationContextMock.firstValidToken)
+            .thenReturn(
+                Optional.of(JwtToken(testTokenForTestFNR()))
+            )
 
         dummyTilgangskontrollUtils =
             object : TilgangskontrollUtils(
-                contextHolder = dummyTokenValidationContextHolder,
-                environment = mockedEnvironment
+                contextHolder = tokenValidationContextHolderMock,
             ) {
                 override fun hentInnloggetBruker(): InnloggetBruker {
                     return InnloggetBruker(TEST_FNR)
@@ -97,9 +91,17 @@ internal class TilgangskontrollServiceIntegrationTest {
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
         tilgangskontrollService =
-            TilgangskontrollService(altinnrettigheterProxyKlient, iaServiceIAltinnKonfig, dummyTilgangskontrollUtils)
+            TilgangskontrollService(
+                altinnrettigheterProxyKlient,
+                iaServiceIAltinnKonfig,
+                dummyTilgangskontrollUtils
+            )
         tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer =
-            TilgangskontrollService(proxyKlientSomIkkeSvarer, iaServiceIAltinnKonfig, dummyTilgangskontrollUtils)
+            TilgangskontrollService(
+                proxyKlientSomIkkeSvarer,
+                iaServiceIAltinnKonfig,
+                dummyTilgangskontrollUtils
+            )
     }
 
 
@@ -120,7 +122,8 @@ internal class TilgangskontrollServiceIntegrationTest {
 
         val actualInnloggetBruker = tilgangskontrollService.hentInnloggetBruker(AltinnServiceKey.IA)
 
-        Assertions.assertThat(actualInnloggetBruker.orNull()!!.fnr).isEqualTo(expectedInnloggetBruker.fnr)
+        Assertions.assertThat(actualInnloggetBruker.orNull()!!.fnr)
+            .isEqualTo(expectedInnloggetBruker.fnr)
         Assertions.assertThat(actualInnloggetBruker.orNull()!!.organisasjoner)
             .isEqualTo(expectedInnloggetBruker.organisasjoner)
             .usingRecursiveFieldByFieldElementComparator(
@@ -130,7 +133,9 @@ internal class TilgangskontrollServiceIntegrationTest {
 
     @Test
     fun `Returnerer feil (Either Left) dersom hverken AltinnProxy eller Altinn svarer`() {
-        val result = tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBruker(AltinnServiceKey.IA)
+        val result = tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBruker(
+            AltinnServiceKey.IA
+        )
 
         when (result) {
             is Either.Left -> Assertions.assertThat(result.value)

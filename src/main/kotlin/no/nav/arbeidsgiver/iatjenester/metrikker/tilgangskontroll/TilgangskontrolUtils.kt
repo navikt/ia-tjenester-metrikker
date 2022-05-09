@@ -3,13 +3,11 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.core.jwt.JwtToken
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
 @Component
 class TilgangskontrollUtils @Autowired constructor(
     private val contextHolder: TokenValidationContextHolder,
-    private val environment: Environment,
 ) {
 
 
