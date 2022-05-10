@@ -10,7 +10,7 @@ spec:
   port: 8080
   ingresses:
   {{#each ingress as |url|}}
-    - {{url}}
+     - {{url}}
   {{/each}}
   liveness:
     path: /ia-tjenester-metrikker/internal/isalive
@@ -19,13 +19,13 @@ spec:
     path: /ia-tjenester-metrikker/internal/isready
     initialDelay: 60
   kafka:
-    pool: {{ kafka_pool }}
+    pool: {{kafka_pool}}
   prometheus:
     enabled: true
     path: /ia-tjenester-metrikker/internal/actuator/prometheus
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: {{ spring_profile_active }}
+      value: {{spring_profile_active}}
   envFrom:
     - configmap: loginservice-idporten
 
