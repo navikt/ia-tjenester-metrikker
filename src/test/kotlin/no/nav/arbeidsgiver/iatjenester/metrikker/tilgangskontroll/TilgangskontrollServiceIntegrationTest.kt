@@ -120,7 +120,8 @@ internal class TilgangskontrollServiceIntegrationTest {
             )
         )
 
-        val actualInnloggetBruker = tilgangskontrollService.hentInnloggetBruker(AltinnServiceKey.IA)
+        val actualInnloggetBruker =
+            tilgangskontrollService.hentInnloggetBrukerFraAltinn(AltinnServiceKey.IA)
 
         Assertions.assertThat(actualInnloggetBruker.orNull()!!.fnr)
             .isEqualTo(expectedInnloggetBruker.fnr)
@@ -133,9 +134,10 @@ internal class TilgangskontrollServiceIntegrationTest {
 
     @Test
     fun `Returnerer feil (Either Left) dersom hverken AltinnProxy eller Altinn svarer`() {
-        val result = tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBruker(
-            AltinnServiceKey.IA
-        )
+        val result =
+            tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBrukerFraAltinn(
+                AltinnServiceKey.IA
+            )
 
         when (result) {
             is Either.Left -> Assertions.assertThat(result.value)

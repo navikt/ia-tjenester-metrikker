@@ -19,18 +19,19 @@ class TilgangskontrollService(
 ) {
 
     fun hentInnloggetBruker(altinnRettighet: AltinnRettighet): Either<Exception, InnloggetBruker> {
-        when (altinnRettighet) {
+        return when (altinnRettighet) {
             AltinnRettighet.SYKEFRAVÆRSSTATISTIKK_FOR_VIRKSOMHETER ->
-                return hentInnloggetBruker(AltinnServiceKey.IA)
+                hentInnloggetBrukerFraAltinn(AltinnServiceKey.IA)
             AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE ->
-                return hentInnloggetBruker(AltinnServiceKey.OPPFOLGINGSPLAN)
+                hentInnloggetBrukerFraAltinn(AltinnServiceKey.OPPFOLGINGSPLAN)
         }
     }
 
-    fun hentInnloggetBruker(serviceKey: AltinnServiceKey): Either<Exception, InnloggetBruker> {
+    fun hentInnloggetBrukerFraAltinn(serviceKey: AltinnServiceKey): Either<Exception, InnloggetBruker> {
 
         try {
-            val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetBruker()
+            val innloggetSelvbetjeningBruker: InnloggetBruker =
+                tilgangskontrollUtils.hentInnloggetBruker()
 
             val currentAltinnServiceConfig = tilgangsconfig.altinnServices.getValue(serviceKey)
 
