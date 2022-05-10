@@ -198,7 +198,7 @@ class IaTjenesterMetrikkerControllerTest {
                 "01079812345",
                 "JWT",
                 listOf("aud-localhost"),
-                emptyMap(),
+                mapOf(Pair("pid", "01079812345")),
                 3600
             )
         ).serialize()
@@ -212,7 +212,7 @@ class IaTjenesterMetrikkerControllerTest {
                 "01079812345",
                 "JWT",
                 listOf("aud-localhost"),
-                emptyMap(),
+                mapOf(Pair("pid", "01079812345")),
                 3600
             )
         ).serialize()
