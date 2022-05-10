@@ -39,14 +39,14 @@ spec:
     inbound:
       rules:
         - application: sykefravarsstatistikk
-            namespace: arbeidsgiver
-            cluster: dev-fss
+          namespace: arbeidsgiver
+          cluster: dev-fss
         - application: samtalestotte-arbeidsgiver
-            namespace: arbeidsgiver
-            cluster: dev-gcp
+          namespace: arbeidsgiver
+          cluster: dev-gcp
         - application: min-ia
-            namespace: team-ia
-            cluster: dev-gcp
+          namespace: team-ia
+          cluster: dev-gcp
     outbound:
       rules:
         - application: altinn-rettigheter-proxy
