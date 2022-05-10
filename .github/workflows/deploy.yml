@@ -32,7 +32,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/oppgradering-av-spring-etter-springshell-CVE-2022-22965'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/hente-fnr-fra-pid-i-claims'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
