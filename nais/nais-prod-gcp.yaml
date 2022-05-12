@@ -40,13 +40,13 @@ spec:
       rules:
         - application: sykefravarsstatistikk
           namespace: arbeidsgiver
-          cluster: dev-fss
+          cluster: prod-fss
         - application: samtalestotte-arbeidsgiver
           namespace: arbeidsgiver
-          cluster: dev-gcp
+          cluster: prod-gcp
         - application: min-ia
           namespace: team-ia
-          cluster: dev-gcp
+          cluster: prod-gcp
     outbound:
       rules:
         - application: altinn-rettigheter-proxy
