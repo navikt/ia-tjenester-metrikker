@@ -42,7 +42,7 @@ spec:
       rules:
         - application: sykefravarsstatistikk
           namespace: arbeidsgiver
-          cluster: dev-fss
+          cluster: dev-gcp
         - application: samtalestotte-arbeidsgiver
           namespace: arbeidsgiver
           cluster: dev-gcp

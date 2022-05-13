@@ -40,7 +40,7 @@ spec:
       rules:
         - application: sykefravarsstatistikk
           namespace: arbeidsgiver
-          cluster: prod-fss
+          cluster: prod-gcp
         - application: samtalestotte-arbeidsgiver
           namespace: arbeidsgiver
           cluster: prod-gcp
