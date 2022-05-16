@@ -36,6 +36,7 @@ class RestResponseEntityExceptionHandler {
     @ExceptionHandler(value = [JwtTokenValidatorException::class, JwtTokenMissingException::class, JwtTokenUnauthorizedException::class, AccessDeniedException::class])
     @ResponseBody
     protected fun handleUnauthorizedException(e: RuntimeException, webRequest: WebRequest?): ResponseEntity<Any> {
+        log("RestResponseEntityExceptionHandler").info("Validering av token feilet: '${e.cause?.message}'", e)
         return getResponseEntity(e, "You are not authorized to access this ressource", HttpStatus.UNAUTHORIZED)
     }
 
@@ -70,11 +71,12 @@ class RestResponseEntityExceptionHandler {
     private fun getResponseEntity(e: RuntimeException, melding: String, status: HttpStatus): ResponseEntity<Any> {
         val body = HashMap<String, String>(1)
         body["message"] = melding
+        val opprineligMeldingEllerNavnTilException = e.message?: e.toString()
         log("RestResponseEntityExceptionHandler").info(String.format(
             "Returnerer følgende HttpStatus '%s' med melding '%s' pga exception '%s'",
             status.toString(),
             melding,
-            e.message
+            opprineligMeldingEllerNavnTilException
         ))
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).body(body)
     }

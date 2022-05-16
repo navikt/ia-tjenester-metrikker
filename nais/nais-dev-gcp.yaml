@@ -40,6 +40,9 @@ spec:
   accessPolicy:
     inbound:
       rules:
+        - application: sykefravarsstatistikk-api
+          namespace: arbeidsgiver
+          cluster: dev-fss
         - application: sykefravarsstatistikk
           namespace: arbeidsgiver
           cluster: dev-gcp
