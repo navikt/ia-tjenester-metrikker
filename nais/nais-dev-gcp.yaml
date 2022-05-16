@@ -10,7 +10,7 @@ spec:
   port: 8080
   ingresses:
   {{#each ingress as |url|}}
-    - {{url}}
+     - {{url}}
   {{/each}}
   liveness:
     path: /internal/isalive
@@ -19,7 +19,7 @@ spec:
     path: /internal/isready
     initialDelay: 60
   kafka:
-    pool: {{ kafka_pool }}
+    pool: {{kafka_pool}}
   prometheus:
     enabled: true
     path: /ia-tjenester-metrikker/internal/actuator/prometheus
@@ -31,11 +31,24 @@ spec:
             envVarPrefix: DATABASE
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: {{ spring_profile_active }}
+      value: {{spring_profile_active}}
   envFrom:
     - configmap: loginservice-idporten
     - secret: ia-tjenester-metrikker-secrets
+  tokenx:
+    enabled: true
   accessPolicy:
+    inbound:
+      rules:
+        - application: sykefravarsstatistikk
+          namespace: arbeidsgiver
+          cluster: dev-gcp
+        - application: samtalestotte-arbeidsgiver
+          namespace: arbeidsgiver
+          cluster: dev-gcp
+        - application: min-ia
+          namespace: teamia
+          cluster: dev-gcp
     outbound:
       rules:
         - application: altinn-rettigheter-proxy

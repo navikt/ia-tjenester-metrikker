@@ -27,6 +27,9 @@ no.nav.security.jwt:
       discoveryurl: http://localhost:${mock-oauth2-server.port}/selvbetjening/.well-known/openid-configuration
       accepted_audience: aud-localhost
       cookiename: selvbetjening-idtoken
+    tokenx:
+      discoveryurl: https://fakedings.dev-gcp.nais.io/fake/.well-known/oauth-authorization-server
+      accepted_audience: aud-localhost
 
 altinn-proxy:
   proxyUrl: http://localhost:${wiremock.port}/proxy/
