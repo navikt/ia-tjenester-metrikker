@@ -45,7 +45,7 @@ spec:
           namespace: arbeidsgiver
           cluster: prod-gcp
         - application: min-ia
-          namespace: team-ia
+          namespace: teamia
           cluster: prod-gcp
     outbound:
       rules:
