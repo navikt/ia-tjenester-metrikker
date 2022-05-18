@@ -2,6 +2,7 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import arrow.core.Either
 import arrow.core.flatMap
+import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.AltinnException
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
@@ -76,7 +77,11 @@ class IaTjenesterMetrikkerInnloggetController(
                     is TilgangskontrollException -> {
                         HttpStatus.FORBIDDEN
                     }
+                    is AltinnException -> {
+                        HttpStatus.FORBIDDEN
+                    }
                     else -> {
+                        log.info("Feil ved validering av rettigheter til bruker. Årsaken er: '${it.message?: it.toString()}' ")
                         HttpStatus.INTERNAL_SERVER_ERROR
                     }
                 }
