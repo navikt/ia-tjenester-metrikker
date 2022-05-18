@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import java.net.URI
@@ -72,7 +73,7 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(201)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         val body: JsonNode = objectMapper.readTree(response.body())
         val status = body.get("status")
         Assertions.assertThat(status).isNotNull
@@ -97,7 +98,7 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(401)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         Assertions.assertThat(response.body())
             .isEqualTo("{\"message\":\"You are not authorized to access this ressource\"}")
     }
@@ -118,7 +119,7 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(201)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
     }
@@ -139,7 +140,7 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(201)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
     }
@@ -160,9 +161,29 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(200)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("status").asText()).isEqualTo("ok")
+    }
+
+    @Test
+    fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 403 forbidden dersom bruker ikke har rettigheter i Altinn`() {
+        val requestBodyMedOrgnrBrukerIkkeHarTilgangTil: String = vilkårligInnloggetIaTjenesteAsString("789999999")
+
+        val gyldigToken = issueGyldigSelvbetjeningToken()
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create(hostAndPort() + innloggetEndepunkt))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                .POST(HttpRequest.BodyPublishers.ofString(requestBodyMedOrgnrBrukerIkkeHarTilgangTil))
+                .build(),
+            BodyHandlers.ofString()
+        )
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
+        val body: JsonNode = objectMapper.readTree(response.body())
+        Assertions.assertThat(body.get("status").asText()).isEqualTo("forbidden")
     }
 
     @Test
@@ -180,7 +201,7 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(400)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("status").asText()).isEqualTo("bad request")
     }
