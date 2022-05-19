@@ -28,7 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import java.util.*
+import java.util.Optional
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -43,6 +43,7 @@ internal class TilgangskontrollServiceIntegrationTest {
     private lateinit var tilgangskontrollService: TilgangskontrollService
     private lateinit var tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer: TilgangskontrollService
     private lateinit var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
+    private lateinit var dummyTokendingsService: TokendingsService
 
     @Autowired
     private lateinit var iaServiceIAltinnKonfig: TilgangskontrollConfig
@@ -94,13 +95,15 @@ internal class TilgangskontrollServiceIntegrationTest {
             TilgangskontrollService(
                 altinnrettigheterProxyKlient,
                 iaServiceIAltinnKonfig,
-                dummyTilgangskontrollUtils
+                dummyTilgangskontrollUtils,
+                dummyTokendingsService
             )
         tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer =
             TilgangskontrollService(
                 proxyKlientSomIkkeSvarer,
                 iaServiceIAltinnKonfig,
-                dummyTilgangskontrollUtils
+                dummyTilgangskontrollUtils,
+                dummyTokendingsService
             )
     }
 

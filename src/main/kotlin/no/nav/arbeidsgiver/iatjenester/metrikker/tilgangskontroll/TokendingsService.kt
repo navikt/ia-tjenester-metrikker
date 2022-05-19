@@ -34,21 +34,19 @@ internal const val PARAMS_CLIENT_ASSERTION_TYPE = "client_assertion_type"
 @Component
 class TokendingsService(val tokenXConfig: TokenXConfigProperties) {
 
-    fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken {
-        with(tokenXConfig) {
-            val clientAssertionToken: String = clientAssertion(
-                clientId = clientId,
-                audience = tokenEndpoint,
-                rsaKey = RSAKey.parse(privateJwk)
-            )
-            val request = OAuth2TokenExchangeRequest(
-                clientAssertion = clientAssertionToken,
-                subjectToken = subjectToken.tokenAsString,
-                audience = altinnRettigheterProxyAudience
-            )
-            val response = tokenExchange(tokendingsUrl, request)
-            return JwtToken(response.body?.access_token)
-        }
+    fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken = with(tokenXConfig) {
+        val clientAssertionToken = clientAssertion(
+            clientId = clientId,
+            audience = tokenEndpoint,
+            rsaKey = RSAKey.parse(privateJwk)
+        )
+        val request = OAuth2TokenExchangeRequest(
+            clientAssertion = clientAssertionToken,
+            subjectToken = subjectToken.tokenAsString,
+            audience = altinnRettigheterProxyAudience
+        )
+        val response = tokenExchange(tokendingsUrl, request)
+        return JwtToken(response.body?.access_token)
     }
 }
 
