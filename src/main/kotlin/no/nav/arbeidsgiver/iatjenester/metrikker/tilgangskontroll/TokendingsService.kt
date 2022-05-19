@@ -37,9 +37,9 @@ class TokendingsService(val tokenXConfig: TokenXConfigProperties) {
     fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken {
         with(tokenXConfig) {
             val clientAssertionToken: String = clientAssertion(
-                tokendingsUrl,
-                tokenEndpoint,
-                RSAKey.parse(privateJwk)
+                clientId = clientId,
+                audience = tokenEndpoint,
+                rsaKey = RSAKey.parse(privateJwk)
             )
             val request = OAuth2TokenExchangeRequest(
                 clientAssertion = clientAssertionToken,
