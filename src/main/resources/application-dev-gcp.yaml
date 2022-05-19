@@ -23,6 +23,7 @@ no.nav.security.jwt.issuer:
 tokenx:
   tokendings-url: ${TOKEN_X_WELL_KNOWN_URL}
   client-id: ${TOKEN_X_CLIENT_ID}
+  token_endpoint: ${TOKEN_X_TOKEN_ENDPOINT}
   altinn_rettigheter_proxy_audience: dev-gcp:arbeidsgiver:altinn-rettigheter-proxy
 
 altinn-proxy:
