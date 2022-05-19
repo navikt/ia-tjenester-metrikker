@@ -19,9 +19,11 @@ no.nav.security.jwt.issuer:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
     cookiename: selvbetjening-idtoken
-  tokenx:
-    discoveryurl: ${TOKEN_X_WELL_KNOWN_URL}
-    accepted_audience: ${TOKEN_X_CLIENT_ID}
+
+tokenx:
+  tokendings-url: ${TOKEN_X_WELL_KNOWN_URL}
+  client-id: ${TOKEN_X_CLIENT_ID}
+  altinn_rettigheter_proxy_audience: prod-gcp:arbeidsgiver:altinn-rettigheter-proxy
 
 altinn-proxy:
   proxyUrl: http://altinn-rettigheter-proxy.arbeidsgiver/altinn-rettigheter-proxy

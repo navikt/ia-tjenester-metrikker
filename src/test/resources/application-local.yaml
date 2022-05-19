@@ -30,7 +30,8 @@ no.nav.security.jwt:
 
 tokenx:
   tokendings-url: https://fakedings.dev-gcp.nais.io/fake/.well-known/oauth-authorization-server
-  client-id: "cluster:namespace:app"
+  client-id: "cluster:namespace:app:ia-tjenester-metrikker"
+  altinn_rettigheter_proxy_audience: cluster:namespace:altinn-rettigheter-proxy
 
 altinn-proxy:
   proxyUrl: http://localhost:${wiremock.port}/proxy/
