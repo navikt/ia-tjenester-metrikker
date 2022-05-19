@@ -20,40 +20,39 @@ import java.util.Date
 import java.util.UUID
 
 
-internal const val PARAMS_GRANT_TYPE = "grant_type"
+internal const val CLIENT_ASSERTION_TYPE = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
 internal const val GRANT_TYPE = "urn:ietf:params:oauth:grant-type:token-exchange"
-internal const val PARAMS_SUBJECT_TOKEN_TYPE = "subject_token_type"
 internal const val SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:jwt"
+
+internal const val PARAMS_GRANT_TYPE = "grant_type"
+internal const val PARAMS_SUBJECT_TOKEN_TYPE = "subject_token_type"
 internal const val PARAMS_SUBJECT_TOKEN = "subject_token"
 internal const val PARAMS_AUDIENCE = "audience"
 internal const val PARAMS_CLIENT_ASSERTION = "client_assertion"
 internal const val PARAMS_CLIENT_ASSERTION_TYPE = "client_assertion_type"
-internal const val CLIENT_ASSERTION_TYPE = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
-internal const val BEARER = "Bearer"
 
 @Component
 class TokendingsService(val tokenXConfig: TokenXConfigProperties) {
 
     fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken {
-        val assertionToken: String = clientAssertion(
-            tokenXConfig.tokendingsUrl,
-            tokenXConfig.tokenEndpoint,
-            RSAKey.parse(tokenXConfig.privateJwk)
-        )
-
-        val request = OAuth2TokenExchangeRequest(
-            clientAssertion = assertionToken,
-            subjectToken = subjectToken.tokenAsString,
-            audience = tokenXConfig.altinnRettigheterProxyAudience
-        )
-
-        val response = RestTemplate().tokenExchange(tokenXConfig.tokendingsUrl, request)
-
-        return JwtToken(response.body?.access_token)
+        with(tokenXConfig) {
+            val clientAssertionToken: String = clientAssertion(
+                tokendingsUrl,
+                tokenEndpoint,
+                RSAKey.parse(privateJwk)
+            )
+            val request = OAuth2TokenExchangeRequest(
+                clientAssertion = clientAssertionToken,
+                subjectToken = subjectToken.tokenAsString,
+                audience = altinnRettigheterProxyAudience
+            )
+            val response = tokenExchange(tokendingsUrl, request)
+            return JwtToken(response.body?.access_token)
+        }
     }
 }
 
-fun RestTemplate.tokenExchange(
+fun tokenExchange(
     tokendingsUrl: String,
     request: OAuth2TokenExchangeRequest
 ): ResponseEntity<TokenExchangeResponse> {
@@ -61,7 +60,7 @@ fun RestTemplate.tokenExchange(
     val contentTypeHeader =
         HttpHeaders().apply { contentType = MediaType.APPLICATION_FORM_URLENCODED }
 
-    return this.postForEntity(
+    return RestTemplate().postForEntity(
         tokendingsUrl,
         request.asParameters(),
         contentTypeHeader,
@@ -69,17 +68,14 @@ fun RestTemplate.tokenExchange(
     )
 }
 
-fun OAuth2TokenExchangeRequest.asParameters(): Map<String, String> {
-    return mapOf(
-        PARAMS_CLIENT_ASSERTION to this.clientAssertion,
-        PARAMS_CLIENT_ASSERTION_TYPE to this.clientAssertionType,
-        PARAMS_SUBJECT_TOKEN to this.subjectToken,
-        PARAMS_SUBJECT_TOKEN_TYPE to this.subjectTokenType,
-        PARAMS_GRANT_TYPE to this.grantType,
-        PARAMS_AUDIENCE to this.audience,
-    )
-}
-
+fun OAuth2TokenExchangeRequest.asParameters() = mapOf(
+    PARAMS_CLIENT_ASSERTION to clientAssertion,
+    PARAMS_CLIENT_ASSERTION_TYPE to clientAssertionType,
+    PARAMS_SUBJECT_TOKEN to subjectToken,
+    PARAMS_SUBJECT_TOKEN_TYPE to subjectTokenType,
+    PARAMS_GRANT_TYPE to grantType,
+    PARAMS_AUDIENCE to audience,
+)
 
 data class OAuth2TokenExchangeRequest(
     val clientAssertion: String,
