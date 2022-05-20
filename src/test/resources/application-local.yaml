@@ -33,6 +33,7 @@ tokenx:
   client-id: "cluster:namespace:app:ia-tjenester-metrikker"
   token_endpoint: https://fakedings.dev-gcp.nais.io/fake/token
   altinn_rettigheter_proxy_audience: cluster:namespace:altinn-rettigheter-proxy
+  private_jwk: "{'p':'','kty':'RSA','q':'','d':'','e':'AQAB','use':'sig','kid':'this_is_fake','qi':''}"
 
 altinn-proxy:
   proxyUrl: http://localhost:${wiremock.port}/proxy/
