@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @CrossOrigin(
     origins = [
-        "https://arbeidsgiver-q.nav.no",
         "https://arbeidsgiver-gcp.dev.nav.no",
         "https://arbeidsgiver.dev.nav.no"],
     allowCredentials = "false"
