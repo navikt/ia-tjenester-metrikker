@@ -32,7 +32,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/fjerne_labs'
+    if: github.ref == 'refs/heads/ikke_deploy_labs'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
