@@ -39,7 +39,7 @@ class RestResponseEntityExceptionHandler {
             "Validering av token feilet: '${e.cause?.message}'",
             e
         )
-        return getResponseEntity(e, "You are not authorized to access this ressource", HttpStatus.UNAUTHORIZED)
+        return getResponseEntity(e, "You are not authorized to access this resource", HttpStatus.UNAUTHORIZED)
     }
 
     @ExceptionHandler(value = [AltinnrettigheterProxyKlientFallbackException::class, AltinnrettigheterProxyKlientException::class])

@@ -60,7 +60,7 @@ class IaTjenesterMetrikkerControllerTest {
 
     @Test
     @Throws(Exception::class)
-    fun `POST til uinnlogget-iatjeneste endepunkt skal returnere 200 created ved suksess`() {
+    fun `POST til uinnlogget-iatjeneste endepunkt skal returnere 201 created ved suksess`() {
         val requestBody: String =
             vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
 
@@ -100,7 +100,7 @@ class IaTjenesterMetrikkerControllerTest {
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         Assertions.assertThat(response.body())
-            .isEqualTo("{\"message\":\"You are not authorized to access this ressource\"}")
+            .isEqualTo("{\"message\":\"You are not authorized to access this resource\"}")
     }
 
     @Test
