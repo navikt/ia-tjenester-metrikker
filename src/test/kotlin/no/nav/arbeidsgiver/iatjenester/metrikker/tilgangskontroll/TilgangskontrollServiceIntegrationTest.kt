@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 
 import arrow.core.Either
+import com.nimbusds.jose.jwk.RSAKey
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnConfig
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlientConfig
@@ -11,6 +12,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.testTokenFo
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.TokenXConfigProperties
 import no.nav.security.token.support.core.context.TokenValidationContext
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.core.jwt.JwtToken
@@ -44,6 +46,9 @@ internal class TilgangskontrollServiceIntegrationTest {
     private lateinit var tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer: TilgangskontrollService
     private lateinit var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
     private lateinit var dummyTokendingsService: TokendingsService
+
+    @Autowired
+    private lateinit var tokenXConfigProperties: TokenXConfigProperties
 
     @Autowired
     private lateinit var iaServiceIAltinnKonfig: TilgangskontrollConfig
@@ -91,6 +96,16 @@ internal class TilgangskontrollServiceIntegrationTest {
 
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
+        dummyTokendingsService =
+            object : TokendingsService(
+                tokenXConfig = tokenXConfigProperties
+            ) {
+                override fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
+                    println("##################### Mock clientAssertion() called #######################")
+                    return "eyJraWQiOiJjbGllbnRBc3NlcnRpb25LZXkiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJub3Rmb3VuZCIsImF1ZCI6Im5vdGZvdW5kIiwibmJmIjoxNjUzMzgwMzU3LCJpc3MiOiJub3Rmb3VuZCIsImV4cCI6MTY1MzM4MDQ1NywiaWF0IjoxNjUzMzgwMzU3fQ.T54HdPb64jSDeQCSYFP4Gk45WdtM-h1_7a-7l8ZVLFQgklP8kwkbA0Y6LgRGe4DC7hjUBMwpO_sJWavV1V0Ykg8M--bei0kGCgwp0scz-LxGCrPSxUWk3Oy8YyGtUWKAR-xN07dTp2kmt-bcBZ37N92G3_55jHQcqPHleiATsSRfheYU3bqtPUnDqNHCWEY7BZ6F7poqirb2LgKlTdXXy_2DRaY-oWMHjreirMK7bcjBjH3vCR4li94-WquNTJJL-EBTsuPxMVjydnSP-4S4d7K2GJhw65tQG9AXwNbEc_vo2wO_G74bz-MaW7gxLzA3FQ5NobnC-HgodSljJXFFWg"
+                }
+            }
+
         tilgangskontrollService =
             TilgangskontrollService(
                 altinnrettigheterProxyKlient,
@@ -105,6 +120,7 @@ internal class TilgangskontrollServiceIntegrationTest {
                 dummyTilgangskontrollUtils,
                 dummyTokendingsService
             )
+
     }
 
 

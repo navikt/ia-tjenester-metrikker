@@ -26,10 +26,15 @@ no.nav.security.jwt:
 
 tokenx:
   tokendings-url: https://fakedings.dev-gcp.nais.io/fake/.well-known/oauth-authorization-server
-  client-id: "cluster:namespace:ia-tjenester-metrikker"
+  client-id: cluster:namespace:ia-tjenester-metrikker
   token_endpoint: https://fakedings.dev-gcp.nais.io/fake/token
   altinn_rettigheter_proxy_audience: cluster:namespace:altinn-rettigheter-proxy
-  private_jwk: "{'p':'','kty':'RSA','q':'','d':'','e':'AQAB','use':'sig','kid':'this_is_fake','qi':''}"
+  private_jwk: '{"kty": "RSA",
+    "e": "AQAB",
+    "use": "sig",
+    "kid": "mock-oauth2-server-key",
+    "n": "33eb36OZYmPSyfQJd44oHjBKPya-v_kN3PMaQLsoJEyB7iXE_-Pul8ibwuxA5_VQqlH72KUBN98izYKKC6Qe4shJrseB8jGxnoMci9A5EXUOQKmnIPEFFmdZ_2YcUcdxZBXazpSFDGCg1gJy6no3v8IFgpZDLgm25Q6iIv2BgYN5uVRk9Q7ruTMfAi6iIIkd4J1CalNAS-UxKwrkY1GgM5Nv4ni7MhB_o9Vy4c6fBQ0kjwVj3FEOBUDxRPJ6qsjYtT2vq69iVET4tz5MgxtKmXLaRr2KtoCTAiLMEPpSV8QMEEBaq5-Y_zJ6psqaLtjjZ6KhRKCuzOeUd1lh5crm6w",
+  }'
 
 altinn-proxy:
   proxyUrl: http://localhost:${wiremock.server.port}/proxy/

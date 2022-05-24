@@ -48,6 +48,24 @@ class TokendingsService(val tokenXConfig: TokenXConfigProperties) {
         val response = tokenExchange(tokendingsUrl, request)
         return JwtToken(response.body?.access_token)
     }
+
+    fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
+        val now = Date.from(now())
+        val inSixtySeconds = Date.from(now().plusSeconds(60))
+        val randomUUID = UUID.randomUUID().toString()
+
+        return JWTClaimsSet.Builder()
+            .issuer(clientId)
+            .subject(clientId)
+            .audience(audience)
+            .issueTime(now)
+            .expirationTime(inSixtySeconds)
+            .jwtID(randomUUID)
+            .notBeforeTime(now)
+            .build()
+            .sign(rsaKey)
+            .serialize()
+    }
 }
 
 fun tokenExchange(
@@ -84,23 +102,6 @@ data class OAuth2TokenExchangeRequest(
     val grantType: String = GRANT_TYPE
 )
 
-fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
-    val now = Date.from(now())
-    val inSixtySeconds = Date.from(now().plusSeconds(60))
-    val randomUUID = UUID.randomUUID().toString()
-
-    return JWTClaimsSet.Builder()
-        .issuer(clientId)
-        .subject(clientId)
-        .audience(audience)
-        .issueTime(now)
-        .expirationTime(inSixtySeconds)
-        .jwtID(randomUUID)
-        .notBeforeTime(now)
-        .build()
-        .sign(rsaKey)
-        .serialize()
-}
 
 internal fun JWTClaimsSet.sign(rsaKey: RSAKey): SignedJWT =
     SignedJWT(
