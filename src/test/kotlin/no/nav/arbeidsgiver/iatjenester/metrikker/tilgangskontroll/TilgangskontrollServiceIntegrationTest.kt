@@ -1,7 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 
 import arrow.core.Either
-import com.nimbusds.jose.jwk.RSAKey
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnConfig
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlientConfig
@@ -30,7 +29,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import java.util.Optional
+import java.util.*
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -100,9 +99,8 @@ internal class TilgangskontrollServiceIntegrationTest {
             object : TokendingsService(
                 tokenXConfig = tokenXConfigProperties
             ) {
-                override fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
-                    println("##################### Mock clientAssertion() called #######################")
-                    return "eyJraWQiOiJjbGllbnRBc3NlcnRpb25LZXkiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJub3Rmb3VuZCIsImF1ZCI6Im5vdGZvdW5kIiwibmJmIjoxNjUzMzgwMzU3LCJpc3MiOiJub3Rmb3VuZCIsImV4cCI6MTY1MzM4MDQ1NywiaWF0IjoxNjUzMzgwMzU3fQ.T54HdPb64jSDeQCSYFP4Gk45WdtM-h1_7a-7l8ZVLFQgklP8kwkbA0Y6LgRGe4DC7hjUBMwpO_sJWavV1V0Ykg8M--bei0kGCgwp0scz-LxGCrPSxUWk3Oy8YyGtUWKAR-xN07dTp2kmt-bcBZ37N92G3_55jHQcqPHleiATsSRfheYU3bqtPUnDqNHCWEY7BZ6F7poqirb2LgKlTdXXy_2DRaY-oWMHjreirMK7bcjBjH3vCR4li94-WquNTJJL-EBTsuPxMVjydnSP-4S4d7K2GJhw65tQG9AXwNbEc_vo2wO_G74bz-MaW7gxLzA3FQ5NobnC-HgodSljJXFFWg"
+                override fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken {
+                    return JwtToken(FAKE_TOKEN_FRA_TOKENX)
                 }
             }
 
@@ -163,5 +161,9 @@ internal class TilgangskontrollServiceIntegrationTest {
                 .isInstanceOf(AltinnrettigheterProxyKlientFallbackException::class.java)
             else -> fail("Returnerte ikke forventet feil")
         }
+    }
+
+    companion object {
+        val FAKE_TOKEN_FRA_TOKENX = "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzNDVjMzkzMi0wZmM3LTRmYWQtOTZhMi1kYzYzOWU0NDZhYzgiLCJhbXIiOlsiQmFua0lEIl0sImlzcyI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlIiwicGlkIjoibm90Zm91bmQiLCJsb2NhbGUiOiJuYiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJjbGllbnRfaWQiOiJub3Rmb3VuZCIsImF1ZCI6Im5vdGZvdW5kIiwiYWNyIjoibm90Zm91bmQiLCJuYmYiOjE2NTMzODg3OTcsImlkcCI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlXC9pZHBvcnRlbiIsInNjb3BlIjoib3BlbmlkIiwiZXhwIjoxNjU2OTg4Nzk3LCJpYXQiOjE2NTMzODg3OTcsImNsaWVudF9vcmdubyI6Ijg4OTY0MDc4MiIsImp0aSI6ImU0MDQ3OTVlLWQ3YmUtNDI2NS1iZTQ2LTFhY2ExZTU3Zjc5MyJ9.DfQ9vojDed9IR8-7r2DmgpToUaBwb70-t_k2BVKnWZhTaDu2y85nS2ME4niGxutXBtZbzhQsgDPQ1eHAnX7gBgvjwyEhbhXKHfx-FgiSVXqLw6fvBUsmg1PP07a1fhZJ1RXXDSN8sM5ImPEomhOEnRLPgFsLcfPYC_44HTHxXP37wPWcioo3DW_lPb90ApgehgNbGzUu5YJm0QFaPI71jKdLhpNWs6ybYLbpOciQJPT-e1eoRNtuWblKJQc8nNU7JTVMBVRv6kVPC_V2Gi5ggF3fIDnBXFdUmpPJIj_F-ezO50KVExKT6KQDSVWLjmn8WaSr37LkN8CF27soth2Kpg";
     }
 }
