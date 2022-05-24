@@ -27,5 +27,5 @@ fun String.toBeValidUrl(): Boolean {
 }
 
 fun String.toContainCorrectClaims(): Boolean {
-    return this.contains("use") && this.contains("kty") && this.contains("kid")
+    return this.contains("kty") && this.contains("kid")
 }

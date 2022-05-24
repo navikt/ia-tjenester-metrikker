@@ -108,7 +108,7 @@ class IaTjenesterMetrikkerControllerTest {
         val requestBody: String =
             vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
 
-        val gyldigToken = issueGyldigSelvbetjeningToken()
+        val gyldigToken = getFakedingsToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
@@ -223,6 +223,9 @@ class IaTjenesterMetrikkerControllerTest {
                 3600
             )
         ).serialize()
+
+    private fun getFakedingsToken() =
+        "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI3NDQ1YzQyYy0yZDVmLTQyYTUtYmMyMC0zOTg1MDA0MjgyMGQiLCJhbXIiOlsiQmFua0lEIl0sImlzcyI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlIiwicGlkIjoibm90Zm91bmQiLCJsb2NhbGUiOiJuYiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJjbGllbnRfaWQiOiJub3Rmb3VuZCIsImF1ZCI6Im5vdGZvdW5kIiwiYWNyIjoibm90Zm91bmQiLCJuYmYiOjE2NTMzOTU5NTQsImlkcCI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlXC9pZHBvcnRlbiIsInNjb3BlIjoib3BlbmlkIiwiZXhwIjoxNjU2OTk1OTU0LCJpYXQiOjE2NTMzOTU5NTQsImNsaWVudF9vcmdubyI6Ijg4OTY0MDc4MiIsImp0aSI6IjU3ZjE3ZGVlLTQ3ZjMtNGFjYi04MWExLTgzODhiZDEwOTU0YSJ9.rO1yw0muQAyZZRF09XGOR2TB7HNOWg1PYUT71rEQlls9JIWpJ7--3qxazaNi5KD2uVaqF9VYCiIlP2SswuVMtRJR8kdtyZtyWXcS14RpW-jW1_jsnrIkjF7OonVsaD8ILXFkcyO41czvV5ZKH3l35eeMbwdLbRjYDPf61Sdx-6XhtzKxz2Q4-SHk8XksWEuN5xLvj-PpZSpcxE9ABSQkeygLdvhQCGYEEIIov4z8NunTfbxgGkiHf5ggbR2FVxA79Brs3TOlbrM1WDvGSa-ZUxqdNiudKtXprDmGdDMr0WamTitOiaJ6EVTXgklVSjXcwl5hveBo2Q9TeU36zQ10vQ"
 
     private fun issueGyldigTokenXToken() =
         mockOAuth2Server!!.issueToken(
