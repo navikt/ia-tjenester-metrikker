@@ -32,7 +32,7 @@ tokenx:
   tokendings-url: https://fakedings.dev-gcp.nais.io/fake/.well-known/oauth-authorization-server
   client-id: "cluster:namespace:ia-tjenester-metrikker"
   token_endpoint: https://fakedings.dev-gcp.nais.io/fake/token
-  private_jwk: ${TOKEN_X_PRIVATE_JWK}
+  private_jwk: src/test/resources/private-jwk.json
   altinn_rettigheter_proxy_audience: cluster:namespace:altinn-rettigheter-proxy
 
 altinn-proxy:
