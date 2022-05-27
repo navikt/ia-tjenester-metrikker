@@ -23,6 +23,10 @@ no.nav.security.jwt:
     selvbetjening:
       discoveryurl: http://localhost:${mock-oauth2-server.port}/selvbetjening/.well-known/openid-configuration
       accepted_audience: aud-localhost
+    tokenx:
+      discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
+      accepted_audience: localhost:arbeidsgiver:ia-tjenester-metrikker
+      cookie_name: tokenx-token
 
 tokenx:
   tokendings-url: https://fakedings.dev-gcp.nais.io/fake/.well-known/oauth-authorization-server

@@ -81,7 +81,8 @@ class IaTjenesterMetrikkerInnloggetController(
                         HttpStatus.FORBIDDEN
                     }
                     else -> {
-                        log.info("Feil ved validering av rettigheter til bruker. Årsaken er: '${it.message?: it.toString()}' ")
+                        log.info("Feil ved validering av rettigheter til bruker. Årsaken er: '${it.message?: it.toString()}', exception er: '${it}' ")
+                        log.info("StackTrace: \n ${it.stackTraceToString()}")
                         HttpStatus.INTERNAL_SERVER_ERROR
                     }
                 }

@@ -35,6 +35,7 @@ internal const val PARAMS_CLIENT_ASSERTION_TYPE = "client_assertion_type"
 class TokendingsService(val tokenXConfig: TokenXConfigProperties) {
 
     fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken = with(tokenXConfig) {
+        println("-----------------------> CAlling exchangeTokenToAltinnProxy with: ${subjectToken.tokenAsString} for issuer: ${subjectToken.issuer}")
         val clientAssertionToken = clientAssertion(
             clientId = clientId,
             audience = tokenEndpoint,

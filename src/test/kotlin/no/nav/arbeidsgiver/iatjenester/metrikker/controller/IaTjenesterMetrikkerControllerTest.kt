@@ -108,7 +108,8 @@ class IaTjenesterMetrikkerControllerTest {
         val requestBody: String =
             vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
 
-        val gyldigToken = getFakedingsToken()
+        //val gyldigToken = getFakedingsToken()
+        val gyldigToken = issueGyldigTokenXToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
@@ -225,17 +226,17 @@ class IaTjenesterMetrikkerControllerTest {
         ).serialize()
 
     private fun getFakedingsToken() =
-        "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI3NDQ1YzQyYy0yZDVmLTQyYTUtYmMyMC0zOTg1MDA0MjgyMGQiLCJhbXIiOlsiQmFua0lEIl0sImlzcyI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlIiwicGlkIjoibm90Zm91bmQiLCJsb2NhbGUiOiJuYiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJjbGllbnRfaWQiOiJub3Rmb3VuZCIsImF1ZCI6Im5vdGZvdW5kIiwiYWNyIjoibm90Zm91bmQiLCJuYmYiOjE2NTMzOTU5NTQsImlkcCI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlXC9pZHBvcnRlbiIsInNjb3BlIjoib3BlbmlkIiwiZXhwIjoxNjU2OTk1OTU0LCJpYXQiOjE2NTMzOTU5NTQsImNsaWVudF9vcmdubyI6Ijg4OTY0MDc4MiIsImp0aSI6IjU3ZjE3ZGVlLTQ3ZjMtNGFjYi04MWExLTgzODhiZDEwOTU0YSJ9.rO1yw0muQAyZZRF09XGOR2TB7HNOWg1PYUT71rEQlls9JIWpJ7--3qxazaNi5KD2uVaqF9VYCiIlP2SswuVMtRJR8kdtyZtyWXcS14RpW-jW1_jsnrIkjF7OonVsaD8ILXFkcyO41czvV5ZKH3l35eeMbwdLbRjYDPf61Sdx-6XhtzKxz2Q4-SHk8XksWEuN5xLvj-PpZSpcxE9ABSQkeygLdvhQCGYEEIIov4z8NunTfbxgGkiHf5ggbR2FVxA79Brs3TOlbrM1WDvGSa-ZUxqdNiudKtXprDmGdDMr0WamTitOiaJ6EVTXgklVSjXcwl5hveBo2Q9TeU36zQ10vQ"
+        "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIyZDhlZjJiZi0zOWQyLTQwZTEtOGI5Mi05NmRlN2EzODMzYTEiLCJhbXIiOlsiQmFua0lEIl0sImlzcyI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlIiwicGlkIjoiMTIzNDU2Nzg5MTAiLCJsb2NhbGUiOiJuYiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJjbGllbnRfaWQiOiJkZXYtZ2NwOnRlYW1pYTptaW4taWEiLCJhdWQiOiJkZXYtZ2NwOmFyYmVpZHNnaXZlcjppYS10amVuZXN0ZXItbWV0cmlra2VyIiwiYWNyIjoiTGV2ZWw0IiwibmJmIjoxNjUzNjQ4NjIwLCJpZHAiOiJodHRwczpcL1wvZmFrZWRpbmdzLmRldi1nY3AubmFpcy5pb1wvZmFrZVwvaWRwb3J0ZW4iLCJzY29wZSI6Im9wZW5pZCIsImV4cCI6MTY1NzI0ODYyMCwiaWF0IjoxNjUzNjQ4NjIwLCJjbGllbnRfb3Jnbm8iOiI4ODk2NDA3ODIiLCJqdGkiOiJmZDA0NGRjYy05ODQ0LTQ2YzItOWNmMC00YjI3ODhhY2I2NjMifQ.ZBpaOUGXrzRoVc0eHefQuQx0cQLMVBrqs-y16JNswKWIWrziHpmQ24tYHDKKyYJoG_hOPA_a8B6s-Yivq3pugTsR48-v60r9H4XGJfwhVVc-C-RJzw34qlUOcTT4aVb6ZOX5bSY5h9IKyvv9EnxGVcR69D0uwhugTypqeJ1wR91RJAhCvvw-l_x_VkTmja7mAJQr_nbQJdMw44rMuLeVkEXDOvypLOpJxKF3KsfJibBvtF3lsblEp2ZxJ1-jZGN0mmHm8LVEIavw4zqL6z_brN2xVAqtonvhBURbDsJcFQ-mnNVRftkjaBe835_bRgFoV9AvmD5DroSSHOGrrd7Zkg"
 
     private fun issueGyldigTokenXToken() =
         mockOAuth2Server!!.issueToken(
             "tokenx",
-            "theclientid",
+            "localhost:teamia:min-ia",
             DefaultOAuth2TokenCallback(
                 "tokenx",
                 "01079812345",
                 "JWT",
-                listOf("aud-localhost"),
+                listOf("localhost:arbeidsgiver:ia-tjenester-metrikker"),
                 mapOf(Pair("pid", "01079812345")),
                 3600
             )
