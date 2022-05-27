@@ -46,7 +46,7 @@ class TokendingsService(val tokenXConfig: TokenXConfigProperties) {
             subjectToken = subjectToken.tokenAsString,
             audience = altinnRettigheterProxyAudience
         )
-        val response = tokenExchange(tokendingsUrl, request)
+        val response = tokenExchange(tokenEndpoint, request)
         return JwtToken(response.body?.access_token)
     }
 
