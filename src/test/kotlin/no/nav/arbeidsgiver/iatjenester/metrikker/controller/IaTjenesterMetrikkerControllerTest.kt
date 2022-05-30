@@ -113,7 +113,6 @@ class IaTjenesterMetrikkerControllerTest {
         val gyldigToken = issueGyldigTokenXToken()
         val gyldigSFApiToken = createTokenLikeSFApi(
             "15008462396",
-            null,
             "tokenx",
             "https://oidc.difi.no/idporten-oidc-provider/"
         )
@@ -243,16 +242,15 @@ class IaTjenesterMetrikkerControllerTest {
                 "tokenx",
                 "01079812345",
                 "JWT",
-                listOf("localhost:arbeidsgiver:ia-tjenester-metrikker"),
-                mapOf(Pair("pid", "01079812345")),
+                audience = listOf("someaudience"),
+                claims = mapOf(Pair("pid", "01079812345")),
                 3600
             )
         ).serialize()
 
     fun createTokenLikeSFApi(
         pid: String,
-        sub: String?,
-        issuerId: String?,
+        issuerId: String,
         idp: String,
     ): String? {
         val claims: MutableMap<String, String> =
@@ -264,9 +262,9 @@ class IaTjenesterMetrikkerControllerTest {
             claims["pid"] = pid
         }
         return mockOAuth2Server!!.issueToken(
-            issuerId!!,
-            "",
-            "localhost:arbeidsgiver:ia-tjenester-metrikker",
+            issuerId,
+            "IKKE_I_BRUK_LENGER",
+            "someaudience",
             claims
         ).serialize()
     }

@@ -20,7 +20,8 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForEntity
 import java.time.Instant.now
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 
 internal const val CLIENT_ASSERTION_TYPE = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
@@ -100,14 +101,14 @@ fun tokenExchange(
     map.add(PARAMS_GRANT_TYPE, request.grantType)
 
 
-
     val tokenExchangeRequestHttpEntity = HttpEntity<MultiValueMap<String, String>>(
         map,
         contentTypeHeader
     )
 
-    println("[DEBUG] -----------------> ${tokendingsUrl}")
-    println("[DEBUG] -----------------> ${map}")
+    println("[DEBUG] -----------------> $tokendingsUrl")
+    println("[DEBUG] -----------------> $map")
+    println("[DEBUG] ----------------_> $contentTypeHeader")
 
     return RestTemplate().postForEntity(
         tokendingsUrl,
