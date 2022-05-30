@@ -5,27 +5,32 @@ import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "tokenx")
+/*
+ * For forklaring av disse verdiene, se NAIS-dokumentasjonen (https://doc.nais.io/security/auth/tokenx)
+ */
 data class TokenXConfigProperties(
-    val tokendingsUrl: String = "Tokendings URL (WELL_KNOWN_URL)",
-    val clientId: String = "Client ID that uniquely identifies the application in TokenX. It has the format ´cluster:namespace:altinn-rettigheter-proxy`",
-    val privateJwk: String = "Private JWK containing an RSA key belonging to your client. Used to sign client assertions during client authentication.",
-    val tokenEndpoint: String = "Token endpoint, eg. `https://tokendings.dev-gcp.nais.io/token`",
-    val altinnRettigheterProxyAudience: String = "",
+    val tokendingsUrl: String,
+    val clientId: String,
+    val privateJwk: String,
+    val tokenEndpoint: String,
+    val altinnRettigheterProxyAudience: String,
 ) {
     init {
-        require(tokendingsUrl.toBeValidUrl()) { "Ikke en gyldig URL" }
-        require(clientId.matches(Regex("^.+:.+:.+$"))) { "$this.clientId er ikke på gyldig format" }
-        require(tokenEndpoint.toBeValidUrl()) { "Ikke en gyldig URL" }
-        require(privateJwk.toContainCorrectClaims())
-        require(altinnRettigheterProxyAudience.matches(Regex("^.+:.+:.+$"))) { "$this.altinnRettigheterProxyAudience er ikke på gyldig format" }
+        require(tokendingsUrl.toBeValidUrl()) { "tokendingsUrl er ikke en gyldig URL" }
+        require(clientId.toHaveCorrectFormat()) { "clientId er ikke på gyldig format" }
+        require(tokenEndpoint.toBeValidUrl()) { "tokenEndpoint er ikke en gyldig URL" }
+        require(privateJwk.toContainCorrectClaims()) { "privateJwk inneholder ikke nødvendige claims" }
+        require(altinnRettigheterProxyAudience.toHaveCorrectFormat()) { "Audience er ikke på gyldig format" }
     }
 }
 
-fun String.toBeValidUrl(): Boolean {
-    // TODO: Implement a proper validator
+internal fun String.toBeValidUrl(): Boolean {
+    // TODO: Implement a proper URL validator
     return this.startsWith("http")
 }
 
-fun String.toContainCorrectClaims(): Boolean {
+internal fun String.toContainCorrectClaims(): Boolean {
     return this.contains("kty") && this.contains("kid")
 }
+
+internal fun String.toHaveCorrectFormat(): Boolean = this.matches(Regex("^.+:.+:.+$"))
