@@ -11,7 +11,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
-import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -111,15 +110,10 @@ class IaTjenesterMetrikkerControllerTest {
 
         //val gyldigToken = getFakedingsToken()
         val gyldigToken = issueGyldigTokenXToken()
-        val gyldigSFApiToken = createTokenLikeSFApi(
-            "15008462396",
-            "tokenx",
-            "https://oidc.difi.no/idporten-oidc-provider/"
-        )
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigSFApiToken")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
                 .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build(),
@@ -136,7 +130,7 @@ class IaTjenesterMetrikkerControllerTest {
         val requestBody: String =
             vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
 
-        val gyldigToken = issueGyldigSelvbetjeningToken()
+        val gyldigToken = issueGyldigTokenXToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
@@ -157,7 +151,7 @@ class IaTjenesterMetrikkerControllerTest {
         val requestBody: String =
             vilkårligInnloggetIaTjenesteAsString(ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET)
 
-        val gyldigToken = issueGyldigSelvbetjeningToken()
+        val gyldigToken = issueGyldigTokenXToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
@@ -175,9 +169,11 @@ class IaTjenesterMetrikkerControllerTest {
 
     @Test
     fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 403 forbidden dersom bruker ikke har rettigheter i Altinn`() {
-        val requestBodyMedOrgnrBrukerIkkeHarTilgangTil: String = vilkårligInnloggetIaTjenesteAsString("789999999")
+        val brukerUtenRettigheter = "789999999"
+        val requestBodyMedOrgnrBrukerIkkeHarTilgangTil: String =
+            vilkårligInnloggetIaTjenesteAsString(brukerUtenRettigheter)
 
-        val gyldigToken = issueGyldigSelvbetjeningToken()
+        val gyldigToken = issueGyldigTokenXToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
@@ -195,9 +191,10 @@ class IaTjenesterMetrikkerControllerTest {
 
     @Test
     fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 400 bad request ved ugyldig data`() {
-        val requestBodyMedUgyldigOrgnr: String = vilkårligInnloggetIaTjenesteAsString("83838")
+        val ugyldigOrgnr = "83838"
+        val requestBodyMedUgyldigOrgnr: String = vilkårligInnloggetIaTjenesteAsString(ugyldigOrgnr)
 
-        val gyldigToken = issueGyldigSelvbetjeningToken()
+        val gyldigToken = issueGyldigTokenXToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
@@ -213,26 +210,7 @@ class IaTjenesterMetrikkerControllerTest {
         Assertions.assertThat(body.get("status").asText()).isEqualTo("bad request")
     }
 
-
     private fun hostAndPort() = "http://localhost:$port"
-
-
-    private fun issueGyldigSelvbetjeningToken() =
-        mockOAuth2Server!!.issueToken(
-            "selvbetjening",
-            "theclientid",
-            DefaultOAuth2TokenCallback(
-                "selvbetjening",
-                "01079812345",
-                "JWT",
-                listOf("aud-localhost"),
-                mapOf(Pair("pid", "01079812345")),
-                3600
-            )
-        ).serialize()
-
-    private fun getFakedingsToken() =
-        "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIyZDhlZjJiZi0zOWQyLTQwZTEtOGI5Mi05NmRlN2EzODMzYTEiLCJhbXIiOlsiQmFua0lEIl0sImlzcyI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlIiwicGlkIjoiMTIzNDU2Nzg5MTAiLCJsb2NhbGUiOiJuYiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJjbGllbnRfaWQiOiJkZXYtZ2NwOnRlYW1pYTptaW4taWEiLCJhdWQiOiJkZXYtZ2NwOmFyYmVpZHNnaXZlcjppYS10amVuZXN0ZXItbWV0cmlra2VyIiwiYWNyIjoiTGV2ZWw0IiwibmJmIjoxNjUzNjQ4NjIwLCJpZHAiOiJodHRwczpcL1wvZmFrZWRpbmdzLmRldi1nY3AubmFpcy5pb1wvZmFrZVwvaWRwb3J0ZW4iLCJzY29wZSI6Im9wZW5pZCIsImV4cCI6MTY1NzI0ODYyMCwiaWF0IjoxNjUzNjQ4NjIwLCJjbGllbnRfb3Jnbm8iOiI4ODk2NDA3ODIiLCJqdGkiOiJmZDA0NGRjYy05ODQ0LTQ2YzItOWNmMC00YjI3ODhhY2I2NjMifQ.ZBpaOUGXrzRoVc0eHefQuQx0cQLMVBrqs-y16JNswKWIWrziHpmQ24tYHDKKyYJoG_hOPA_a8B6s-Yivq3pugTsR48-v60r9H4XGJfwhVVc-C-RJzw34qlUOcTT4aVb6ZOX5bSY5h9IKyvv9EnxGVcR69D0uwhugTypqeJ1wR91RJAhCvvw-l_x_VkTmja7mAJQr_nbQJdMw44rMuLeVkEXDOvypLOpJxKF3KsfJibBvtF3lsblEp2ZxJ1-jZGN0mmHm8LVEIavw4zqL6z_brN2xVAqtonvhBURbDsJcFQ-mnNVRftkjaBe835_bRgFoV9AvmD5DroSSHOGrrd7Zkg"
 
     private fun issueGyldigTokenXToken() =
         mockOAuth2Server!!.issueToken(
@@ -248,24 +226,4 @@ class IaTjenesterMetrikkerControllerTest {
             )
         ).serialize()
 
-    fun createTokenLikeSFApi(
-        pid: String,
-        issuerId: String,
-        idp: String,
-    ): String? {
-        val claims: MutableMap<String, String> =
-            HashMap()
-        if (StringUtils.isNoneEmpty(idp)) {
-            claims["idp"] = idp
-        }
-        if (StringUtils.isNoneEmpty(pid)) {
-            claims["pid"] = pid
-        }
-        return mockOAuth2Server!!.issueToken(
-            issuerId,
-            "IKKE_I_BRUK_LENGER",
-            "someaudience",
-            claims
-        ).serialize()
-    }
 }
