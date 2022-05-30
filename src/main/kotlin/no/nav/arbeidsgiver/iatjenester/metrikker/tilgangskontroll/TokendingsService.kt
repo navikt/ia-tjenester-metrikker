@@ -38,34 +38,29 @@ internal const val PARAMS_CLIENT_ASSERTION_TYPE = "client_assertion_type"
 @Component
 class TokendingsService(
     val tokenXConfig: TokenXConfigProperties,
-    //val tokenService: OAuth2AccessTokenService,
-    //val clientConfigurationProperties: ClientConfigurationProperties,
 ) {
-    val tokendingsServiceLogger = log("TokendingsService")
-    /*
-    fun exchangeTokenToAltinnProxyV2(subjectToken: JwtToken): String = with(clientConfigurationProperties) {
-        val clientProperty: ClientProperties = clientConfigurationProperties.registration["altinn-rettigheter-proxy"]!!
-        tokenService.getAccessToken(clientProperty).accessToken;
-    }*/
 
     fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken = with(tokenXConfig) {
-        tokendingsServiceLogger.info("Kaller exchangeTokenToAltinnProxy men en token av lengde: ${subjectToken.tokenAsString.length} for issuer: ${subjectToken.issuer}")
+        log.info("Running token exchange with clientId:$clientId and audience:${tokenEndpoint}")
+
         val clientAssertionToken = clientAssertion(
             clientId = clientId,
             audience = tokenEndpoint,
             rsaKey = RSAKey.parse(privateJwk)
         )
+
         val request = OAuth2TokenExchangeRequest(
             clientAssertion = clientAssertionToken,
             subjectToken = subjectToken.tokenAsString,
             audience = altinnRettigheterProxyAudience
         )
+
         val response = tokenExchange("$tokendingsUrl/token", request)
         return JwtToken(response.body?.access_token)
     }
+}
 
-
-fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
+internal fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
     val now = Date.from(now())
     val inSixtySeconds = Date.from(now().plusSeconds(60))
     val randomUUID = UUID.randomUUID().toString()
@@ -79,54 +74,38 @@ fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String 
         .jwtID(randomUUID)
         .notBeforeTime(now)
         .build()
-        .sign(rsaKey)
+        .sign(with = rsaKey)
         .serialize()
 }
-}
 
-fun tokenExchange(
+internal fun tokenExchange(
     tokendingsUrl: String,
     request: OAuth2TokenExchangeRequest,
 ): ResponseEntity<TokenExchangeResponse> {
 
-    val contentTypeHeader =
-        HttpHeaders().apply { contentType = MediaType.APPLICATION_FORM_URLENCODED }
-
-    val map: MultiValueMap<String, String> = LinkedMultiValueMap()
-    map.add(PARAMS_AUDIENCE, request.audience)
-    map.add(PARAMS_CLIENT_ASSERTION, request.clientAssertion)
-    map.add(PARAMS_CLIENT_ASSERTION_TYPE, request.clientAssertionType)
-    map.add(PARAMS_SUBJECT_TOKEN, request.subjectToken)
-    map.add(PARAMS_SUBJECT_TOKEN_TYPE, request.subjectTokenType)
-    map.add(PARAMS_GRANT_TYPE, request.grantType)
-
-
-    val tokenExchangeRequestHttpEntity = HttpEntity<MultiValueMap<String, String>>(
-        map,
-        contentTypeHeader
-    )
-
-    println("[DEBUG] -----------------> $tokendingsUrl")
-    println("[DEBUG] -----------------> $map")
-    println("[DEBUG] ----------------_> $contentTypeHeader")
-
     return RestTemplate().postForEntity(
         tokendingsUrl,
-        tokenExchangeRequestHttpEntity,
+        request.asHttpEntity(),
         TokenExchangeResponse::class
     )
 }
 
-fun OAuth2TokenExchangeRequest.asParameters() = linkedMapOf(
-    PARAMS_CLIENT_ASSERTION to clientAssertion,
-    PARAMS_CLIENT_ASSERTION_TYPE to clientAssertionType,
-    PARAMS_SUBJECT_TOKEN to subjectToken,
-    PARAMS_SUBJECT_TOKEN_TYPE to subjectTokenType,
-    PARAMS_GRANT_TYPE to grantType,
-    PARAMS_AUDIENCE to audience,
+internal fun OAuth2TokenExchangeRequest.asHttpEntity() = HttpEntity<MultiValueMap<String, String>>(
+    this.asParameterMap(),
+    HttpHeaders().apply { contentType = MediaType.APPLICATION_FORM_URLENCODED }
 )
 
-data class OAuth2TokenExchangeRequest(
+internal fun OAuth2TokenExchangeRequest.asParameterMap() =
+    LinkedMultiValueMap<String, String>().apply {
+        add(PARAMS_CLIENT_ASSERTION, clientAssertion)
+        add(PARAMS_CLIENT_ASSERTION_TYPE, clientAssertionType)
+        add(PARAMS_SUBJECT_TOKEN, subjectToken)
+        add(PARAMS_SUBJECT_TOKEN_TYPE, subjectTokenType)
+        add(PARAMS_GRANT_TYPE, grantType)
+        add(PARAMS_AUDIENCE, audience)
+    }
+
+internal data class OAuth2TokenExchangeRequest(
     val clientAssertion: String,
     val subjectToken: String,
     val audience: String,
@@ -135,17 +114,16 @@ data class OAuth2TokenExchangeRequest(
     val grantType: String = GRANT_TYPE,
 )
 
-
-internal fun JWTClaimsSet.sign(rsaKey: RSAKey): SignedJWT =
+internal fun JWTClaimsSet.sign(with: RSAKey): SignedJWT =
     SignedJWT(
         JWSHeader.Builder(JWSAlgorithm.RS256)
-            .keyID(rsaKey.keyID)
+            .keyID(with.keyID)
             .type(JWT)
             .build(),
         this
-    ).apply { sign(RSASSASigner(rsaKey.toPrivateKey())) }
+    ).apply { sign(RSASSASigner(with.toPrivateKey())) }
 
-data class TokenExchangeResponse(
+internal data class TokenExchangeResponse(
     val access_token: String,
     val issued_token_type: String,
     val token_type: String,
