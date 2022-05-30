@@ -36,7 +36,7 @@ no.nav.security.jwt:
 tokenx:
   tokendings-url: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
   client-id: localhost:arbeidsgiver:ia-tjenester-metrikker
-  token_endpoint: http://localhost:${mock-oauth2-server.port}/tokenx
+  token_endpoint: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration/token
   altinn_rettigheter_proxy_audience: localhost:arbeidsgiver:altinn-rettigheter-proxy
   private_jwk: '{
       "kty": "RSA",
