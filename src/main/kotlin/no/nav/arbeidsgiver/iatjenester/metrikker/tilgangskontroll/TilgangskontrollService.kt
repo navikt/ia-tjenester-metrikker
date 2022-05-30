@@ -9,6 +9,7 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.TokenXToken
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.AltinnRettighet
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
 
 @Component
@@ -18,6 +19,8 @@ class TilgangskontrollService(
     private val tilgangskontrollUtils: TilgangskontrollUtils,
     private val tokendingsService: TokendingsService,
 ) {
+
+    val tilgangskontrollServiceLogger = log("TilgangskontrollService")
 
     fun hentInnloggetBruker(altinnRettighet: AltinnRettighet): Either<Exception, InnloggetBruker> {
         return when (altinnRettighet) {
@@ -38,6 +41,8 @@ class TilgangskontrollService(
 
             val tokendingsToken =
                 tokendingsService.exchangeTokenToAltinnProxy(tilgangskontrollUtils.hentJwtToken())
+
+            tilgangskontrollServiceLogger.info("Fikk en token etter exchange med følgende lengde: '${tokendingsToken.tokenAsString.length}'")
 
             innloggetSelvbetjeningBruker.organisasjoner =
                 klient.hentOrganisasjoner(

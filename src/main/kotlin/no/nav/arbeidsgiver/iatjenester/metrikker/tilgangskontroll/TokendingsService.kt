@@ -8,16 +8,19 @@ import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TokenXConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.security.token.support.core.jwt.JwtToken
+import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForEntity
 import java.time.Instant.now
-import java.util.Date
-import java.util.UUID
+import java.util.*
 
 
 internal const val CLIENT_ASSERTION_TYPE = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
@@ -32,10 +35,20 @@ internal const val PARAMS_CLIENT_ASSERTION = "client_assertion"
 internal const val PARAMS_CLIENT_ASSERTION_TYPE = "client_assertion_type"
 
 @Component
-class TokendingsService(val tokenXConfig: TokenXConfigProperties) {
+class TokendingsService(
+    val tokenXConfig: TokenXConfigProperties,
+    //val tokenService: OAuth2AccessTokenService,
+    //val clientConfigurationProperties: ClientConfigurationProperties,
+) {
+    val tokendingsServiceLogger = log("TokendingsService")
+    /*
+    fun exchangeTokenToAltinnProxyV2(subjectToken: JwtToken): String = with(clientConfigurationProperties) {
+        val clientProperty: ClientProperties = clientConfigurationProperties.registration["altinn-rettigheter-proxy"]!!
+        tokenService.getAccessToken(clientProperty).accessToken;
+    }*/
 
     fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken = with(tokenXConfig) {
-        println("-----------------------> CAlling exchangeTokenToAltinnProxy with: ${subjectToken.tokenAsString} for issuer: ${subjectToken.issuer}")
+        tokendingsServiceLogger.info("Kaller exchangeTokenToAltinnProxy men en token av lengde: ${subjectToken.tokenAsString.length} for issuer: ${subjectToken.issuer}")
         val clientAssertionToken = clientAssertion(
             clientId = clientId,
             audience = tokenEndpoint,
@@ -46,46 +59,64 @@ class TokendingsService(val tokenXConfig: TokenXConfigProperties) {
             subjectToken = subjectToken.tokenAsString,
             audience = altinnRettigheterProxyAudience
         )
-        val response = tokenExchange(tokenEndpoint, request)
+        val response = tokenExchange("$tokendingsUrl/token", request)
         return JwtToken(response.body?.access_token)
     }
 
-    fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
-        val now = Date.from(now())
-        val inSixtySeconds = Date.from(now().plusSeconds(60))
-        val randomUUID = UUID.randomUUID().toString()
 
-        return JWTClaimsSet.Builder()
-            .issuer(clientId)
-            .subject(clientId)
-            .audience(audience)
-            .issueTime(now)
-            .expirationTime(inSixtySeconds)
-            .jwtID(randomUUID)
-            .notBeforeTime(now)
-            .build()
-            .sign(rsaKey)
-            .serialize()
-    }
+fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
+    val now = Date.from(now())
+    val inSixtySeconds = Date.from(now().plusSeconds(60))
+    val randomUUID = UUID.randomUUID().toString()
+
+    return JWTClaimsSet.Builder()
+        .issuer(clientId)
+        .subject(clientId)
+        .audience(audience)
+        .issueTime(now)
+        .expirationTime(inSixtySeconds)
+        .jwtID(randomUUID)
+        .notBeforeTime(now)
+        .build()
+        .sign(rsaKey)
+        .serialize()
+}
 }
 
 fun tokenExchange(
     tokendingsUrl: String,
-    request: OAuth2TokenExchangeRequest
+    request: OAuth2TokenExchangeRequest,
 ): ResponseEntity<TokenExchangeResponse> {
 
     val contentTypeHeader =
         HttpHeaders().apply { contentType = MediaType.APPLICATION_FORM_URLENCODED }
 
+    val map: MultiValueMap<String, String> = LinkedMultiValueMap()
+    map.add(PARAMS_AUDIENCE, request.audience)
+    map.add(PARAMS_CLIENT_ASSERTION, request.clientAssertion)
+    map.add(PARAMS_CLIENT_ASSERTION_TYPE, request.clientAssertionType)
+    map.add(PARAMS_SUBJECT_TOKEN, request.subjectToken)
+    map.add(PARAMS_SUBJECT_TOKEN_TYPE, request.subjectTokenType)
+    map.add(PARAMS_GRANT_TYPE, request.grantType)
+
+
+
+    val tokenExchangeRequestHttpEntity = HttpEntity<MultiValueMap<String, String>>(
+        map,
+        contentTypeHeader
+    )
+
+    println("[DEBUG] -----------------> ${tokendingsUrl}")
+    println("[DEBUG] -----------------> ${map}")
+
     return RestTemplate().postForEntity(
         tokendingsUrl,
-        request.asParameters(),
-        contentTypeHeader,
+        tokenExchangeRequestHttpEntity,
         TokenExchangeResponse::class
     )
 }
 
-fun OAuth2TokenExchangeRequest.asParameters() = mapOf(
+fun OAuth2TokenExchangeRequest.asParameters() = linkedMapOf(
     PARAMS_CLIENT_ASSERTION to clientAssertion,
     PARAMS_CLIENT_ASSERTION_TYPE to clientAssertionType,
     PARAMS_SUBJECT_TOKEN to subjectToken,
@@ -100,7 +131,7 @@ data class OAuth2TokenExchangeRequest(
     val audience: String,
     val subjectTokenType: String = SUBJECT_TOKEN_TYPE,
     val clientAssertionType: String = CLIENT_ASSERTION_TYPE,
-    val grantType: String = GRANT_TYPE
+    val grantType: String = GRANT_TYPE,
 )
 
 

@@ -11,6 +11,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
+import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -110,10 +111,16 @@ class IaTjenesterMetrikkerControllerTest {
 
         //val gyldigToken = getFakedingsToken()
         val gyldigToken = issueGyldigTokenXToken()
+        val gyldigSFApiToken = createTokenLikeSFApi(
+            "15008462396",
+            null,
+            "tokenx",
+            "https://oidc.difi.no/idporten-oidc-provider/"
+        )
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigSFApiToken")
                 .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build(),
@@ -241,4 +248,26 @@ class IaTjenesterMetrikkerControllerTest {
                 3600
             )
         ).serialize()
+
+    fun createTokenLikeSFApi(
+        pid: String,
+        sub: String?,
+        issuerId: String?,
+        idp: String,
+    ): String? {
+        val claims: MutableMap<String, String> =
+            HashMap()
+        if (StringUtils.isNoneEmpty(idp)) {
+            claims["idp"] = idp
+        }
+        if (StringUtils.isNoneEmpty(pid)) {
+            claims["pid"] = pid
+        }
+        return mockOAuth2Server!!.issueToken(
+            issuerId!!,
+            "",
+            "localhost:arbeidsgiver:ia-tjenester-metrikker",
+            claims
+        ).serialize()
+    }
 }
