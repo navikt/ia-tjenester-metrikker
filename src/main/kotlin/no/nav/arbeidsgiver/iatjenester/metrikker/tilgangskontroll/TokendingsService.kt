@@ -60,6 +60,19 @@ class TokendingsService(
     }
 }
 
+internal fun tokenExchange(
+    tokendingsUrl: String,
+    request: OAuth2TokenExchangeRequest,
+): ResponseEntity<TokenExchangeResponse> {
+
+    return RestTemplate().postForEntity(
+        tokendingsUrl,
+        request.asHttpEntity(),
+        TokenExchangeResponse::class
+    )
+}
+
+
 internal fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
     val now = Date.from(now())
     val inSixtySeconds = Date.from(now().plusSeconds(60))
@@ -76,18 +89,6 @@ internal fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey)
         .build()
         .sign(with = rsaKey)
         .serialize()
-}
-
-internal fun tokenExchange(
-    tokendingsUrl: String,
-    request: OAuth2TokenExchangeRequest,
-): ResponseEntity<TokenExchangeResponse> {
-
-    return RestTemplate().postForEntity(
-        tokendingsUrl,
-        request.asHttpEntity(),
-        TokenExchangeResponse::class
-    )
 }
 
 internal fun OAuth2TokenExchangeRequest.asHttpEntity() = HttpEntity<MultiValueMap<String, String>>(
