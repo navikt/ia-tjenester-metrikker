@@ -213,16 +213,15 @@ class IaTjenesterMetrikkerControllerTest {
 
     private fun issueGyldigTokenXToken() =
         mockOAuth2Server!!.issueToken(
-            "tokenx",
-            "localhost:teamia:min-ia",
-            DefaultOAuth2TokenCallback(
-                "tokenx",
-                "01079812345",
-                "JWT",
+            issuerId = "tokenx",
+            clientId = "localhost:teamia:min-ia",
+            tokenCallback = DefaultOAuth2TokenCallback(
+                issuerId = "tokenx",
+                subject = "01079812345",
+                typeHeader = "JWT",
                 audience = listOf("someaudience"),
                 claims = mapOf(Pair("pid", "01079812345")),
-                3600
+                expiry = 3600
             )
         ).serialize()
-
 }

@@ -27,13 +27,8 @@ no.nav.security.jwt:
       discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
       accepted_audience: someaudience
       cookie_name: tokenx-token
-#    client:
-#      registration:
-#        altinn-rettigheter-proxy:
-#          token-exchange:
-#            audience: cluster:namespace:altinn-rettigheter-proxy
 
-tokenx:
+tokenx-service:
   client-id: localhost:arbeidsgiver:ia-tjenester-metrikker
   token_endpoint: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration/token
   altinn_rettigheter_proxy_audience: localhost:arbeidsgiver:altinn-rettigheter-proxy
