@@ -108,7 +108,6 @@ class IaTjenesterMetrikkerControllerTest {
         val requestBody: String =
             vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
 
-        //val gyldigToken = getFakedingsToken()
         val gyldigToken = issueGyldigTokenXToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()

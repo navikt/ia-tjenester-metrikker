@@ -55,8 +55,11 @@ class TokendingsService(
             audience = altinnRettigheterProxyAudience
         )
 
-        val response = tokenExchange("$tokendingsUrl/token", request)
-        return JwtToken(response.body?.access_token)
+        val response = tokenExchange(tokenEndpoint, request)
+        val jwtToken = JwtToken(response.body?.access_token)
+
+        log.info("Token exchange completed with returned jwtToken (length):${jwtToken.tokenAsString.length}")
+        return jwtToken
     }
 }
 
