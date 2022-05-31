@@ -29,7 +29,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import java.util.*
+import java.util.Optional
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,7 +44,7 @@ internal class TilgangskontrollServiceIntegrationTest {
     private lateinit var tilgangskontrollService: TilgangskontrollService
     private lateinit var tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer: TilgangskontrollService
     private lateinit var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
-    private lateinit var dummyTokendingsService: TokendingsService
+    private lateinit var dummyTokendingsService: TokenxService
 
     @Autowired
     private lateinit var tokenXConfigProperties: TokenXConfigProperties
@@ -96,7 +96,7 @@ internal class TilgangskontrollServiceIntegrationTest {
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
         dummyTokendingsService =
-            object : TokendingsService(
+            object : TokenxService(
                 tokenXConfig = tokenXConfigProperties
             ) {
                 override fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken {

@@ -34,8 +34,6 @@ no.nav.security.jwt:
 #            audience: cluster:namespace:altinn-rettigheter-proxy
 
 tokenx:
-  #tokendings-url: ${TOKEN_X_WELL_KNOWN_URL}
-  tokendings-url: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
   client-id: localhost:arbeidsgiver:ia-tjenester-metrikker
   token_endpoint: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration/token
   altinn_rettigheter_proxy_audience: localhost:arbeidsgiver:altinn-rettigheter-proxy

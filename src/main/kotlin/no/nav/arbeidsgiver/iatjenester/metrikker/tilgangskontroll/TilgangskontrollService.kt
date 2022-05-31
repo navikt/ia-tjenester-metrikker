@@ -17,7 +17,7 @@ class TilgangskontrollService(
     private val klient: AltinnrettigheterProxyKlient,
     private val tilgangsconfig: TilgangskontrollConfig,
     private val tilgangskontrollUtils: TilgangskontrollUtils,
-    private val tokendingsService: TokendingsService,
+    private val tokendingsService: TokenxService,
 ) {
 
     val tilgangskontrollServiceLogger = log("TilgangskontrollService")
