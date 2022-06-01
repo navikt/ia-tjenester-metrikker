@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import java.net.URI
@@ -59,7 +60,7 @@ class IaTjenesterMetrikkerControllerTest {
 
     @Test
     @Throws(Exception::class)
-    fun `POST til uinnlogget-iatjeneste endepunkt skal returnere 200 created ved suksess`() {
+    fun `POST til uinnlogget-iatjeneste endepunkt skal returnere 201 created ved suksess`() {
         val requestBody: String =
             vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
 
@@ -72,7 +73,7 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(201)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         val body: JsonNode = objectMapper.readTree(response.body())
         val status = body.get("status")
         Assertions.assertThat(status).isNotNull
@@ -97,9 +98,9 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(401)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         Assertions.assertThat(response.body())
-            .isEqualTo("{\"message\":\"You are not authorized to access this ressource\"}")
+            .isEqualTo("{\"message\":\"You are not authorized to access this resource\"}")
     }
 
     @Test
@@ -107,7 +108,7 @@ class IaTjenesterMetrikkerControllerTest {
         val requestBody: String =
             vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
 
-        val gyldigToken = issueGyldigSelvbetjeningToken()
+        val gyldigToken = issueGyldigTokenXToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
@@ -118,7 +119,28 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(201)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        val body: JsonNode = objectMapper.readTree(response.body())
+        Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
+    }
+
+    @Test
+    fun `Innlogget endepunkt mottatt-ia-tjeneste validerer tokens fra tokenX og returnerer 201 OK dersom token er gyldig`() {
+        val requestBody: String =
+            vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
+
+        val gyldigToken = issueGyldigTokenXToken()
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create(hostAndPort() + innloggetEndepunkt))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build(),
+            BodyHandlers.ofString()
+        )
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
     }
@@ -128,7 +150,7 @@ class IaTjenesterMetrikkerControllerTest {
         val requestBody: String =
             vilkårligInnloggetIaTjenesteAsString(ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET)
 
-        val gyldigToken = issueGyldigSelvbetjeningToken()
+        val gyldigToken = issueGyldigTokenXToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
@@ -139,16 +161,39 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(200)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("status").asText()).isEqualTo("ok")
     }
 
     @Test
-    fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 400 bad request ved ugyldig data`() {
-        val requestBodyMedUgyldigOrgnr: String = vilkårligInnloggetIaTjenesteAsString("83838")
+    fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 403 forbidden dersom bruker ikke har rettigheter i Altinn`() {
+        val brukerUtenRettigheter = "789999999"
+        val requestBodyMedOrgnrBrukerIkkeHarTilgangTil: String =
+            vilkårligInnloggetIaTjenesteAsString(brukerUtenRettigheter)
 
-        val gyldigToken = issueGyldigSelvbetjeningToken()
+        val gyldigToken = issueGyldigTokenXToken()
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create(hostAndPort() + innloggetEndepunkt))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                .POST(HttpRequest.BodyPublishers.ofString(requestBodyMedOrgnrBrukerIkkeHarTilgangTil))
+                .build(),
+            BodyHandlers.ofString()
+        )
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
+        val body: JsonNode = objectMapper.readTree(response.body())
+        Assertions.assertThat(body.get("status").asText()).isEqualTo("forbidden")
+    }
+
+    @Test
+    fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 400 bad request ved ugyldig data`() {
+        val ugyldigOrgnr = "83838"
+        val requestBodyMedUgyldigOrgnr: String = vilkårligInnloggetIaTjenesteAsString(ugyldigOrgnr)
+
+        val gyldigToken = issueGyldigTokenXToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
@@ -159,25 +204,24 @@ class IaTjenesterMetrikkerControllerTest {
             BodyHandlers.ofString()
         )
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(400)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("status").asText()).isEqualTo("bad request")
     }
 
-
     private fun hostAndPort() = "http://localhost:$port"
 
-
-    private fun issueGyldigSelvbetjeningToken() =
+    private fun issueGyldigTokenXToken() =
         mockOAuth2Server!!.issueToken(
-            "selvbetjening",
-            "theclientid",
-            DefaultOAuth2TokenCallback(
-                "selvbetjening",
-                "01079812345",
-                listOf("aud-localhost"),
-                emptyMap(),
-                3600
+            issuerId = "tokenx",
+            clientId = "localhost:teamia:min-ia",
+            tokenCallback = DefaultOAuth2TokenCallback(
+                issuerId = "tokenx",
+                subject = "01079812345",
+                typeHeader = "JWT",
+                audience = listOf("someaudience"),
+                claims = mapOf(Pair("pid", "01079812345")),
+                expiry = 3600
             )
         ).serialize()
 }

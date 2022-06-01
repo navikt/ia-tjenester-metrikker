@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.server.ResponseStatusException
 import java.nio.file.AccessDeniedException
-import java.util.*
 
 
 @ControllerAdvice(annotations = [RestController::class])
@@ -36,57 +35,63 @@ class RestResponseEntityExceptionHandler {
     @ExceptionHandler(value = [JwtTokenValidatorException::class, JwtTokenMissingException::class, JwtTokenUnauthorizedException::class, AccessDeniedException::class])
     @ResponseBody
     protected fun handleUnauthorizedException(e: RuntimeException, webRequest: WebRequest?): ResponseEntity<Any> {
-        return getResponseEntity(e, "You are not authorized to access this ressource", HttpStatus.UNAUTHORIZED)
+        log.info("Validering av token feilet: '${e.cause?.message}'", e)
+        return getResponseEntity(e, "You are not authorized to access this resource", HttpStatus.UNAUTHORIZED)
     }
 
     @ExceptionHandler(value = [AltinnrettigheterProxyKlientFallbackException::class, AltinnrettigheterProxyKlientException::class])
     @ResponseBody
     protected fun handleAltinnException(e: RuntimeException, webRequest: WebRequest?): ResponseEntity<Any> {
-        log("RestResponseEntityExceptionHandler").error("Kunne ikke verifisere at innlogget bruker har tilgang til orgnr i Altinn", e)
+        log.error("Kunne ikke verifisere at innlogget bruker har tilgang til orgnr i Altinn", e)
         return getResponseEntity(e, "Forbidden", HttpStatus.FORBIDDEN)
     }
 
     @ExceptionHandler(value = [TilgangskontrollException::class])
     @ResponseBody
     protected fun handleTilgangskontrollException(e: RuntimeException, webRequest: WebRequest?): ResponseEntity<Any> {
-        log("RestResponseEntityExceptionHandler").error("Bruker har tilgang til orgnr i Altinn", e)
+        log.error("Bruker har tilgang til orgnr i Altinn", e)
         return getResponseEntity(e, "Forbidden", HttpStatus.FORBIDDEN)
     }
 
     @ExceptionHandler(value = [ResponseStatusException::class])
     @ResponseBody
     protected fun handleResponseStatusException(e: ResponseStatusException, webRequest: WebRequest?): ResponseEntity<Any> {
-        log("RestResponseEntityExceptionHandler").warn(e.message, e)
+        log.warn(e.message, e)
         return getResponseEntity(e, e.message, e.status)
     }
 
     @ExceptionHandler(value = [Exception::class])
     @ResponseBody
     protected fun handleGenerellException(e: RuntimeException, webRequest: WebRequest?): ResponseEntity<Any> {
-        log("RestResponseEntityExceptionHandler").error("Uhåndtert feil", e)
+        log.error("Uhåndtert feil", e)
         return getResponseEntity(e, "Internal error", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
     private fun getResponseEntity(e: RuntimeException, melding: String, status: HttpStatus): ResponseEntity<Any> {
         val body = HashMap<String, String>(1)
         body["message"] = melding
-        log("RestResponseEntityExceptionHandler").info(String.format(
-            "Returnerer følgende HttpStatus '%s' med melding '%s' pga exception '%s'",
-            status.toString(),
-            melding,
-            e.message
-        ))
+        val opprineligMeldingEllerNavnTilException = e.message ?: e.toString()
+        log.info(
+            String.format(
+                "Returnerer følgende HttpStatus '%s' med melding '%s' pga exception '%s'",
+                status.toString(),
+                melding,
+                opprineligMeldingEllerNavnTilException
+            )
+        )
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).body(body)
     }
 
     private fun getResponseEntity(melding: String, status: HttpStatus): ResponseEntity<Any> {
         val body = HashMap<String, String>(1)
         body["message"] = melding
-        log("RestResponseEntityExceptionHandler").info(String.format(
-            "Returnerer følgende HttpStatus '%s' med melding '%s'",
-            status.toString(),
-            melding
-        ))
+        log.info(
+            String.format(
+                "Returnerer følgende HttpStatus '%s' med melding '%s'",
+                status.toString(),
+                melding
+            )
+        )
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).body(body)
     }
 }

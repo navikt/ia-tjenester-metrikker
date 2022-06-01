@@ -4,7 +4,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
-import lombok.SneakyThrows
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
@@ -137,7 +136,6 @@ class EnhetsregisteretClientTest {
         ) { enhetsregisteretClient!!.hentUnderenhet(Orgnr("777777777")) }
     }
 
-    @SneakyThrows
     private fun mockRespons(node: JsonNode) {
         Mockito.`when`(restTemplate!!.getForObject(ArgumentMatchers.anyString(), ArgumentMatchers.any<Class<Any>>()))
             .thenReturn(
@@ -145,7 +143,6 @@ class EnhetsregisteretClientTest {
             )
     }
 
-    @SneakyThrows
     private fun gyldigUnderenhetRespons(orgnr: String): ObjectNode {
         val str = """{
               "organisasjonsnummer": "$orgnr",
@@ -171,7 +168,6 @@ class EnhetsregisteretClientTest {
         return objectMapper.readTree(str) as ObjectNode
     }
 
-    @SneakyThrows
     private fun gyldigEnhetRespons(orgnr: String): ObjectNode {
         val str = """{
               "organisasjonsnummer": "$orgnr",
