@@ -16,15 +16,14 @@ data class TokenXConfigProperties(
 ) {
     init {
         require(clientId.toHaveCorrectFormat()) { "'clientId' må være på format cluster:namespace:app" }
-        require(tokenEndpoint.toBeValidUrl()) { "'tokenEndpoint' må være en gyldig URL" }
+        require(tokenEndpoint.toBeAValidTokenUrl()) { "'tokenEndpoint' er ikke en gyldig URL" }
         require(privateJwk.toContainCorrectClaims()) { "'privateJwk' må inneholde nødvendige claims" }
         require(altinnRettigheterProxyAudience.toHaveCorrectFormat()) { "'audience' må være på format cluster:namespace:app" }
     }
 }
 
-internal fun String.toBeValidUrl(): Boolean {
-    // TODO: Implement a proper URL validator
-    return this.startsWith("http")
+internal fun String.toBeAValidTokenUrl(): Boolean {
+    return this.startsWith("http") && this.endsWith("/token")
 }
 
 internal fun String.toContainCorrectClaims() = this.contains("kty") && this.contains("kid")

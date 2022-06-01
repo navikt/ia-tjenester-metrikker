@@ -42,8 +42,6 @@ class TilgangskontrollService(
             val tokendingsToken =
                 tokendingsService.exchangeTokenToAltinnProxy(tilgangskontrollUtils.hentJwtToken())
 
-            tilgangskontrollServiceLogger.info("Fikk en token etter exchange med følgende lengde: '${tokendingsToken.tokenAsString.length}'")
-
             innloggetSelvbetjeningBruker.organisasjoner =
                 klient.hentOrganisasjoner(
                     TokenXToken(tokendingsToken.tokenAsString),
