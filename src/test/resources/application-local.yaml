@@ -28,7 +28,7 @@ no.nav.security.jwt:
       accepted_audience: aud-localhost
       cookiename: selvbetjening-idtoken
 
-tokenx:
+tokenx-service:
   client-id: "cluster:namespace:ia-tjenester-metrikker"
   token_endpoint: https://fakedings.dev-gcp.nais.io/fake/token
   private_jwk: src/test/resources/private-jwk.json
