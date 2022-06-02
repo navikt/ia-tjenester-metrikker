@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MånedOgÅr
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._10_JAN_2022
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_JANUAR_2021
@@ -37,9 +38,9 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             Kilde.SYKEFRAVÆRSSTATISTIKK,
             IaTjenesteTilgjengelighet.INNLOGGET
         )
-        Assertions.assertThat(resultat[Month.MAY]).isEqualTo(1)
-        Assertions.assertThat(resultat[Month.JUNE]).isEqualTo(1)
-        Assertions.assertThat(resultat[Month.JANUARY]).isEqualTo(0)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MAY)]).isEqualTo(1)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JUNE)]).isEqualTo(1)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JANUARY)]).isEqualTo(0)
 
     }
 
@@ -59,8 +60,8 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             Kilde.SYKEFRAVÆRSSTATISTIKK,
             IaTjenesteTilgjengelighet.INNLOGGET
         )
-        Assertions.assertThat(resultat[Month.MAY]).isEqualTo(1)
-        Assertions.assertThat(resultat[Month.JUNE]).isEqualTo(0)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MAY)]).isEqualTo(1)
+        Assertions.assertThat(resultat[MånedOgÅr(2021, Month.JUNE)]).isEqualTo(0)
     }
 
     @Test
@@ -302,18 +303,18 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _21_JUNI_2021
         )
 
-        val resultat: Map<Month, Int> = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+        val resultat: Map<MånedOgÅr, Int> = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
             Kilde.SYKEFRAVÆRSSTATISTIKK,
             IaTjenesteTilgjengelighet.INNLOGGET
         )
 
         Assertions.assertThat(resultat.keys.size).isEqualTo(6)
-        Assertions.assertThat(resultat[Month.JANUARY]).isEqualTo(0)
-        Assertions.assertThat(resultat[Month.FEBRUARY]).isEqualTo(0)
-        Assertions.assertThat(resultat[Month.MARCH]).isEqualTo(0)
-        Assertions.assertThat(resultat[Month.APRIL]).isEqualTo(0)
-        Assertions.assertThat(resultat[Month.MAY]).isEqualTo(2)
-        Assertions.assertThat(resultat[Month.JUNE]).isEqualTo(1)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JANUARY)]).isEqualTo(0)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.FEBRUARY)]).isEqualTo(0)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MARCH)]).isEqualTo(0)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.APRIL)]).isEqualTo(0)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MAY)]).isEqualTo(2)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JUNE)]).isEqualTo(1)
     }
 
     @Test
@@ -337,17 +338,17 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             _21_JUNI_2021
         )
 
-        val resultat: Map<Month, Int> = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
+        val resultat: Map<MånedOgÅr, Int> = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
             Kilde.SAMTALESTØTTE,
             IaTjenesteTilgjengelighet.UINNLOGGET
         )
 
         Assertions.assertThat(resultat.keys.size).isEqualTo(6)
-        Assertions.assertThat(resultat[Month.JANUARY]).isEqualTo(0)
-        Assertions.assertThat(resultat[Month.FEBRUARY]).isEqualTo(0)
-        Assertions.assertThat(resultat[Month.MARCH]).isEqualTo(0)
-        Assertions.assertThat(resultat[Month.APRIL]).isEqualTo(0)
-        Assertions.assertThat(resultat[Month.MAY]).isEqualTo(3)
-        Assertions.assertThat(resultat[Month.JUNE]).isEqualTo(1)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JANUARY)]).isEqualTo(0)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.FEBRUARY)]).isEqualTo(0)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MARCH)]).isEqualTo(0)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.APRIL)]).isEqualTo(0)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MAY)]).isEqualTo(3)
+        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JUNE)]).isEqualTo(1)
     }
 }
