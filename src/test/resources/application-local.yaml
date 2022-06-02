@@ -18,7 +18,7 @@ spring:
     path: /h2
 
   flyway:
-      locations: classpath:/db/migration, classpath:/db/test-lokaldb-data
+    locations: classpath:/db/migration, classpath:/db/test-lokaldb-data
 
 no.nav.security.jwt:
   expirythreshold: 10 #threshold in minutes until token expires (optional)
@@ -27,6 +27,12 @@ no.nav.security.jwt:
       discoveryurl: http://localhost:${mock-oauth2-server.port}/selvbetjening/.well-known/openid-configuration
       accepted_audience: aud-localhost
       cookiename: selvbetjening-idtoken
+
+tokenx-service:
+  client-id: "cluster:namespace:ia-tjenester-metrikker"
+  token_endpoint: https://fakedings.dev-gcp.nais.io/fake/token
+  private_jwk: src/test/resources/private-jwk.json
+  altinn_rettigheter_proxy_audience: cluster:namespace:altinn-rettigheter-proxy
 
 altinn-proxy:
   proxyUrl: http://localhost:${wiremock.port}/proxy/

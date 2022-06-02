@@ -5,20 +5,20 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.5.21"
     id("com.github.ben-manes.versions") version "0.39.0"
-    kotlin("jvm") version "1.5.30-M1"
-    kotlin("plugin.spring") version "1.5.30-M1"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.spring") version "1.6.10"
     application
 }
 
-val navSecurityVersion = "1.3.9"
-val altinnRettigheterProxyKlientVersion = "2.0.6-rc"
+val navSecurityVersion = "2.0.15"
+val altinnRettigheterProxyKlientVersion = "2.1.3"
 val shedlockVersion = "4.25.0"
 val springdoc_openApi_version = "1.6.2"
 
 
 group = "no.nav.arbeidsgiver"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 application {
     mainClass.set("no.nav.arbeidsgiver.iatjenester.metrikker.AppKt")
@@ -27,12 +27,16 @@ application {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    val javaToolchains = project.extensions.getByType<JavaToolchainService>()
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    })
 }
 
 tasks.getByName<Jar>("jar") {

@@ -2,61 +2,65 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 
 import arrow.core.Either
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.SelvbetjeningToken
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceCode
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceEdition
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
+import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.TokenXToken
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.AltinnRettighet
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
 
 @Component
 class TilgangskontrollService(
     private val klient: AltinnrettigheterProxyKlient,
     private val tilgangsconfig: TilgangskontrollConfig,
-    private val tilgangskontrollUtils: TilgangskontrollUtils
+    private val tilgangskontrollUtils: TilgangskontrollUtils,
+    private val tokendingsService: TokenxService,
 ) {
 
+    val tilgangskontrollServiceLogger = log("TilgangskontrollService")
+
     fun hentInnloggetBruker(altinnRettighet: AltinnRettighet): Either<Exception, InnloggetBruker> {
-        when (altinnRettighet) {
+        return when (altinnRettighet) {
             AltinnRettighet.SYKEFRAVÆRSSTATISTIKK_FOR_VIRKSOMHETER ->
-                return hentInnloggetBruker(AltinnServiceKey.IA)
+                hentInnloggetBrukerFraAltinn(AltinnServiceKey.IA)
             AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE ->
-                return hentInnloggetBruker(AltinnServiceKey.OPPFOLGINGSPLAN)
+                hentInnloggetBrukerFraAltinn(AltinnServiceKey.OPPFOLGINGSPLAN)
         }
     }
 
-    fun hentInnloggetBruker(serviceKey: AltinnServiceKey): Either<Exception, InnloggetBruker> {
+    fun hentInnloggetBrukerFraAltinn(serviceKey: AltinnServiceKey): Either<Exception, InnloggetBruker> {
 
-        try{
-            if (tilgangskontrollUtils.erInnloggetSelvbetjeningBruker() as Boolean) {
-                val innloggetSelvbetjeningBruker: InnloggetBruker = tilgangskontrollUtils.hentInnloggetSelvbetjeningBruker()
+        try {
+            val innloggetSelvbetjeningBruker: InnloggetBruker =
+                tilgangskontrollUtils.hentInnloggetBruker()
 
-                val currentAltinnServiceConfig = tilgangsconfig.altinnServices.getValue(serviceKey)
+            val currentAltinnServiceConfig = tilgangsconfig.altinnServices.getValue(serviceKey)
 
-                innloggetSelvbetjeningBruker.organisasjoner =
-                    klient.hentOrganisasjoner(
-                        SelvbetjeningToken(tilgangskontrollUtils.selvbetjeningToken.tokenAsString),
-                        Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                        ServiceCode(currentAltinnServiceConfig.serviceCode),
-                        ServiceEdition(currentAltinnServiceConfig.serviceEdition),
-                        false
-                    ).map {
-                        AltinnOrganisasjon(
-                            it.name,
-                            it.parentOrganizationNumber,
-                            it.organizationNumber,
-                            it.organizationForm,
-                            it.status!!,
-                            it.type
-                        )
-                    }
-                return Either.Right(innloggetSelvbetjeningBruker)
-            } else {
-                return Either.Left(TilgangskontrollException("Innlogget bruker er ikke selvbetjeningsbruker"))
-            }
-        } catch (exception: Exception){
+            val tokendingsToken =
+                tokendingsService.exchangeTokenToAltinnProxy(tilgangskontrollUtils.hentJwtToken())
+
+            innloggetSelvbetjeningBruker.organisasjoner =
+                klient.hentOrganisasjoner(
+                    TokenXToken(tokendingsToken.tokenAsString),
+                    Subject(innloggetSelvbetjeningBruker.fnr.asString()),
+                    ServiceCode(currentAltinnServiceConfig.serviceCode),
+                    ServiceEdition(currentAltinnServiceConfig.serviceEdition),
+                    false
+                ).map {
+                    AltinnOrganisasjon(
+                        it.name,
+                        it.parentOrganizationNumber,
+                        it.organizationNumber,
+                        it.organizationForm,
+                        it.status!!,
+                        it.type
+                    )
+                }
+            return Either.Right(innloggetSelvbetjeningBruker)
+        } catch (exception: Exception) {
             return Either.Left(exception)
         }
     }
