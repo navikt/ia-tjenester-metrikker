@@ -4,13 +4,11 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MånedOgÅr
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.månederOgÅrTil
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.månederTil
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import java.time.LocalDate
-import java.time.Month
 
 class MottattIaTjenesterDatagrunnlag(
     private val innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
@@ -19,7 +17,6 @@ class MottattIaTjenesterDatagrunnlag(
     val tilDato: LocalDate
 ) {
     val gjeldendeÅr = fraDato.year
-    val gjeldendeMåneder: List<Month> = fraDato månederTil tilDato
     val gjeldendeMånederOgÅr: List<MånedOgÅr> = fraDato månederOgÅrTil tilDato
     val leverteInnloggedeIatjenester = fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
 

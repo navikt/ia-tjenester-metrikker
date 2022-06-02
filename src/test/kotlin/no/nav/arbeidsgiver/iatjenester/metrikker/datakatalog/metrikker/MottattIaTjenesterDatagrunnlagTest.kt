@@ -311,7 +311,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         )
 
         Assertions.assertThat(resultat.keys.size).isEqualTo(7)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.DECEMBER)]).isEqualTo(1)
+        Assertions.assertThat(resultat[MånedOgÅr( 2020, Month.DECEMBER)]).isEqualTo(1)
         Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JANUARY)]).isEqualTo(0)
         Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.FEBRUARY)]).isEqualTo(0)
         Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MARCH)]).isEqualTo(0)

@@ -99,7 +99,4 @@ infix fun LocalDate.dagerTil(tilDato: LocalDate): List<LocalDate> =
 infix fun LocalDate.månederOgÅrTil(tilDato: LocalDate): List<MånedOgÅr> =
     (this dagerTil tilDato).map { MånedOgÅr(it.year, it.month) }.distinct()
 
-infix fun LocalDate.månederTil(tilDato: LocalDate): List<Month> =
-    (this månederOgÅrTil tilDato).map { it.måned }
-
 data class MånedOgÅr(val år: Int, val måned: Month)

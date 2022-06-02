@@ -124,7 +124,7 @@ class MottattIaTjenesterStatistikk(private val datagrunnlag: MottattIaTjenesterD
                 Grid(),
                 Xaxis(
                     type = "category",
-                    data = datagrunnlag.gjeldendeMåneder.map { it.tilNorskTekstformat() }
+                    data = datagrunnlag.gjeldendeMånederOgÅr.map { it.måned.tilNorskTekstformat() }
                 ),
                 Yaxis("value"),
                 Tooltip("item"),

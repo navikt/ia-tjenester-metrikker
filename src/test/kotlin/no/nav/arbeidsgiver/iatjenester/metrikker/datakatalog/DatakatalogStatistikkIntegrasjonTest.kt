@@ -72,7 +72,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
             mockDatakatalogKlient
         ) {
             override fun dagensDato(): LocalDate {
-                return LocalDate.of(2021, Month.JULY, 1)
+                return LocalDate.of(2020, Month.NOVEMBER, 1)
             }
         }
 
@@ -127,7 +127,15 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         val leverteIaTjenesterPerMånedEchart: EchartSpec =
             produsertDatapakke.views[1].spec as EchartSpec
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.xAxis.data)
-            .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
+            .isEqualTo(
+                listOf(
+                    "nov.",
+                    "des.",
+                    "jan.",
+                    "feb.",
+                    "mar.",
+                )
+            )
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].name)
             .isEqualTo("Samtalestøtte (uinnlogget)")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].title)
@@ -235,13 +243,12 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         opprettInnloggetIaTjenester(
             listOf(
                 Date.valueOf(målingFra),
-                Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(3)),
+                Date.valueOf(målingFra.withDayOfMonth(3)),
                 Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(12)),
                 Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(14)),
-                Date.valueOf(målingFra.plusMonths(2).withDayOfMonth(1)),
                 Date.valueOf(målingFra.plusMonths(3).withDayOfMonth(22)),
                 Date.valueOf(målingFra.plusMonths(4).withDayOfMonth(13)),
-                Date.valueOf(målingFra.plusMonths(6).withDayOfMonth(15)),
+                Date.valueOf(målingFra.plusMonths(4).withDayOfMonth(15)),
             )
         )
 
