@@ -63,7 +63,7 @@ class MottattIaTjenesterDatagrunnlag(
 
         return gjeldendeMånederOgÅr.associateWith { 0 } +
                 datagrunnlag.filter { it.kilde == fraApp }
-                    .filter { it.tidspunkt.month in gjeldendeMåneder }
+                    .filter { MånedOgÅr(it.tidspunkt.year, it.tidspunkt.month) in gjeldendeMånederOgÅr }
                     .groupingBy { MånedOgÅr(it.tidspunkt.year, it.tidspunkt.month) }
                     .eachCount()
     }
