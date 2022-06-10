@@ -90,33 +90,42 @@ internal class DatakatalogStatistikkIntegrasjonTest {
                 "og dagensDato: '${datakatalogStatistikkMedDato.dagensDato()}'")
     }
 
+    @Test
+    fun `startDato er første dag i måneden`() {
+        Assertions.assertThat(datakatalogStatistikkMedDato.startDato().dayOfMonth).isEqualTo(1)
+    }
 
     @Test
-    fun `Oppdaterte data hentes ved månedsskifte og tar de siste 12 måneder (+1)`() {
-        var idag = LocalDate.of(2021, Month.JUNE, 1)
+    fun `Oppdaterte data hentes ved månedsskifte og tar de siste 12 måneder (pluss nåværende måneden)`() {
+        val _1_MARS_2020 = LocalDate.of(2020, Month.MARCH, 1)
+        val _1_MARS_2021 = LocalDate.of(2021, Month.MARCH, 1)
+        val _1_APRIL_2021 = LocalDate.of(2021, Month.APRIL, 1)
+        opprettTestDataIDB(namedParameterJdbcTemplate, _1_MARS_2020)
 
+        val periodeFraMarsTilMars = listOf("mar.", "apr.", "mai", "jun.", "jul.", "aug.", "sep.", "okt.", "nov.", "des.", "jan.", "feb.", "mar.")
+        assertProdusertDataInneholderRiktigTidsperiode(_1_MARS_2021, periodeFraMarsTilMars)
+
+        val periodeFraAprilTilApril = listOf("apr.", "mai", "jun.", "jul.", "aug.", "sep.", "okt.", "nov.", "des.", "jan.", "feb.", "mar.", "apr.")
+        assertProdusertDataInneholderRiktigTidsperiode(_1_APRIL_2021, periodeFraAprilTilApril)
+    }
+
+    private fun assertProdusertDataInneholderRiktigTidsperiode(
+        iDag: LocalDate,
+        tidsPeriode: List<String>
+    ) {
         val datakatalogStatistikkMedTilDatoSomVarierer = object : DatakatalogStatistikk(
             iaTjenesterMetrikkerRepository,
             mockDatakatalogKlient
         ) {
             override fun dagensDato(): LocalDate {
-                return idag
+                return iDag
             }
         }
-        opprettTestDataIDB(namedParameterJdbcTemplate, datakatalogStatistikkMedTilDatoSomVarierer.startDato())
 
         datakatalogStatistikkMedTilDatoSomVarierer.run()
-        var echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
-
+        val echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
         Assertions.assertThat(echartSpec.option.xAxis.data)
-            .isEqualTo(listOf("jun.", "jul.", "aug.", "sep.", "okt.", "nov.", "des.", "jan.", "feb.", "mar.", "apr.", "mai", "jun."))
-
-        idag = LocalDate.of(2021, Month.JULY, 1)
-        datakatalogStatistikkMedTilDatoSomVarierer.run()
-        echartSpec = produsertDatapakke.views[1].spec as EchartSpec
-
-        Assertions.assertThat(echartSpec.option.xAxis.data)
-            .isEqualTo(listOf("jul.", "aug.", "sep.", "okt.", "nov.", "des.", "jan.", "feb.", "mar.", "apr.", "mai", "jun.", "jul."))
+            .isEqualTo(tidsPeriode)
     }
 
     @Test
@@ -168,7 +177,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[2].title)
             .isEqualTo("Sykefraværsstatistikk")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[2].data.toList())
-            .isEqualTo(listOf(1, 2, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0))
+            .isEqualTo(listOf(2, 2, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0))
     }
 
     @Test
