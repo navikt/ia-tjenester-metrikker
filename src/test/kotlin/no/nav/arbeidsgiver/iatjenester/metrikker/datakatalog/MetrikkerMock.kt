@@ -30,6 +30,7 @@ fun dummyInnloggetMetrikk(
     tidspunkt
 )
 
+val _1_DECEMBER_2020: LocalDate = LocalDate.of(2020, Month.DECEMBER, 1)
 val _1_JANUAR_2021: LocalDate = LocalDate.of(2021, Month.JANUARY, 1)
 val _21_JUNI_2021: LocalDate = LocalDate.of(2021, Month.JUNE, 21)
 val _1_MAI_2021: LocalDate = LocalDate.of(2021, Month.MAY, 1)

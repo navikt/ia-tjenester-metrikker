@@ -18,11 +18,11 @@ class DatakatalogStatistikk(
     private val datakatalogKlient: DatakatalogKlient
 ) : Runnable {
 
-    private val fraDato: LocalDate = startDato()
+    private var fraDato: LocalDate = startDato()
     private var tilDato: LocalDate = dagensDato()
 
     fun startDato(): LocalDate {
-        return LocalDate.of(2021, Month.MARCH, 17)
+        return dagensDato().minusMonths(12).withDayOfMonth(1)
     }
 
     fun dagensDato(): LocalDate {
@@ -34,6 +34,7 @@ class DatakatalogStatistikk(
     }
 
     internal fun byggOgSendDatapakke(erDebugAktivert: Boolean = false) {
+        fraDato = startDato()
         tilDato = dagensDato()
         log.info("Starter jobb som sender statistikk til datakatalogen")
         log.info("Skal sende statistikk for målinger til og med $tilDato")
@@ -98,8 +99,5 @@ infix fun LocalDate.dagerTil(tilDato: LocalDate): List<LocalDate> =
 
 infix fun LocalDate.månederOgÅrTil(tilDato: LocalDate): List<MånedOgÅr> =
     (this dagerTil tilDato).map { MånedOgÅr(it.year, it.month) }.distinct()
-
-infix fun LocalDate.månederTil(tilDato: LocalDate): List<Month> =
-    (this månederOgÅrTil tilDato).map { it.måned }
 
 data class MånedOgÅr(val år: Int, val måned: Month)

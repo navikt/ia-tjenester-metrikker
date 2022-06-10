@@ -12,6 +12,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -72,7 +73,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
             mockDatakatalogKlient
         ) {
             override fun dagensDato(): LocalDate {
-                return LocalDate.of(2021, Month.JULY, 1)
+                return LocalDate.of(2021, Month.JULY, 14)
             }
         }
 
@@ -82,41 +83,54 @@ internal class DatakatalogStatistikkIntegrasjonTest {
                 datakatalogKlient
             )
 
-        målingFra = datakatalogStatistikkSomSenderTilLokalMockServer.startDato()
+        målingFra = datakatalogStatistikkMedDato.startDato()
+        log.info("[Test-Log] Starter test med " +
+                "målingFra: '$målingFra', " +
+                "startDato: '${datakatalogStatistikkMedDato.startDato()}' " +
+                "og dagensDato: '${datakatalogStatistikkMedDato.dagensDato()}'")
     }
 
+    @Test
+    fun `startDato er første dag i måneden`() {
+        Assertions.assertThat(datakatalogStatistikkMedDato.startDato().dayOfMonth).isEqualTo(1)
+    }
 
     @Test
-    fun `Oppdaterte data hentes ved månedsskifte`() {
-        var idag = LocalDate.of(2021, Month.JUNE, 1)
+    fun `Oppdaterte data hentes ved månedsskifte og tar de siste 12 måneder (pluss nåværende måneden)`() {
+        val _1_MARS_2020 = LocalDate.of(2020, Month.MARCH, 1)
+        val _1_MARS_2021 = LocalDate.of(2021, Month.MARCH, 1)
+        val _1_APRIL_2021 = LocalDate.of(2021, Month.APRIL, 1)
+        opprettTestDataIDB(namedParameterJdbcTemplate, _1_MARS_2020)
 
+        val periodeFraMarsTilMars = listOf("mar.", "apr.", "mai", "jun.", "jul.", "aug.", "sep.", "okt.", "nov.", "des.", "jan.", "feb.", "mar.")
+        assertProdusertDataInneholderRiktigTidsperiode(_1_MARS_2021, periodeFraMarsTilMars)
+
+        val periodeFraAprilTilApril = listOf("apr.", "mai", "jun.", "jul.", "aug.", "sep.", "okt.", "nov.", "des.", "jan.", "feb.", "mar.", "apr.")
+        assertProdusertDataInneholderRiktigTidsperiode(_1_APRIL_2021, periodeFraAprilTilApril)
+    }
+
+    private fun assertProdusertDataInneholderRiktigTidsperiode(
+        iDag: LocalDate,
+        tidsPeriode: List<String>
+    ) {
         val datakatalogStatistikkMedTilDatoSomVarierer = object : DatakatalogStatistikk(
             iaTjenesterMetrikkerRepository,
             mockDatakatalogKlient
         ) {
             override fun dagensDato(): LocalDate {
-                return idag
+                return iDag
             }
         }
-        opprettTestDataIDB(namedParameterJdbcTemplate)
 
         datakatalogStatistikkMedTilDatoSomVarierer.run()
-        var echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
-
+        val echartSpec: EchartSpec = produsertDatapakke.views[1].spec as EchartSpec
         Assertions.assertThat(echartSpec.option.xAxis.data)
-            .isEqualTo(listOf("mar.", "apr.", "mai", "jun."))
-
-        idag = LocalDate.of(2021, Month.JULY, 1)
-        datakatalogStatistikkMedTilDatoSomVarierer.run()
-        echartSpec = produsertDatapakke.views[1].spec as EchartSpec
-
-        Assertions.assertThat(echartSpec.option.xAxis.data)
-            .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
+            .isEqualTo(tidsPeriode)
     }
 
     @Test
     fun `kjør DatakatalogStatistikk og verifiser innhold til datapakke`() {
-        opprettTestDataIDB(namedParameterJdbcTemplate)
+        opprettTestDataIDB(namedParameterJdbcTemplate, målingFra)
 
         datakatalogStatistikkMedDato.run()
 
@@ -127,13 +141,27 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         val leverteIaTjenesterPerMånedEchart: EchartSpec =
             produsertDatapakke.views[1].spec as EchartSpec
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.xAxis.data)
-            .isEqualTo(listOf("mar.", "apr.", "mai", "jun.", "jul."))
+            .isEqualTo(
+                listOf("jul.",
+                    "aug.",
+                    "sep.",
+                    "okt.",
+                    "nov.",
+                    "des.",
+                    "jan.",
+                    "feb.",
+                    "mar.",
+                    "apr.",
+                    "mai",
+                    "jun.",
+                    "jul.")
+            )
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].name)
             .isEqualTo("Samtalestøtte (uinnlogget)")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].title)
             .isEqualTo("Samtalestøtte")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].data.toList())
-            .isEqualTo(listOf(0, 1, 2, 2, 2))
+            .isEqualTo(listOf(0, 1, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0))
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[0].stack)
             .isEqualTo("Samtalestøtte")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].name)
@@ -141,7 +169,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].title)
             .isEqualTo("Samtalestøtte")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].data.toList())
-            .isEqualTo(listOf(0, 0, 0, 0, 0))
+            .isEqualTo(listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[1].stack)
             .isEqualTo("Samtalestøtte")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[2].name)
@@ -149,12 +177,12 @@ internal class DatakatalogStatistikkIntegrasjonTest {
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[2].title)
             .isEqualTo("Sykefraværsstatistikk")
         Assertions.assertThat(leverteIaTjenesterPerMånedEchart.option.series[2].data.toList())
-            .isEqualTo(listOf(1, 3, 1, 1, 1))
+            .isEqualTo(listOf(2, 2, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0))
     }
 
     @Test
     fun `Generert datapakke har graf over IA-tjenester per måned`() {
-        opprettTestDataIDB(namedParameterJdbcTemplate)
+        opprettTestDataIDB(namedParameterJdbcTemplate, målingFra)
         datakatalogStatistikkMedDato.run()
 
         val leverteIaTjenesterPerMåned: View = produsertDatapakke.views[1]
@@ -178,7 +206,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
     @Test
     fun `Generert datapakke har graf over IA-tjenester per bransje`() {
-        opprettTestDataIDB(namedParameterJdbcTemplate)
+        opprettTestDataIDB(namedParameterJdbcTemplate, målingFra)
         datakatalogStatistikkMedDato.run()
 
         val leverteIaTjenesterPerBransje: View = produsertDatapakke.views[2]
@@ -199,7 +227,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
     @Test
     fun `Generert datapakke har graf over IA-tjenester per fylke av typen stacked-bar`() {
-        opprettTestDataIDB(namedParameterJdbcTemplate)
+        opprettTestDataIDB(namedParameterJdbcTemplate, målingFra)
         datakatalogStatistikkMedDato.run()
 
         val leverteIaTjenesterPerFylke: View = produsertDatapakke.views[3]
@@ -215,7 +243,7 @@ internal class DatakatalogStatistikkIntegrasjonTest {
 
     @Test
     fun `Kjør DatakatalogStatistikk og send data til lokal mock datakatalog`() {
-        opprettTestDataIDB(namedParameterJdbcTemplate)
+        opprettTestDataIDB(namedParameterJdbcTemplate, målingFra)
 
         datakatalogStatistikkSomSenderTilLokalMockServer.run()
 
@@ -228,32 +256,31 @@ internal class DatakatalogStatistikkIntegrasjonTest {
     }
 
 
-    private fun opprettTestDataIDB(namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
+    private fun opprettTestDataIDB(namedParameterJdbcTemplate: NamedParameterJdbcTemplate, fraDato: LocalDate) {
         namedParameterJdbcTemplate.jdbcTemplate.dataSource?.connection?.cleanTable("metrikker_ia_tjenester_innlogget")
         namedParameterJdbcTemplate.jdbcTemplate.dataSource?.connection?.cleanTable("metrikker_ia_tjenester_uinnlogget")
 
         opprettInnloggetIaTjenester(
             listOf(
-                Date.valueOf(målingFra),
-                Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(3)),
-                Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(12)),
-                Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(14)),
-                Date.valueOf(målingFra.plusMonths(2).withDayOfMonth(1)),
-                Date.valueOf(målingFra.plusMonths(3).withDayOfMonth(22)),
-                Date.valueOf(målingFra.plusMonths(4).withDayOfMonth(13)),
-                Date.valueOf(målingFra.plusMonths(6).withDayOfMonth(15)),
+                Date.valueOf(fraDato),
+                Date.valueOf(fraDato.withDayOfMonth(3)),
+                Date.valueOf(fraDato.plusMonths(1).withDayOfMonth(12)),
+                Date.valueOf(fraDato.plusMonths(1).withDayOfMonth(14)),
+                Date.valueOf(fraDato.plusMonths(3).withDayOfMonth(22)),
+                Date.valueOf(fraDato.plusMonths(4).withDayOfMonth(13)),
+                Date.valueOf(fraDato.plusMonths(4).withDayOfMonth(15)),
             )
         )
 
         opprettUinnloggetIaTjenester(
             listOf(
-                Date.valueOf(målingFra.plusMonths(1).withDayOfMonth(3)),
-                Date.valueOf(målingFra.plusMonths(2).withDayOfMonth(12)),
-                Date.valueOf(målingFra.plusMonths(2).withDayOfMonth(14)),
-                Date.valueOf(målingFra.plusMonths(3).withDayOfMonth(1)),
-                Date.valueOf(målingFra.plusMonths(3).withDayOfMonth(22)),
-                Date.valueOf(målingFra.plusMonths(4).withDayOfMonth(3)),
-                Date.valueOf(målingFra.plusMonths(4).withDayOfMonth(3)),
+                Date.valueOf(fraDato.plusMonths(1).withDayOfMonth(3)),
+                Date.valueOf(fraDato.plusMonths(2).withDayOfMonth(12)),
+                Date.valueOf(fraDato.plusMonths(2).withDayOfMonth(14)),
+                Date.valueOf(fraDato.plusMonths(3).withDayOfMonth(1)),
+                Date.valueOf(fraDato.plusMonths(3).withDayOfMonth(22)),
+                Date.valueOf(fraDato.plusMonths(4).withDayOfMonth(3)),
+                Date.valueOf(fraDato.plusMonths(4).withDayOfMonth(3)),
             )
         )
     }

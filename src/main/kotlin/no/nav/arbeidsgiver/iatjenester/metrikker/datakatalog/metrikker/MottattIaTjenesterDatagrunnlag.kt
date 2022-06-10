@@ -1,14 +1,14 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.MånedOgÅr
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.månederTil
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.månederOgÅrTil
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import java.time.LocalDate
-import java.time.Month
 
 class MottattIaTjenesterDatagrunnlag(
     private val innloggetMetrikker: List<MottattInnloggetIaTjenesteMetrikk>,
@@ -16,8 +16,7 @@ class MottattIaTjenesterDatagrunnlag(
     val fraDato: LocalDate,
     val tilDato: LocalDate
 ) {
-    val gjeldendeÅr = fraDato.year
-    val gjeldendeMåneder: List<Month> = fraDato månederTil tilDato
+    val gjeldendeMånederOgÅr: List<MånedOgÅr> = fraDato månederOgÅrTil tilDato
     val leverteInnloggedeIatjenester = fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
 
     private val alleFylkerAlfabetisk = alleFylkerAlfabetisk()
@@ -53,15 +52,15 @@ class MottattIaTjenesterDatagrunnlag(
     fun beregnAntallMetrikkerPerMånedPerApp(
         fraApp: Kilde,
         innloggetEllerUinlogget: IaTjenesteTilgjengelighet
-    ): Map<Month, Int> {
+    ): Map<MånedOgÅr, Int> {
         val datagrunnlag =
             if (innloggetEllerUinlogget == IaTjenesteTilgjengelighet.INNLOGGET)
                 leverteInnloggedeIatjenester else uinnloggetMetrikker
 
-        return gjeldendeMåneder.associateWith { 0 } +
+        return gjeldendeMånederOgÅr.associateWith { 0 } +
                 datagrunnlag.filter { it.kilde == fraApp }
-                    .filter { it.tidspunkt.month in gjeldendeMåneder }
-                    .groupingBy { it.tidspunkt.month }
+                    .filter { MånedOgÅr(it.tidspunkt.year, it.tidspunkt.month) in gjeldendeMånederOgÅr }
+                    .groupingBy { MånedOgÅr(it.tidspunkt.year, it.tidspunkt.month) }
                     .eachCount()
     }
 
