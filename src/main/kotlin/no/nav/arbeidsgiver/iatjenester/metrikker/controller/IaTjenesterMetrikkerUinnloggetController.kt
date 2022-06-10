@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController
         "https://arbeidsgiver.dev.nav.no"],
     allowCredentials = "false"
 )
-@Profile("local","dev-gcp")
+@Profile("test", "local", "dev-gcp")
 @RequestMapping("/uinnlogget")
 class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService) {
 
