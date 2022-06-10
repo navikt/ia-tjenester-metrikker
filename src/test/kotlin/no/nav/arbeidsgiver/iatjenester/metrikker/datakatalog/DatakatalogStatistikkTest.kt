@@ -2,9 +2,11 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import java.time.Month
 import java.time.Month.FEBRUARY
+import kotlin.test.assertFailsWith
 
 
 internal class DatakatalogStatistikkTest {
@@ -28,7 +30,12 @@ internal class DatakatalogStatistikkTest {
         val fraDato = LocalDate.of(2021, 3, 1)
         val tilDato = LocalDate.of(2021, 1, 17)
 
-        // DENNE BØR GI FEILMELDING
+        assertFailsWith<IllegalArgumentException>(
+            message = "2021-01-18 < 2021-03-01",
+            block = {
+                fraDato månederOgÅrTil tilDato
+            }
+        )
     }
 
 
@@ -37,30 +44,50 @@ internal class DatakatalogStatistikkTest {
         val fraDato = LocalDate.of(2021, 1, 17)
         val tilDato = LocalDate.of(2021, 4, 1)
 
-        assertThat((fraDato månederOgÅrTil fraDato)).isEqualTo(listOf(Month.JANUARY))
-        assertThat((tilDato månederOgÅrTil tilDato)).isEqualTo(listOf(Month.APRIL))
+        assertThat((fraDato månederOgÅrTil fraDato)).isEqualTo(listOf(MånedOgÅr(2021, Month.JANUARY)))
+        assertThat((tilDato månederOgÅrTil tilDato)).isEqualTo(listOf(MånedOgÅr(2021, Month.APRIL)))
         assertThat((fraDato månederOgÅrTil tilDato))
-            .isEqualTo(listOf(Month.JANUARY, Month.FEBRUARY, Month.MARCH, Month.APRIL))
+            .isEqualTo(
+                listOf(
+                    MånedOgÅr(2021, Month.JANUARY),
+                    MånedOgÅr(2021, Month.FEBRUARY),
+                    MånedOgÅr(2021, Month.MARCH),
+                    MånedOgÅr(2021, Month.APRIL)
+                )
+            )
     }
-
 
     @Test
     fun `Antall måneder mellom to datoer, når første dag ikke er 1, hverken på fra- eller tilDato`() {
         val fraDato = LocalDate.of(2021, 1, 17)
         val tilDato = LocalDate.of(2021, 4, 30)
 
-        assertThat((fraDato månederOgÅrTil fraDato)).isEqualTo(listOf(Month.JANUARY))
-        assertThat((tilDato månederOgÅrTil tilDato)).isEqualTo(listOf(Month.APRIL))
+        assertThat((fraDato månederOgÅrTil fraDato)).isEqualTo(listOf(MånedOgÅr(2021, Month.JANUARY)))
+        assertThat((tilDato månederOgÅrTil tilDato)).isEqualTo(listOf(MånedOgÅr(2021, Month.APRIL)))
         assertThat((fraDato månederOgÅrTil tilDato))
-            .isEqualTo(listOf(Month.JANUARY, Month.FEBRUARY, Month.MARCH, Month.APRIL))
+            .isEqualTo(
+                listOf(
+                    MånedOgÅr(2021, Month.JANUARY),
+                    MånedOgÅr(2021, Month.FEBRUARY),
+                    MånedOgÅr(2021, Month.MARCH),
+                    MånedOgÅr(2021, Month.APRIL)
+                )
+            )
     }
 
     @Test
     fun `Antall måneder mellom to datoer spenner seg over flere år`() {
-        val fraDato = LocalDate.of(2021, 1, 17)
+        val fraDato = LocalDate.of(2021, 10, 1)
         val tilDato = LocalDate.of(2022, 1, 30)
 
-        assertThat((fraDato månederOgÅrTil tilDato).size).isEqualTo(13)
+        assertThat((fraDato månederOgÅrTil tilDato)).isEqualTo(
+            listOf(
+                MånedOgÅr(2021, Month.OCTOBER),
+                MånedOgÅr(2021, Month.NOVEMBER),
+                MånedOgÅr(2021, Month.DECEMBER),
+                MånedOgÅr(2022, Month.JANUARY)
+            )
+        )
     }
 
     @Test

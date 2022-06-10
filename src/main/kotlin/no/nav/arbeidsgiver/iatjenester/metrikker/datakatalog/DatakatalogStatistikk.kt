@@ -18,7 +18,7 @@ class DatakatalogStatistikk(
     private val datakatalogKlient: DatakatalogKlient
 ) : Runnable {
 
-    private val fraDato: LocalDate = startDato()
+    private var fraDato: LocalDate = startDato()
     private var tilDato: LocalDate = dagensDato()
 
     fun startDato(): LocalDate {
@@ -34,6 +34,7 @@ class DatakatalogStatistikk(
     }
 
     internal fun byggOgSendDatapakke(erDebugAktivert: Boolean = false) {
+        fraDato = startDato()
         tilDato = dagensDato()
         log.info("Starter jobb som sender statistikk til datakatalogen")
         log.info("Skal sende statistikk for målinger til og med $tilDato")
