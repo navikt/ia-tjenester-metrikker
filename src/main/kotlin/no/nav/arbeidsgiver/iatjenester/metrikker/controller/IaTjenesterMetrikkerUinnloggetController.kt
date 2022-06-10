@@ -5,6 +5,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjen
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.security.token.support.core.api.Unprotected
+import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController
         "https://arbeidsgiver.dev.nav.no"],
     allowCredentials = "false"
 )
+@Profile("local","dev-gcp")
 @RequestMapping("/uinnlogget")
 class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService) {
 
