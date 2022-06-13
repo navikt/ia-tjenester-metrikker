@@ -4,7 +4,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.DatakatalogConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.FlywayConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.OutboundKafkaProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.SecurityConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TokenXConfigProperties
@@ -22,7 +21,6 @@ import org.springframework.boot.runApplication
     value = [
         DBConfigProperties::class,
         FlywayConfigProperties::class,
-        OutboundKafkaProperties::class,
         SecurityConfig::class,
         AltinnConfigProperties::class,
         TilgangskontrollConfig::class,

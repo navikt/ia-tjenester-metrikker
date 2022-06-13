@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.5.12"
+    id("org.springframework.boot") version "2.6.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.5.21"
     id("com.github.ben-manes.versions") version "0.39.0"
@@ -83,7 +83,6 @@ dependencies {
     implementation("com.h2database:h2:2.0.202")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.retry:spring-retry")
-    implementation("org.springframework.kafka:spring-kafka:2.7.5")
     implementation("no.nav.security:token-validation-spring:${navSecurityVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:${altinnRettigheterProxyKlientVersion}")
     runtimeOnlyDependenciesMetadata("com.github.kittinunf.result:result:2.2.1")
