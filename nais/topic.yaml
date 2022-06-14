@@ -5,8 +5,10 @@ metadata:
   namespace: arbeidsgiver
   labels:
     team: arbeidsgiver
+  annotations:
+    kafka.nais.io/removeDataWhenResourceIsDeleted: "true"
 spec:
-  pool: {{ kafka_pool }}
+  pool: {{ kafka_pool }} # hard-code to nav-dev when running kubectl apply
   acl:
     - team: arbeidsgiver
       application: ia-tjenester-metrikker
