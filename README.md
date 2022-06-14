@@ -14,7 +14,7 @@ Fra IntelliJ, trykk "Edit Configurations", "Add new configuration" og velg `Spri
 
 ### API-Dokumentasjon
 
-API dok finner du her: http://localhost:8080/ia-tjenester-metrikker/swagger-ui.html
+API dok finner du her: http://localhost:8080/ia-tjenester-metrikker/swagger-ui/index.html
 
 ### Datapakke til datakatalogen
 

@@ -14,6 +14,12 @@ spring:
   flyway:
     locations: classpath:/db/migration, classpath:/db/privileges
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
 no.nav.security.jwt.issuer:
   selvbetjening:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}

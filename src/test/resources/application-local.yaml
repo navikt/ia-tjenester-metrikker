@@ -20,6 +20,12 @@ spring:
   flyway:
     locations: classpath:/db/migration, classpath:/db/test-lokaldb-data
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
 no.nav.security.jwt:
   expirythreshold: 10 #threshold in minutes until token expires (optional)
   issuer:
@@ -29,10 +35,17 @@ no.nav.security.jwt:
       cookiename: selvbetjening-idtoken
 
 tokenx-service:
-  client-id: "cluster:namespace:ia-tjenester-metrikker"
-  token_endpoint: https://fakedings.dev-gcp.nais.io/fake/token
-  private_jwk: src/test/resources/private-jwk.json
-  altinn_rettigheter_proxy_audience: cluster:namespace:altinn-rettigheter-proxy
+  client-id: localhost:arbeidsgiver:ia-tjenester-metrikker
+  token_endpoint: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration/token
+  altinn_rettigheter_proxy_audience: localhost:arbeidsgiver:altinn-rettigheter-proxy
+  private_jwk: '{
+      "kty": "RSA",
+      "d": "BRcX3ywynvH9WA5wOz_vU9HzSY6OkmRKOGGqLEG_fEtVcXwxReSSuVcXZUngZrPkoC3li-jvNfDz9c_7WP44HkO07RkG10mSspLjS-EarYg5HUI8JPfrjtacCVmq0pnVlvEeR-35x1e91o6iC5-hEGQPkBgImKwuFy1u2eiPBM-mIoNHOSpO5IqHBAP2Gi2w7SU28mZ1xt2xmvj6kGE96u3G6nSkr175tgdi0tHO9T7BCYFjr1NNkLojzExpo5gUVyNsm17ahMi2XE7NIRdduHkEXcprr5DayDK7_VaQYqa3OPsN3UcRZanXcpdFt9HHt8KyuRW3zvXJ6-AtM1UCkQ",
+      "e": "AQAB",
+      "use": "sig",
+      "kid": "1",
+      "n": "ssXDjDMHXWxvnAFXwJiKqgyf6tn_zHGbkSiWNgHZ2xsQgxo-gzv5JssbJxLCDZCdC5zX7nXIHOC5fid_fxMXGNAYh6xaJzxSLGGAJHSp_uCh5zSPAGFigihxLNwwWaDxYDcLFC9QHzaV__BaB_JUaHyD7aFDUEyQiB4MXAqTkCEUmPj-RTiUbcnicD5Q32zByJ8gzG3ufxuCGnP-xcc5QJQ8TmrlLgNzgiHHdkpRjeXCHovP_gYGXujJkhQ0dvgYtVpgoHeGcH1FC9ZRd6IiFtanJ1MPwg2i6sR_HlE2l3Ua_Knj4FZY3F0cM3P4AgXI8TyEhQgM2GWwPGf6YNrHyQ"
+  }'
 
 altinn-proxy:
   proxyUrl: http://localhost:${wiremock.port}/proxy/
