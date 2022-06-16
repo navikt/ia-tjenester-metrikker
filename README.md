@@ -67,6 +67,8 @@ Bygg image
 Kjør container (forutsetter .env fil med riktige miljøvariabler)
 `docker run --env-file=./.env -d -p 8080:8080 ia-tjenester-metrikker`
 
+## Om autentisering til applikasjonen
+Applikasjonen bruker MockOAuth2Server for å lage og verifisere tokens (i både integrasjonstester og ved lokalt kjøring). Den `private_jwk` ble generert [her](https://mkjwk.org/).
 
 # Henvendelser
 

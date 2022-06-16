@@ -33,6 +33,9 @@ no.nav.security.jwt:
       discoveryurl: http://localhost:${mock-oauth2-server.port}/selvbetjening/.well-known/openid-configuration
       accepted_audience: aud-localhost
       cookiename: selvbetjening-idtoken
+    tokenx:
+      discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
+      accepted_audience: aud-localhost
 
 tokenx-service:
   client-id: localhost:arbeidsgiver:ia-tjenester-metrikker
