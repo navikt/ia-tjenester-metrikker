@@ -34,7 +34,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/hente-fnr-fra-pid-i-claims'
+    if: github.ref == 'refs/heads/disable-swagger-i-prod--og-oppdater-spring'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -64,7 +64,7 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           VAR: image=${{ env.IMAGE }}
-          RESOURCE: nais/nais-dev-gcp.yaml,nais/topic.yaml
+          RESOURCE: nais/nais-dev-gcp.yaml
           VARS: nais/nais-dev-gcp.json
 
   deploy-to-prod-gcp:
