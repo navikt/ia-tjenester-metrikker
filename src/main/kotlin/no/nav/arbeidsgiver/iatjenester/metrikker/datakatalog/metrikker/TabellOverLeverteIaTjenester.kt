@@ -18,6 +18,11 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
 
     private val tabellFraDato = LocalDate.of(2021, 1, 1)
     private val tabellTilDato = LocalDate.of(2022, 12, 31)
+    private val gjeldendeTyperIaTjeneste = listOf(
+        TypeLevertTjeneste(SYKEFRAVÆRSSTATISTIKK, INNLOGGET),
+        TypeLevertTjeneste(SAMTALESTØTTE, INNLOGGET),
+        TypeLevertTjeneste(SAMTALESTØTTE, UINNLOGGET)
+    )
 
     fun opprett() =
         DatapakkeTabellBuilder(
@@ -60,28 +65,27 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
                 datagrunnlag.leverteInnloggedeIatjenester.map { Tabellcelle(it, INNLOGGET) },
                 datagrunnlag.uinnloggetMetrikker.map { Tabellcelle(it, UINNLOGGET) }
             ).flatten()
+                .filter { it.typeLevertTjeneste in gjeldendeTyperIaTjeneste }
 
         val tabellcellerIDatagrunnlaget = tabelldata.groupingBy { it }
 
         val alleTabellceller =
             (tabellFraDato månederOgÅrTil tabellTilDato).flatMap { tidspunkt ->
-                listOf(
-                    TypeLevertTjeneste(SYKEFRAVÆRSSTATISTIKK, INNLOGGET),
-                    TypeLevertTjeneste(SAMTALESTØTTE, INNLOGGET),
-                    TypeLevertTjeneste(SAMTALESTØTTE, UINNLOGGET)
-                )
-                    .map { kilde -> Tabellcelle(kilde, tidspunkt.år, tidspunkt.måned) }
+                gjeldendeTyperIaTjeneste.map { kilde ->
+                    Tabellcelle(
+                        kilde,
+                        tidspunkt.år,
+                        tidspunkt.måned
+                    )
+                }
             }
 
-        val alleTabellcellerSortert =
-            alleTabellceller.sortedWith(
-                compareBy(
-                    { it.måned },
-                    { it.typeLevertTjeneste }
-                )
+        return alleTabellceller.sortedWith(
+            compareBy(
+                { it.måned },
+                { it.typeLevertTjeneste }
             )
-
-        return alleTabellcellerSortert.associateWith { 0 } + tabellcellerIDatagrunnlaget.eachCount()
+        ).associateWith { 0 } + tabellcellerIDatagrunnlaget.eachCount()
     }
 
     data class Tabellcelle(
