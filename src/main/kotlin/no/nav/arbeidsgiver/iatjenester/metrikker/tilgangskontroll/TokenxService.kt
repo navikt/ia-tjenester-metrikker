@@ -43,11 +43,11 @@ class TokenxService(
 
         val response = tokenExchange(tokenEndpoint, tokenExchangeRequest)
         return JwtToken(response.body?.access_token)
-            .also { log.info("Token exchange completed; returned access_token has length of ${it.tokenAsString.length}") }
+            .also { log.trace("Token exchange completed; returned access_token has length of ${it.tokenAsString.length}") }
     }
 
     internal fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
-        log.info("Performing client assertion with clientId:$clientId and audience:$audience")
+        log.trace("Performing client assertion with clientId:$clientId and audience:$audience")
 
         val now = Date.from(now())
         val inSixtySeconds = Date.from(now().plusSeconds(60))
@@ -70,7 +70,7 @@ class TokenxService(
         tokenEndpoint: String,
         tokenExchangeRequest: OAuth2TokenExchangeRequest,
     ): ResponseEntity<TokenExchangeResponse> {
-        log.info("Performing token exchange for audience:${tokenExchangeRequest.audience}")
+        log.trace("Performing token exchange for audience:${tokenExchangeRequest.audience}")
 
         return RestTemplate().postForEntity(
             tokenEndpoint,
