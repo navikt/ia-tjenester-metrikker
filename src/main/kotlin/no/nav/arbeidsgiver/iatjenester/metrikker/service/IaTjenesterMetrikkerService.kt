@@ -9,10 +9,12 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjen
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime.now
+import io.micrometer.core.annotation.Counted
 
 @Component
 class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository) {
 
+    @Counted(value = "counted.innlogget.mottatt.iatjeneste", description = "Antall innlogget mottatt IA tjeneste")
     fun sjekkOgPersister(innloggetIaTjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val iaTjenesteSjekkResultat = validerMottakelsesdato(innloggetIaTjeneste)
 
@@ -33,6 +35,7 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
         return iaTjenesteSjekkResultat
     }
 
+    @Counted(value = "counted.uinnlogget.mottatt.iatjeneste", description = "Antall uinnlogget mottatt IA tjeneste")
     fun sjekkOgPersister(uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val iaTjenesteSjekkResultat = validerMottakelsesdato(uinnloggetIaTjeneste)
 
