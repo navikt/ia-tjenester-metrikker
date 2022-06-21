@@ -2,12 +2,15 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._10_JAN_2022
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_JANUAR_2021
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_MAI_2021
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._5_JUNI_2021
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.dummyInnloggetMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.dummyUinnloggetMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.TabellOverLeverteIaTjenester.Tabellcelle
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet.INNLOGGET
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet.UINNLOGGET
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.KALKULATOR
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.NETTKURS
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -80,5 +83,23 @@ internal class TabellOverLeverteIaTjenesterTest {
             tabellceller[Tabellcelle(dummyInnloggetMetrikk(), INNLOGGET)]
 
         Assertions.assertThat(antallInnloggedeMetrikkerFørsteMai2021).isEqualTo(2)
+    }
+
+    @Test
+    fun `verdier fra andre kilder enn samtalestøtte og sykefraværsstatistikk filtreres bort`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = listOf(
+                dummyInnloggetMetrikk(kilde = KALKULATOR),
+                dummyInnloggetMetrikk(kilde = NETTKURS),
+            ),
+            uinnloggetMetrikker = emptyList(),
+            fraDato = _1_MAI_2021,
+            tilDato = _1_MAI_2021.plusDays(1)
+        )
+
+        val totaltAntallTabellceller =
+            TabellOverLeverteIaTjenester(datagrunnlag).regnUtAntallLeverteTjenesterPerMånedOgÅr().size
+
+        Assertions.assertThat(totaltAntallTabellceller).isEqualTo(72)
     }
 }
