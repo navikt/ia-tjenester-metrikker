@@ -34,7 +34,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/disable-swagger-i-prod--og-oppdater-spring'
+    if: github.ref == 'refs/heads/alerts-når-antall-lagret-innloggede-metrikker-er-for-lavt'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
