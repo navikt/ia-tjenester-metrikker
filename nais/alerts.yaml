@@ -27,13 +27,13 @@ spec:
       description: "ia-tjenester-metrikker har logget uvanlig menge advarsler"
       action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.nais.io/d/VniEA46Mz/ia-tjenester-metrikker"
     - alert: Få ia-tjenester-metrikker (uinnlogget)
-      expr: rate(counted_uinnlogget_mottatt_iatjeneste_total{app="ia-tjenester-metrikker"}[2d]) == 0
+      expr: sum(increase(counted_uinnlogget_mottatt_iatjeneste_total{app="ia-tjenester-metrikker"}[48h])) == 0
       for: 2m
       description: "Ingen ia-tjenester-metrikk (uinnlogget) lagret ila de siste 48 timer"
       action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.nais.io/d/VniEA46Mz/ia-tjenester-metrikker"
 
     - alert: Få ia-tjenester-metrikker (innlogget)
-      expr: rate(counted_innlogget_mottatt_iatjeneste_total{app="ia-tjenester-metrikker"}[2d]) == 0
+      expr: sum(increase(counted_innlogget_mottatt_iatjeneste_total{app="ia-tjenester-metrikker"}[48h])) == 0
       for: 2m
       description: "Ingen ia-tjenester-metrikk lagret (innnlogget) ila de siste 48 timer"
       action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.nais.io/d/VniEA46Mz/ia-tjenester-metrikker"
