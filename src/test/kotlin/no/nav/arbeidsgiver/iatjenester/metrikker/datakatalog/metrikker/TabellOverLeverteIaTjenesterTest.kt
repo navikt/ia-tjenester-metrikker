@@ -102,6 +102,6 @@ internal class TabellOverLeverteIaTjenesterTest {
 
         assertThat(totaltAntallTabellceller)
             .withFailMessage("Tabellen skal inneholde tre kildetyper og to år med månedlige verdier, dvs 72 totalt")
-            .isEqualTo(71)
+            .isEqualTo(72)
     }
 }
