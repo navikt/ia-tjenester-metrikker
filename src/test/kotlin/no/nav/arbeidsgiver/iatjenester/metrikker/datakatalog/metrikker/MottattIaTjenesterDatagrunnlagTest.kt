@@ -14,9 +14,9 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.dummyInnloggetMetri
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.dummyUinnloggetMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository.MottattUinnloggetIaTjenesteMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SAMTALESTØTTE
-import org.assertj.core.api.Assertions
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.SYKEFRAVÆRSSTATISTIKK
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.Month
@@ -36,33 +36,32 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _21_JUNI_2021
         )
         val resultat = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            SYKEFRAVÆRSSTATISTIKK,
             IaTjenesteTilgjengelighet.INNLOGGET
         )
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MAY)]).isEqualTo(1)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JUNE)]).isEqualTo(1)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JANUARY)]).isEqualTo(0)
-
+        assertThat(resultat[MånedOgÅr(2021, Month.MAY)]).isEqualTo(1)
+        assertThat(resultat[MånedOgÅr(2021, Month.JUNE)]).isEqualTo(1)
+        assertThat(resultat[MånedOgÅr(2021, Month.JANUARY)]).isEqualTo(0)
     }
 
     @Test
     fun `beregnAntallMetrikkerPerMåned skal returnere riktig liste for ønskede app`() {
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
             listOf(
-                dummyInnloggetMetrikk(kilde = Kilde.SAMTALESTØTTE),
+                dummyInnloggetMetrikk(kilde = SAMTALESTØTTE),
                 dummyInnloggetMetrikk(tidspunkt = _1_MAI_2021.atStartOfDay()),
                 dummyInnloggetMetrikk(
-                    kilde = Kilde.SAMTALESTØTTE,
+                    kilde = SAMTALESTØTTE,
                     tidspunkt = _21_JUNI_2021.atStartOfDay()
                 ),
             ), emptyList(), _1_JANUAR_2021, _21_JUNI_2021
         )
         val resultat = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            SYKEFRAVÆRSSTATISTIKK,
             IaTjenesteTilgjengelighet.INNLOGGET
         )
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MAY)]).isEqualTo(1)
-        Assertions.assertThat(resultat[MånedOgÅr(2021, Month.JUNE)]).isEqualTo(0)
+        assertThat(resultat[MånedOgÅr(2021, Month.MAY)]).isEqualTo(1)
+        assertThat(resultat[MånedOgÅr(2021, Month.JUNE)]).isEqualTo(0)
     }
 
     @Test
@@ -74,11 +73,11 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _21_JUNI_2021
         )
 
-        Assertions.assertThat(
-            datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SAMTALESTØTTE)
+        assertThat(
+            datagrunnlag.totalInnloggetMetrikkerPerApp(SAMTALESTØTTE)
         ).isEqualTo(0)
-        Assertions.assertThat(
-            datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK)
+        assertThat(
+            datagrunnlag.totalInnloggetMetrikkerPerApp(SYKEFRAVÆRSSTATISTIKK)
         ).isEqualTo(0)
     }
 
@@ -91,9 +90,9 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _21_JUNI_2021
         )
 
-        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SAMTALESTØTTE))
+        assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(SAMTALESTØTTE))
             .isEqualTo(0)
-        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK))
+        assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(SYKEFRAVÆRSSTATISTIKK))
             .isEqualTo(1)
     }
 
@@ -106,8 +105,8 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _21_JUNI_2021
         )
 
-        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
-        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2022]).isEqualTo(null)
+        assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
+        assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2022]).isEqualTo(null)
     }
 
     @Test
@@ -124,8 +123,8 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _10_JAN_2022
         )
 
-        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(2)
-        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2022]).isEqualTo(1)
+        assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(2)
+        assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2022]).isEqualTo(1)
     }
 
     @Test
@@ -142,7 +141,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _10_JAN_2022
         )
 
-        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
+        assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
     }
 
     @Test
@@ -157,7 +156,7 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _10_JAN_2022
         )
 
-        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
+        assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
     }
 
     @Test
@@ -172,8 +171,8 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _10_JAN_2022
         )
 
-        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
-        Assertions.assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2022]).isEqualTo(1)
+        assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2021]).isEqualTo(1)
+        assertThat(datagrunnlag.antallUnikeBedrifterPerÅr[2022]).isEqualTo(1)
     }
 
     @Test
@@ -185,12 +184,11 @@ internal class MottattIaTjenesterDatagrunnlagTest {
             tilDato = _21_JUNI_2021
         )
 
-        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SAMTALESTØTTE))
+        assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(SAMTALESTØTTE))
             .isEqualTo(0)
-        Assertions.assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(Kilde.SYKEFRAVÆRSSTATISTIKK))
+        assertThat(datagrunnlag.totalInnloggetMetrikkerPerApp(SYKEFRAVÆRSSTATISTIKK))
             .isEqualTo(0)
     }
-
 
     @Test
     fun `beregn antall metrikker per bransje med hensyn på duplikater`() {
@@ -208,13 +206,13 @@ internal class MottattIaTjenesterDatagrunnlagTest {
 
         val resultat = datagrunnlag.mottatteIaTjenesterInnloggetPerBransjeOgKilde
 
-        Assertions.assertThat(resultat.keys.filter { it.first == Kilde.SAMTALESTØTTE }.size)
+        assertThat(resultat.keys.filter { it.first == SAMTALESTØTTE }.size)
             .isEqualTo(datagrunnlag.bransjeListe.size)
-        Assertions.assertThat(resultat.keys.filter { it.first == Kilde.SYKEFRAVÆRSSTATISTIKK }.size)
+        assertThat(resultat.keys.filter { it.first == SYKEFRAVÆRSSTATISTIKK }.size)
             .isEqualTo(datagrunnlag.bransjeListe.size)
-        Assertions.assertThat(
+        assertThat(
             resultat[BransjeOgKilde(
-                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                SYKEFRAVÆRSSTATISTIKK,
                 ArbeidsmiljøportalenBransje.BARNEHAGER
             )]
         )
@@ -227,19 +225,19 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         val innloggetMetrikkerTest = listOf(
             dummyInnloggetMetrikk(),
             dummyInnloggetMetrikk(
-                kilde = Kilde.SAMTALESTØTTE,
+                kilde = SAMTALESTØTTE,
                 tidspunkt = _5_JUNI_2021.atStartOfDay()
             ),
             dummyInnloggetMetrikk(orgnr = "98888888"),
             dummyInnloggetMetrikk(
                 orgnr = "97777777",
-                kilde = Kilde.SAMTALESTØTTE,
+                kilde = SAMTALESTØTTE,
                 næring = anleggsvirksomhet,
                 tidspunkt = LocalDate.now().atStartOfDay()
             ),
             dummyInnloggetMetrikk(
                 orgnr = "96666666",
-                kilde = Kilde.SAMTALESTØTTE,
+                kilde = SAMTALESTØTTE,
                 næring = detaljhandelMedBiler,
                 tidspunkt = _5_JUNI_2021.atStartOfDay()
             )
@@ -255,30 +253,30 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         val resultat: Map<BransjeOgKilde, Int> =
             datagrunnlag.mottatteIaTjenesterInnloggetPerBransjeOgKilde
 
-        Assertions.assertThat(
+        assertThat(
             resultat[BransjeOgKilde(
-                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                SYKEFRAVÆRSSTATISTIKK,
                 ArbeidsmiljøportalenBransje.BARNEHAGER
             )]
         )
             .isEqualTo(2)
-        Assertions.assertThat(
+        assertThat(
             resultat[BransjeOgKilde(
-                Kilde.SAMTALESTØTTE,
+                SAMTALESTØTTE,
                 ArbeidsmiljøportalenBransje.BARNEHAGER
             )]
         )
             .isEqualTo(1)
-        Assertions.assertThat(
+        assertThat(
             resultat[BransjeOgKilde(
-                Kilde.SAMTALESTØTTE,
+                SAMTALESTØTTE,
                 ArbeidsmiljøportalenBransje.ANLEGG
             )]
         )
             .isEqualTo(1)
-        Assertions.assertThat(
+        assertThat(
             resultat[BransjeOgKilde(
-                Kilde.SAMTALESTØTTE,
+                SAMTALESTØTTE,
                 ArbeidsmiljøportalenBransje.ANDRE_BRANSJER
             )]
         )
@@ -306,33 +304,33 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         )
 
         val resultat: Map<MånedOgÅr, Int> = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            SYKEFRAVÆRSSTATISTIKK,
             IaTjenesteTilgjengelighet.INNLOGGET
         )
 
-        Assertions.assertThat(resultat.keys.size).isEqualTo(7)
-        Assertions.assertThat(resultat[MånedOgÅr( 2020, Month.DECEMBER)]).isEqualTo(1)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JANUARY)]).isEqualTo(0)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.FEBRUARY)]).isEqualTo(0)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MARCH)]).isEqualTo(0)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.APRIL)]).isEqualTo(0)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MAY)]).isEqualTo(2)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JUNE)]).isEqualTo(1)
+        assertThat(resultat.keys.size).isEqualTo(7)
+        assertThat(resultat[MånedOgÅr(2020, Month.DECEMBER)]).isEqualTo(1)
+        assertThat(resultat[MånedOgÅr(2021, Month.JANUARY)]).isEqualTo(0)
+        assertThat(resultat[MånedOgÅr(2021, Month.FEBRUARY)]).isEqualTo(0)
+        assertThat(resultat[MånedOgÅr(2021, Month.MARCH)]).isEqualTo(0)
+        assertThat(resultat[MånedOgÅr(2021, Month.APRIL)]).isEqualTo(0)
+        assertThat(resultat[MånedOgÅr(2021, Month.MAY)]).isEqualTo(2)
+        assertThat(resultat[MånedOgÅr(2021, Month.JUNE)]).isEqualTo(1)
     }
 
     @Test
     fun `beregn antall uinnlogget metrikker per dag for uinnlogget ia-tjenester`() {
         val uinnloggetMetrikkerTest = listOf(
-            MottattUinnloggetIaTjenesteMetrikk(Kilde.SAMTALESTØTTE, _1_MAI_2021.atStartOfDay()),
+            MottattUinnloggetIaTjenesteMetrikk(SAMTALESTØTTE, _1_MAI_2021.atStartOfDay()),
             MottattUinnloggetIaTjenesteMetrikk(
-                Kilde.SAMTALESTØTTE,
+                SAMTALESTØTTE,
                 _1_MAI_2021.atStartOfDay().plusHours(4)
             ),
             MottattUinnloggetIaTjenesteMetrikk(
-                Kilde.SAMTALESTØTTE,
+                SAMTALESTØTTE,
                 _1_MAI_2021.atStartOfDay().plusHours(4)
             ),
-            MottattUinnloggetIaTjenesteMetrikk(Kilde.SAMTALESTØTTE, _5_JUNI_2021.atStartOfDay()),
+            MottattUinnloggetIaTjenesteMetrikk(SAMTALESTØTTE, _5_JUNI_2021.atStartOfDay()),
         )
         val datagrunnlag = MottattIaTjenesterDatagrunnlag(
             innloggetMetrikker = emptyList(),
@@ -342,16 +340,16 @@ internal class MottattIaTjenesterDatagrunnlagTest {
         )
 
         val resultat: Map<MånedOgÅr, Int> = datagrunnlag.beregnAntallMetrikkerPerMånedPerApp(
-            Kilde.SAMTALESTØTTE,
+            SAMTALESTØTTE,
             IaTjenesteTilgjengelighet.UINNLOGGET
         )
 
-        Assertions.assertThat(resultat.keys.size).isEqualTo(6)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JANUARY)]).isEqualTo(0)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.FEBRUARY)]).isEqualTo(0)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MARCH)]).isEqualTo(0)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.APRIL)]).isEqualTo(0)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.MAY)]).isEqualTo(3)
-        Assertions.assertThat(resultat[MånedOgÅr( 2021, Month.JUNE)]).isEqualTo(1)
+        assertThat(resultat.keys.size).isEqualTo(6)
+        assertThat(resultat[MånedOgÅr(2021, Month.JANUARY)]).isEqualTo(0)
+        assertThat(resultat[MånedOgÅr(2021, Month.FEBRUARY)]).isEqualTo(0)
+        assertThat(resultat[MånedOgÅr(2021, Month.MARCH)]).isEqualTo(0)
+        assertThat(resultat[MånedOgÅr(2021, Month.APRIL)]).isEqualTo(0)
+        assertThat(resultat[MånedOgÅr(2021, Month.MAY)]).isEqualTo(3)
+        assertThat(resultat[MånedOgÅr(2021, Month.JUNE)]).isEqualTo(1)
     }
 }
