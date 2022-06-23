@@ -61,7 +61,10 @@ class DatakatalogStatistikk(
             **En digital IA-tjeneste telles når en bruker har benyttet seg av innholdet i tjenesten.**
             
             Som hovedregel betyr dette at brukeren har *klikket på noe*, *skrevet noe* eller *åpnet noe* på siden. 
-            Det er ikke tilstrekkelig at brukeren kun har besøkt forsiden. 
+            Det er ikke tilstrekkelig at brukeren kun har besøkt forsiden.
+            
+            Vi har hatt en feil på telling av digitale IA-tjenester i perioden 19. mai til 1. juli 2022.
+            Det er ca 1000 digitale IA-tjenester som ikke er kommet med i statistikken.
             """.trimIndent()
 
         return Datapakke(
