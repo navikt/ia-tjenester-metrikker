@@ -14,7 +14,13 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.utils.tilNorskTekstformat
 import java.time.LocalDate
 import java.time.Month
 
-class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterDatagrunnlag) {
+class TabellOverLeverteIaTjenester(datagrunnlag: MottattIaTjenesterDatagrunnlag) {
+
+    private val gjeldendeTyperIaTjeneste = listOf(
+        TypeLevertTjeneste(SYKEFRAVÆRSSTATISTIKK, INNLOGGET),
+        TypeLevertTjeneste(SAMTALESTØTTE, INNLOGGET),
+        TypeLevertTjeneste(SAMTALESTØTTE, UINNLOGGET)
+    )
 
     private val tabellFraDato = LocalDate.of(2021, 1, 1)
     private val tabellTilDato = LocalDate.of(2022, 12, 31)
@@ -33,8 +39,15 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
             .leggTilRad(summerLeverteTjenester, uthevet = true)
             .build()
 
-    private val antallLeverteTjenesterPerMånedOgÅr = regnUtAntallLeverteTjenesterPerMånedOgÅr()
+    private val tabelldata =
+        listOf(
+            datagrunnlag.innloggedeIatjenester.map { Tabellcelle(it, INNLOGGET) },
+            datagrunnlag.uinnloggetMetrikker.map { Tabellcelle(it, UINNLOGGET) }
+        ).flatten()
+            .filter { it.typeLevertTjeneste in gjeldendeTyperIaTjeneste }
+            .groupingBy { it }
 
+    private val antallLeverteTjenesterPerMånedOgÅr = regnUtAntallLeverteTjenesterPerMånedOgÅr()
 
     private val antallLeverteIaTjenesterSomTabellrader =
         antallLeverteTjenesterPerMånedOgÅr
@@ -54,34 +67,23 @@ class TabellOverLeverteIaTjenester(private val datagrunnlag: MottattIaTjenesterD
 
 
     fun regnUtAntallLeverteTjenesterPerMånedOgÅr(): Map<Tabellcelle, Int> {
-
-        val tabelldata: List<Tabellcelle> =
-            listOf(
-                datagrunnlag.leverteInnloggedeIatjenester.map { Tabellcelle(it, INNLOGGET) },
-                datagrunnlag.uinnloggetMetrikker.map { Tabellcelle(it, UINNLOGGET) }
-            ).flatten()
-
-        val tabellcellerIDatagrunnlaget = tabelldata.groupingBy { it }
-
         val alleTabellceller =
             (tabellFraDato månederOgÅrTil tabellTilDato).flatMap { tidspunkt ->
-                listOf(
-                    TypeLevertTjeneste(SYKEFRAVÆRSSTATISTIKK, INNLOGGET),
-                    TypeLevertTjeneste(SAMTALESTØTTE, INNLOGGET),
-                    TypeLevertTjeneste(SAMTALESTØTTE, UINNLOGGET)
-                )
-                    .map { kilde -> Tabellcelle(kilde, tidspunkt.år, tidspunkt.måned) }
+                gjeldendeTyperIaTjeneste.map { kilde ->
+                    Tabellcelle(
+                        kilde,
+                        tidspunkt.år,
+                        tidspunkt.måned
+                    )
+                }
             }
 
-        val alleTabellcellerSortert =
-            alleTabellceller.sortedWith(
-                compareBy(
-                    { it.måned },
-                    { it.typeLevertTjeneste }
-                )
+        return alleTabellceller.sortedWith(
+            compareBy(
+                { it.måned },
+                { it.typeLevertTjeneste }
             )
-
-        return alleTabellcellerSortert.associateWith { 0 } + tabellcellerIDatagrunnlaget.eachCount()
+        ).associateWith { 0 } + tabelldata.eachCount()
     }
 
     data class Tabellcelle(

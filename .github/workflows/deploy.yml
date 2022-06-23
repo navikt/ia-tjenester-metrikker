@@ -67,6 +67,20 @@ jobs:
           RESOURCE: nais/nais-dev-gcp.yaml
           VARS: nais/nais-dev-gcp.json
 
+  apply-alerts-to-dev:
+    name: Apply alerts to cluster (dev)
+    needs: deploy-to-dev
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: apply to dev
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: nais/alerts-dev.yaml
+
   deploy-to-prod-gcp:
     name: Deploy to prod-gcp
     needs: test

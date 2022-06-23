@@ -56,9 +56,11 @@ ext["okhttp3.version"] = "4.9.0" // For at token support testen kjører
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springdoc:springdoc-openapi-ui:$springdoc_openApi_version")
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdoc_openApi_version")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -90,6 +92,7 @@ dependencies {
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
 
+    implementation("io.micrometer:micrometer-registry-prometheus:1.8.4")
 
     // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")

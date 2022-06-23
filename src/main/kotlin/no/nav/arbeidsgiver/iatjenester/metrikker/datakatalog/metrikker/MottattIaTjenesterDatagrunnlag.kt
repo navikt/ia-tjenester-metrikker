@@ -17,7 +17,7 @@ class MottattIaTjenesterDatagrunnlag(
     val tilDato: LocalDate
 ) {
     val gjeldendeMånederOgÅr: List<MånedOgÅr> = fraDato månederOgÅrTil tilDato
-    val leverteInnloggedeIatjenester = fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
+    val innloggedeIatjenester = fjernDupliserteMetrikkerSammeDag(innloggetMetrikker)
 
     private val alleFylkerAlfabetisk = alleFylkerAlfabetisk()
 
@@ -31,7 +31,7 @@ class MottattIaTjenesterDatagrunnlag(
     val mottatteIaTjenesterInnloggetPerBransjeOgKilde: Map<BransjeOgKilde, Int> =
         beregnAntallMottatteIaTjenesterPerBransjeOgKilde(
             bransjeListe,
-            leverteInnloggedeIatjenester
+            innloggedeIatjenester
         )
 
     val antallUnikeBedrifterPerÅr: Map<Int, Int> = beregnAntallUnikeBedrifterPerÅr()
@@ -55,7 +55,7 @@ class MottattIaTjenesterDatagrunnlag(
     ): Map<MånedOgÅr, Int> {
         val datagrunnlag =
             if (innloggetEllerUinlogget == IaTjenesteTilgjengelighet.INNLOGGET)
-                leverteInnloggedeIatjenester else uinnloggetMetrikker
+                innloggedeIatjenester else uinnloggetMetrikker
 
         return gjeldendeMånederOgÅr.associateWith { 0 } +
                 datagrunnlag.filter { it.kilde == fraApp }
@@ -73,7 +73,7 @@ class MottattIaTjenesterDatagrunnlag(
     }
 
     private fun beregnAntallUnikeBedrifterPerÅr() =
-        leverteInnloggedeIatjenester
+        innloggedeIatjenester
             .distinctBy { Pair(it.orgnr, it.tidspunkt.year) }
             .groupingBy { it.tidspunkt.toLocalDate().year }
             .eachCount()

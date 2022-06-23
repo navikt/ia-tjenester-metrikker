@@ -2,13 +2,16 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._10_JAN_2022
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_JANUAR_2021
+import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._1_MAI_2021
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog._5_JUNI_2021
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.dummyInnloggetMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.dummyUinnloggetMetrikk
 import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.TabellOverLeverteIaTjenester.Tabellcelle
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet.INNLOGGET
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.IaTjenesteTilgjengelighet.UINNLOGGET
-import org.assertj.core.api.Assertions
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.KALKULATOR
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde.NETTKURS
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class TabellOverLeverteIaTjenesterTest {
@@ -25,9 +28,9 @@ internal class TabellOverLeverteIaTjenesterTest {
         val tabellceller =
             TabellOverLeverteIaTjenester(datagrunnlag).regnUtAntallLeverteTjenesterPerMånedOgÅr()
 
-        // Tre apptyper (Samtalestøtte innlogget, Samtalestøtte uinnlogget, Sykefrværsstatistikk)
-        // ganger 24 måneder = 72 tabellverdier
-        Assertions.assertThat(tabellceller.size).isEqualTo(72)
+        assertThat(tabellceller.size)
+            .withFailMessage("Tabellen skal inneholde tre kildetyper og to år med månedlige verdier, dvs 72 totalt")
+            .isEqualTo(72)
     }
 
     @Test
@@ -55,9 +58,9 @@ internal class TabellOverLeverteIaTjenesterTest {
                 INNLOGGET
             )]
 
-        Assertions.assertThat(antallInnloggedeMetrikkerFørsteMai2021).isEqualTo(2)
-        Assertions.assertThat(antallUinnloggedeMetrikkerFørsteMai2021).isEqualTo(1)
-        Assertions.assertThat(antallInnloggedeMetrikkerFørsteJanuar2022).isEqualTo(0)
+        assertThat(antallInnloggedeMetrikkerFørsteMai2021).isEqualTo(2)
+        assertThat(antallUinnloggedeMetrikkerFørsteMai2021).isEqualTo(1)
+        assertThat(antallInnloggedeMetrikkerFørsteJanuar2022).isEqualTo(0)
     }
 
     @Test
@@ -79,6 +82,26 @@ internal class TabellOverLeverteIaTjenesterTest {
         val antallInnloggedeMetrikkerFørsteMai2021 =
             tabellceller[Tabellcelle(dummyInnloggetMetrikk(), INNLOGGET)]
 
-        Assertions.assertThat(antallInnloggedeMetrikkerFørsteMai2021).isEqualTo(2)
+        assertThat(antallInnloggedeMetrikkerFørsteMai2021).isEqualTo(2)
+    }
+
+    @Test
+    fun `verdier fra andre kilder enn samtalestøtte og sykefraværsstatistikk filtreres bort`() {
+        val datagrunnlag = MottattIaTjenesterDatagrunnlag(
+            innloggetMetrikker = listOf(
+                dummyInnloggetMetrikk(kilde = KALKULATOR),
+                dummyInnloggetMetrikk(kilde = NETTKURS),
+            ),
+            uinnloggetMetrikker = emptyList(),
+            fraDato = _1_MAI_2021,
+            tilDato = _1_MAI_2021.plusDays(1)
+        )
+
+        val totaltAntallTabellceller =
+            TabellOverLeverteIaTjenester(datagrunnlag).regnUtAntallLeverteTjenesterPerMånedOgÅr().size
+
+        assertThat(totaltAntallTabellceller)
+            .withFailMessage("Tabellen skal inneholde tre kildetyper og to år med månedlige verdier, dvs 72 totalt")
+            .isEqualTo(72)
     }
 }
