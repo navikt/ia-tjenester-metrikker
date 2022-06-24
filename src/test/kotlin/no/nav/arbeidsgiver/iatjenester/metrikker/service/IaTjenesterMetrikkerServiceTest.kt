@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
 import arrow.core.Either
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
@@ -32,7 +33,7 @@ internal class IaTjenesterMetrikkerServiceTest {
     fun `sjekkOgPersister validerer gyldig IA-tjeneste OK`() {
 
         val sjekkOgOpprett =
-            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository)
+            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, SimpleMeterRegistry())
                 .sjekkOgPersister(TestUtils.vilkårligIaTjeneste())
 
         assertThat(sjekkOgOpprett is Either.Right).isEqualTo(true)
@@ -45,9 +46,8 @@ internal class IaTjenesterMetrikkerServiceTest {
         val iaTjenesteMedDatoIFremtiden = TestUtils.vilkårligIaTjeneste()
         iaTjenesteMedDatoIFremtiden.tjenesteMottakkelsesdato = now().plusMinutes(2)
 
-        val iaSjekk = IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository).sjekkOgPersister(
-            iaTjenesteMedDatoIFremtiden
-        )
+        val iaSjekk = IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, SimpleMeterRegistry())
+            .sjekkOgPersister(iaTjenesteMedDatoIFremtiden)
 
         assertThat(iaSjekk is Either.Left).isEqualTo(true)
         assertThat((iaSjekk as Either.Left).value.årsak)
@@ -59,9 +59,8 @@ internal class IaTjenesterMetrikkerServiceTest {
         val levertIaTjenesteFraInnlandet =
             TestUtils.vilkårligIaTjeneste().apply { kommunenummer = "3403" }
 
-        val resultat = IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository).sjekkOgPersister(
-            levertIaTjenesteFraInnlandet
-        )
+        val resultat = IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, SimpleMeterRegistry())
+            .sjekkOgPersister(levertIaTjenesteFraInnlandet)
 
         val persisterteData = (resultat as Either.Right).value
                 as InnloggetMottattIaTjenesteMedVirksomhetGrunndata
