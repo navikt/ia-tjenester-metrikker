@@ -63,8 +63,8 @@ class DatakatalogStatistikk(
             Som hovedregel betyr dette at brukeren har *klikket på noe*, *skrevet noe* eller *åpnet noe* på siden. 
             Det er ikke tilstrekkelig at brukeren kun har besøkt forsiden.
             
-            Vi har hatt en feil på telling av digitale IA-tjenester i perioden 19. mai til 1. juli 2022.
-            Det er ca 1000 digitale IA-tjenester som ikke er kommet med i statistikken.
+            **Vi har hatt en feil på telling av digitale IA-tjenester i perioden 19. mai til 1. juli 2022.**
+            **Det er ca 1000 digitale IA-tjenester som ikke er kommet med i statistikken.**
             """.trimIndent()
 
         return Datapakke(
