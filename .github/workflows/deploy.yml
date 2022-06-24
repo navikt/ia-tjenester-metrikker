@@ -116,3 +116,17 @@ jobs:
           VAR: image=${{ env.IMAGE }}
           RESOURCE: nais/nais-prod-gcp.yaml
           VARS: nais/nais-prod-gcp.json
+
+  apply-alerts-to-prod:
+    name: Apply alerts to cluster (prod)
+    needs: deploy-to-prod-gcp
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: apply to prod
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: nais/alerts.yaml

@@ -39,12 +39,12 @@ class ObservabilityService(private val iaTjenesterMetrikkerRepository: IaTjenest
     private fun sjekkAntallMetrikkerMottattOgSkrivLog(
         antallMetrikkerMottatt: Int,
         fraDato: LocalDate,
-        typeMetrrikk: String
+        typeMetrikk: String
     ) {
-        log.info("Antall $typeMetrrikk metrikker mottatt og lagret siden '$fraDato' er: ${antallMetrikkerMottatt}")
+        log.info("Antall $typeMetrikk metrikker mottatt og lagret siden '$fraDato' er: ${antallMetrikkerMottatt}")
 
         if (antallMetrikkerMottatt == 0) {
-            skrivErrorLog(typeMetrrikk, fraDato)
+            skrivErrorLog(typeMetrikk, fraDato)
         }
     }
 }
