@@ -12,7 +12,7 @@ import java.time.temporal.ChronoUnit
 class ObservabilityScheduler(val taskExecutor :LockingTaskExecutor, val observabilityService: ObservabilityService) {
 
     @Scheduled(cron = "0 30 8 * * Mon-Fri")
-    fun scheduledUtsendingAvDatapakke() {
+    fun scheduledSjekkAntallIATjenestertMetrikkerLagret() {
         val lockAtMostFor = Duration.of(10, ChronoUnit.MINUTES)
         val lockAtLeastFor = Duration.of(1, ChronoUnit.MINUTES)
 
