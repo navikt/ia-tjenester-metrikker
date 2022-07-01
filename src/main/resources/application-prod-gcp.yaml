@@ -63,8 +63,3 @@ tilgangskontroll:
     oppfolgingsplan:
       servicecode: 5062
       serviceedition: 1
-
-datakatalog:
-  rootUrl: https://datakatalog-api.intern.nav.no/v1/datapackage/
-  datapakkeId: 76cbb88ca1cd3d335810aec71c587aa1
-  erUtsendingAktivert: true

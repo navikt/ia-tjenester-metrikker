@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste

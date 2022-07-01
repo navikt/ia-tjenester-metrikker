@@ -1,7 +1,5 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
+package no.nav.arbeidsgiver.iatjenester.metrikker.domene
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Fylke
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 
 

@@ -2,7 +2,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.DatakatalogConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.FlywayConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.SecurityConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
@@ -24,7 +23,6 @@ import org.springframework.boot.runApplication
         SecurityConfig::class,
         AltinnConfigProperties::class,
         TilgangskontrollConfig::class,
-        DatakatalogConfigProperties::class,
         EnhetsregisteretProperties::class,
         TokenXConfigProperties::class,
     ]

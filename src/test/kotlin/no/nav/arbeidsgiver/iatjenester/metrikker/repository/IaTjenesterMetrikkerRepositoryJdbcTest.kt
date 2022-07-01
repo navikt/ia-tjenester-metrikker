@@ -10,7 +10,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.getAlleUinn
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettInnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettUinnloggetIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.UinnloggetIaTjenesteRad
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import org.assertj.core.api.Assertions.assertThat
