@@ -58,8 +58,3 @@ tilgangskontroll:
     oppfolgingsplan:
       servicecode: 5062
       serviceedition: 1
-
-datakatalog:
-  rootUrl: http://localhost:${wiremock.server.port}/lokal_datakatalog/
-  datapakkeId: ikke_en_ekte_datapakke_id
-  erUtsendingAktivert: true

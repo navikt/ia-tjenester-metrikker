@@ -1,10 +1,10 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.restdto
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Fylke
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.InstitusjonellSektorkode
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Fylke
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næringskode5Siffer
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InstitusjonellSektorkode
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.OverordnetEnhet
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
