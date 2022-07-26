@@ -2,9 +2,6 @@
 
 Applikasjon som mottar og lagrer metrikker fra andre IA-applikasjoner.
 
-Oppdaterer [Datakatalogen](https://data.intern.nav.no/datapakke/76cbb88ca1cd3d335810aec71c587aa1#) med friske tall
-daglig (kl. 07:55) via en cron-jobb.
-
 ## Kjøre lokalt
 
 Fra IntelliJ, trykk "Edit Configurations", "Add new configuration" og velg `Spring Boot`
@@ -15,18 +12,6 @@ Fra IntelliJ, trykk "Edit Configurations", "Add new configuration" og velg `Spri
 ### API-Dokumentasjon
 
 API dok finner du her: http://localhost:8080/ia-tjenester-metrikker/swagger-ui/index.html
-
-### Datapakke til datakatalogen
-
-Datapakker er opprettet i [dev](https://data.dev.intern.nav.no/datapakke/219e562d893afbc8307b5f4e8b210baa#) og
-[prod](https://data.intern.nav.no/datapakke/76cbb88ca1cd3d335810aec71c587aa1#). Om det skulle gjøres på nytt, bruk filen
-`datapakke-init.json` for å opprette en ny datapakke som følgende (OBS: ta vare på id-en i response):
-
-```
-curl -X 'POST' -d @src/test/resources/datapakke-init.json 'https://{utl til datakatalog-api}/v1/datapackage'
-```
-
-Endepunktet `ia-tjeneste-metrikker/utsending/datapakke` kan kalles manuelt for å oppdatere Datakatalogen i dev.
 
 ### Hente en lokal selvbetjenening-idtoken for å kjøre Postman mot innlogget endepunkt
 
