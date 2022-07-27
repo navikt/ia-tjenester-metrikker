@@ -34,7 +34,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/slette-bygg-og-utsending-av-datapakke'
+    if: github.ref == 'refs/heads/test-med-enhetsregisteret-i-dev-gcp'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
