@@ -92,11 +92,11 @@ dependencies {
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.4")
+    implementation("com.github.tomakehurst:wiremock:2.27.2")
 
     // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:token-validation-spring-test:${navSecurityVersion}")
-    testImplementation("com.github.tomakehurst:wiremock:2.27.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("org.assertj:assertj-core:3.20.2")
