@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component
 import java.net.URL
 import java.nio.charset.StandardCharsets
 
-@Profile("local", "dev-gcp")
+@Profile("local")
 @Component
 class MockEnhetsregisteret: InitializingBean {
 
@@ -42,7 +42,7 @@ class MockEnhetsregisteret: InitializingBean {
         )
         mockKallFraEnhetsregisteret(enhetsregisteretUrl)
 
-        log.info("[MOCK dev-gcp/lokalt] Starter mock-server for enhetsregisteret på port $wiremockPort")
+        log.info("[MOCK lokalt] Starter mock-server for enhetsregisteret på port $wiremockPort")
         wireMockServer.start()
     }
 
