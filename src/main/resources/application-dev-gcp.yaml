@@ -53,7 +53,7 @@ altinn-proxy:
   apiGwKey: ${ALTINN_APIGW_APIKEY}
 
 enhetsregisteret:
-  url: "http://localhost:${wiremock.port}/enhetsregisteret/"
+  url: https://arbeidsgiver-mock-enhetsregisteret.dev.nav.no/enhetsregisteret/api/
 
 tilgangskontroll:
   altinn-services:
