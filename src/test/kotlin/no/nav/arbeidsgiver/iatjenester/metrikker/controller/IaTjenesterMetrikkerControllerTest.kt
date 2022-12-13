@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.APPLICATION_JSON
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET
+import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ugyldigInnloggetIaTjenesteAsString
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligInnloggetIaTjenesteAsString
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.security.mock.oauth2.MockOAuth2Server
@@ -208,6 +209,28 @@ class IaTjenesterMetrikkerControllerTest {
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("status").asText()).isEqualTo("bad request")
     }
+
+    @Test
+    fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 400 bad request ved ugyldig data (håndterer feil Enum verdi i request body)`() {
+
+        val requestBody: String = ugyldigInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
+
+        val gyldigToken = issueGyldigTokenXToken()
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create(hostAndPort() + innloggetEndepunkt))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build(),
+            BodyHandlers.ofString()
+        )
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        val body: JsonNode = objectMapper.readTree(response.body())
+        Assertions.assertThat(body.get("message").asText()).startsWith("Innhold til request er ikke gyldig")
+    }
+
 
     private fun hostAndPort() = "http://localhost:$port"
 

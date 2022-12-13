@@ -11,6 +11,7 @@ import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnaut
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
@@ -58,6 +59,17 @@ class RestResponseEntityExceptionHandler {
     protected fun handleResponseStatusException(e: ResponseStatusException, webRequest: WebRequest?): ResponseEntity<Any> {
         log.warn(e.message, e)
         return getResponseEntity(e, e.message, e.status)
+    }
+
+    @ExceptionHandler(value = [HttpMessageNotReadableException::class])
+    @ResponseBody
+    protected fun handleRequestParsingException(e: HttpMessageNotReadableException, webRequest: WebRequest?): ResponseEntity<Any> {
+        log.info(e.message, e)
+        return getResponseEntity(
+            e,
+            "Innhold til request er ikke gyldig (feil ved parsing av request body)",
+            HttpStatus.BAD_REQUEST
+        )
     }
 
     @ExceptionHandler(value = [Exception::class])
