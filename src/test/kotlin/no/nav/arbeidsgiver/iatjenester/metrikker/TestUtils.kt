@@ -71,6 +71,18 @@ class TestUtils {
         """.trimIndent()
         }
 
+        fun ugyldigInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String {
+            return """
+            {
+              "orgnr":"$orgnr",
+              "altinnRettighet":"${AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE.name}",
+              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "type":"drop table innlogget_ia_tjenester",
+              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
+            }
+        """.trimIndent()
+        }
+
         fun Connection.cleanTable(tableName: String) =
             use {
                 this.prepareStatement(
