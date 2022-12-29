@@ -34,7 +34,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/tabellfix'
+    if: github.ref == 'refs/heads/fjern_datapakke'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2

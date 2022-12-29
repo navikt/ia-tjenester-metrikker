@@ -1,11 +1,10 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.restdto
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Fylke
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.InstitusjonellSektorkode
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
+import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.InstitusjonellSektorkode
+import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.OverordnetEnhet
+import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.Fylke
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.ZonedDateTime

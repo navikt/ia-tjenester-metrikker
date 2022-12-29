@@ -1,4 +1,4 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
+package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
 enum class Fylke(val navn: String, val nummer: String) {
     OSLO("Oslo", "03"),

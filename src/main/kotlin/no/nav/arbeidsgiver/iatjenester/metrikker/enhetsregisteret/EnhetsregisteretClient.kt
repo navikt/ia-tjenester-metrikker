@@ -2,18 +2,14 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Fylke
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.InstitusjonellSektorkode
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.Fylke
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import java.io.IOException
-
 
 @Configuration
 class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregisteretUrl: String) {

@@ -5,9 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer
 import io.swagger.v3.oas.annotations.media.Schema
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringsbeskrivelser
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
+import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.OverordnetEnhet
+import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.Underenhet
 import java.time.ZonedDateTime
 
 enum class Kilde {

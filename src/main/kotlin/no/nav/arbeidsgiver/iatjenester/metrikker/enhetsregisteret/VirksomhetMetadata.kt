@@ -1,9 +1,8 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
+package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Fylke
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næringskode5Siffer
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
-
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.Fylke
 
 interface Virksomhet {
     val orgnr: Orgnr

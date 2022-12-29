@@ -1,8 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 
 import arrow.core.Either
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.OverordnetEnhet
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 import org.springframework.stereotype.Component
 import java.security.InvalidParameterException

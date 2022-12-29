@@ -1,4 +1,4 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
+package no.nav.arbeidsgiver.iatjenester.metrikker.restdto
 
 /*
   Næringskode 2 siffer og næringskode 5 siffer er standard for næringsgruppering (SN) fra SSB:

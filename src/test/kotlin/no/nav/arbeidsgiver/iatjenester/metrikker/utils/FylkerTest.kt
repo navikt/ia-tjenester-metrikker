@@ -1,7 +1,5 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.metrikker
+package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Fylke
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.alleFylkerAlfabetisk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

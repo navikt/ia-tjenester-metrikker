@@ -26,6 +26,7 @@ class TilgangskontrollService(
         return when (altinnRettighet) {
             AltinnRettighet.SYKEFRAVÆRSSTATISTIKK_FOR_VIRKSOMHETER ->
                 hentInnloggetBrukerFraAltinn(AltinnServiceKey.IA)
+
             AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE ->
                 hentInnloggetBrukerFraAltinn(AltinnServiceKey.OPPFOLGINGSPLAN)
         }

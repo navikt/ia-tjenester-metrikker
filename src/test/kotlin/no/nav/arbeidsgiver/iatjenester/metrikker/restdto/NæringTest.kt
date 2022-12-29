@@ -1,10 +1,10 @@
-package no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog
+package no.nav.arbeidsgiver.iatjenester.metrikker.restdto
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje.ANDRE_BRANSJER
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje.ANLEGG
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje.BARNEHAGER
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje.NÆRINGSMIDDELINDUSTRI
-import no.nav.arbeidsgiver.iatjenester.metrikker.datakatalog.Næring.ArbeidsmiljøportalenBransje.TRANSPORT
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Næring.ArbeidsmiljøportalenBransje.ANDRE_BRANSJER
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Næring.ArbeidsmiljøportalenBransje.ANLEGG
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Næring.ArbeidsmiljøportalenBransje.BARNEHAGER
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Næring.ArbeidsmiljøportalenBransje.NÆRINGSMIDDELINDUSTRI
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Næring.ArbeidsmiljøportalenBransje.TRANSPORT
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
