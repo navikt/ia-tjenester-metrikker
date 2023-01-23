@@ -31,7 +31,8 @@ enum class TypeIATjeneste {
 
 enum class AltinnRettighet {
     SYKEFRAVÆRSSTATISTIKK_FOR_VIRKSOMHETER,
-    ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE
+    ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE,
+    ANDRE
 }
 
 interface MottattIaTjeneste {

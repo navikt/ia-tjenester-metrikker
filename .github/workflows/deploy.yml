@@ -34,7 +34,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/tillate-mottat-kall-alle-representaner-av-virksomhet'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2

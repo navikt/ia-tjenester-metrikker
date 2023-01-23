@@ -22,22 +22,16 @@ class TilgangskontrollService(
 
     val tilgangskontrollServiceLogger = log("TilgangskontrollService")
 
-    fun hentInnloggetBruker(altinnRettighet: AltinnRettighet): Either<Exception, InnloggetBruker> {
-        return when (altinnRettighet) {
-            AltinnRettighet.SYKEFRAVÆRSSTATISTIKK_FOR_VIRKSOMHETER ->
-                hentInnloggetBrukerFraAltinn(AltinnServiceKey.IA)
-            AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE ->
-                hentInnloggetBrukerFraAltinn(AltinnServiceKey.OPPFOLGINGSPLAN)
-        }
+    fun hentInnloggetBruker(): Either<Exception, InnloggetBruker> {
+        return hentInnloggetBrukerFraAltinn()
     }
 
-    fun hentInnloggetBrukerFraAltinn(serviceKey: AltinnServiceKey): Either<Exception, InnloggetBruker> {
+    fun hentInnloggetBrukerFraAltinn(): Either<Exception, InnloggetBruker> {
 
         try {
             val innloggetSelvbetjeningBruker: InnloggetBruker =
                 tilgangskontrollUtils.hentInnloggetBruker()
 
-            val currentAltinnServiceConfig = tilgangsconfig.altinnServices.getValue(serviceKey)
 
             val tokendingsToken =
                 tokendingsService.exchangeTokenToAltinnProxy(tilgangskontrollUtils.hentJwtToken())
@@ -46,8 +40,6 @@ class TilgangskontrollService(
                 klient.hentOrganisasjoner(
                     TokenXToken(tokendingsToken.tokenAsString),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                    ServiceCode(currentAltinnServiceConfig.serviceCode),
-                    ServiceEdition(currentAltinnServiceConfig.serviceEdition),
                     false
                 ).map {
                     AltinnOrganisasjon(

@@ -65,7 +65,7 @@ class IaTjenesterMetrikkerInnloggetController(
 
         val innloggetBruker: Either<Exception, InnloggetBruker> =
             tilgangskontrollService
-                .hentInnloggetBruker(innloggetIaTjeneste.altinnRettighet)
+                .hentInnloggetBruker()
                 .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
         return innloggetBruker.fold(
