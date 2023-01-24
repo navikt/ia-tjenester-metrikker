@@ -134,6 +134,14 @@ internal class TilgangskontrollServiceIntegrationTest {
                 organizationForm = "AS",
                 status = "Active",
                 type = "Enterprise",
+            ),
+            AltinnOrganisasjon(
+                name = "BALLSTAD OG HORTEN",
+                parentOrganizationNumber = null,
+                organizationNumber = "833445566",
+                organizationForm = "AS",
+                status = "Active",
+                type = "Enterprise",
             )
         )
 

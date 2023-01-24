@@ -1,6 +1,5 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.AltinnRettighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
@@ -63,7 +62,6 @@ class TestUtils {
             return """
             {
               "orgnr":"$orgnr",
-              "altinnRettighet":"${AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE.name}",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
               "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
@@ -75,7 +73,6 @@ class TestUtils {
             return """
             {
               "orgnr":"$orgnr",
-              "altinnRettighet":"${AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE.name}",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"drop table innlogget_ia_tjenester",
               "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"

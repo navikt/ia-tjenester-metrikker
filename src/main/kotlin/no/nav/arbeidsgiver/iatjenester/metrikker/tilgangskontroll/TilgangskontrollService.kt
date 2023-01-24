@@ -2,13 +2,9 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 
 import arrow.core.Either
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceCode
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.ServiceEdition
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.TokenXToken
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.AltinnRettighet
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
 
@@ -40,7 +36,7 @@ class TilgangskontrollService(
                 klient.hentOrganisasjoner(
                     TokenXToken(tokendingsToken.tokenAsString),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                    false
+                    filtrerPåAktiveOrganisasjoner = true
                 ).map {
                     AltinnOrganisasjon(
                         it.name,

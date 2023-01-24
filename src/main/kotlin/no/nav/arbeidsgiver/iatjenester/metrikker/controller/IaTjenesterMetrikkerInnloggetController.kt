@@ -107,8 +107,7 @@ class IaTjenesterMetrikkerInnloggetController(
     ): Either<EnhetsregisteretException, InnloggetMottattIaTjenesteMedVirksomhetGrunndata> {
         log.info(
             "Mottatt IaTjenester metrikk (med virksomhet metadata) av tpye '${innloggetIaTjeneste.type}' " +
-                    "fra kilde '${innloggetIaTjeneste.kilde}' " +
-                    "med rettighet '${innloggetIaTjeneste.altinnRettighet.name}'"
+                    "fra kilde '${innloggetIaTjeneste.kilde}' "
         )
 
         val opplysningerForUnderenhet: Either<EnhetsregisteretException, Underenhet> =
