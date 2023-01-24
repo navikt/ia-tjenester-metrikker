@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController
     origins = [
         "https://arbeidsgiver-gcp.dev.nav.no",
         "https://arbeidsgiver.dev.nav.no",
-        "https://min-ia.dev.nav.no"
+        "https://forebygge-fravar.dev.nav.no"
     ],
     allowCredentials = "true"
 )

@@ -4,14 +4,12 @@ import arrow.core.Either
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.TokenXToken
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
 
 @Component
 class TilgangskontrollService(
     private val klient: AltinnrettigheterProxyKlient,
-    private val tilgangsconfig: TilgangskontrollConfig,
     private val tilgangskontrollUtils: TilgangskontrollUtils,
     private val tokendingsService: TokenxService,
 ) {
