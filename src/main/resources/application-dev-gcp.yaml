@@ -55,12 +55,4 @@ altinn-proxy:
 enhetsregisteret:
   url: https://arbeidsgiver-mock-enhetsregisteret.dev.nav.no/enhetsregisteret/api/
 
-tilgangskontroll:
-  altinn-services:
-    ia:
-      servicecode: 3403
-      serviceedition: 1
-    oppfolgingsplan:
-      servicecode: 5062
-      serviceedition: 1
 

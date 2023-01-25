@@ -55,11 +55,3 @@ altinn-proxy:
 enhetsregisteret:
   url: "https://data.brreg.no/enhetsregisteret/api/"
 
-tilgangskontroll:
-  altinn-services:
-    ia:
-      servicecode: 3403
-      serviceedition: 2
-    oppfolgingsplan:
-      servicecode: 5062
-      serviceedition: 1

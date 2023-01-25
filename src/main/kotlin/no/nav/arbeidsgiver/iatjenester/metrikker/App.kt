@@ -4,7 +4,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.FlywayConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.SecurityConfig
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TokenXConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
@@ -22,7 +21,6 @@ import org.springframework.boot.runApplication
         FlywayConfigProperties::class,
         SecurityConfig::class,
         AltinnConfigProperties::class,
-        TilgangskontrollConfig::class,
         EnhetsregisteretProperties::class,
         TokenXConfigProperties::class,
     ]
