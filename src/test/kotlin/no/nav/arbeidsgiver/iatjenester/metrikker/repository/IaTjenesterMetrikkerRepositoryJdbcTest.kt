@@ -22,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.sql.Date
-import java.sql.Timestamp
 import java.time.LocalDate.now
 import javax.sql.DataSource
 
@@ -35,7 +34,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         dataSource.connection.cleanTable("metrikker_ia_tjenester_innlogget")
         dataSource.connection.cleanTable("metrikker_ia_tjenester_uinnlogget")
     }
-
 
     @Test
     fun `hentUinnloggetIaTjenesterMetrikker`() {
@@ -126,7 +124,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         val iaTjenesteRad = antallUinnloggetIaTjenester[0]
         assertThat(iaTjenesteRad.type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
         assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKEFRAVÆRSSTATISTIKK)
-        assertThat(iaTjenesteRad.tjeneste_mottakkelsesdato).isNotNull()
         assertThat(iaTjenesteRad.opprettet).isNotNull()
     }
 
@@ -146,7 +143,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.næringKode5Siffer).isEqualTo("12345")
         assertThat(iaTjenesteRad.type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
         assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKEFRAVÆRSSTATISTIKK)
-        assertThat(iaTjenesteRad.tjeneste_mottakkelsesdato).isNotNull()
         assertThat(iaTjenesteRad.antallAnsatte).isEqualTo(10)
         assertThat(iaTjenesteRad.næringskode5SifferBeskrivelse).isEqualTo("En beskrivelse for næringskode 5 siffer")
         assertThat(iaTjenesteRad.næring2SifferBeskrivelse).isEqualTo("En beskrivelse for næring kode 2 siffer")
@@ -158,7 +154,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.opprettet).isNotNull()
     }
 
-
     private fun opprettUinnloggetIaTjenester(dates: List<Date>) {
         dates.forEachIndexed() { index, date ->
             dataSource.connection.opprettUinnloggetIaTjeneste(
@@ -166,7 +161,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     id = index + 1,
                     type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
                     kilde = Kilde.SAMTALESTØTTE,
-                    Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
                     Date.valueOf(now())
                 )
             )
@@ -185,7 +179,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     orgnr = mottattIATjeneste.orgnr,
                     næringKode5Siffer = mottattIATjeneste.næring.kode5Siffer,
                     næring2SifferBeskrivelse = mottattIATjeneste.næring.kode2SifferBeskrivelse,
-                    tjeneste_mottakkelsesdato = Timestamp.valueOf(now().atStartOfDay()),
                     antallAnsatte = 5 + index,
                     næringskode5SifferBeskrivelse = mottattIATjeneste.næring.kode5SifferBeskrivelse,
                     SSBSektorKode = "",
@@ -209,7 +202,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     orgnr = (999999900 + index).toString(),
                     næringKode5Siffer = "",
                     næring2SifferBeskrivelse = "",
-                    tjeneste_mottakkelsesdato = Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
                     antallAnsatte = 5 + index,
                     næringskode5SifferBeskrivelse = "",
                     SSBSektorKode = "",
@@ -217,12 +209,11 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     fylke = "",
                     kommunenummer = "",
                     kommune = "",
-                    opprettet = Date.valueOf(now())
+                    opprettet = date
                 )
             )
         }
     }
-
 
     companion object {
 

@@ -8,7 +8,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Fnr
 import java.sql.Connection
 import java.sql.Date
 import java.sql.ResultSet
-import java.sql.Timestamp
 
 class TestUtils {
 
@@ -143,9 +142,8 @@ class TestUtils {
                          ssb_sektor_kode_beskrivelse,
                          fylke,
                          kommunenummer, 
-                         kommune,
-                         tjeneste_mottakkelsesdato
-                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
+                         kommune
+                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
                 ).run {
                     setString(1, rad.type.name)
                     setString(2, rad.kilde.name)
@@ -159,7 +157,6 @@ class TestUtils {
                     setString(10, rad.fylke)
                     setString(11, rad.kommunenummer)
                     setString(12, rad.kommune)
-                    setTimestamp(13, rad.tjeneste_mottakkelsesdato)
                     executeUpdate()
                 }
             }
@@ -169,13 +166,11 @@ class TestUtils {
                 this.prepareStatement(
                     """insert into metrikker_ia_tjenester_uinnlogget (
                         form_av_tjeneste, 
-                        kilde_applikasjon, 
-                        tjeneste_mottakkelsesdato
-                    ) values (?, ?, ?)"""
+                        kilde_applikasjon 
+                    ) values (?, ?)"""
                 ).run {
                     setString(1, rad.type.name)
                     setString(2, rad.kilde.name)
-                    setTimestamp(3, rad.tjeneste_mottakkelsesdato)
                     executeUpdate()
                 }
             }
@@ -187,7 +182,6 @@ class TestUtils {
                 næringKode5Siffer = getString("naering_kode_5siffer"),
                 type = TypeIATjeneste.valueOf(getString("form_av_tjeneste")),
                 kilde = Kilde.valueOf(getString("kilde_applikasjon")),
-                tjeneste_mottakkelsesdato = getTimestamp("tjeneste_mottakkelsesdato"),
                 antallAnsatte = getInt("antall_ansatte"),
                 næringskode5SifferBeskrivelse = getString("naering_kode5siffer_beskrivelse"),
                 næring2SifferBeskrivelse = getString("naering_2siffer_beskrivelse"),
@@ -205,7 +199,6 @@ class TestUtils {
                 id = getInt("id"),
                 type = TypeIATjeneste.valueOf(getString("form_av_tjeneste")),
                 kilde = Kilde.valueOf(getString("kilde_applikasjon")),
-                tjeneste_mottakkelsesdato = getTimestamp("tjeneste_mottakkelsesdato"),
                 opprettet = getDate("opprettet")
             )
         }
@@ -218,7 +211,6 @@ data class IaTjenesteRad(
     val næringKode5Siffer: String,
     val type: TypeIATjeneste,
     val kilde: Kilde,
-    val tjeneste_mottakkelsesdato: Timestamp,
     val antallAnsatte: Int,
     val næringskode5SifferBeskrivelse: String,
     val næring2SifferBeskrivelse: String,
@@ -234,8 +226,6 @@ data class UinnloggetIaTjenesteRad(
     val id: Int,
     val type: TypeIATjeneste,
     val kilde: Kilde,
-    val tjeneste_mottakkelsesdato: Timestamp,
     val opprettet: Date?
-
 )
 

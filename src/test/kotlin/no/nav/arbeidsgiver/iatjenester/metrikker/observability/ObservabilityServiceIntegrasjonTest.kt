@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import java.sql.Date
-import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.Month
 
@@ -104,7 +103,6 @@ internal class ObservabilityServiceIntegrasjonTest {
                     id = index + 1,
                     type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
                     kilde = Kilde.SAMTALESTØTTE,
-                    tjeneste_mottakkelsesdato = Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
                     opprettet = Date.valueOf(LocalDate.now())
                 )
             )
@@ -121,7 +119,6 @@ internal class ObservabilityServiceIntegrasjonTest {
                     orgnr = (999999900 + index).toString(),
                     næringKode5Siffer = "",
                     næring2SifferBeskrivelse = "",
-                    tjeneste_mottakkelsesdato = Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
                     antallAnsatte = 5 + index,
                     næringskode5SifferBeskrivelse = "",
                     SSBSektorKode = "",
