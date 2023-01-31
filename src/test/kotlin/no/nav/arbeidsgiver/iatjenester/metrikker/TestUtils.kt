@@ -14,7 +14,6 @@ class TestUtils {
 
     companion object {
 
-        const val OVERORDNETENHET_ORGNR: String = "987654321"
         const val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
         const val ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET: String = "833445566"
 
@@ -61,7 +60,7 @@ class TestUtils {
             {
               "orgnr":"$orgnr",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
-              "type":"DIGITAL_IA_TJENESTE",
+              "type":"DIGITAL_IA_TJENESTE"
             }
         """.trimIndent()
         }
@@ -71,7 +70,7 @@ class TestUtils {
             {
               "orgnr":"$orgnr",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
-              "type":"drop table innlogget_ia_tjenester",
+              "type":"drop table innlogget_ia_tjenester"
             }
         """.trimIndent()
         }
@@ -237,5 +236,6 @@ data class UinnloggetIaTjenesteRad(
     val kilde: Kilde,
     val tjeneste_mottakkelsesdato: Timestamp,
     val opprettet: Date?
+
 )
 

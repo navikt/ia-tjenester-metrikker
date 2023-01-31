@@ -2,7 +2,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker
 
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.AltinnrettigheterProxyKlientException
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.AltinnrettigheterProxyKlientFallbackException
-import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerValideringException
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollException
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
@@ -23,15 +22,6 @@ import java.nio.file.AccessDeniedException
 
 @ControllerAdvice(annotations = [RestController::class])
 class RestResponseEntityExceptionHandler {
-
-    @ExceptionHandler(value = [IaTjenesterMetrikkerValideringException::class])
-    @ResponseBody
-    protected fun handleBadRequestException(e: IaTjenesterMetrikkerValideringException, webRequest: WebRequest?): ResponseEntity<Any> {
-        return getResponseEntity(
-            "Innhold til request er ikke gyldig med årsak: '${e.årsak}'",
-            HttpStatus.BAD_REQUEST
-        )
-    }
 
     @ExceptionHandler(value = [JwtTokenValidatorException::class, JwtTokenMissingException::class, JwtTokenUnauthorizedException::class, AccessDeniedException::class])
     @ResponseBody
