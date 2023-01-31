@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional
 import java.sql.ResultSet
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZonedDateTime
 
 @Transactional
 @Repository
@@ -41,7 +40,7 @@ class IaTjenesterMetrikkerRepository(
                 .addValue("form_av_tjeneste", uinnloggetIatjeneste.type.name)
                 .addValue("kilde_applikasjon", uinnloggetIatjeneste.kilde.name)
                 .addValue(
-                    "tjeneste_mottakkelsesdato", ZonedDateTime.now()
+                    "tjeneste_mottakkelsesdato", LocalDateTime.now()
                 )
         )
     }
@@ -85,7 +84,7 @@ class IaTjenesterMetrikkerRepository(
                 .addValue("naering_kode_5siffer", iatjeneste.næringKode5Siffer)
                 .addValue("form_av_tjeneste", iatjeneste.type.name)
                 .addValue("kilde_applikasjon", iatjeneste.kilde.name)
-                .addValue("tjeneste_mottakkelsesdato", ZonedDateTime.now())
+                .addValue("tjeneste_mottakkelsesdato", LocalDateTime.now())
                 .addValue("antall_ansatte", iatjeneste.antallAnsatte)
                 .addValue(
                     "naering_kode5siffer_beskrivelse",
