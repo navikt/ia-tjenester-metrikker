@@ -68,14 +68,5 @@ altinn-proxy:
 enhetsregisteret:
   url: "http://localhost:9191/enhetsregisteret/"
 
-tilgangskontroll:
-  altinn-services:
-    ia:
-      servicecode: 3403
-      serviceedition: 1
-    oppfolgingsplan:
-      servicecode: 5062
-      serviceedition: 1
-
 wiremock:
   port: 8585

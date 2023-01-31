@@ -18,7 +18,6 @@ internal class MottattIaTjenesteTest {
 
         val innloggetIaTjeneste = InnloggetMottattIaTjeneste(
             UNDERENHET_ORGNR,
-            AltinnRettighet.ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE,
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
             Kilde.SAMTALESTØTTE,
             TODAY

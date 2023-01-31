@@ -20,11 +20,6 @@ enum class Kilde {
     FOREBYGGINGSPLAN,
 }
 
-enum class IaTjenesteTilgjengelighet {
-    INNLOGGET,
-    UINNLOGGET
-}
-
 enum class TypeIATjeneste {
     DIGITAL_IA_TJENESTE,
     INFORMASJONSTJENESTE,
@@ -32,10 +27,6 @@ enum class TypeIATjeneste {
     RÅDGIVNING,
 }
 
-enum class AltinnRettighet {
-    SYKEFRAVÆRSSTATISTIKK_FOR_VIRKSOMHETER,
-    ARBEIDSGIVERS_OPPFØLGINGSPLAN_FOR_SYKMELDTE
-}
 
 interface MottattIaTjeneste {
     var tjenesteMottakkelsesdato: ZonedDateTime
@@ -55,7 +46,6 @@ data class UinnloggetMottattIaTjeneste(
 
 data class InnloggetMottattIaTjeneste(
     var orgnr: String,
-    var altinnRettighet: AltinnRettighet,
     override var type: TypeIATjeneste,
     override var kilde: Kilde,
     @get: JsonSerialize(using = ZonedDateTimeSerializer::class)

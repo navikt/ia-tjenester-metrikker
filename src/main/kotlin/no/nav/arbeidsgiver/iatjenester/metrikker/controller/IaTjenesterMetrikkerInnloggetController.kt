@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController
     origins = [
         "https://arbeidsgiver-gcp.dev.nav.no",
         "https://arbeidsgiver.dev.nav.no",
-        "https://min-ia.dev.nav.no"
+        "https://forebygge-fravar.dev.nav.no"
     ],
     allowCredentials = "true"
 )
@@ -65,7 +65,7 @@ class IaTjenesterMetrikkerInnloggetController(
 
         val innloggetBruker: Either<Exception, InnloggetBruker> =
             tilgangskontrollService
-                .hentInnloggetBruker(innloggetIaTjeneste.altinnRettighet)
+                .hentInnloggetBruker()
                 .flatMap { TilgangskontrollService.sjekkTilgangTilOrgnr(orgnr, it) }
 
         return innloggetBruker.fold(
@@ -107,8 +107,7 @@ class IaTjenesterMetrikkerInnloggetController(
     ): Either<EnhetsregisteretException, InnloggetMottattIaTjenesteMedVirksomhetGrunndata> {
         log.info(
             "Mottatt IaTjenester metrikk (med virksomhet metadata) av tpye '${innloggetIaTjeneste.type}' " +
-                    "fra kilde '${innloggetIaTjeneste.kilde}' " +
-                    "med rettighet '${innloggetIaTjeneste.altinnRettighet.name}'"
+                    "fra kilde '${innloggetIaTjeneste.kilde}' "
         )
 
         val opplysningerForUnderenhet: Either<EnhetsregisteretException, Underenhet> =

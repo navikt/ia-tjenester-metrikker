@@ -50,11 +50,3 @@ altinn-proxy:
 enhetsregisteret:
   url: http://localhost:${wiremock.server.port}/enhetsregisteret/
 
-tilgangskontroll:
-  altinn-services:
-    ia:
-      servicecode: 3403
-      serviceedition: 1
-    oppfolgingsplan:
-      servicecode: 5062
-      serviceedition: 1

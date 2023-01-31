@@ -9,8 +9,6 @@ import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.Altin
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.TEST_FNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.testTokenForTestFNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnServiceKey
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.TilgangskontrollConfig
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TokenXConfigProperties
 import no.nav.security.token.support.core.context.TokenValidationContext
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -48,9 +46,6 @@ internal class TilgangskontrollServiceIntegrationTest {
 
     @Autowired
     private lateinit var tokenXConfigProperties: TokenXConfigProperties
-
-    @Autowired
-    private lateinit var iaServiceIAltinnKonfig: TilgangskontrollConfig
 
     @Autowired
     private lateinit var altinnrettigheterProxyKlient: AltinnrettigheterProxyKlient
@@ -107,14 +102,12 @@ internal class TilgangskontrollServiceIntegrationTest {
         tilgangskontrollService =
             TilgangskontrollService(
                 altinnrettigheterProxyKlient,
-                iaServiceIAltinnKonfig,
                 dummyTilgangskontrollUtils,
                 dummyTokendingsService
             )
         tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer =
             TilgangskontrollService(
                 proxyKlientSomIkkeSvarer,
-                iaServiceIAltinnKonfig,
                 dummyTilgangskontrollUtils,
                 dummyTokendingsService
             )
@@ -134,11 +127,19 @@ internal class TilgangskontrollServiceIntegrationTest {
                 organizationForm = "AS",
                 status = "Active",
                 type = "Enterprise",
+            ),
+            AltinnOrganisasjon(
+                name = "BALLSTAD OG HORTEN",
+                parentOrganizationNumber = null,
+                organizationNumber = "833445566",
+                organizationForm = "AS",
+                status = "Active",
+                type = "Enterprise",
             )
         )
 
         val actualInnloggetBruker =
-            tilgangskontrollService.hentInnloggetBrukerFraAltinn(AltinnServiceKey.IA)
+            tilgangskontrollService.hentInnloggetBrukerFraAltinn()
 
         Assertions.assertThat(actualInnloggetBruker.orNull()!!.fnr)
             .isEqualTo(expectedInnloggetBruker.fnr)
@@ -152,9 +153,7 @@ internal class TilgangskontrollServiceIntegrationTest {
     @Test
     fun `Returnerer feil (Either Left) dersom hverken AltinnProxy eller Altinn svarer`() {
         val result =
-            tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBrukerFraAltinn(
-                AltinnServiceKey.IA
-            )
+            tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBrukerFraAltinn()
 
         when (result) {
             is Either.Left -> Assertions.assertThat(result.value)

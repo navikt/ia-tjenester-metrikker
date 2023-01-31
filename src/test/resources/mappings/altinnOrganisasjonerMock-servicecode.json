@@ -6,14 +6,6 @@
       "Accept": {
         "contains": "application/json"
       }
-    },
-    "queryParameters": {
-      "serviceCode": {
-        "equalTo": "5062"
-      },
-      "serviceEdition": {
-        "equalTo": "1"
-      }
     }
   },
   "response": {
