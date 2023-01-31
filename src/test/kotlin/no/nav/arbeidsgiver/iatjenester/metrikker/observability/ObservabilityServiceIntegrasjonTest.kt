@@ -1,7 +1,5 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.observability
 
-import arrow.core.Either
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import no.nav.arbeidsgiver.iatjenester.metrikker.IaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.cleanTable
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettInnloggetIaTjeneste
@@ -11,7 +9,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -28,7 +25,6 @@ import java.sql.Date
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.Month
-import kotlin.test.assertTrue
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,12 +36,12 @@ import kotlin.test.assertTrue
 internal class ObservabilityServiceIntegrasjonTest {
     @Autowired
     private lateinit var iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository
+
     @Autowired
     private lateinit var namedParameterJdbcTemplate: NamedParameterJdbcTemplate
 
     private lateinit var observabilityServiceMedDato: ObservabilityService
     private var antallErrorMeldingerSendt = 0
-
 
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
@@ -83,7 +79,6 @@ internal class ObservabilityServiceIntegrasjonTest {
 
         Assertions.assertThat(antallErrorMeldingerSendt).isEqualTo(0)
     }
-
 
     private fun opprettTestDataIDB(namedParameterJdbcTemplate: NamedParameterJdbcTemplate, fraDato: LocalDate) {
         namedParameterJdbcTemplate.jdbcTemplate.dataSource?.connection?.cleanTable("metrikker_ia_tjenester_innlogget")

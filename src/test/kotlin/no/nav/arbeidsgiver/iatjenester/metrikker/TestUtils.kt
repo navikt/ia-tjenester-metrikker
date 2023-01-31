@@ -9,7 +9,6 @@ import java.sql.Connection
 import java.sql.Date
 import java.sql.ResultSet
 import java.sql.Timestamp
-import java.time.ZonedDateTime
 
 class TestUtils {
 
@@ -28,34 +27,33 @@ class TestUtils {
                 "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ"
             val localhostOnlyJasonPayload =
                 "eyJzdWIiOiIwMTAxOTkxMjM0NSIsImF1ZCI6ImF1ZC1sb2NhbGhvc3QiLCJhY3IiOi" +
-                        "JMZXZlbDQiLCJuYmYiOjE2MTY0OTQwMDksImF6cCI6Ik1vY2tMb2dpbkNvbnRyb2xsZXIiLCJpc3MiOiJodH" +
-                        "RwOlwvXC9sb2NhbGhvc3Q6MTA4MzJcL3NlbHZiZXRqZW5pbmciLCJleHAiOjE2MTY0OTc2MDksImlhdCI6M" +
-                        "TYxNjQ5NDAwOSwianRpIjoiZWY1ZGEzM2YtMTBhMC00YTZlLTgyMjYtOWY5NTUxNTA5Y2ZlIiwidGlkIjoic" +
-                        "2VsdmJldGplbmluZyJ9"
+                    "JMZXZlbDQiLCJuYmYiOjE2MTY0OTQwMDksImF6cCI6Ik1vY2tMb2dpbkNvbnRyb2xsZXIiLCJpc3MiOiJodH" +
+                    "RwOlwvXC9sb2NhbGhvc3Q6MTA4MzJcL3NlbHZiZXRqZW5pbmciLCJleHAiOjE2MTY0OTc2MDksImlhdCI6M" +
+                    "TYxNjQ5NDAwOSwianRpIjoiZWY1ZGEzM2YtMTBhMC00YTZlLTgyMjYtOWY5NTUxNTA5Y2ZlIiwidGlkIjoic" +
+                    "2VsdmJldGplbmluZyJ9"
             val signature = "Ingen signature"
             return "$mockOAuth2Header.$localhostOnlyJasonPayload.$signature"
         }
 
-        fun vilkårligIaTjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata = InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
-            "987654321",
-            "12345",
-            TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
-            ZonedDateTime.now(),
-            10,
-            "En beskrivelse for næringskode 5 siffer",
-            "En beskrivelse for næring kode 2 siffer",
-            "21000",
-            "Beskrivelse ssb sektor kode",
-            "Viken",
-            "0234",
-            "Gjerdrum"
-        )
+        fun vilkårligIaTjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata =
+            InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+                "987654321",
+                "12345",
+                TypeIATjeneste.DIGITAL_IA_TJENESTE,
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                10,
+                "En beskrivelse for næringskode 5 siffer",
+                "En beskrivelse for næring kode 2 siffer",
+                "21000",
+                "Beskrivelse ssb sektor kode",
+                "Viken",
+                "0234",
+                "Gjerdrum"
+            )
 
         fun vilkårligUinnloggetIaTjeneste(): UinnloggetMottattIaTjeneste = UinnloggetMottattIaTjeneste(
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
             Kilde.SYKEFRAVÆRSSTATISTIKK,
-            ZonedDateTime.now(),
         )
 
         fun vilkårligInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String {
@@ -64,7 +62,6 @@ class TestUtils {
               "orgnr":"$orgnr",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE",
-              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
             }
         """.trimIndent()
         }
@@ -75,7 +72,6 @@ class TestUtils {
               "orgnr":"$orgnr",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"drop table innlogget_ia_tjenester",
-              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
             }
         """.trimIndent()
         }
@@ -88,7 +84,6 @@ class TestUtils {
                     it.executeUpdate()
                 }
             }
-
 
         fun Connection.getAlleIATjenester(): List<IaTjenesteRad> =
             use {
