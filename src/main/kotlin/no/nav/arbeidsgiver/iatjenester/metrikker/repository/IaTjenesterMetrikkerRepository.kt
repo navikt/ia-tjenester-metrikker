@@ -9,8 +9,15 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.sql.ResultSet
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
+
+fun nowAsString(): String {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+    return dateFormat.format(ZonedDateTime.now())
+}
 
 @Transactional
 @Repository
@@ -40,7 +47,7 @@ class IaTjenesterMetrikkerRepository(
                 .addValue("form_av_tjeneste", uinnloggetIatjeneste.type.name)
                 .addValue("kilde_applikasjon", uinnloggetIatjeneste.kilde.name)
                 .addValue(
-                    "tjeneste_mottakkelsesdato", LocalDateTime.now()
+                    "tjeneste_mottakkelsesdato", nowAsString()
                 )
         )
     }
@@ -84,7 +91,7 @@ class IaTjenesterMetrikkerRepository(
                 .addValue("naering_kode_5siffer", iatjeneste.næringKode5Siffer)
                 .addValue("form_av_tjeneste", iatjeneste.type.name)
                 .addValue("kilde_applikasjon", iatjeneste.kilde.name)
-                .addValue("tjeneste_mottakkelsesdato", LocalDateTime.now())
+                .addValue("tjeneste_mottakkelsesdato", nowAsString())
                 .addValue("antall_ansatte", iatjeneste.antallAnsatte)
                 .addValue(
                     "naering_kode5siffer_beskrivelse",
