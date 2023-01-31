@@ -16,7 +16,8 @@ enum class Kilde {
     FOREBYGGE_FRAVÆR,
     KALKULATOR,
     NETTKURS,
-    DIALOG
+    DIALOG,
+    FOREBYGGINGSPLAN,
 }
 
 enum class IaTjenesteTilgjengelighet {
@@ -26,7 +27,9 @@ enum class IaTjenesteTilgjengelighet {
 
 enum class TypeIATjeneste {
     DIGITAL_IA_TJENESTE,
-    RÅDGIVNING
+    INFORMASJONSTJENESTE,
+    INTERAKSJONSTJENESTE,
+    RÅDGIVNING,
 }
 
 enum class AltinnRettighet {
