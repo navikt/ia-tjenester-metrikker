@@ -11,13 +11,13 @@ Fra IntelliJ, trykk "Edit Configurations", "Add new configuration" og velg `Spri
 
 ### API-Dokumentasjon
 
-API dok finner du her: http://localhost:8080/ia-tjenester-metrikker/swagger-ui/index.html
+API dok finner du her: http://localhost:9090/ia-tjenester-metrikker/swagger-ui/index.html
 
 ### Hente en lokal selvbetjenening-idtoken for å kjøre Postman mot innlogget endepunkt
 
 Start applikasjon og kjør i terminal (Mac med python 2):
 
-`curl --location --request GET 'http://localhost:8080/ia-tjenester-metrikker/local/cookie?issuerId=selvbetjening&audience=aud-localhost&subject=12345678910&cookiename=selvbetjening-idtoken' | python -c "import sys, json; print json.load(sys.stdin)['value']" | tr -d '\n' | pbcopy`
+`curl --location --request GET 'http://localhost:9090/ia-tjenester-metrikker/local/cookie?issuerId=selvbetjening&audience=aud-localhost&subject=12345678910&cookiename=selvbetjening-idtoken' | python -c "import sys, json; print json.load(sys.stdin)['value']" | tr -d '\n' | pbcopy`
 
 Da er `selvbetjening-token` kopiert i clipboard og kan limes inn direkte etter `Authorization: Bearer ` i f.eks Postman.
 
@@ -25,10 +25,10 @@ Da er `selvbetjening-token` kopiert i clipboard og kan limes inn direkte etter `
 
 #### Diagnostic endepunkt
 I terminal kjør
-`curl -v  -X GET "http://localhost:8080/ia-tjenester-metrikker/internal/isalive"`
+`curl -v  -X GET "http://localhost:9090/ia-tjenester-metrikker/internal/isalive"`
 
 #### Lokal DB instance
-Åpne følgende URL i nettleser: http://localhost:8080/ia-tjenester-metrikker/h2 
+Åpne følgende URL i nettleser: http://localhost:9090/ia-tjenester-metrikker/h2 
  - Driver class: `org.h2.Driver`
  - URL: `jdbc:h2:mem:local-db;MODE=PostgreSQL`
  - user name: `sa`

@@ -27,11 +27,11 @@ class IaTjenesterMetrikkerRepository(
             """
                 INSERT INTO metrikker_ia_tjenester_uinnlogget(
                 form_av_tjeneste, 
-                kilde_applikasjon,
+                kilde_applikasjon
                 ) 
                 VALUES  (
                   :form_av_tjeneste, 
-                  :kilde_applikasjon, 
+                  :kilde_applikasjon 
                 )
                 """,
             MapSqlParameterSource()
@@ -115,7 +115,7 @@ class IaTjenesterMetrikkerRepository(
     fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattUinnloggetIaTjenesteMetrikk> =
         namedParameterJdbcTemplate.query(
             """
-                select kilde_applikasjon 
+                select kilde_applikasjon, opprettet
                 from metrikker_ia_tjenester_uinnlogget 
                 where opprettet >= :startDato
                 """,
@@ -138,7 +138,8 @@ class IaTjenesterMetrikkerRepository(
               naering_2siffer_beskrivelse, 
               kommunenummer,
               kommune,
-              fylke
+              fylke,
+              opprettet
             from metrikker_ia_tjenester_innlogget 
             where opprettet >= :startDato
             """,

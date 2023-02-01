@@ -21,13 +21,15 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.sql.Date
+import java.sql.Timestamp
 import java.time.LocalDate.now
+import java.time.LocalDateTime
 import javax.sql.DataSource
 
 class IaTjenesterMetrikkerRepositoryJdbcTest {
 
     private val IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED = false
+    private val nowTimestamp = Timestamp.valueOf(LocalDateTime.now())
 
     @BeforeEach
     fun cleanUp() {
@@ -37,27 +39,27 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
 
     @Test
     fun `hentUinnloggetIaTjenesterMetrikker`() {
-        opprettUinnloggetIaTjenester(listOf(Date.valueOf(now()), Date.valueOf(now())))
+        opprettUinnloggetIaTjenester(listOf(nowTimestamp, nowTimestamp))
 
         val innloggetMetrikker =
             IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentUinnloggetMetrikker(
-                now().withDayOfMonth(
-                    1
-                ).withMonth(1)
+                now().minusDays(10)
             )
-
         assertThat(innloggetMetrikker.size).isEqualTo(2)
     }
 
     @Test
-    fun `hentUinnloggetIaTjenesterMetrikker fra en vis dato`() {
-        opprettUinnloggetIaTjenester(listOf(Date.valueOf(now()), Date.valueOf(now().minusYears(1))))
+    fun `hentUinnloggetIaTjenesterMetrikker fra en viss dato`() {
+        opprettUinnloggetIaTjenester(
+            listOf(
+                nowTimestamp,
+                Timestamp.valueOf(LocalDateTime.now().minusMonths(1))
+            )
+        )
 
         val innloggetMetrikker =
             IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentUinnloggetMetrikker(
-                now().withDayOfMonth(
-                    1
-                ).withMonth(1)
+                now().minusDays(10)
             )
         startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
         assertThat(innloggetMetrikker.size).isEqualTo(1)
@@ -67,8 +69,8 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
     fun `hentInnloggetIaTjenesterMetrikker`() {
         opprettInnloggetIaTjenesterFraDatoer(
             listOf(
-                Date.valueOf(now().minusDays(3)),
-                Date.valueOf(now().minusDays(3))
+                Timestamp.valueOf(LocalDateTime.now().minusDays(3)),
+                Timestamp.valueOf(LocalDateTime.now().minusDays(3))
             )
         )
 
@@ -151,17 +153,17 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.fylke).isEqualTo("Viken")
         assertThat(iaTjenesteRad.kommunenummer).isEqualTo("0234")
         assertThat(iaTjenesteRad.kommune).isEqualTo("Gjerdrum")
-        assertThat(iaTjenesteRad.opprettet).isNotNull()
+        assertThat(iaTjenesteRad.opprettet).isNotNull
     }
 
-    private fun opprettUinnloggetIaTjenester(dates: List<Date>) {
+    private fun opprettUinnloggetIaTjenester(dates: List<Timestamp>) {
         dates.forEachIndexed() { index, date ->
             dataSource.connection.opprettUinnloggetIaTjeneste(
                 UinnloggetIaTjenesteRad(
                     id = index + 1,
                     type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
                     kilde = Kilde.SAMTALESTØTTE,
-                    Date.valueOf(now())
+                    opprettet = date
                 )
             )
         }
@@ -186,13 +188,13 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     fylke = mottattIATjeneste.fylke,
                     kommunenummer = mottattIATjeneste.kommunenummer,
                     kommune = mottattIATjeneste.kommune,
-                    opprettet = Date.valueOf(now())
+                    opprettet = nowTimestamp
                 )
             )
         }
     }
 
-    private fun opprettInnloggetIaTjenesterFraDatoer(dates: List<Date>) {
+    private fun opprettInnloggetIaTjenesterFraDatoer(dates: List<Timestamp>) {
         dates.forEachIndexed() { index, date ->
             dataSource.connection.opprettInnloggetIaTjeneste(
                 IaTjenesteRad(

@@ -21,7 +21,7 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import java.sql.Date
+import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.Month
 
@@ -85,32 +85,32 @@ internal class ObservabilityServiceIntegrasjonTest {
 
         opprettInnloggetIaTjenester(
             listOf(
-                Date.valueOf(fraDato)
+                Timestamp.valueOf(fraDato.atStartOfDay())
             )
         )
 
         opprettUinnloggetIaTjenester(
             listOf(
-                Date.valueOf(fraDato)
+                Timestamp.valueOf(fraDato.atStartOfDay())
             )
         )
     }
 
-    private fun opprettUinnloggetIaTjenester(dates: List<Date>) {
-        dates.forEachIndexed() { index, date ->
+    private fun opprettUinnloggetIaTjenester(dates: List<Timestamp>) {
+        dates.forEachIndexed { index, date ->
             namedParameterJdbcTemplate.jdbcTemplate.dataSource?.connection?.opprettUinnloggetIaTjeneste(
                 UinnloggetIaTjenesteRad(
                     id = index + 1,
                     type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
                     kilde = Kilde.SAMTALESTØTTE,
-                    opprettet = Date.valueOf(LocalDate.now())
+                    opprettet = date
                 )
             )
         }
     }
 
-    private fun opprettInnloggetIaTjenester(dates: List<Date>) {
-        dates.forEachIndexed() { index, date ->
+    private fun opprettInnloggetIaTjenester(dates: List<Timestamp>) {
+        dates.forEachIndexed { index, date ->
             namedParameterJdbcTemplate.jdbcTemplate.dataSource?.connection?.opprettInnloggetIaTjeneste(
                 IaTjenesteRad(
                     id = index + 1,
@@ -126,7 +126,7 @@ internal class ObservabilityServiceIntegrasjonTest {
                     fylke = "",
                     kommunenummer = "",
                     kommune = "",
-                    opprettet = Date.valueOf(LocalDate.now())
+                    opprettet = date
                 )
             )
         }

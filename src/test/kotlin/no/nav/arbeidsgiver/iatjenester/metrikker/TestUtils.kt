@@ -6,8 +6,8 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Fnr
 import java.sql.Connection
-import java.sql.Date
 import java.sql.ResultSet
+import java.sql.Timestamp
 
 class TestUtils {
 
@@ -142,8 +142,9 @@ class TestUtils {
                          ssb_sektor_kode_beskrivelse,
                          fylke,
                          kommunenummer, 
-                         kommune
-                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
+                         kommune,
+                         opprettet
+                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
                 ).run {
                     setString(1, rad.type.name)
                     setString(2, rad.kilde.name)
@@ -157,6 +158,7 @@ class TestUtils {
                     setString(10, rad.fylke)
                     setString(11, rad.kommunenummer)
                     setString(12, rad.kommune)
+                    setTimestamp(13, rad.opprettet)
                     executeUpdate()
                 }
             }
@@ -166,11 +168,13 @@ class TestUtils {
                 this.prepareStatement(
                     """insert into metrikker_ia_tjenester_uinnlogget (
                         form_av_tjeneste, 
-                        kilde_applikasjon 
-                    ) values (?, ?)"""
+                        kilde_applikasjon, 
+                        opprettet
+                    ) values (?, ?, ?)"""
                 ).run {
                     setString(1, rad.type.name)
                     setString(2, rad.kilde.name)
+                    setTimestamp(3, rad.opprettet)
                     executeUpdate()
                 }
             }
@@ -190,7 +194,7 @@ class TestUtils {
                 fylke = getString("fylke"),
                 kommunenummer = getString("kommunenummer"),
                 kommune = getString("kommune"),
-                opprettet = getDate("opprettet")
+                opprettet = getTimestamp("opprettet")
             )
         }
 
@@ -199,7 +203,7 @@ class TestUtils {
                 id = getInt("id"),
                 type = TypeIATjeneste.valueOf(getString("form_av_tjeneste")),
                 kilde = Kilde.valueOf(getString("kilde_applikasjon")),
-                opprettet = getDate("opprettet")
+                opprettet = getTimestamp("opprettet")
             )
         }
     }
@@ -219,13 +223,13 @@ data class IaTjenesteRad(
     val fylke: String,
     val kommunenummer: String,
     val kommune: String,
-    val opprettet: Date?
+    val opprettet: Timestamp?
 )
 
 data class UinnloggetIaTjenesteRad(
     val id: Int,
     val type: TypeIATjeneste,
     val kilde: Kilde,
-    val opprettet: Date?
+    val opprettet: Timestamp?
 )
 
