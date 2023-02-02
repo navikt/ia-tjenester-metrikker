@@ -39,8 +39,8 @@ data class UinnloggetMottattIaTjeneste(
     override var kilde: Kilde,
     @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
     @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @Schema(required = true, example = "2022-04-20T10:03:44Z")
-    override var tjenesteMottakkelsesdato: ZonedDateTime,
+    @Schema(required = false, example = "2022-04-20T10:03:44Z")
+    override var tjenesteMottakkelsesdato: ZonedDateTime = ZonedDateTime.now(),
 ) : MottattIaTjeneste
 
 
@@ -50,8 +50,8 @@ data class InnloggetMottattIaTjeneste(
     override var kilde: Kilde,
     @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
     @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @Schema(required = true, example = "2022-04-20T10:03:44Z")
-    override var tjenesteMottakkelsesdato: ZonedDateTime,
+    @Schema(required = false, example = "2022-04-20T10:03:44Z")
+    override var tjenesteMottakkelsesdato: ZonedDateTime = ZonedDateTime.now(),
 ) : MottattIaTjeneste
 
 data class InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
@@ -61,7 +61,7 @@ data class InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
     override var kilde: Kilde,
     @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
     @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    override var tjenesteMottakkelsesdato: ZonedDateTime,
+    override var tjenesteMottakkelsesdato: ZonedDateTime = ZonedDateTime.now(),
     var antallAnsatte: Int,
     var næringskode5SifferBeskrivelse: String,
     var næring2SifferBeskrivelse: String,

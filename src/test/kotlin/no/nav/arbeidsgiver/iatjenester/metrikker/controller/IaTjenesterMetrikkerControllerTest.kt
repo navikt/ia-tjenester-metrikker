@@ -81,6 +81,28 @@ class IaTjenesterMetrikkerControllerTest {
         Assertions.assertThat(status.asText()).isEqualTo("created")
     }
 
+    @Test
+    @Throws(Exception::class)
+    fun `POST til uinnlogget-iatjeneste skal sette mottakkelsesdato til dagens dato dersom feltet ikke sendes i payload`() {
+        val requestBodyUtenMottakkelsesdato: String = """
+            {
+              "orgnr":"$ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN",
+              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "type":"DIGITAL_IA_TJENESTE",
+            }
+        """.trimIndent()
+
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create(hostAndPort() + uinnloggetEndepunkt))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBodyUtenMottakkelsesdato))
+                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                .build(),
+            BodyHandlers.ofString()
+        )
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+    }
+
 
     @Test
     fun `Endepunkt innlogget-metrikker krever AUTH header med gyldig token`() {
