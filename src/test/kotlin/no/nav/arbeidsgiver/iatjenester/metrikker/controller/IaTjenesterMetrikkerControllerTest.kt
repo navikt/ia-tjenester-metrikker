@@ -88,7 +88,7 @@ class IaTjenesterMetrikkerControllerTest {
             {
               "orgnr":"$ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
-              "type":"DIGITAL_IA_TJENESTE",
+              "type":"DIGITAL_IA_TJENESTE"
             }
         """.trimIndent()
 
