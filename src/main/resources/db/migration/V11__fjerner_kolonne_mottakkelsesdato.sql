@@ -1,5 +1,2 @@
-ALTER TABLE METRIKKER_IA_TJENESTER_INNLOGGET
-DROP COLUMN tjeneste_mottakkelsesdato;
-
-ALTER TABLE METRIKKER_IA_TJENESTER_UINNLOGGET
-DROP COLUMN tjeneste_mottakkelsesdato;
+alter table metrikker_ia_tjenester_innlogget add column tjeneste_mottakkelsesdato timestamp not null ;
+alter table metrikker_ia_tjenester_uinnlogget add column tjeneste_mottakkelsesdato timestamp not null ;
