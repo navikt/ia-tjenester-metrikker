@@ -83,10 +83,9 @@ class IaTjenesterMetrikkerControllerTest {
 
     @Test
     @Throws(Exception::class)
-    fun `POST til uinnlogget-iatjeneste skal sette mottakkelsesdato til dagens dato dersom feltet ikke sendes i payload`() {
+    fun `POST til uinnlogget-iatjeneste skal tillate at mottakkelsesdato ikke sendes i payload`() {
         val requestBodyUtenMottakkelsesdato: String = """
             {
-              "orgnr":"$ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
               "type":"DIGITAL_IA_TJENESTE"
             }
@@ -103,6 +102,30 @@ class IaTjenesterMetrikkerControllerTest {
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
 
+    @Test
+    fun `Innlogget endepunkt mottatt-ia-tjeneste skal tillate at mottakkelsesdato ikke sendes i payload`() {
+        val requestBodyUtenMottakkelsesdato: String = """
+            {
+              "orgnr": "$ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN",
+              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "type":"DIGITAL_IA_TJENESTE"
+            }
+        """.trimIndent()
+        val gyldigToken = issueGyldigTokenXToken()
+        val response = HttpClient.newBuilder().build().send(
+            HttpRequest.newBuilder()
+                .uri(URI.create(hostAndPort() + innloggetEndepunkt))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $gyldigToken")
+                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                .POST(HttpRequest.BodyPublishers.ofString(requestBodyUtenMottakkelsesdato))
+                .build(),
+            BodyHandlers.ofString()
+        )
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        val body: JsonNode = objectMapper.readTree(response.body())
+        Assertions.assertThat(body.get("status").asText()).isEqualTo("created")
+    }
 
     @Test
     fun `Endepunkt innlogget-metrikker krever AUTH header med gyldig token`() {
@@ -252,7 +275,6 @@ class IaTjenesterMetrikkerControllerTest {
         val body: JsonNode = objectMapper.readTree(response.body())
         Assertions.assertThat(body.get("message").asText()).startsWith("Innhold til request er ikke gyldig")
     }
-
 
     private fun hostAndPort() = "http://localhost:$port"
 
