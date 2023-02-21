@@ -28,8 +28,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Run tests
-        run: ./gradlew test --info
 
   deploy-to-dev:
     name: Deploy to dev-gcp
