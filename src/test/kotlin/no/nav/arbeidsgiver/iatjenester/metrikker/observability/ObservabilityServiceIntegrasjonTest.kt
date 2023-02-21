@@ -28,7 +28,6 @@ import java.sql.Date
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.Month
-import kotlin.test.assertTrue
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -45,7 +44,6 @@ internal class ObservabilityServiceIntegrasjonTest {
 
     private lateinit var observabilityServiceMedDato: ObservabilityService
     private var antallErrorMeldingerSendt = 0
-
 
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
@@ -83,7 +81,6 @@ internal class ObservabilityServiceIntegrasjonTest {
 
         Assertions.assertThat(antallErrorMeldingerSendt).isEqualTo(0)
     }
-
 
     private fun opprettTestDataIDB(namedParameterJdbcTemplate: NamedParameterJdbcTemplate, fraDato: LocalDate) {
         namedParameterJdbcTemplate.jdbcTemplate.dataSource?.connection?.cleanTable("metrikker_ia_tjenester_innlogget")

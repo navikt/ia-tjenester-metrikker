@@ -1,6 +1,5 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
-import arrow.core.Either
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-
 
 @Unprotected
 @RestController
@@ -40,17 +38,7 @@ class IaTjenesterMetrikkerUinnloggetController(private val iaTjenesterMetrikkerS
         log("IaTjenesterMetrikkerUinnloggetController")
             .info("Mottatt IA tjeneste (uinnlogget) fra ${uinnloggetIaTjeneste.kilde.name}")
 
-        when (val iaSjekk = iaTjenesterMetrikkerService.sjekkOgPersister(uinnloggetIaTjeneste)) {
-            is Either.Left -> {
-                log("IaTjenesterMetrikkerInnloggetController")
-                    .warn(iaSjekk.value.message, iaSjekk.value)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(ResponseStatus.BadRequest)
-            }
-            else -> {
-            }
-        }
+        iaTjenesterMetrikkerService.persister(uinnloggetIaTjeneste)
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .contentType(MediaType.APPLICATION_JSON)

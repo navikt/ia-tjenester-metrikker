@@ -9,13 +9,11 @@ import java.sql.Connection
 import java.sql.Date
 import java.sql.ResultSet
 import java.sql.Timestamp
-import java.time.ZonedDateTime
 
 class TestUtils {
 
     companion object {
 
-        const val OVERORDNETENHET_ORGNR: String = "987654321"
         const val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
         const val ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET: String = "833445566"
 
@@ -36,26 +34,25 @@ class TestUtils {
             return "$mockOAuth2Header.$localhostOnlyJasonPayload.$signature"
         }
 
-        fun vilkårligIaTjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata = InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
-            "987654321",
-            "12345",
-            TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
-            ZonedDateTime.now(),
-            10,
-            "En beskrivelse for næringskode 5 siffer",
-            "En beskrivelse for næring kode 2 siffer",
-            "21000",
-            "Beskrivelse ssb sektor kode",
-            "Viken",
-            "0234",
-            "Gjerdrum"
-        )
+        fun vilkårligIaTjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata =
+            InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+                "987654321",
+                "12345",
+                TypeIATjeneste.DIGITAL_IA_TJENESTE,
+                Kilde.SYKEFRAVÆRSSTATISTIKK,
+                10,
+                "En beskrivelse for næringskode 5 siffer",
+                "En beskrivelse for næring kode 2 siffer",
+                "21000",
+                "Beskrivelse ssb sektor kode",
+                "Viken",
+                "0234",
+                "Gjerdrum"
+            )
 
         fun vilkårligUinnloggetIaTjeneste(): UinnloggetMottattIaTjeneste = UinnloggetMottattIaTjeneste(
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
             Kilde.SYKEFRAVÆRSSTATISTIKK,
-            ZonedDateTime.now(),
         )
 
         fun vilkårligInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String {
@@ -63,8 +60,7 @@ class TestUtils {
             {
               "orgnr":"$orgnr",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
-              "type":"DIGITAL_IA_TJENESTE",
-              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
+              "type":"DIGITAL_IA_TJENESTE"
             }
         """.trimIndent()
         }
@@ -74,8 +70,7 @@ class TestUtils {
             {
               "orgnr":"$orgnr",
               "kilde":"SYKEFRAVÆRSSTATISTIKK",
-              "type":"drop table innlogget_ia_tjenester",
-              "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
+              "type":"drop table innlogget_ia_tjenester"
             }
         """.trimIndent()
         }
@@ -88,7 +83,6 @@ class TestUtils {
                     it.executeUpdate()
                 }
             }
-
 
         fun Connection.getAlleIATjenester(): List<IaTjenesteRad> =
             use {

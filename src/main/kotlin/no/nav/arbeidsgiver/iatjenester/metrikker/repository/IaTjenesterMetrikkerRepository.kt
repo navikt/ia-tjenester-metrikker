@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.sql.ResultSet
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 @Transactional
 @Repository
@@ -41,7 +42,7 @@ class IaTjenesterMetrikkerRepository(
                 .addValue("kilde_applikasjon", uinnloggetIatjeneste.kilde.name)
                 .addValue(
                     "tjeneste_mottakkelsesdato",
-                    uinnloggetIatjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
+                    ZonedDateTime.now().toLocalDateTime()
                 )
         )
     }
@@ -87,7 +88,7 @@ class IaTjenesterMetrikkerRepository(
                 .addValue("kilde_applikasjon", iatjeneste.kilde.name)
                 .addValue(
                     "tjeneste_mottakkelsesdato",
-                    iatjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
+                    ZonedDateTime.now().toLocalDateTime()
                 )
                 .addValue("antall_ansatte", iatjeneste.antallAnsatte)
                 .addValue(
@@ -106,7 +107,6 @@ class IaTjenesterMetrikkerRepository(
     sealed class MottattIaTjenesteMetrikk {
         abstract val tidspunkt: LocalDateTime
         abstract val kilde: Kilde
-
     }
 
     data class MottattInnloggetIaTjenesteMetrikk(
@@ -125,19 +125,18 @@ class IaTjenesterMetrikkerRepository(
     ) :
         MottattIaTjenesteMetrikk()
 
-
     fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattUinnloggetIaTjenesteMetrikk> =
         namedParameterJdbcTemplate.query(
             """
-                select tjeneste_mottakkelsesdato, kilde_applikasjon 
+                select kilde_applikasjon, opprettet
                 from metrikker_ia_tjenester_uinnlogget 
-                where tjeneste_mottakkelsesdato >= :startDato
+                where opprettet >= :startDato
                 """,
             MapSqlParameterSource().addValue("startDato", startDato)
         ) { rs: ResultSet, _: Int ->
             MottattUinnloggetIaTjenesteMetrikk(
                 Kilde.valueOf(rs.getString("kilde_applikasjon")),
-                rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
+                rs.getDate("opprettet").toLocalDate().atStartOfDay()
             )
         }
 
@@ -145,16 +144,17 @@ class IaTjenesterMetrikkerRepository(
         namedParameterJdbcTemplate.query(
             """
             select orgnr,
-              tjeneste_mottakkelsesdato, 
+              opprettet, 
               kilde_applikasjon, 
               naering_kode_5siffer, 
               naering_kode5siffer_beskrivelse, 
               naering_2siffer_beskrivelse, 
               kommunenummer,
               kommune,
-              fylke
+              fylke,
+              opprettet
             from metrikker_ia_tjenester_innlogget 
-            where tjeneste_mottakkelsesdato >= :startDato
+            where opprettet >= :startDato
             """,
             MapSqlParameterSource().addValue("startDato", startDato)
         ) { rs: ResultSet, _: Int ->
@@ -170,7 +170,7 @@ class IaTjenesterMetrikkerRepository(
                 rs.getString("kommunenummer"),
                 rs.getString("kommune"),
                 rs.getString("fylke"),
-                rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
+                rs.getDate("opprettet").toLocalDate().atStartOfDay()
             )
         }
 }

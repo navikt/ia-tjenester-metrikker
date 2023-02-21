@@ -24,15 +24,6 @@ import java.nio.file.AccessDeniedException
 @ControllerAdvice(annotations = [RestController::class])
 class RestResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = [IaTjenesterMetrikkerValideringException::class])
-    @ResponseBody
-    protected fun handleBadRequestException(e: IaTjenesterMetrikkerValideringException, webRequest: WebRequest?): ResponseEntity<Any> {
-        return getResponseEntity(
-            "Innhold til request er ikke gyldig med årsak: '${e.årsak}'",
-            HttpStatus.BAD_REQUEST
-        )
-    }
-
     @ExceptionHandler(value = [JwtTokenValidatorException::class, JwtTokenMissingException::class, JwtTokenUnauthorizedException::class, AccessDeniedException::class])
     @ResponseBody
     protected fun handleUnauthorizedException(e: RuntimeException, webRequest: WebRequest?): ResponseEntity<Any> {

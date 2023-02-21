@@ -20,7 +20,6 @@ internal class MottattIaTjenesteTest {
             UNDERENHET_ORGNR,
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
             Kilde.SAMTALESTØTTE,
-            TODAY
         )
         val underenhet = Underenhet(
             orgnr = Orgnr(UNDERENHET_ORGNR),
@@ -53,7 +52,6 @@ internal class MottattIaTjenesteTest {
             næringKode5Siffer,
             type,
             kilde,
-            tjenesteMottakkelsesdato,
             antallAnsatte,
             næringskode5SifferBeskrivelse,
             næring2SifferBeskrivelse,
@@ -71,7 +69,6 @@ internal class MottattIaTjenesteTest {
         assertThat(næringKode5Siffer).isEqualTo("88911")
         assertThat(type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
         assertThat(kilde).isEqualTo(Kilde.SAMTALESTØTTE)
-        assertThat(tjenesteMottakkelsesdato).isEqualTo(TODAY)
         assertThat(antallAnsatte).isEqualTo(15)
         assertThat(næringskode5SifferBeskrivelse).isEqualTo("Barnehager")
         assertThat(næring2SifferBeskrivelse).isEqualTo("Sosiale omsorgstjenester uten botilbud")
@@ -85,6 +82,5 @@ internal class MottattIaTjenesteTest {
     companion object {
         const val OVERORDNET_ENHET_ORGNR: String = "999999999"
         const val UNDERENHET_ORGNR: String = "888888888"
-        val TODAY: ZonedDateTime = now()
     }
 }
