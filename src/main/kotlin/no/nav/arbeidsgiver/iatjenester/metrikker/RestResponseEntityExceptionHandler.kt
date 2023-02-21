@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.server.ResponseStatusException
 import java.nio.file.AccessDeniedException
@@ -64,6 +66,12 @@ class RestResponseEntityExceptionHandler {
     @ExceptionHandler(value = [HttpMessageNotReadableException::class])
     @ResponseBody
     protected fun handleRequestParsingException(e: HttpMessageNotReadableException, webRequest: WebRequest?): ResponseEntity<Any> {
+        val requestAttributes = RequestContextHolder.getRequestAttributes()
+        if (requestAttributes is ServletRequestAttributes) {
+            val request = requestAttributes.request
+            log.info("$request")
+        }
+        log.info("$webRequest")
         log.info(e.message, e)
         return getResponseEntity(
             e,
