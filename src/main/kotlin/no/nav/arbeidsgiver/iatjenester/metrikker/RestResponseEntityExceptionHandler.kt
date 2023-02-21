@@ -69,6 +69,9 @@ class RestResponseEntityExceptionHandler {
         val requestAttributes = RequestContextHolder.getRequestAttributes()
         if (requestAttributes is ServletRequestAttributes) {
             val request = requestAttributes.request
+            if (request.method == "POST") {
+                log.info(request.reader.lines().toList().joinToString(""))
+            }
             log.info("$request")
         }
         log.info("$webRequest")
