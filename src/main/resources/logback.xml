@@ -11,9 +11,9 @@
         <appender-ref ref="loggIJsonFormatTilKibana"/>
     </root>
 
-    <!--  Override log level in dev  -->
     <springProfile name="dev-gcp">
-        <root level="DEBUG">
+        <!--    Set log level to DEBUG for more granular logging in dev    -->
+        <root level="INFO">
             <appender-ref ref="loggIJsonFormatTilKibana"/>
         </root>
     </springProfile>
