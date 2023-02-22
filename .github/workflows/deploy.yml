@@ -34,7 +34,7 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev-gcp
     needs: test
-    if: github.ref == 'refs/heads/mottakkelsesdato_optional_in_payload'
+    if: github.ref == 'refs/heads/add_request_logging'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
