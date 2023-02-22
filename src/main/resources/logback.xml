@@ -7,7 +7,15 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="loggIJsonFormatTilKibana"/>
-    </root>
+    <springProfile name="dev-gcp">
+        <root level="DEBUG">
+            <appender-ref ref="loggIJsonFormatTilKibana"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="prod-gcp">
+        <root level="INFO">
+            <appender-ref ref="loggIJsonFormatTilKibana"/>
+        </root>
+    </springProfile>
 </configuration>

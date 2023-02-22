@@ -104,11 +104,12 @@ class IaTjenesterMetrikkerControllerTest {
 
     @Test
     fun `Innlogget endepunkt mottatt-ia-tjeneste skal tillate at mottakkelsesdato ikke sendes i payload`() {
+        // language=JSON
         val requestBodyUtenMottakkelsesdato: String = """
             {
               "orgnr": "$ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN",
-              "kilde":"SYKEFRAVÆRSSTATISTIKK",
-              "type":"DIGITAL_IA_TJENESTE"
+              "kilde": "SYKEFRAVÆRSSTATISTIKK",
+              "type": "DIGITAL_IA_TJENESTE"
             }
         """.trimIndent()
         val gyldigToken = issueGyldigTokenXToken()
