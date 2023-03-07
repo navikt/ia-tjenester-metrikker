@@ -10,4 +10,11 @@
     <root level="INFO">
         <appender-ref ref="loggIJsonFormatTilKibana"/>
     </root>
+
+    <springProfile name="dev-gcp">
+        <!--    Set log level to DEBUG for more granular logging in dev    -->
+        <root level="INFO">
+            <appender-ref ref="loggIJsonFormatTilKibana"/>
+        </root>
+    </springProfile>
 </configuration>
