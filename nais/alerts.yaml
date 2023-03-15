@@ -1,30 +1,33 @@
-apiVersion: "nais.io/v1"
-kind: "Alert"
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
 metadata:
   name: ia-tjenester-metrikker-alert
   namespace: arbeidsgiver
   labels:
     team: arbeidsgiver
 spec:
-  receivers:
-    slack:
-      channel: '#teamia-alerts'
-      prependText: '<!channel> | '
-  alerts:
-    - alert: applikasjon nede
-      expr: sum(up{app="ia-tjenester-metrikker", job="kubernetes-pods"}) == 0
-      for: 2m
-      description: "ia-tjenester-metrikker er nede"
-      action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.nais.io/d/VniEA46Mz/ia-tjenester-metrikker"
-
-    - alert: det har skjedd en feil i ia-tjenester-metrikker
-      expr: sum(increase(logd_messages_total{log_app="ia-tjenester-metrikker",log_level="Error"}[10m])) > 0
-      for: 10s
-      description: "ia-tjenester-metrikker har logget en feil"
-      action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.nais.io/d/VniEA46Mz/ia-tjenester-metrikker"
-
-    - alert: uvanlig mengde advarsler i ia-tjenester-metrikker
-      expr: sum(increase(logd_messages_total{log_app="ia-tjenester-metrikker",log_level="Warn"}[10m])) > 10
-      for: 10s
-      description: "ia-tjenester-metrikker har logget uvanlig menge advarsler"
-      action: "Sjekk logs.adeo.no for logger, og Grafana-dashboardet vårt: https://grafana.nais.io/d/VniEA46Mz/ia-tjenester-metrikker"
+  groups:
+    - name: ia-tjenester-metrikker-alerts
+      rules:
+        - alert: ApplikasjonNede
+          expr: sum(up{app="ia-tjenester-metrikker"}) == 0
+          for: 2m
+          annotations:
+            consequence: "ia-tjenester-metrikker er utilgjengelig"
+            action: |-
+                Sjekk helsa til applikasjonen ved å kjøre
+                `kubectl describe pod <podname> -n arbeidsgiver` og 
+                `kubectl logs <podname> -n arbeidsgiver`
+            labels:
+              namespace: arbeidsgiver
+              severity: critical
+        - alert: ErrorLogRegistrert
+          expr: sum(increase(logd_messages_total{log_app="ia-tjenester-metrikker",log_level="Error"}[10m])) > 0
+          annotations:
+            description: "ia-tjenester-metrikker har logget en (eller flere) feil."
+            action: |-
+              Sjekk logs.adeo.no for logger, 
+              eller Grafana-dashboardet vårt: https://grafana.nais.io/dashboards/f/cvOhCMUnz/team-ia
+            labels:
+              namespace: arbeidsgiver
+              severity: warning
