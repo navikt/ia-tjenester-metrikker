@@ -53,6 +53,6 @@ altinn-proxy:
   apiGwKey: ${ALTINN_APIGW_APIKEY}
 
 enhetsregisteret:
-  url: https://arbeidsgiver-mock-enhetsregisteret.dev.nav.no/enhetsregisteret/api/
+  url: https://arbeidsgiver-mock-enhetsregisteret.intern.dev.nav.no/enhetsregisteret/api/
 
 

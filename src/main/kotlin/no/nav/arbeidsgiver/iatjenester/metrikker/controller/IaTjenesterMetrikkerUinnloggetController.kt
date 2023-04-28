@@ -21,8 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @CrossOrigin(
     origins = [
-        "https://arbeidsgiver-gcp.dev.nav.no",
-        "https://arbeidsgiver.dev.nav.no"],
+        "https://arbeidsgiver.intern.dev.nav.no"],
     allowCredentials = "false"
 )
 @RequestMapping("/uinnlogget")
