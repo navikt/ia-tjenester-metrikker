@@ -92,6 +92,7 @@ dependencies {
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.4")
+    implementation ("io.prometheus:simpleclient:0.16.0")
     implementation("com.github.tomakehurst:wiremock:2.27.2")
 
     // Test dependencies

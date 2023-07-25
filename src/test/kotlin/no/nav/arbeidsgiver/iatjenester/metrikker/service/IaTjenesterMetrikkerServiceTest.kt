@@ -4,18 +4,33 @@ import arrow.core.Either
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
+import no.nav.arbeidsgiver.iatjenester.metrikker.observability.PrometheusMetrics
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.event.annotation.BeforeTestMethod
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime.now
 
 @ExtendWith(SpringExtension::class)
+@AutoConfigureObservability
+@TestPropertySource(
+    properties =
+    [
+        "management.endpoints.web.exposure.include=prometheus",
+        "management.endpoints.web.base-path=/internal/actuator"
+    ]
+)
+@AutoC
 internal class IaTjenesterMetrikkerServiceTest {
+
+    @Autowired
+    lateinit var prometheusMetrics: PrometheusMetrics
 
     @MockBean
     lateinit var iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository
@@ -33,7 +48,7 @@ internal class IaTjenesterMetrikkerServiceTest {
     fun `sjekkOgPersister validerer gyldig IA-tjeneste OK`() {
 
         val sjekkOgOpprett =
-            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, SimpleMeterRegistry())
+            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, prometheusMetrics)
                 .sjekkOgPersister(TestUtils.vilkårligIaTjeneste())
 
         assertThat(sjekkOgOpprett is Either.Right).isEqualTo(true)
@@ -46,8 +61,9 @@ internal class IaTjenesterMetrikkerServiceTest {
         val iaTjenesteMedDatoIFremtiden = TestUtils.vilkårligIaTjeneste()
         iaTjenesteMedDatoIFremtiden.tjenesteMottakkelsesdato = now().plusMinutes(2)
 
-        val iaSjekk = IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, SimpleMeterRegistry())
-            .sjekkOgPersister(iaTjenesteMedDatoIFremtiden)
+        val iaSjekk =
+            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, SimpleMeterRegistry())
+                .sjekkOgPersister(iaTjenesteMedDatoIFremtiden)
 
         assertThat(iaSjekk is Either.Left).isEqualTo(true)
         assertThat((iaSjekk as Either.Left).value.årsak)
@@ -59,8 +75,9 @@ internal class IaTjenesterMetrikkerServiceTest {
         val levertIaTjenesteFraInnlandet =
             TestUtils.vilkårligIaTjeneste().apply { kommunenummer = "3403" }
 
-        val resultat = IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, SimpleMeterRegistry())
-            .sjekkOgPersister(levertIaTjenesteFraInnlandet)
+        val resultat =
+            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, SimpleMeterRegistry())
+                .sjekkOgPersister(levertIaTjenesteFraInnlandet)
 
         val persisterteData = (resultat as Either.Right).value
                 as InnloggetMottattIaTjenesteMedVirksomhetGrunndata
