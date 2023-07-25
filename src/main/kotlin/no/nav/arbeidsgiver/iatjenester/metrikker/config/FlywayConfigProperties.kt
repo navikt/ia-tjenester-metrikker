@@ -1,9 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
-@ConstructorBinding
 @ConfigurationProperties(prefix = "spring.flyway")
 data class FlywayConfigProperties(
     var locations: Array<String>
