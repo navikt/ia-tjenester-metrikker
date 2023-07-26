@@ -14,8 +14,7 @@ val navTokenSupportVersion = "3.1.0"
 val shedlockVersion = "5.6.0"
 val springdocOpenapiVersion = "1.7.0"
 val log4jVersion = "2.20.0"
-val jupiterVersion = "5.10.0"
-
+val jupiterVersion = "5.7.2"
 
 group = "no.nav.arbeidsgiver"
 version = "0.0.1-SNAPSHOT"
@@ -52,11 +51,9 @@ repositories {
     }
 }
 
-ext["nimbus-jose-jwt.version"] =
-    "9.15.2" // https://nav-it.slack.com/archives/C01381BAT62/p1611056940004800
-ext["okhttp3.version"] = "4.9.0" // For at token support testen kjører
-
 dependencies {
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
@@ -64,12 +61,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springdoc:springdoc-openapi-ui:$springdocOpenapiVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdocOpenapiVersion")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
     implementation("ch.qos.logback:logback-classic:1.4.8")
     implementation("net.logstash.logback:logstash-logback-encoder:7.4")
     implementation("org.apache.logging.log4j:log4j-api:${log4jVersion}")
@@ -77,7 +71,6 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-to-slf4j:2.16.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
     implementation("com.google.code.gson:gson:2.10.1")
-
     implementation("io.arrow-kt:arrow-core:1.2.0")
     implementation("com.zaxxer:HikariCP:5.0.1")
     implementation("org.flywaydb:flyway-core:9.21.0")
@@ -88,12 +81,10 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:${navTokenSupportVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:3.1.0")
     implementation("com.github.kittinunf.result:result-jvm:5.4.0")
-
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
-
     implementation("io.micrometer:micrometer-registry-prometheus:1.11.2")
-    implementation("com.github.tomakehurst:wiremock-jre8:2.35.0")
+    implementation("com.github.tomakehurst:wiremock:3.0.0-beta-10")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.0.0")
 
@@ -101,11 +92,10 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:token-validation-spring-test:${navTokenSupportVersion}")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("com.github.tomakehurst:wiremock-jre8-standalone:2.35.0")
     testImplementation("org.assertj:assertj-core:3.24.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
     testImplementation("io.mockk:mockk:1.13.5")
-    testImplementation("com.github.tomakehurst:wiremock-jre8:2.35.0") // TODO: Upgrade to v3-beta
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.0.3")
+
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}")
 }
