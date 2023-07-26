@@ -1,6 +1,0 @@
-{
-  "ingress": [
-    "https://ia-tjenester-metrikker.intern.dev.nav.no/ia-tjenester-metrikker"
-  ],
-  "spring_profile_active": "dev-gcp"
-}

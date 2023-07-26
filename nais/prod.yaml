@@ -9,9 +9,7 @@ spec:
   image: {{image}}
   port: 8080
   ingresses:
-  {{#each ingress as |url|}}
-     - {{url}}
-  {{/each}}
+    - https://arbeidsgiver.nav.no/ia-tjenester-metrikker/
   liveness:
     path: /ia-tjenester-metrikker/internal/isalive
     initialDelay: 60
@@ -29,7 +27,7 @@ spec:
             envVarPrefix: DATABASE
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: {{spring_profile_active}}
+      value: prod-gcp
   envFrom:
     - configmap: loginservice-idporten
     - secret: ia-tjenester-metrikker-secrets
@@ -40,18 +38,20 @@ spec:
       rules:
         - application: sykefravarsstatistikk
           namespace: arbeidsgiver
-          cluster: dev-gcp
+          cluster: prod-gcp
         - application: samtalestotte-arbeidsgiver
           namespace: arbeidsgiver
-          cluster: dev-gcp
+          cluster: prod-gcp
         - application: min-ia
           namespace: teamia
-          cluster: dev-gcp
+          cluster: prod-gcp
         - application: forebyggingsplan-frontend
           namespace: teamia
-          cluster: dev-gcp
+          cluster: prod-gcp
     outbound:
       rules:
         - application: altinn-rettigheter-proxy
       external:
         - host: data.brreg.no
+
+

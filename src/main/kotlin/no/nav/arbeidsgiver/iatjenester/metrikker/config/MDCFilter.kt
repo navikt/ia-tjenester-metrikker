@@ -2,13 +2,13 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.config
 
 import arrow.core.Option
 import arrow.core.Some
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-import java.util.UUID
+import java.util.*
 
 private const val DEFAULT_CALLID_HEADER_NAME = "Nav-CallId"
 private const val ALTERNATIVE_CALLID_HEADER_NAME = "Nav-Call-Id"
@@ -17,20 +17,20 @@ private const val CORRELATION_ID_MDC_NAME = "correlationId"
 private const val CORRELATION_ID_HEADER_NAME = "X-Correlation-ID"
 
 @Component
-class MDCFilter: OncePerRequestFilter() {
+class MDCFilter : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        try{
-            val correlationId = extractCorrelationId(request);
+        try {
+            val correlationId = extractCorrelationId(request)
             val callId = extractCallId(request)
 
             addToMDC(callId, correlationId)
 
             response.addHeader(CORRELATION_ID_HEADER_NAME, correlationId)
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response)
         } finally {
             clearMDC()
         }
@@ -51,12 +51,16 @@ class MDCFilter: OncePerRequestFilter() {
     private fun extractCorrelationId(request: HttpServletRequest): String {
         return Option.fromNullable(request.getHeader(CORRELATION_ID_HEADER_NAME))
             .filter { it.isNotBlank() }
-            .fold({UUID.randomUUID().toString()}, { it })
+            .fold({ UUID.randomUUID().toString() }, { it })
     }
 
     private fun extractCallId(request: HttpServletRequest): String {
-        val defaultCallid: Option<String> = Option.fromNullable(request.getHeader(DEFAULT_CALLID_HEADER_NAME)).filter { it.isNotBlank() }
-        val altCallid: Option<String> = Option.fromNullable(request.getHeader(ALTERNATIVE_CALLID_HEADER_NAME)).filter { it.isNotBlank() }
+        val defaultCallid: Option<String> =
+            Option.fromNullable(request.getHeader(DEFAULT_CALLID_HEADER_NAME))
+                .filter { it.isNotBlank() }
+        val altCallid: Option<String> =
+            Option.fromNullable(request.getHeader(ALTERNATIVE_CALLID_HEADER_NAME))
+                .filter { it.isNotBlank() }
         val uuid = UUID.randomUUID().toString()
 
         return when {
