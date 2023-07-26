@@ -141,9 +141,9 @@ internal class TilgangskontrollServiceIntegrationTest {
         val actualInnloggetBruker =
             tilgangskontrollService.hentInnloggetBrukerFraAltinn()
 
-        Assertions.assertThat(actualInnloggetBruker.orNull()!!.fnr)
+        Assertions.assertThat(actualInnloggetBruker.getOrNull()!!.fnr)
             .isEqualTo(expectedInnloggetBruker.fnr)
-        Assertions.assertThat(actualInnloggetBruker.orNull()!!.organisasjoner)
+        Assertions.assertThat(actualInnloggetBruker.getOrNull()!!.organisasjoner)
             .isEqualTo(expectedInnloggetBruker.organisasjoner)
             .usingRecursiveFieldByFieldElementComparator(
                 RecursiveComparisonConfiguration.builder().withStrictTypeChecking(true).build()
@@ -163,6 +163,6 @@ internal class TilgangskontrollServiceIntegrationTest {
     }
 
     companion object {
-        val FAKE_TOKEN_FRA_TOKENX = "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzNDVjMzkzMi0wZmM3LTRmYWQtOTZhMi1kYzYzOWU0NDZhYzgiLCJhbXIiOlsiQmFua0lEIl0sImlzcyI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlIiwicGlkIjoibm90Zm91bmQiLCJsb2NhbGUiOiJuYiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJjbGllbnRfaWQiOiJub3Rmb3VuZCIsImF1ZCI6Im5vdGZvdW5kIiwiYWNyIjoibm90Zm91bmQiLCJuYmYiOjE2NTMzODg3OTcsImlkcCI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlXC9pZHBvcnRlbiIsInNjb3BlIjoib3BlbmlkIiwiZXhwIjoxNjU2OTg4Nzk3LCJpYXQiOjE2NTMzODg3OTcsImNsaWVudF9vcmdubyI6Ijg4OTY0MDc4MiIsImp0aSI6ImU0MDQ3OTVlLWQ3YmUtNDI2NS1iZTQ2LTFhY2ExZTU3Zjc5MyJ9.DfQ9vojDed9IR8-7r2DmgpToUaBwb70-t_k2BVKnWZhTaDu2y85nS2ME4niGxutXBtZbzhQsgDPQ1eHAnX7gBgvjwyEhbhXKHfx-FgiSVXqLw6fvBUsmg1PP07a1fhZJ1RXXDSN8sM5ImPEomhOEnRLPgFsLcfPYC_44HTHxXP37wPWcioo3DW_lPb90ApgehgNbGzUu5YJm0QFaPI71jKdLhpNWs6ybYLbpOciQJPT-e1eoRNtuWblKJQc8nNU7JTVMBVRv6kVPC_V2Gi5ggF3fIDnBXFdUmpPJIj_F-ezO50KVExKT6KQDSVWLjmn8WaSr37LkN8CF27soth2Kpg";
+        val FAKE_TOKEN_FRA_TOKENX = "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzNDVjMzkzMi0wZmM3LTRmYWQtOTZhMi1kYzYzOWU0NDZhYzgiLCJhbXIiOlsiQmFua0lEIl0sImlzcyI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlIiwicGlkIjoibm90Zm91bmQiLCJsb2NhbGUiOiJuYiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJjbGllbnRfaWQiOiJub3Rmb3VuZCIsImF1ZCI6Im5vdGZvdW5kIiwiYWNyIjoibm90Zm91bmQiLCJuYmYiOjE2NTMzODg3OTcsImlkcCI6Imh0dHBzOlwvXC9mYWtlZGluZ3MuZGV2LWdjcC5uYWlzLmlvXC9mYWtlXC9pZHBvcnRlbiIsInNjb3BlIjoib3BlbmlkIiwiZXhwIjoxNjU2OTg4Nzk3LCJpYXQiOjE2NTMzODg3OTcsImNsaWVudF9vcmdubyI6Ijg4OTY0MDc4MiIsImp0aSI6ImU0MDQ3OTVlLWQ3YmUtNDI2NS1iZTQ2LTFhY2ExZTU3Zjc5MyJ9.DfQ9vojDed9IR8-7r2DmgpToUaBwb70-t_k2BVKnWZhTaDu2y85nS2ME4niGxutXBtZbzhQsgDPQ1eHAnX7gBgvjwyEhbhXKHfx-FgiSVXqLw6fvBUsmg1PP07a1fhZJ1RXXDSN8sM5ImPEomhOEnRLPgFsLcfPYC_44HTHxXP37wPWcioo3DW_lPb90ApgehgNbGzUu5YJm0QFaPI71jKdLhpNWs6ybYLbpOciQJPT-e1eoRNtuWblKJQc8nNU7JTVMBVRv6kVPC_V2Gi5ggF3fIDnBXFdUmpPJIj_F-ezO50KVExKT6KQDSVWLjmn8WaSr37LkN8CF27soth2Kpg"
     }
 }

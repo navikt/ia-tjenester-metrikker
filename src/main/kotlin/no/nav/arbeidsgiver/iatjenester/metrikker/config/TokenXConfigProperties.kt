@@ -1,9 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
-@ConstructorBinding
 @ConfigurationProperties(prefix = "tokenx-service")
 /*
  * For forklaring av disse verdiene, se NAIS-dokumentasjonen (https://doc.nais.io/security/auth/tokenx)
