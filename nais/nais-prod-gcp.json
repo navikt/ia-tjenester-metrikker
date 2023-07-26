@@ -1,6 +1,0 @@
-{
-  "ingress": [
-    "https://arbeidsgiver.nav.no/ia-tjenester-metrikker/"
-  ],
-  "spring_profile_active": "prod-gcp"
-}
