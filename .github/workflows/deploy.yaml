@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - upgrades
+      - prometheus
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -42,7 +42,7 @@ jobs:
 
 
   deploy-to-dev:
-    if: github.ref == 'refs/heads/upgrades'
+    if: github.ref == 'refs/heads/prometheus'
     name: Deploy to dev-gcp
     needs: docker-build-push
     runs-on: ubuntu-latest
