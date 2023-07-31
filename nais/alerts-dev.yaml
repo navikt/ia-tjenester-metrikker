@@ -17,4 +17,4 @@ spec:
               Verifiser at metrikkene fungerer som de skal. TEST!
             labels:
               namespace: teamia
-              severity: warning
+              severity: critical
