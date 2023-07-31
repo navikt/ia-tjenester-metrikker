@@ -62,7 +62,6 @@ class IaTjenesterMetrikkerInnloggetController(
         // TODO: Fjern meg i produksjon, jeg er lagt her slik at vi kan teste metrikker selv om enhetesregisteret feiler.
         prometheusMetrics.inkrementerInnloggedeMetrikkerPersistert(
             innloggetIaTjeneste.kilde,
-            innloggetIaTjeneste.type
         )
 
 

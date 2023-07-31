@@ -3,7 +3,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.observability
 import io.prometheus.client.exporter.common.TextFormat
 import no.nav.arbeidsgiver.iatjenester.metrikker.IntegrationTestSuite
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,10 +18,23 @@ internal class PrometheusMetricsTest : IntegrationTestSuite() {
     lateinit var mockMvc: MockMvc
 
     @Test
-    fun `metrics funker`() {
+    fun `Applikasjoner får registrert en counter ved oppstart`() {
+        mockMvc.get("/internal/actuator/prometheus").andExpect {
+            content {
+                contentType(TextFormat.CONTENT_TYPE_004)
+                string(
+                    containsString(
+                        "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"NETTKURS\",}"
+                    )
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `inkrementerInnloggedeMetrikkerPersistert inkrementerer Prometheus-metrikk`() {
         prometheusMetrics.inkrementerInnloggedeMetrikkerPersistert(
             Kilde.FOREBYGGE_FRAVÆR,
-            TypeIATjeneste.DIGITAL_IA_TJENESTE
         )
 
         mockMvc.get("/internal/actuator/prometheus").andExpect {
@@ -30,7 +42,7 @@ internal class PrometheusMetricsTest : IntegrationTestSuite() {
                 contentType(TextFormat.CONTENT_TYPE_004)
                 string(
                     containsString(
-                        "innloggede_ia_tjenester_metrikker_persistert"
+                        "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"FOREBYGGE_FRAVÆR\",} 1.0"
                     )
                 )
             }
