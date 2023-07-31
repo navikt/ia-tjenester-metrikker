@@ -10,7 +10,7 @@ spec:
     - name: ia-tjenester-metrikker-alerts
       rules:
         - alert: Ingen metrikk registrert for applikasjon
-          expr: sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total{kilde="FOREBYGGE_FRAVÆR"}[5m])) == 0
+          expr: sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total{kilde="FOREBYGGE_FRAVÆR"}[1m])) == 0
           annotations:
             description: "Har ikke registrert noen IA-metrikker til {{ $labels.kilde }} de siste 24 timer"
             action: |-
