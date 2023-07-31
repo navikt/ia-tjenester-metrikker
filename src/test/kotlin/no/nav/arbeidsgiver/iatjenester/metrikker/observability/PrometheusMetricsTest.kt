@@ -30,7 +30,7 @@ internal class PrometheusMetricsTest : IntegrationTestSuite() {
                 contentType(TextFormat.CONTENT_TYPE_004)
                 string(
                     containsString(
-                        "innloggede_metrikker_persistert"
+                        "innloggede_ia_tjenester_metrikker_persistert"
                     )
                 )
             }

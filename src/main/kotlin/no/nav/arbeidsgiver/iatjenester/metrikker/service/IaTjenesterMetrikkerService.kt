@@ -24,6 +24,12 @@ class IaTjenesterMetrikkerService(
             return iaTjenesteSjekkResultat
         }
 
+        // TODO: Flytt meg neders i denne funksjonen, den er lagt her slik at vi kan teste selv om enhetesregisteret feiler.
+        prometheusMetrics.inkrementerInnloggedeMetrikkerPersistert(
+            innloggetIaTjeneste.kilde,
+            innloggetIaTjeneste.type
+        )
+
         innloggetIaTjeneste.fylke =
             Fylke.fraKommunenummer(innloggetIaTjeneste.kommunenummer).navn
 
@@ -35,10 +41,6 @@ class IaTjenesterMetrikkerService(
                     "opprettet"
         )
 
-        prometheusMetrics.inkrementerInnloggedeMetrikkerPersistert(
-            innloggetIaTjeneste.kilde,
-            innloggetIaTjeneste.type
-        )
         return iaTjenesteSjekkResultat
     }
 

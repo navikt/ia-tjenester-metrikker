@@ -11,7 +11,7 @@ class PrometheusMetrics(
     meterRegistry: CollectorRegistry,
     ) {
     private val innloggedeMetrikkerPersistert = Counter.build()
-        .name("innloggede_metrikker_persistert")
+        .name("innloggede_ia_tjenester_metrikker_persistert")
         .help("Teller hvor mange innloggede IA-tjenestemetrikker som har blitt persistert i databasen")
         .labelNames("kilde", "type")
         .register(meterRegistry)
