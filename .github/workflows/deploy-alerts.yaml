@@ -3,10 +3,11 @@ on:
   push:
     branches:
       - main
+      - prometheus
     paths:
       - 'nais/alerts-dev.yaml'
       - 'nais/alerts-prod.yaml'
-      - 'github/alerts.yaml'
+      - 'github/deploy-alerts.yaml'
 jobs:
   apply-alerts:
     name: Apply alerts to clusters
