@@ -7,11 +7,10 @@ metadata:
     team: arbeidsgiver
 spec:
   groups:
-    - name: ia-tjenester-metrikker-alerts
+    - name: ia-tjenester-metrikker-persisted-metrics-alerts
       rules:
         - alert: Ingen metrikk registrert for applikasjon
-          expr: sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total[5m])) == 0
-          group_by: [kilde]
+          expr: sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total{kilde="FOREBYGGE_FRAVÆR"}[5m])) == 0
           annotations:
             description: "Har ikke registrert noen IA-metrikker til {{ $labels.kilde }} de siste 24 timer"
             action: |-
