@@ -12,7 +12,6 @@ import org.springframework.test.context.TestPropertySource
 
 @ActiveProfiles("test")
 @SpringBootTest(
-    classes = [TestApp::class],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @TestPropertySource(locations = ["classpath:application-test.yaml"])
