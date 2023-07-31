@@ -1,29 +1,30 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.*
-import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
+import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.Profile
 
 
+@Profile("test")
 @SpringBootApplication(exclude = [DataSourceAutoConfiguration::class, FlywayAutoConfiguration::class])
 @EnableConfigurationProperties(
     value = [
         DBConfigProperties::class,
-        FlywayConfigProperties::class,
-        SecurityConfig::class,
-        AltinnConfigProperties::class,
-        EnhetsregisteretProperties::class,
-        TokenXConfigProperties::class,
-    ])
-class App
+        AltinnConfigProperties::class
+    ]
+)
+@EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])
+class TestApp
 
 fun main(args: Array<String>) {
 
-    log("main()").info("Starter ia-tjenester-metrikker applikasjon")
-    runApplication<App>(*args)
+    log("main()").info("Starter ia-tjenester-metrikker applikasjon -- TEST --")
+    runApplication<TestApp>(*args)
 }

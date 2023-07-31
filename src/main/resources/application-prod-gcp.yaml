@@ -2,7 +2,6 @@ server.servlet.context-path: /ia-tjenester-metrikker
 
 # Expose the prometheus endpoint /internal/actuator/prometheus, disable all other endpoints
 management:
-  metrics.export.prometheus.enabled: true
   endpoint.prometheus.enabled: true
   endpoints:
     enabled-by-default: false

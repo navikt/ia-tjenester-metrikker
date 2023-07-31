@@ -7,16 +7,14 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import org.springframework.stereotype.Component
 
 @Component
-class PrometheusMetrics(collectorRegistry: CollectorRegistry) {
-    private val innloggedeMetrikkerPersistert: Counter;
-
-    init {
-        innloggedeMetrikkerPersistert = Counter.build()
-            .name("innloggede_metrikker_persistert")
-            .help("Teller hvor mange innloggede IA-tjenestemetrikker som har blitt persistert i databasen")
-            .labelNames("kilde", "type")
-            .register(collectorRegistry)
-    }
+class PrometheusMetrics(
+    meterRegistry: CollectorRegistry,
+    ) {
+    private val innloggedeMetrikkerPersistert = Counter.build()
+        .name("innloggede_metrikker_persistert")
+        .help("Teller hvor mange innloggede IA-tjenestemetrikker som har blitt persistert i databasen")
+        .labelNames("kilde", "type")
+        .register(meterRegistry)
 
     fun inkrementerInnloggedeMetrikkerPersistert(kilde: Kilde, type: TypeIATjeneste) {
         innloggedeMetrikkerPersistert.labels(kilde.name, type.name).inc()

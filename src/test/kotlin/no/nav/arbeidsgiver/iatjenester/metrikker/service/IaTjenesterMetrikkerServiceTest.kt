@@ -1,7 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
 import arrow.core.Either
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.observability.PrometheusMetrics
@@ -10,15 +9,15 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjene
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.event.annotation.BeforeTestMethod
 import org.springframework.test.context.junit.jupiter.SpringExtension
+
+
 import java.time.ZonedDateTime.now
 
 @ExtendWith(SpringExtension::class)
-@AutoConfigureObservability
 @TestPropertySource(
     properties =
     [
@@ -26,10 +25,8 @@ import java.time.ZonedDateTime.now
         "management.endpoints.web.base-path=/internal/actuator"
     ]
 )
-@AutoC
 internal class IaTjenesterMetrikkerServiceTest {
-
-    @Autowired
+    @MockBean
     lateinit var prometheusMetrics: PrometheusMetrics
 
     @MockBean
@@ -62,7 +59,7 @@ internal class IaTjenesterMetrikkerServiceTest {
         iaTjenesteMedDatoIFremtiden.tjenesteMottakkelsesdato = now().plusMinutes(2)
 
         val iaSjekk =
-            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, SimpleMeterRegistry())
+            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, prometheusMetrics)
                 .sjekkOgPersister(iaTjenesteMedDatoIFremtiden)
 
         assertThat(iaSjekk is Either.Left).isEqualTo(true)
@@ -76,7 +73,7 @@ internal class IaTjenesterMetrikkerServiceTest {
             TestUtils.vilkårligIaTjeneste().apply { kommunenummer = "3403" }
 
         val resultat =
-            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, SimpleMeterRegistry())
+            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, prometheusMetrics)
                 .sjekkOgPersister(levertIaTjenesteFraInnlandet)
 
         val persisterteData = (resultat as Either.Right).value
