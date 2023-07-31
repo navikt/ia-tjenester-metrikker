@@ -4,14 +4,16 @@ metadata:
   name: ia-tjenester-metrikker-alert
   namespace: arbeidsgiver
   labels:
-    team: teamia
+    team: arbeidsgiver
 spec:
   groups:
     - name: ia-tjenester-metrikker-alerts
       rules:
         - alert: Ingen metrikk registrert for applikasjon
           expr: sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total{kilde="FOREBYGGE_FRAVÆR"}[1m])) == 0
+          for: 10s
           annotations:
+            consequence: "Vi mottar ikke metrikker for tjeneste {{ $labels.kilde }}"
             description: "Har ikke registrert noen IA-metrikker til {{ $labels.kilde }} de siste 24 timer"
             action: |-
               Verifiser at metrikkene fungerer som de skal. TEST!
