@@ -7,6 +7,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.domene.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretService
+import no.nav.arbeidsgiver.iatjenester.metrikker.observability.PrometheusMetrics
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.getInnloggetMottattIaTjenesteMedVirksomhetGrunndata
@@ -44,7 +45,8 @@ import org.springframework.web.bind.annotation.RestController
 class IaTjenesterMetrikkerInnloggetController(
     private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService,
     private val tilgangskontrollService: TilgangskontrollService,
-    private val enhetsregisteretService: EnhetsregisteretService
+    private val enhetsregisteretService: EnhetsregisteretService,
+    private val prometheusMetrics: PrometheusMetrics
 ) {
     @PostMapping(
         value = ["/mottatt-iatjeneste"],
@@ -56,6 +58,13 @@ class IaTjenesterMetrikkerInnloggetController(
         @RequestBody innloggetIaTjeneste: InnloggetMottattIaTjeneste
     ): ResponseEntity<ResponseStatus> {
         log.info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
+
+        // TODO: Fjern meg i produksjon, jeg er lagt her slik at vi kan teste metrikker selv om enhetesregisteret feiler.
+        prometheusMetrics.inkrementerInnloggedeMetrikkerPersistert(
+            innloggetIaTjeneste.kilde,
+            innloggetIaTjeneste.type
+        )
+
 
         if (!erOrgnrGyldig(innloggetIaTjeneste)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
