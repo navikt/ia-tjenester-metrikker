@@ -4,10 +4,10 @@ metadata:
   name: ia-tjenester-metrikker-alert
   namespace: arbeidsgiver
   labels:
-    team: arbeidsgiver
+    team: teamia
 spec:
   groups:
-    - name: ia-tjenester-metrikker-persisted-metrics-alerts
+    - name: ia-tjenester-metrikker-alerts
       rules:
         - alert: Ingen metrikk registrert for applikasjon
           expr: sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total{kilde="FOREBYGGE_FRAVÆR"}[5m])) == 0
