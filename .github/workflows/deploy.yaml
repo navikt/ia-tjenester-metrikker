@@ -1,11 +1,7 @@
 name: Build & deploy
 run-name: Build and deploy || ${{ github.event.head_commit.message }}
 
-on:
-  push:
-    branches:
-      - main
-      - ...
+on: [ push ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
