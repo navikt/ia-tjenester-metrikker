@@ -49,21 +49,69 @@ spec:
             labels:
               namespace: teamia
               severity: warning
+              special_type_to_use_in_alertmanager_config: teamia-testing
+              alert_type: custom
 
 ---
 
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
-  name: ia-tjenester-metrikker-alert-slack
+  name: teamia-testing-slack
   namespace: arbeidsgiver
   labels:
-    alertmanagerConfig: ia-tjenester-metrikker-alert-config
+    alertmanagerConfig: teamia-testing-slack
 spec:
   receivers:
-    - name: ia-tjenester-metrikker-alert-receiver
+    - name: teamia-testing-receiver
       slackConfigs:
         - apiURL:
             key: apiUrl
             name: slack-webhook
-          channel: '#teamia-alerts-dev'
+          channel: 'teamia-alerts-dev'
+          iconEmoji: ':test:'
+          username: 'Testing Alert'
+          sendResolved: true
+          title: |-
+            [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
+          text: >-
+            {{ range .Alerts -}}
+            *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+            *Description:* {{ .Annotations.description }}
+            *Details:*
+            {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+            {{ end }}
+            {{ end }}
+          color: |-
+            {{ if eq .Status "firing" -}}
+              {{ if eq .CommonLabels.severity "warning" -}}
+                warning
+              {{- else if eq .CommonLabels.severity "fatal" -}}
+                #611f69
+              {{- else if eq .CommonLabels.severity "critical" -}}
+                #611f69
+              {{- else if eq .CommonLabels.severity "danger" -}}
+                danger
+              {{- else if eq .CommonLabels.severity "error" -}}
+                danger
+              {{- else if eq .CommonLabels.severity "notice" -}}
+                good
+              {{- else if eq .CommonLabels.severity "info" -}}
+                #36c5f0
+              {{- else -}}
+                .CommonLabels.severity
+              {{- end -}}
+            {{ else -}}
+            good
+            {{- end }}
+  route:
+    groupBy:
+      - alertname
+    matchers:
+      - name: "special_type_to_use_in_alertmanager_config"
+        matchType: "="
+        value: "teamia-testing"
+    groupInterval: 10s
+    groupWait: 5s
+    receiver: myteam-testing-receiver
+    repeatInterval: 2m
