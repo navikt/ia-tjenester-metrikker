@@ -63,6 +63,6 @@ jobs:
       - uses: nais/deploy/actions/deploy@v1
         env:
           CLUSTER: prod-gcp
-          IMAGE: ${{ needs.docker-push.outputs.image }}
+          IMAGE: ${{ needs.docker-build-push.outputs.image }}
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais/prod.yaml
