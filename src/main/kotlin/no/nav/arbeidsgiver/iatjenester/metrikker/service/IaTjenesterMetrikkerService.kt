@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
 import arrow.core.Either
+import arrow.core.left
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Fylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.observability.PrometheusMetrics
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
@@ -18,10 +19,8 @@ class IaTjenesterMetrikkerService(
 ) {
 
     fun sjekkOgPersister(innloggetIaTjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
-        val iaTjenesteSjekkResultat = validerMottakelsesdato(innloggetIaTjeneste)
-
-        if (iaTjenesteSjekkResultat is Either.Left) {
-            return iaTjenesteSjekkResultat
+        val iaTjenesteSjekkResultat = validerMottakelsesdato(innloggetIaTjeneste).onLeft {
+            return it.left()
         }
 
         innloggetIaTjeneste.fylke =
@@ -35,13 +34,15 @@ class IaTjenesterMetrikkerService(
                     "opprettet"
         )
 
+        prometheusMetrics.inkrementerInnloggedeMetrikkerPersistert(innloggetIaTjeneste.kilde)
+
         return iaTjenesteSjekkResultat
     }
 
     fun sjekkOgPersister(uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val iaTjenesteSjekkResultat = validerMottakelsesdato(uinnloggetIaTjeneste)
 
-        if (iaTjenesteSjekkResultat is Either.Right) {
+        iaTjenesteSjekkResultat.onRight {
             iaTjenesterMetrikkerRepository.persister(uinnloggetIaTjeneste)
             log("sjekkOgPersister()").info(
                 "IA Tjeneste (uinnlogget) av type '${uinnloggetIaTjeneste.type.name}' " +
@@ -50,7 +51,6 @@ class IaTjenesterMetrikkerService(
             )
         }
 
-        // TODO: Legg til metrikker her også
         return iaTjenesteSjekkResultat
     }
 
