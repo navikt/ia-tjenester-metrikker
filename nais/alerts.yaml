@@ -113,5 +113,5 @@ spec:
         value: "teamia-testing"
     groupInterval: 10s
     groupWait: 5s
-    receiver: myteam-testing-receiver
+    receiver: teamia-testing-receiver
     repeatInterval: 2m
