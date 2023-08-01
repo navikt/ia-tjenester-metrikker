@@ -15,9 +15,9 @@ spec:
           annotations:
             consequence: "ia-tjenester-metrikker er utilgjengelig"
             action: |-
-                Sjekk helsa til applikasjonen ved å kjøre
-                `kubectl describe pod <podname> -n arbeidsgiver` og 
-                `kubectl logs <podname> -n arbeidsgiver`
+              Sjekk helsa til applikasjonen ved å kjøre
+              `kubectl describe pod <podname> -n arbeidsgiver` og 
+              `kubectl logs <podname> -n arbeidsgiver`
             labels:
               namespace: teamia
               severity: critical
@@ -31,13 +31,21 @@ spec:
             labels:
               namespace: teamia
               severity: warning
-        - alert: Ingen metrikk registrert for applikasjon
-          expr: sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total[24h])) == 0
+        - alert: IngenMetrikkRegistrert
+          expr: sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total[2m])) == 0
           group_by: [kilde]
           annotations:
             description: "Har ikke registrert noen IA-metrikker til {{ $labels.kilde }} de siste 24 timer"
             action: |-
               Verifiser at metrikkene fungerer som de skal.
+            labels:
+              namespace: teamia
+              severity: warning
+        - alert: TriggerAlltid
+          expr: vector(1)
+          annotations:
+            description: "Trigger alltid for å teste Slack"
+            action: Ikke få panikk
             labels:
               namespace: teamia
               severity: warning
