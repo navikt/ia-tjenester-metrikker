@@ -1,7 +1,9 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
 import arrow.core.Either
+import arrow.core.left
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Fylke
+import no.nav.arbeidsgiver.iatjenester.metrikker.observability.PrometheusMetrics
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjeneste
@@ -9,36 +11,38 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjen
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime.now
-import io.micrometer.core.instrument.MeterRegistry
 
 @Component
-class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository, private val meterRegistry: MeterRegistry) {
+class IaTjenesterMetrikkerService(
+    private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository,
+    private val prometheusMetrics: PrometheusMetrics
+) {
 
     fun sjekkOgPersister(innloggetIaTjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
-        val iaTjenesteSjekkResultat = validerMottakelsesdato(innloggetIaTjeneste)
-
-        if (iaTjenesteSjekkResultat is Either.Right) {
-
-            innloggetIaTjeneste.fylke =
-                Fylke.fraKommunenummer(innloggetIaTjeneste.kommunenummer).navn
-
-            iaTjenesterMetrikkerRepository.persister(innloggetIaTjeneste)
-            log("sjekkOgPersister()").info(
-                "IA Tjeneste av type '${innloggetIaTjeneste.type.name}' " +
-                        "fra kilde '${innloggetIaTjeneste.kilde.name}' " +
-                        "og sektor '${innloggetIaTjeneste.SSBSektorKodeBeskrivelse}' " +
-                        "opprettet"
-            )
+        val iaTjenesteSjekkResultat = validerMottakelsesdato(innloggetIaTjeneste).onLeft {
+            return it.left()
         }
 
-        meterRegistry.counter("counted.innlogget.mottatt.iatjeneste").increment()
+        innloggetIaTjeneste.fylke =
+            Fylke.fraKommunenummer(innloggetIaTjeneste.kommunenummer).navn
+
+        iaTjenesterMetrikkerRepository.persister(innloggetIaTjeneste)
+        log("sjekkOgPersister()").info(
+            "IA Tjeneste av type '${innloggetIaTjeneste.type.name}' " +
+                    "fra kilde '${innloggetIaTjeneste.kilde.name}' " +
+                    "og sektor '${innloggetIaTjeneste.SSBSektorKodeBeskrivelse}' " +
+                    "opprettet"
+        )
+
+        prometheusMetrics.inkrementerInnloggedeMetrikkerPersistert(innloggetIaTjeneste.kilde)
+
         return iaTjenesteSjekkResultat
     }
 
     fun sjekkOgPersister(uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val iaTjenesteSjekkResultat = validerMottakelsesdato(uinnloggetIaTjeneste)
 
-        if (iaTjenesteSjekkResultat is Either.Right) {
+        iaTjenesteSjekkResultat.onRight {
             iaTjenesterMetrikkerRepository.persister(uinnloggetIaTjeneste)
             log("sjekkOgPersister()").info(
                 "IA Tjeneste (uinnlogget) av type '${uinnloggetIaTjeneste.type.name}' " +
@@ -47,7 +51,6 @@ class IaTjenesterMetrikkerService(private val iaTjenesterMetrikkerRepository: Ia
             )
         }
 
-        meterRegistry.counter("counted.uinnlogget.mottatt.iatjeneste").increment()
         return iaTjenesteSjekkResultat
     }
 

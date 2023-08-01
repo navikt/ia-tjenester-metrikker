@@ -1,0 +1,19 @@
+name: Deploy alerts to prod-gcp
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'nais/alerts.yaml'
+      - '.github/workflows/deploy-alerts-prod.yaml'
+jobs:
+  apply-alerts:
+    name: Apply alerts to prod-gcp
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: nais/alerts.yaml

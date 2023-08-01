@@ -1,10 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.FlywayConfigProperties
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.SecurityConfig
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.TokenXConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.*
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -23,8 +19,7 @@ import org.springframework.boot.runApplication
         AltinnConfigProperties::class,
         EnhetsregisteretProperties::class,
         TokenXConfigProperties::class,
-    ]
-)
+    ])
 class App
 
 fun main(args: Array<String>) {

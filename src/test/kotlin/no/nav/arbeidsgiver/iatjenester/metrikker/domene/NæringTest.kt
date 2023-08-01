@@ -6,6 +6,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring.Arbeidsmiljøpor
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring.ArbeidsmiljøportalenBransje.NÆRINGSMIDDELINDUSTRI
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring.ArbeidsmiljøportalenBransje.TRANSPORT
 import org.assertj.core.api.Assertions
+
 import org.junit.jupiter.api.Test
 
 internal class NæringTest {

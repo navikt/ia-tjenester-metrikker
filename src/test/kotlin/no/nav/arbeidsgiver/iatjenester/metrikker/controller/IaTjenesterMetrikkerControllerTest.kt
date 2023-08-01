@@ -2,43 +2,26 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import no.nav.arbeidsgiver.iatjenester.metrikker.IntegrationTestSuite
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.APPLICATION_JSON
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.ugyldigInnloggetIaTjenesteAsString
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.vilkårligInnloggetIaTjenesteAsString
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
-import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.ActiveProfiles
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableConfigurationProperties(value = [AltinnConfigProperties::class])
-@EnableMockOAuth2Server
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@AutoConfigureWireMock(port = 0)
-class IaTjenesterMetrikkerControllerTest {
+private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
 
     @Autowired
     private val mockOAuth2Server: MockOAuth2Server? = null
@@ -49,15 +32,6 @@ class IaTjenesterMetrikkerControllerTest {
     private val objectMapper = ObjectMapper()
     private var uinnloggetEndepunkt = "/ia-tjenester-metrikker/uinnlogget/mottatt-iatjeneste"
     private var innloggetEndepunkt = "/ia-tjenester-metrikker/innlogget/mottatt-iatjeneste"
-
-    @BeforeEach
-    fun setUp() {
-        objectMapper.registerModule(JavaTimeModule())
-    }
-
-    @AfterEach
-    fun tearDown() {
-    }
 
     @Test
     @Throws(Exception::class)
