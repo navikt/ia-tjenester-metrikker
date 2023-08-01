@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: ia-tjenester-metrikker-alert
-  namespace: teamia
+  namespace: arbeidsgiver
   labels:
     team: arbeidsgiver
 spec:
@@ -49,3 +49,21 @@ spec:
             labels:
               namespace: teamia
               severity: warning
+
+---
+
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: ia-tjenester-metrikker-alert-slack
+  namespace: arbeidsgiver
+  labels:
+    alertmanagerConfig: ia-tjenester-metrikker-alert-config
+spec:
+  receivers:
+    - name: ia-tjenester-metrikker-alert-receiver
+      slackConfigs:
+        - apiURL:
+            key: apiUrl
+            name: slack-webhook
+          channel: '#teamia-alerts-dev'
