@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component
 class PrometheusMetrics(
     meterRegistry: CollectorRegistry,
 ) {
-    // Ensure that all applications will have a persistence counter on startup
     private val innloggedeMetrikkerPersistert = Counter.build()
         .name("innloggede_ia_tjenester_metrikker_persistert")
         .help("Teller hvor mange innloggede IA-tjenestemetrikker som har blitt persistert i databasen")
@@ -17,6 +16,7 @@ class PrometheusMetrics(
         .register(meterRegistry)
 
     init {
+        // For å kunne monitorere en kilde over tid, er vi avhengige at kilden har en teller knytta til seg fra a start.
         Kilde.entries.forEach {
             innloggedeMetrikkerPersistert.labels(it.name).inc(0.0)
         }

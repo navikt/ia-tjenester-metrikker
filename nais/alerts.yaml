@@ -37,7 +37,8 @@ spec:
           annotations:
             description: "Har ikke registrert noen IA-metrikker til {{ $labels.kilde }} de siste 48 timer"
             action: |-
-              Verifiser at metrikkene fungerer som de skal.
+              Verifiser at metrikkene fungerer som de skal. 
+              Dette kan være en normal situasjon dersom vi har lite trykk på tjenestene våre.
           labels:
             namespace: teamia
             severity: warning
