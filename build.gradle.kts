@@ -18,7 +18,10 @@ val log4jVersion = "2.20.0"
 group = "no.nav.arbeidsgiver"
 version = "0.0.1-SNAPSHOT"
 
-java.sourceCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 application {
     mainClass.set("no.nav.arbeidsgiver.iatjenester.metrikker.AppKt")

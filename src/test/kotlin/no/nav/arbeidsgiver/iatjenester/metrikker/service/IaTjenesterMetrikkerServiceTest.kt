@@ -1,44 +1,32 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
+
 import arrow.core.Either
-import io.mockk.every
+import no.nav.arbeidsgiver.iatjenester.metrikker.IntegrationTestSuite
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.observability.PrometheusMetrics
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.andExpectMetricValueToBe
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.getPrometheusMetrics
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.TestPropertySource
-import org.springframework.test.context.event.annotation.BeforeTestMethod
-import org.springframework.test.context.junit.jupiter.SpringExtension
-
-
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.web.servlet.MockMvc
 import java.time.ZonedDateTime.now
 
-@ExtendWith(SpringExtension::class)
-@TestPropertySource(
-    properties =
-    [
-        "management.endpoints.web.exposure.include=prometheus",
-        "management.endpoints.web.base-path=/internal/actuator"
-    ]
-)
-internal class IaTjenesterMetrikkerServiceTest {
-    @MockBean
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+internal class IaTjenesterMetrikkerServiceTest : IntegrationTestSuite() {
+    @Autowired
     lateinit var prometheusMetrics: PrometheusMetrics
 
     @MockBean
     lateinit var iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository
 
-    @BeforeTestMethod
-    fun setupMocks() {
-        every {
-            iaTjenesterMetrikkerRepository
-                .persister(any<InnloggetMottattIaTjenesteMedVirksomhetGrunndata>())
-        } returns Unit
-    }
+    @Autowired
+    lateinit var mockMvc: MockMvc
 
     @Test
     @Throws(Exception::class)
@@ -49,6 +37,22 @@ internal class IaTjenesterMetrikkerServiceTest {
                 .sjekkOgPersister(TestUtils.vilkårligIaTjeneste())
 
         assertThat(sjekkOgOpprett is Either.Right).isEqualTo(true)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun `sjekkOgPersister oppdaterer teller for metrikk`() {
+
+        val counterName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"SYKEFRAVÆRSSTATISTIKK\",}"
+        mockMvc.getPrometheusMetrics().andExpectMetricValueToBe(counterName, 0.0)
+
+        val sjekkOgOpprett =
+            IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, prometheusMetrics)
+                .sjekkOgPersister(TestUtils.vilkårligIaTjeneste())
+
+        assertThat(sjekkOgOpprett is Either.Right).isEqualTo(true)
+
+        mockMvc.getPrometheusMetrics().andExpectMetricValueToBe(counterName, 1.0)
     }
 
     @Test
