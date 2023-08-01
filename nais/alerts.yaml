@@ -4,7 +4,7 @@ metadata:
   name: ia-tjenester-metrikker-alert
   namespace: arbeidsgiver
   labels:
-    team: arbeidsgiver
+    team: teamia
 spec:
   groups:
     - name: ia-tjenester-metrikker-alerts
