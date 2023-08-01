@@ -2,9 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: ia-tjenester-metrikker-alert
-  namespace: arbeidsgiver
+  namespace: teamia
   labels:
-    team: teamia
+    team: arbeidsgiver
 spec:
   groups:
     - name: ia-tjenester-metrikker-alerts
