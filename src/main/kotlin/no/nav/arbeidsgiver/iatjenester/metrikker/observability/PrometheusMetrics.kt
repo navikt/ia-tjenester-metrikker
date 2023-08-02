@@ -16,13 +16,16 @@ class PrometheusMetrics(
         .register(meterRegistry)
 
     init {
-        // For å kunne monitorere en kilde over tid, er vi avhengige at kilden har en teller knytta til seg fra a start.
-        Kilde.entries.forEach {
-            innloggedeMetrikkerPersistert.labels(it.name).inc(0.0)
-        }
+        settOppTellere()
     }
 
     fun inkrementerInnloggedeMetrikkerPersistert(kilde: Kilde) {
         innloggedeMetrikkerPersistert.labels(kilde.name).inc()
+    }
+
+    private fun settOppTellere() {
+        Kilde.entries.forEach {
+            innloggedeMetrikkerPersistert.labels(it.name).inc(0.0)
+        }
     }
 }
