@@ -15,3 +15,4 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/alerts.yaml
+          VAR: isDev=true

@@ -31,14 +31,16 @@ spec:
           labels:
             namespace: teamia
             severity: warning
+        {{#unless isDev}}
         - alert: IngenMetrikkRegistrert
           expr: sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total[48h])) == 0
           group_by: [ kilde ]
           annotations:
-            description: "Har ikke registrert noen IA-metrikker til {{ $labels.kilde }} de siste 48 timer"
+            description: "Har ikke registrert noen IA-metrikker til \{{ $labels.kilde }} de siste 48 timer"
             action: |-
               Verifiser at metrikkene fungerer som de skal. 
               Dette kan være en normal situasjon dersom vi har lite trykk på tjenestene våre.
           labels:
             namespace: teamia
             severity: warning
+        {{/unless}}

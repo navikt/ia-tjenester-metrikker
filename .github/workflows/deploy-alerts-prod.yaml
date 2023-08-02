@@ -17,3 +17,5 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
           RESOURCE: nais/alerts.yaml
+          # Nødvendig for å trigge templating engine på alerts.yaml
+          VAR:
