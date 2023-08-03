@@ -16,7 +16,7 @@ spec:
             consequence: "ia-tjenester-metrikker er utilgjengelig"
             action: |-
               Sjekk helsa til applikasjonen ved å kjøre
-              `kubectl describe pod <podname> -n arbeidsgiver` og 
+              `kubectl describe pod <podname> -n arbeidsgiver` og
               `kubectl logs <podname> -n arbeidsgiver`
           labels:
             namespace: teamia
@@ -26,21 +26,23 @@ spec:
           annotations:
             description: "ia-tjenester-metrikker har logget en (eller flere) feil."
             action: |-
-              Sjekk logs.adeo.no for logger, 
+              Sjekk logs.adeo.no for logger,
               eller Grafana-dashboardet vårt: https://grafana.nais.io/dashboards/f/cvOhCMUnz/team-ia
           labels:
             namespace: teamia
             severity: warning
-        # TODO: Legg inn "ignore dev"
+        {{#unless isDev}}
         - alert: IngenMetrikkRegistrert
-          expr: ((sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total[48h])) == bool 0) * on() scalar(hour()) == bool 10) == 1
-          for: 5m
+          # Dette uttrykket er kun aktivt mellom kl 6-7 og kan kun trigges en gang i den perioden
+          expr: ((sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total[48h])) == bool 0) * on() scalar(hour()) == bool 4) == 1
+          for: 45m
           group_by: [ kilde ]
           annotations:
             description: "Har ikke registrert noen IA-metrikker til \{{ $labels.kilde }} de siste 48 timer"
             action: |-
-              Verifiser at metrikkene fungerer som de skal. 
+              Verifiser at metrikkene fungerer som de skal.
               Dette kan være en normal situasjon dersom vi har lite trykk på tjenestene våre.
           labels:
             namespace: teamia
             severity: warning
+        {{/unless}}
