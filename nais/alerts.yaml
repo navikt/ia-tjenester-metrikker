@@ -33,8 +33,8 @@ spec:
             severity: warning
         # TODO: Legg inn "ignore dev"
         - alert: IngenMetrikkRegistrert
-          expr: ((sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total[48h])) == bool 0) * on() scalar(hour()) == bool 9) == 1
-          for: 1h
+          expr: ((sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total[48h])) == bool 0) * on() scalar(hour()) == bool 10) == 1
+          for: 5m
           group_by: [ kilde ]
           annotations:
             description: "Har ikke registrert noen IA-metrikker til \{{ $labels.kilde }} de siste 48 timer"
