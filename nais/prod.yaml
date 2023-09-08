@@ -29,7 +29,6 @@ spec:
     - name: SPRING_PROFILES_ACTIVE
       value: prod-gcp
   envFrom:
-    - configmap: loginservice-idporten
     - secret: ia-tjenester-metrikker-secrets
   tokenx:
     enabled: true
