@@ -10,7 +10,7 @@ plugins {
     application
 }
 
-val navTokenSupportVersion = "3.1.0"
+val navTokenSupportVersion = "3.1.5"
 val shedlockVersion = "5.6.0"
 val springdocOpenapiVersion = "1.7.0"
 val log4jVersion = "2.20.0"
