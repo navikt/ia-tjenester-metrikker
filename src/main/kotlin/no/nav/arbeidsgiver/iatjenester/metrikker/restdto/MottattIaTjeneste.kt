@@ -15,7 +15,6 @@ enum class Kilde {
     SAMTALESTØTTE,
     FOREBYGGE_FRAVÆR,
     KALKULATOR,
-    NETTKURS,
     FOREBYGGINGSPLAN,
 }
 

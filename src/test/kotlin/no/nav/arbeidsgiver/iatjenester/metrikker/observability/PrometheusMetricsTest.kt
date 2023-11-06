@@ -18,7 +18,7 @@ internal class PrometheusMetricsTest : IntegrationTestSuite() {
 
     @Test
     fun `Applikasjoner får registrert en counter ved oppstart`() {
-        val metricName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"NETTKURS\",}"
+        val metricName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"SYKEFRAVÆRSSTATISTIKK\",}"
         mockMvc.getPrometheusMetrics().andExpectMetricValueToBe(metricName, 0.0)
     }
 
