@@ -30,51 +30,7 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
     lateinit var port: String
 
     private val objectMapper = ObjectMapper()
-    private var uinnloggetEndepunkt = "/ia-tjenester-metrikker/uinnlogget/mottatt-iatjeneste"
     private var innloggetEndepunkt = "/ia-tjenester-metrikker/innlogget/mottatt-iatjeneste"
-
-    @Test
-    @Throws(Exception::class)
-    fun `POST til uinnlogget-iatjeneste endepunkt skal returnere 201 created ved suksess`() {
-        val requestBody: String =
-            vilkårligInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
-
-        val response = HttpClient.newBuilder().build().send(
-            HttpRequest.newBuilder()
-                .uri(URI.create(hostAndPort() + uinnloggetEndepunkt))
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
-                .build(),
-            BodyHandlers.ofString()
-        )
-
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        val body: JsonNode = objectMapper.readTree(response.body())
-        val status = body.get("status")
-        Assertions.assertThat(status).isNotNull
-        Assertions.assertThat(status.asText()).isEqualTo("created")
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun `POST til uinnlogget-iatjeneste skal tillate at mottakkelsesdato ikke sendes i payload`() {
-        val requestBodyUtenMottakkelsesdato: String = """
-            {
-              "kilde":"SYKEFRAVÆRSSTATISTIKK",
-              "type":"DIGITAL_IA_TJENESTE"
-            }
-        """.trimIndent()
-
-        val response = HttpClient.newBuilder().build().send(
-            HttpRequest.newBuilder()
-                .uri(URI.create(hostAndPort() + uinnloggetEndepunkt))
-                .POST(HttpRequest.BodyPublishers.ofString(requestBodyUtenMottakkelsesdato))
-                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
-                .build(),
-            BodyHandlers.ofString()
-        )
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-    }
 
     @Test
     fun `Innlogget endepunkt mottatt-ia-tjeneste skal tillate at mottakkelsesdato ikke sendes i payload`() {

@@ -164,7 +164,6 @@ class IaTjenesterMetrikkerInnloggetController(
                 ResponseEntity.status(HttpStatus.CREATED)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Created)
-
             }
         }
     }

@@ -1,7 +1,13 @@
-name: Build & deploy
-run-name: Build and deploy || ${{ github.event.head_commit.message }}
-
-on: [ push ]
+name: Build and deploy
+run-name: Build and deploy ~~ "${{ github.event.head_commit.message }}"
+on:
+  push:
+    branches:
+      - main
+      - fjern-uinnlogget
+    paths-ignore:
+      - '**.md'
+      - '**/**.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
