@@ -35,18 +35,8 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: sykefravarsstatistikk
-          namespace: arbeidsgiver
-          cluster: prod-gcp
-        - application: samtalestotte-arbeidsgiver
-          namespace: arbeidsgiver
-          cluster: prod-gcp
         - application: min-ia
           namespace: teamia
-          cluster: prod-gcp
-        - application: forebyggingsplan-frontend
-          namespace: teamia
-          cluster: prod-gcp
     outbound:
       rules:
         - application: altinn-rettigheter-proxy

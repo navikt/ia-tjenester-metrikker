@@ -3,7 +3,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Fnr
 import java.sql.Connection
 import java.sql.Date
@@ -15,7 +14,6 @@ class TestUtils {
 
     companion object {
 
-        const val OVERORDNETENHET_ORGNR: String = "987654321"
         const val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
         const val ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET: String = "833445566"
 
@@ -50,12 +48,6 @@ class TestUtils {
             "Viken",
             "0234",
             "Gjerdrum"
-        )
-
-        fun vilkårligUinnloggetIaTjeneste(): UinnloggetMottattIaTjeneste = UinnloggetMottattIaTjeneste(
-            TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
-            ZonedDateTime.now(),
         )
 
         fun vilkårligInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String {
@@ -113,27 +105,6 @@ class TestUtils {
                 }
             }
 
-        fun Connection.getAlleUinnloggetIaTjenester(): List<UinnloggetIaTjenesteRad> =
-            use {
-                this.prepareStatement(
-                    """
-                SELECT *  
-                FROM metrikker_ia_tjenester_uinnlogget
-                """
-                ).use {
-                    it.executeQuery()
-                        .use {
-                            generateSequence {
-                                if (it.next()) {
-                                    it.getUinnloggetIaTjenesteRad()
-                                } else {
-                                    null
-                                }
-                            }.toList()
-                        }
-                }
-            }
-
         fun Connection.opprettInnloggetIaTjeneste(rad: IaTjenesteRad): Any =
             use {
                 this.prepareStatement(
@@ -170,22 +141,6 @@ class TestUtils {
                 }
             }
 
-        fun Connection.opprettUinnloggetIaTjeneste(rad: UinnloggetIaTjenesteRad): Any =
-            use {
-                this.prepareStatement(
-                    """insert into metrikker_ia_tjenester_uinnlogget (
-                        form_av_tjeneste, 
-                        kilde_applikasjon, 
-                        tjeneste_mottakkelsesdato
-                    ) values (?, ?, ?)"""
-                ).run {
-                    setString(1, rad.type.name)
-                    setString(2, rad.kilde.name)
-                    setTimestamp(3, rad.tjeneste_mottakkelsesdato)
-                    executeUpdate()
-                }
-            }
-
         private fun ResultSet.getIaTjenesteRad(): IaTjenesteRad {
             return IaTjenesteRad(
                 id = getInt("id"),
@@ -202,16 +157,6 @@ class TestUtils {
                 fylke = getString("fylke"),
                 kommunenummer = getString("kommunenummer"),
                 kommune = getString("kommune"),
-                opprettet = getDate("opprettet")
-            )
-        }
-
-        private fun ResultSet.getUinnloggetIaTjenesteRad(): UinnloggetIaTjenesteRad {
-            return UinnloggetIaTjenesteRad(
-                id = getInt("id"),
-                type = TypeIATjeneste.valueOf(getString("form_av_tjeneste")),
-                kilde = Kilde.valueOf(getString("kilde_applikasjon")),
-                tjeneste_mottakkelsesdato = getTimestamp("tjeneste_mottakkelsesdato"),
                 opprettet = getDate("opprettet")
             )
         }
@@ -235,12 +180,3 @@ data class IaTjenesteRad(
     val kommune: String,
     val opprettet: Date?
 )
-
-data class UinnloggetIaTjenesteRad(
-    val id: Int,
-    val type: TypeIATjeneste,
-    val kilde: Kilde,
-    val tjeneste_mottakkelsesdato: Timestamp,
-    val opprettet: Date?
-)
-

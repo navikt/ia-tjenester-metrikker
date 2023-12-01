@@ -3,7 +3,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
@@ -20,30 +19,6 @@ class IaTjenesterMetrikkerRepository(
 
     fun persister(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
         insertIaTjeneste(iatjeneste)
-    }
-
-    fun persister(uinnloggetIatjeneste: UinnloggetMottattIaTjeneste) {
-        namedParameterJdbcTemplate.update(
-            """
-                INSERT INTO metrikker_ia_tjenester_uinnlogget(
-                form_av_tjeneste, 
-                kilde_applikasjon,
-                tjeneste_mottakkelsesdato
-                ) 
-                VALUES  (
-                  :form_av_tjeneste, 
-                  :kilde_applikasjon, 
-                  :tjeneste_mottakkelsesdato
-                )
-                """,
-            MapSqlParameterSource()
-                .addValue("form_av_tjeneste", uinnloggetIatjeneste.type.name)
-                .addValue("kilde_applikasjon", uinnloggetIatjeneste.kilde.name)
-                .addValue(
-                    "tjeneste_mottakkelsesdato",
-                    uinnloggetIatjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
-                )
-        )
     }
 
     private fun insertIaTjeneste(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
@@ -119,27 +94,6 @@ class IaTjenesterMetrikkerRepository(
         override val tidspunkt: LocalDateTime
     ) : MottattIaTjenesteMetrikk()
 
-    data class MottattUinnloggetIaTjenesteMetrikk(
-        override val kilde: Kilde,
-        override val tidspunkt: LocalDateTime
-    ) :
-        MottattIaTjenesteMetrikk()
-
-
-    fun hentUinnloggetMetrikker(startDato: LocalDate): List<MottattUinnloggetIaTjenesteMetrikk> =
-        namedParameterJdbcTemplate.query(
-            """
-                select tjeneste_mottakkelsesdato, kilde_applikasjon 
-                from metrikker_ia_tjenester_uinnlogget 
-                where tjeneste_mottakkelsesdato >= :startDato
-                """,
-            MapSqlParameterSource().addValue("startDato", startDato)
-        ) { rs: ResultSet, _: Int ->
-            MottattUinnloggetIaTjenesteMetrikk(
-                Kilde.valueOf(rs.getString("kilde_applikasjon")),
-                rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
-            )
-        }
 
     fun hentInnloggetMetrikker(startDato: LocalDate): List<MottattInnloggetIaTjenesteMetrikk> =
         namedParameterJdbcTemplate.query(

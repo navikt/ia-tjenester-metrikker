@@ -6,10 +6,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.IaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.cleanTable
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.getAlleIATjenester
-import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.getAlleUinnloggetIaTjenester
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettInnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.opprettUinnloggetIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.UinnloggetIaTjenesteRad
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
@@ -33,37 +30,8 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
     @BeforeEach
     fun cleanUp() {
         dataSource.connection.cleanTable("metrikker_ia_tjenester_innlogget")
-        dataSource.connection.cleanTable("metrikker_ia_tjenester_uinnlogget")
     }
 
-
-    @Test
-    fun `hentUinnloggetIaTjenesterMetrikker`() {
-        opprettUinnloggetIaTjenester(listOf(Date.valueOf(now()), Date.valueOf(now())))
-
-        val innloggetMetrikker =
-            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentUinnloggetMetrikker(
-                now().withDayOfMonth(
-                    1
-                ).withMonth(1)
-            )
-
-        assertThat(innloggetMetrikker.size).isEqualTo(2)
-    }
-
-    @Test
-    fun `hentUinnloggetIaTjenesterMetrikker fra en vis dato`() {
-        opprettUinnloggetIaTjenester(listOf(Date.valueOf(now()), Date.valueOf(now().minusYears(1))))
-
-        val innloggetMetrikker =
-            IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentUinnloggetMetrikker(
-                now().withDayOfMonth(
-                    1
-                ).withMonth(1)
-            )
-        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
-        assertThat(innloggetMetrikker.size).isEqualTo(1)
-    }
 
     @Test
     fun `hentInnloggetIaTjenesterMetrikker`() {
@@ -75,14 +43,14 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         )
 
         startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
-        val uinnloggetMetrikker =
+        val innloggetMetrikker =
             IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentInnloggetMetrikker(
                 now().withDayOfMonth(
                     1
                 ).withMonth(1)
             )
 
-        assertThat(uinnloggetMetrikker.size).isEqualTo(2)
+        assertThat(innloggetMetrikker.size).isEqualTo(2)
     }
 
     @Test
@@ -103,31 +71,15 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         )
 
         startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
-        val uinnloggetMetrikker =
+        val innloggetMetrikker =
             IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentInnloggetMetrikker(
                 now().withDayOfMonth(
                     1
                 ).withMonth(1)
             )
 
-        assertThat(uinnloggetMetrikker.size).isEqualTo(1)
-        assertThat(uinnloggetMetrikker.get(0)).isEqualTo(iaTjenesteMetrikk)
-    }
-
-    @Test
-    fun `opprett() lagrer en UinnloggetIaTjeneste i DB`() {
-        IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).persister(
-            TestUtils.vilkårligUinnloggetIaTjeneste()
-        )
-
-        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
-        val antallUinnloggetIaTjenester = dataSource.connection.getAlleUinnloggetIaTjenester()
-        assertThat(antallUinnloggetIaTjenester.size).isEqualTo(1)
-        val iaTjenesteRad = antallUinnloggetIaTjenester[0]
-        assertThat(iaTjenesteRad.type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
-        assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKEFRAVÆRSSTATISTIKK)
-        assertThat(iaTjenesteRad.tjeneste_mottakkelsesdato).isNotNull()
-        assertThat(iaTjenesteRad.opprettet).isNotNull()
+        assertThat(innloggetMetrikker.size).isEqualTo(1)
+        assertThat(innloggetMetrikker.get(0)).isEqualTo(iaTjenesteMetrikk)
     }
 
     @Test
@@ -158,20 +110,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.opprettet).isNotNull()
     }
 
-
-    private fun opprettUinnloggetIaTjenester(dates: List<Date>) {
-        dates.forEachIndexed() { index, date ->
-            dataSource.connection.opprettUinnloggetIaTjeneste(
-                UinnloggetIaTjenesteRad(
-                    id = index + 1,
-                    type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
-                    kilde = Kilde.SAMTALESTØTTE,
-                    Timestamp.valueOf(date.toLocalDate().atStartOfDay()),
-                    Date.valueOf(now())
-                )
-            )
-        }
-    }
 
     private fun opprettInnloggetIaTjenester(
         mottatteInnloggetIATjenester: List<IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk>

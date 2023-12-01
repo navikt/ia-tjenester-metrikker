@@ -7,7 +7,6 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.observability.PrometheusMetrics
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.UinnloggetMottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime.now
@@ -35,21 +34,6 @@ class IaTjenesterMetrikkerService(
         )
 
         prometheusMetrics.inkrementerInnloggedeMetrikkerPersistert(innloggetIaTjeneste.kilde)
-
-        return iaTjenesteSjekkResultat
-    }
-
-    fun sjekkOgPersister(uinnloggetIaTjeneste: UinnloggetMottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
-        val iaTjenesteSjekkResultat = validerMottakelsesdato(uinnloggetIaTjeneste)
-
-        iaTjenesteSjekkResultat.onRight {
-            iaTjenesterMetrikkerRepository.persister(uinnloggetIaTjeneste)
-            log("sjekkOgPersister()").info(
-                "IA Tjeneste (uinnlogget) av type '${uinnloggetIaTjeneste.type.name}' " +
-                        "fra kilde '${uinnloggetIaTjeneste.kilde.name}' " +
-                        "opprettet"
-            )
-        }
 
         return iaTjenesteSjekkResultat
     }
