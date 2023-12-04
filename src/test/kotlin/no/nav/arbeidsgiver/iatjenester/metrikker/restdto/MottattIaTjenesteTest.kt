@@ -19,7 +19,7 @@ internal class MottattIaTjenesteTest {
         val innloggetIaTjeneste = InnloggetMottattIaTjeneste(
             UNDERENHET_ORGNR,
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SAMTALESTØTTE,
+            Kilde.FOREBYGGE_FRAVÆR,
             TODAY
         )
         val underenhet = Underenhet(
@@ -70,7 +70,7 @@ internal class MottattIaTjenesteTest {
         assertThat(orgnr).isEqualTo(UNDERENHET_ORGNR)
         assertThat(næringKode5Siffer).isEqualTo("88911")
         assertThat(type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
-        assertThat(kilde).isEqualTo(Kilde.SAMTALESTØTTE)
+        assertThat(kilde).isEqualTo(Kilde.FOREBYGGE_FRAVÆR)
         assertThat(tjenesteMottakkelsesdato).isEqualTo(TODAY)
         assertThat(antallAnsatte).isEqualTo(15)
         assertThat(næringskode5SifferBeskrivelse).isEqualTo("Barnehager")
