@@ -12,7 +12,6 @@ import java.time.ZonedDateTime
 
 enum class Kilde {
     SYKEFRAVÆRSSTATISTIKK,
-    SAMTALESTØTTE,
     FOREBYGGE_FRAVÆR,
     KALKULATOR,
 }
