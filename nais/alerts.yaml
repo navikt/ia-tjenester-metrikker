@@ -33,7 +33,7 @@ spec:
             severity: warning
         {{#unless isDev}}
         - alert: IngenMetrikkRegistrert
-          # Dette uttrykket er kun aktivt mellom kl 6-7 og kan kun trigges en gang i den perioden
+          # Dette uttrykket er kun aktivt mellom kl 6-7 og trigges kun én gang i den perioden
           expr: ((sum by(kilde) (increase(innloggede_ia_tjenester_metrikker_persistert_total[48h])) == bool 0) * on() scalar(hour()) == bool 4) == 1
           for: 45m
           group_by: [ kilde ]
