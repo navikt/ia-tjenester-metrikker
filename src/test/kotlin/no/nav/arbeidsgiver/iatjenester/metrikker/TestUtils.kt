@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Fnr
@@ -34,11 +34,11 @@ class TestUtils {
             return "$mockOAuth2Header.$localhostOnlyJasonPayload.$signature"
         }
 
-        fun vilkårligIaTjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata = InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+        fun vilkårligIaTjeneste(): MottattIaTjenesteMedVirksomhetGrunndata = MottattIaTjenesteMedVirksomhetGrunndata(
             "987654321",
             "12345",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            Kilde.FOREBYGGE_FRAVÆR,
             ZonedDateTime.now(),
             10,
             "En beskrivelse for næringskode 5 siffer",
@@ -54,7 +54,7 @@ class TestUtils {
             return """
             {
               "orgnr":"$orgnr",
-              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "kilde":"FOREBYGGE_FRAVÆR",
               "type":"DIGITAL_IA_TJENESTE",
               "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
             }
@@ -65,7 +65,7 @@ class TestUtils {
             return """
             {
               "orgnr":"$orgnr",
-              "kilde":"SYKEFRAVÆRSSTATISTIKK",
+              "kilde":"FOREBYGGE_FRAVÆR",
               "type":"drop table innlogget_ia_tjenester",
               "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
             }

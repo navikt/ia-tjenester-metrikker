@@ -5,7 +5,7 @@ import arrow.core.left
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Fylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.observability.PrometheusMetrics
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
@@ -17,7 +17,7 @@ class IaTjenesterMetrikkerService(
     private val prometheusMetrics: PrometheusMetrics
 ) {
 
-    fun sjekkOgPersister(innloggetIaTjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
+    fun sjekkOgPersister(innloggetIaTjeneste: MottattIaTjenesteMedVirksomhetGrunndata): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val iaTjenesteSjekkResultat = validerMottakelsesdato(innloggetIaTjeneste).onLeft {
             return it.left()
         }

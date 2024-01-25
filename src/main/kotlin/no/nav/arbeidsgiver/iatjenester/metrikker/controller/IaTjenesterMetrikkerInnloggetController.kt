@@ -8,7 +8,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretService
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.getInnloggetMottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerService
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.InnloggetBruker
@@ -48,18 +48,18 @@ class IaTjenesterMetrikkerInnloggetController(
         consumes = ["application/json"],
         produces = ["application/json"]
     )
-    fun leggTilNyIaMottattTjenesteForInnloggetKlient(
+    fun leggTilNyIaMottattTjeneste(
         @RequestHeader headers: HttpHeaders,
-        @RequestBody innloggetIaTjeneste: InnloggetMottattIaTjeneste
+        @RequestBody iaTjeneste: InnloggetMottattIaTjeneste
     ): ResponseEntity<ResponseStatus> {
-        log.info("Mottatt IA tjeneste (innlogget) fra ${innloggetIaTjeneste.kilde.name}")
+        log.info("Mottatt IA tjeneste (innlogget) fra ${iaTjeneste.kilde.name}")
 
-        if (!erOrgnrGyldig(innloggetIaTjeneste)) {
+        if (!erOrgnrGyldig(iaTjeneste)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResponseStatus.BadRequest)
         }
-        val orgnr = Orgnr(innloggetIaTjeneste.orgnr)
+        val orgnr = Orgnr(iaTjeneste.orgnr)
 
         val innloggetBruker: Either<Exception, InnloggetBruker> =
             tilgangskontrollService
@@ -83,7 +83,7 @@ class IaTjenesterMetrikkerInnloggetController(
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatus.Forbidden)
             }, {
-                byggIaTjenesteMetrikk(innloggetIaTjeneste).fold(
+                byggIaTjenesteMetrikk(iaTjeneste).fold(
                     { enhetsregisteretException ->
                         log.warn(
                             enhetsregisteretException.message,
@@ -102,7 +102,7 @@ class IaTjenesterMetrikkerInnloggetController(
 
     private fun byggIaTjenesteMetrikk(
         innloggetIaTjeneste: InnloggetMottattIaTjeneste
-    ): Either<EnhetsregisteretException, InnloggetMottattIaTjenesteMedVirksomhetGrunndata> {
+    ): Either<EnhetsregisteretException, MottattIaTjenesteMedVirksomhetGrunndata> {
         log.info(
             "Mottatt IaTjenester metrikk (med virksomhet metadata) av tpye '${innloggetIaTjeneste.type}' " +
                     "fra kilde '${innloggetIaTjeneste.kilde}' "
@@ -146,7 +146,7 @@ class IaTjenesterMetrikkerInnloggetController(
     }
 
     private fun persisterMottattIaTjenesteMetrikk(
-        innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+        innloggetIaTjenesteMedVirksomhetGrunndata: MottattIaTjenesteMedVirksomhetGrunndata
     ): ResponseEntity<ResponseStatus> {
 
         return when (val iaSjekk =

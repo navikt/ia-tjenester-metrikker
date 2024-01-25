@@ -6,6 +6,8 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.utils.andExpectMetricValueToBe
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.getPrometheusMetrics
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD
 import org.springframework.test.web.servlet.MockMvc
 
 
@@ -17,8 +19,9 @@ internal class PrometheusMetricsTest : IntegrationTestSuite() {
     lateinit var mockMvc: MockMvc
 
     @Test
+    @DirtiesContext(methodMode = BEFORE_METHOD)
     fun `Applikasjoner får registrert en counter ved oppstart`() {
-        val metricName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"SYKEFRAVÆRSSTATISTIKK\",}"
+        val metricName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"FOREBYGGE_FRAVÆR\",}"
         mockMvc.getPrometheusMetrics().andExpectMetricValueToBe(metricName, 0.0)
     }
 

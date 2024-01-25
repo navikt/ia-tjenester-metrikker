@@ -34,7 +34,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
 
 
     @Test
-    fun `hentInnloggetIaTjenesterMetrikker`() {
+    fun `hentInnloggetIaTjenesterMetrikker fungerer`() {
         opprettInnloggetIaTjenesterFraDatoer(
             listOf(
                 Date.valueOf(now().minusDays(3)),
@@ -57,7 +57,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
     fun `hentInnloggetIaTjenesterMetrikker fra en viss dato`() {
         val iaTjenesteMetrikk = IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk(
             "987654321",
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            Kilde.FOREBYGGE_FRAVÆR,
             Næring("12345", "Test 5 siffer", "Test 2 siffer"),
             "0576",
             "Oslo",
@@ -97,7 +97,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.orgnr).isEqualTo("987654321")
         assertThat(iaTjenesteRad.næringKode5Siffer).isEqualTo("12345")
         assertThat(iaTjenesteRad.type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
-        assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.SYKEFRAVÆRSSTATISTIKK)
+        assertThat(iaTjenesteRad.kilde).isEqualTo(Kilde.FOREBYGGE_FRAVÆR)
         assertThat(iaTjenesteRad.tjeneste_mottakkelsesdato).isNotNull()
         assertThat(iaTjenesteRad.antallAnsatte).isEqualTo(10)
         assertThat(iaTjenesteRad.næringskode5SifferBeskrivelse).isEqualTo("En beskrivelse for næringskode 5 siffer")
@@ -143,7 +143,7 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                 IaTjenesteRad(
                     id = index + 1,
                     type = TypeIATjeneste.DIGITAL_IA_TJENESTE,
-                    kilde = Kilde.SYKEFRAVÆRSSTATISTIKK,
+                    kilde = Kilde.FOREBYGGE_FRAVÆR,
                     orgnr = (999999900 + index).toString(),
                     næringKode5Siffer = "",
                     næring2SifferBeskrivelse = "",

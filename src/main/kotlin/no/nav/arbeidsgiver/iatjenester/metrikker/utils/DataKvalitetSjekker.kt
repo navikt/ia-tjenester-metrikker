@@ -1,13 +1,13 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
 
-private val MAKSIMUM_KOMMUNE_NR = 5444
-private val MAKSIMUM_SSBSEKTORKODE = 9000
-private val MAKSIMUM_ANTALL_KARAKTERERTILLATT = 512
+private const val MAKSIMUM_KOMMUNE_NR = 9999
+private const val MAKSIMUM_SSBSEKTORKODE = 9000
+private const val MAKSIMUM_ANTALL_KARAKTERER_TILLATT = 512
 
-fun erOrgnrGyldig(innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaTjenesteMedVirksomhetGrunndata)
+fun erOrgnrGyldig(innloggetIaTjenesteMedVirksomhetGrunndata: MottattIaTjenesteMedVirksomhetGrunndata)
         : Boolean {
     if (innloggetIaTjenesteMedVirksomhetGrunndata.orgnr.length != 9) {
         log("IaTjenesterMetrikkerInnloggetController")
@@ -40,31 +40,31 @@ fun erOrgnrGyldig(innloggetIaTjenesteMedVirksomhetGrunndata: InnloggetMottattIaT
     }
 
     if (
-        innloggetIaTjenesteMedVirksomhetGrunndata.næringskode5SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
+        innloggetIaTjenesteMedVirksomhetGrunndata.næringskode5SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERER_TILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for næringskode 5 siffer felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjenesteMedVirksomhetGrunndata.næring2SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.næring2SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERER_TILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for næringskode 2siffer felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjenesteMedVirksomhetGrunndata.SSBSektorKodeBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.SSBSektorKodeBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERER_TILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for SSB sektorkode felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjenesteMedVirksomhetGrunndata.fylke.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.fylke.length > MAKSIMUM_ANTALL_KARAKTERER_TILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for fylke felt fra innlogget tjeneste, avslutter registrering")
         return false
     }
 
-    if (innloggetIaTjenesteMedVirksomhetGrunndata.kommune.length > MAKSIMUM_ANTALL_KARAKTERERTILLATT) {
+    if (innloggetIaTjenesteMedVirksomhetGrunndata.kommune.length > MAKSIMUM_ANTALL_KARAKTERER_TILLATT) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for kommune felt fra innlogget tjeneste, avslutter registrering")
         return false

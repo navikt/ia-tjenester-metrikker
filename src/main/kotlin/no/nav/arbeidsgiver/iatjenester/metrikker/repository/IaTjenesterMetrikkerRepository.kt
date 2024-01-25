@@ -1,7 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -17,11 +17,11 @@ class IaTjenesterMetrikkerRepository(
     private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
 ) {
 
-    fun persister(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
+    fun persister(iatjeneste: MottattIaTjenesteMedVirksomhetGrunndata) {
         insertIaTjeneste(iatjeneste)
     }
 
-    private fun insertIaTjeneste(iatjeneste: InnloggetMottattIaTjenesteMedVirksomhetGrunndata) {
+    private fun insertIaTjeneste(iatjeneste: MottattIaTjenesteMedVirksomhetGrunndata) {
         namedParameterJdbcTemplate.update(
             """
                 INSERT INTO metrikker_ia_tjenester_innlogget(

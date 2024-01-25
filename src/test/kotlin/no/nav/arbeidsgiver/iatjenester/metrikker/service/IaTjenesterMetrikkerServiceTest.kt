@@ -6,7 +6,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.IntegrationTestSuite
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.observability.PrometheusMetrics
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.andExpectMetricValueToBe
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.getPrometheusMetrics
 import org.assertj.core.api.Assertions.assertThat
@@ -43,7 +43,7 @@ internal class IaTjenesterMetrikkerServiceTest : IntegrationTestSuite() {
     @Throws(Exception::class)
     fun `sjekkOgPersister oppdaterer teller for metrikk`() {
 
-        val counterName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"SYKEFRAVÆRSSTATISTIKK\",}"
+        val counterName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"FOREBYGGE_FRAVÆR\",}"
         mockMvc.getPrometheusMetrics().andExpectMetricValueToBe(counterName, 0.0)
 
         val sjekkOgOpprett =
@@ -81,7 +81,7 @@ internal class IaTjenesterMetrikkerServiceTest : IntegrationTestSuite() {
                 .sjekkOgPersister(levertIaTjenesteFraInnlandet)
 
         val persisterteData = (resultat as Either.Right).value
-                as InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+                as MottattIaTjenesteMedVirksomhetGrunndata
 
         assertThat(persisterteData.fylke).isEqualTo("Innlandet")
     }

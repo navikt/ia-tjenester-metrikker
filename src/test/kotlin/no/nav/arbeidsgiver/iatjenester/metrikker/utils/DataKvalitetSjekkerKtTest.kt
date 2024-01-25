@@ -1,15 +1,12 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjenesteMedVirksomhetGrunndata
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
-import org.junit.Assert
 import org.junit.jupiter.api.*
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.io.PrintStream
 import java.time.ZonedDateTime
 import kotlin.test.assertFalse
@@ -17,9 +14,8 @@ import kotlin.test.assertTrue
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class DataKvalitetSjekkerKtTest {
-    private val log: Logger = LoggerFactory.getLogger(DataKvalitetSjekkerKtTest::class.java)
-    private val mockOut = Mockito.mock(PrintStream::class.java);
-    private lateinit var stdOut: PrintStream;
+    private val mockOut = Mockito.mock(PrintStream::class.java)
+    private lateinit var stdOut: PrintStream
 
     @BeforeEach
     fun setUp() {
@@ -49,7 +45,7 @@ internal class DataKvalitetSjekkerKtTest {
         assertFalse(erOrgnrGyldig(getUgyldigOrgNrTestInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
         val value = captor.value.toString(Charsets.UTF_8)
-        Assert.assertTrue(value.contains("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering"))
+        Assertions.assertTrue(value.contains("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering"))
     }
 
     @Test
@@ -58,7 +54,7 @@ internal class DataKvalitetSjekkerKtTest {
         assertFalse(erOrgnrGyldig(getUgyldigNæringskode5SifferInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
         val value = captor.value.toString(Charsets.UTF_8)
-        Assert.assertTrue(value.contains("Ugyldig næringskode5siffer mottatt fra innlogget tjeneste, avslutter registrering"))
+        Assertions.assertTrue(value.contains("Ugyldig næringskode5siffer mottatt fra innlogget tjeneste, avslutter registrering"))
     }
 
     @Test
@@ -67,7 +63,7 @@ internal class DataKvalitetSjekkerKtTest {
         assertFalse(erOrgnrGyldig(getUgyldigKommuneNrInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
         val value = captor.value.toString(Charsets.UTF_8)
-        Assert.assertTrue(value.contains("Ugyldig kommunenummer mottatt fra innlogget tjeneste, avslutter registrering"))
+        Assertions.assertTrue(value.contains("Ugyldig kommunenummer mottatt fra innlogget tjeneste, avslutter registrering"))
     }
 
     @Test
@@ -76,7 +72,7 @@ internal class DataKvalitetSjekkerKtTest {
         assertFalse(erOrgnrGyldig(getUgyldigSSBSektorkodeInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
         val value = captor.value.toString(Charsets.UTF_8)
-        Assert.assertTrue(value.contains("Ugyldig SSB sektorkode mottatt fra innlogget tjeneste, avslutter registrering"))
+        Assertions.assertTrue(value.contains("Ugyldig SSB sektorkode mottatt fra innlogget tjeneste, avslutter registrering"))
     }
 
     @Test
@@ -85,19 +81,19 @@ internal class DataKvalitetSjekkerKtTest {
         assertFalse(erOrgnrGyldig(getForLangNæringskode5SifferBeskrivelseInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
         val value = captor.value.toString(Charsets.UTF_8)
-        Assert.assertTrue(
+        Assertions.assertTrue(
             value.contains(
                 "For lang beskrivelse for næringskode 5 siffer felt fra innlogget tjeneste, avslutter registrering"
             )
         )
     }
 
-    fun getGyldigTestInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
-        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+    private fun getGyldigTestInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
+        return MottattIaTjenesteMedVirksomhetGrunndata(
             "999999999",
             "85000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            Kilde.FOREBYGGE_FRAVÆR,
             ZonedDateTime.now(),
             10,
             "barnehage",
@@ -110,12 +106,12 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getUgyldigOrgNrTestInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
-        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+    private fun getUgyldigOrgNrTestInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
+        return MottattIaTjenesteMedVirksomhetGrunndata(
             "959595",
             "85000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            Kilde.FOREBYGGE_FRAVÆR,
             ZonedDateTime.now(),
             10,
             "barnehage",
@@ -128,12 +124,12 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getUgyldigNæringskode5SifferInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
-        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+    private fun getUgyldigNæringskode5SifferInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
+        return MottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "85525000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            Kilde.FOREBYGGE_FRAVÆR,
             ZonedDateTime.now(),
             0,
             "feilnæringskodeognæring",
@@ -146,12 +142,12 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getUgyldigKommuneNrInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
-        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+    private fun getUgyldigKommuneNrInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
+        return MottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "25000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            Kilde.FOREBYGGE_FRAVÆR,
             ZonedDateTime.now(),
             0,
             "besk",
@@ -164,12 +160,12 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getUgyldigSSBSektorkodeInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
-        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+    private fun getUgyldigSSBSektorkodeInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
+        return MottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "25000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            Kilde.FOREBYGGE_FRAVÆR,
             ZonedDateTime.now(),
             0,
             "besk",
@@ -182,18 +178,18 @@ internal class DataKvalitetSjekkerKtTest {
         )
     }
 
-    fun getForLangNæringskode5SifferBeskrivelseInnloggetIATjeneste(): InnloggetMottattIaTjenesteMedVirksomhetGrunndata {
+    private fun getForLangNæringskode5SifferBeskrivelseInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
         var i = 0
         var tekst = ""
         do {
             tekst += "K"
             i++
         } while (i <= 513)
-        return InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+        return MottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "25000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.SYKEFRAVÆRSSTATISTIKK,
+            Kilde.FOREBYGGE_FRAVÆR,
             ZonedDateTime.now(),
             0,
             tekst,

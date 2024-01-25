@@ -38,7 +38,7 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
         val requestBodyUtenMottakkelsesdato: String = """
             {
               "orgnr": "$ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN",
-              "kilde": "SYKEFRAVÆRSSTATISTIKK",
+              "kilde": "FOREBYGGE_FRAVÆR",
               "type": "DIGITAL_IA_TJENESTE"
             }
         """.trimIndent()

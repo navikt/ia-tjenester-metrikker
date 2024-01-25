@@ -11,17 +11,11 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Underenhet
 import java.time.ZonedDateTime
 
 enum class Kilde {
-    SYKEFRAVÆRSSTATISTIKK,
     FOREBYGGE_FRAVÆR,
-    FOREBYGGINGSPLAN,
-    KALKULATOR,
 }
 
 enum class TypeIATjeneste {
     DIGITAL_IA_TJENESTE,
-    INFORMASJONSTJENESTE,
-    INTERAKSJONSTJENESTE,
-    RÅDGIVNING,
 }
 
 
@@ -42,7 +36,7 @@ data class InnloggetMottattIaTjeneste(
     override var tjenesteMottakkelsesdato: ZonedDateTime = ZonedDateTime.now(),
 ) : MottattIaTjeneste
 
-data class InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+data class MottattIaTjenesteMedVirksomhetGrunndata(
     var orgnr: String,
     var næringKode5Siffer: String,
     override var type: TypeIATjeneste,
@@ -69,7 +63,7 @@ fun getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
     innloggetIaTjeneste: InnloggetMottattIaTjeneste,
     underenhet: Underenhet,
     overordnetEnhet: OverordnetEnhet
-) = InnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+) = MottattIaTjenesteMedVirksomhetGrunndata(
     orgnr = innloggetIaTjeneste.orgnr,
     næringKode5Siffer = underenhet.næringskode.kode!!,
     type = innloggetIaTjeneste.type,
