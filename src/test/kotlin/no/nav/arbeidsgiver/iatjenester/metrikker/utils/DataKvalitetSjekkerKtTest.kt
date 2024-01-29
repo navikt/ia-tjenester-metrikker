@@ -58,7 +58,7 @@ internal class DataKvalitetSjekkerKtTest {
     }
 
     @Test
-    fun `sjekkDataKvalitet skal logge og retunere false ved ugyldig kommunenr`() {
+    fun `sjekkDataKvalitet skal logge og returnere false ved ugyldig kommunenr`() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
         assertFalse(erOrgnrGyldig(getUgyldigKommuneNrInnloggetIATjeneste()))
         verify(System.out).write(captor.capture())
@@ -155,7 +155,7 @@ internal class DataKvalitetSjekkerKtTest {
             "9000",
             "besk",
             "fylke ",
-            "5445",
+            "10000",
             "Feil kommune"
         )
     }

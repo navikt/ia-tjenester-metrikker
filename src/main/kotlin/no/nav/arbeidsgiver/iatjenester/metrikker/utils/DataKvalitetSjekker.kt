@@ -10,7 +10,7 @@ private const val MAKSIMUM_ANTALL_KARAKTERER_TILLATT = 512
 fun erOrgnrGyldig(innloggetIaTjenesteMedVirksomhetGrunndata: MottattIaTjenesteMedVirksomhetGrunndata)
         : Boolean {
     if (innloggetIaTjenesteMedVirksomhetGrunndata.orgnr.length != 9) {
-        log("IaTjenesterMetrikkerInnloggetController")
+        log("")
             .warn("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering")
         return false
     }

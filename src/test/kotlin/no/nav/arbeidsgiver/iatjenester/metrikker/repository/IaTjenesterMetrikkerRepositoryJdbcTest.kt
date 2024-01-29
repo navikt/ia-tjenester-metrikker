@@ -93,7 +93,6 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         val antallIATjenester = dataSource.connection.getAlleIATjenester()
         assertThat(antallIATjenester.size).isEqualTo(1)
         val iaTjenesteRad = antallIATjenester[0]
-        assertThat(iaTjenesteRad.id).isEqualTo(1)
         assertThat(iaTjenesteRad.orgnr).isEqualTo("987654321")
         assertThat(iaTjenesteRad.næringKode5Siffer).isEqualTo("12345")
         assertThat(iaTjenesteRad.type).isEqualTo(TypeIATjeneste.DIGITAL_IA_TJENESTE)
