@@ -42,9 +42,7 @@ jobs:
     outputs:
       image: ${{ steps.docker-push.outputs.image }}
 
-
   deploy-to-dev:
-    if: github.ref == 'refs/heads/fix-dev'
     name: Deploy to dev-gcp
     needs: docker-build-push
     runs-on: ubuntu-latest
