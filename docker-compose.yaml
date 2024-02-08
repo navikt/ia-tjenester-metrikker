@@ -4,6 +4,7 @@ services:
     environment:
       TZ: Europe/Oslo
       SERVER_PORT: 6969
+      JSON_CONFIG: "{\"interactiveLogin\":true,\"tokenCallbacks\":[{\"issuerId\":\"tokenx\",\"tokenExpiry\":3600,\"requestMappings\":[{\"match\":\"*\",\"requestParam\":\"grant_type\",\"claims\":{\"aud\":[\"aud-localhost\"],\"pid\":\"01079812345\",\"sub\":\"01079812345\"}}]}]}"
     ports:
       - "6969:6969"
 
@@ -16,6 +17,14 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+
+  altinn:
+    container_name: altinn
+    image: wiremock/wiremock
+    ports:
+      - "8585:8080"
+    volumes:
+      - ./src/test/resources:/home/wiremock
 
 volumes:
   postgres-data:

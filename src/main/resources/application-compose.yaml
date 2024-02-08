@@ -34,12 +34,10 @@ springdoc:
     enabled: true
 
 no.nav.security.jwt:
-  expirythreshold: 10 #threshold in minutes until token expires (optional)
   issuer:
-    selvbetjening:
-      discoveryurl: http://localhost:6969/selvbetjening/.well-known/openid-configuration
+    tokenx:
+      discoveryurl: http://localhost:6969/tokenx/.well-known/openid-configuration
       accepted_audience: aud-localhost
-      cookiename: selvbetjening-idtoken
 
 tokenx-service:
   client-id: localhost:arbeidsgiver:ia-tjenester-metrikker
@@ -61,7 +59,7 @@ altinn-proxy:
   apiGwKey: "local-API-GW-key"
 
 enhetsregisteret:
-  url: "http://localhost:9191/enhetsregisteret/"
+  url: "http://localhost:8585/enhetsregisteret/"
 
 wiremock:
   port: 8585

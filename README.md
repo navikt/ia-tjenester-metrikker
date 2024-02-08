@@ -2,6 +2,43 @@
 
 Applikasjon som mottar og lagrer metrikker fra andre IA-applikasjoner.
 
+## Kjøre lokalt i docker-compose
+
+Pass på at docker-compose er satt opp og at docker kjører. Gå så til en rotmappen i prosjektet med en terminal og kjør `./run.sh`
+
+Appen burde da svare på `http://localhost:9090/ia-tjeneste-metrikker/ping`
+
+**Resten av guiden går utifra at `./run.sh` kjører, man er på mac og har `jq` og `psql` innstallert** 
+
+For å hente et gyldig token kan du kjøre følgende kommando i en terminal:
+
+```bash
+curl -H "Content-Type: application/x-www-form-urlencoded" --request POST  \
+  -d grant_type="client_credentials"                                      \
+  -d client_id="localhost:arbeidsgiver:ia-tjenester-metrikker"            \
+  -d client_secret="client_secret"                                        \
+  "http://localhost:6969/tokenx/token" | jq -r '.access_token' | pbcopy
+```
+
+Dette henter ut token fra mock-oauth2-server instansen, parses json-responsen og kopierer access tokenet inn i clipboardet.
+
+Man skal så kunne teste å sende inn en metrikk med hjelp av denne kommandoen:
+
+```bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $(pbpaste)" \
+  -d '{"orgnr": "811076112", "type": "DIGITAL_IA_TJENESTE", "kilde": "FOREBYGGE_FRAVÆR"}' \
+  "http://localhost:9090/ia-tjenester-metrikker/innlogget/mottatt-iatjeneste"
+```
+
+Dette burde returnere `{"status":"created"}`. For å sjekke at det har blitt peristert i databasen, sjekker man postgres:
+
+```bash
+PGPASSWORD=test psql -h localhost -p 5432 -U postgres postgres -c 'select * from metrikker_ia_tjenester_innlogget'
+```
+(se at siste rad har timestamp ca når man sendte inn metrikken)
+
 ## Kjøre lokalt
 
 Fra IntelliJ, trykk "Edit Configurations", "Add new configuration" og velg `Spring Boot`

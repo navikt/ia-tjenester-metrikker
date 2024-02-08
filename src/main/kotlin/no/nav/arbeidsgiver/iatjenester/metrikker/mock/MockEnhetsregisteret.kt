@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
 import java.net.URL
 import java.nio.charset.StandardCharsets
 
-@Profile("local", "compose")
+@Profile("local")
 @Component
 class MockEnhetsregisteret: InitializingBean, DisposableBean {
 
