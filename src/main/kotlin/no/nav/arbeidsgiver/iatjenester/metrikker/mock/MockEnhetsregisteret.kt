@@ -2,14 +2,13 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.mock
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.client.WireMock.any
-import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.common.ConsoleNotifier
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern
 import io.micrometer.core.instrument.util.IOUtils
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
+import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
@@ -18,15 +17,15 @@ import org.springframework.stereotype.Component
 import java.net.URL
 import java.nio.charset.StandardCharsets
 
-@Profile("local")
+@Profile("local", "compose")
 @Component
-class MockEnhetsregisteret: InitializingBean {
+class MockEnhetsregisteret: InitializingBean, DisposableBean {
 
     var wiremockPort: Int = 9191
     @Value("\${enhetsregisteret.url}")
     var enhetsregisteretUrl: String = "http://localhost:9191/enhetsregisteret/"
 
-    private val MOCK_SERVER_VERBOSE_CONSOLE_LOGGING_ENABLED = false;
+    private val MOCK_SERVER_VERBOSE_CONSOLE_LOGGING_ENABLED = false
     lateinit var wireMockServer: WireMockServer
 
     override fun afterPropertiesSet() {
@@ -67,5 +66,9 @@ class MockEnhetsregisteret: InitializingBean {
 
     private fun lesFilSomString(filnavn: String): String {
         return IOUtils.toString(this.javaClass.classLoader.getResourceAsStream("mock/$filnavn"), StandardCharsets.UTF_8)
+    }
+
+    override fun destroy() {
+        wireMockServer.stop()
     }
 }

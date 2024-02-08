@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 
-@Profile("local")
+@Profile("local", "compose")
 @Configuration
 class LokalCorsConfig {
     @Bean

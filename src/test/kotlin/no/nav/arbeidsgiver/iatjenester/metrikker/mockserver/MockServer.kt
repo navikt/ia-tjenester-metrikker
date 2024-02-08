@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
-@Profile("local")
+@Profile("local", "compose")
 @Component
 class MockServer: InitializingBean {
 
     @Value("\${wiremock.port}")
     var wiremockPort: Int = 8484
-    private val MOCK_SERVER_VERBOSE_CONSOLE_LOGGING_ENABLED = false;
+    private val MOCK_SERVER_VERBOSE_CONSOLE_LOGGING_ENABLED = false
     lateinit var wireMockServer: WireMockServer
 
     override fun afterPropertiesSet() {

@@ -90,4 +90,6 @@ dependencies {
     testImplementation("no.nav.security:token-validation-spring-test:${navTokenSupportVersion}")
     testImplementation("io.mockk:mockk:1.13.5")
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.0.3")
+
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
