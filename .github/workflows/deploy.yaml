@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - fjern-uinnlogget
+      - oppdateringer-og-rydd
     paths-ignore:
       - '**.md'
       - '**/**.md'
