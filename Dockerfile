@@ -1,4 +1,4 @@
-FROM cgr.dev/chainguard/jre:latest
+FROM cgr.dev/chainguard/jre-lts:latest
 ENV TZ="Europe/Oslo"
 COPY ./build/libs/ia-tjenester-metrikker-*.jar app.jar
 

@@ -14,8 +14,6 @@ class TilgangskontrollService(
     private val tokendingsService: TokenxService,
 ) {
 
-    val tilgangskontrollServiceLogger = log("TilgangskontrollService")
-
     fun hentInnloggetBruker(): Either<Exception, InnloggetBruker> {
         return hentInnloggetBrukerFraAltinn()
     }
@@ -32,7 +30,7 @@ class TilgangskontrollService(
 
             innloggetSelvbetjeningBruker.organisasjoner =
                 klient.hentOrganisasjoner(
-                    TokenXToken(tokendingsToken.tokenAsString),
+                    TokenXToken(tokendingsToken.encodedToken),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
                     filtrerPåAktiveOrganisasjoner = true
                 ).map {

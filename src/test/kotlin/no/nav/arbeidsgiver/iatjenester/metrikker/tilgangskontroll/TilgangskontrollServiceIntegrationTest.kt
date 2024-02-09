@@ -50,12 +50,12 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
         val tokenValidationContextMock: TokenValidationContext =
             Mockito.mock(TokenValidationContext::class.java)
 
-        Mockito.`when`(tokenValidationContextHolderMock.tokenValidationContext)
+        Mockito.`when`(tokenValidationContextHolderMock.getTokenValidationContext())
             .thenReturn(tokenValidationContextMock)
 
         Mockito.`when`(tokenValidationContextMock.firstValidToken)
             .thenReturn(
-                Optional.of(JwtToken(testTokenForTestFNR()))
+                JwtToken(testTokenForTestFNR())
             )
 
         dummyTilgangskontrollUtils =

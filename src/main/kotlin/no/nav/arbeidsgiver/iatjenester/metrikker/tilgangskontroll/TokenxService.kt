@@ -37,13 +37,15 @@ class TokenxService(
 
         val tokenExchangeRequest = OAuth2TokenExchangeRequest(
             clientAssertion = clientAssertionToken,
-            subjectToken = subjectToken.tokenAsString,
+            subjectToken = subjectToken.encodedToken,
             audience = altinnRettigheterProxyAudience
         )
 
         val response = tokenExchange(tokenEndpoint, tokenExchangeRequest)
-        return JwtToken(response.body?.access_token)
-            .also { log.debug("Token exchange completed; returned access_token has length of ${it.tokenAsString.length}") }
+        return response.body?.access_token?.let {
+            log.debug("Token exchange completed; returned access_token has length of ${it.length}")
+            JwtToken(it)
+        } ?: throw TilgangskontrollException("Kunne ikke veksle token mot altinn")
     }
 
     internal fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {

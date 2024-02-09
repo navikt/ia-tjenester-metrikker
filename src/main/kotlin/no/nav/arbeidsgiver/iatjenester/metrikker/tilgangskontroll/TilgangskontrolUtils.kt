@@ -11,20 +11,15 @@ class TilgangskontrollUtils @Autowired constructor(
 ) {
 
     fun hentJwtToken(): JwtToken =
-        contextHolder.tokenValidationContext.firstValidToken.orElseThrow {
-            TilgangskontrollException(
-                "Finner ikke jwt token"
-            )
-        }
+        contextHolder.getTokenValidationContext().firstValidToken ?:
+            throw TilgangskontrollException("Finner ikke jwt token")
 
     fun hentInnloggetBruker(): InnloggetBruker {
         val fnr = contextHolder
-            .tokenValidationContext
-            .anyValidClaims
-            .orElseThrow {
-                TilgangskontrollException("Kan ikke hente innlogget bruker. Finner ikke claims.")
-            }.getStringClaim("pid")
+            .getTokenValidationContext()
+            .anyValidClaims?.getStringClaim("pid") ?:
+                throw TilgangskontrollException("Kan ikke hente innlogget bruker. Finner ikke claims.")
 
-        return InnloggetBruker(Fnr(fnr));
+        return InnloggetBruker(Fnr(fnr))
     }
 }
