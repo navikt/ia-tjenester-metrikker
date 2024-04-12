@@ -4,7 +4,7 @@ plugins {
     id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.2"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.9.22"
-    id("com.github.ben-manes.versions") version "0.47.0"
+    id("com.github.ben-manes.versions") version "0.51.0"
     kotlin("jvm") version "1.9.22"
     kotlin("plugin.spring") version "1.9.22"
     application
