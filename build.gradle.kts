@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.2.2"
+    id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.9.22"
     id("com.github.ben-manes.versions") version "0.51.0"
@@ -11,7 +11,7 @@ plugins {
 }
 
 val navTokenSupportVersion = "4.1.4"
-val springdocOpenapiVersion = "1.7.0"
+val springdocOpenapiVersion = "1.8.0"
 val log4jVersion = "2.20.0"
 
 group = "no.nav.arbeidsgiver"
@@ -69,8 +69,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdocOpenapiVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:7.4")
     implementation("io.arrow-kt:arrow-core:1.2.4")
-    implementation("org.flywaydb:flyway-core:10.7.2")
-    implementation("org.flywaydb:flyway-database-postgresql:10.7.2")
+    implementation("org.flywaydb:flyway-core:10.11.0")
+    implementation("org.flywaydb:flyway-database-postgresql:10.11.0")
     implementation("org.postgresql:postgresql:42.7.3")
     implementation("org.springframework.retry:spring-retry")
     implementation("no.nav.security:token-validation-spring:${navTokenSupportVersion}")
