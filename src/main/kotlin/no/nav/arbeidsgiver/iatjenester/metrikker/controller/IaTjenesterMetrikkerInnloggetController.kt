@@ -57,7 +57,7 @@ class IaTjenesterMetrikkerInnloggetController(
         if (!erOrgnrGyldig(iaTjeneste)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(ResponseStatus.BadRequest)
+                .body(ResponseStatusConsts.BadRequest)
         }
         val orgnr = Orgnr(iaTjeneste.orgnr)
 
@@ -81,7 +81,7 @@ class IaTjenesterMetrikkerInnloggetController(
                 log.warn(it.message, it)
                 ResponseEntity.status(httpStatus)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(ResponseStatus.Forbidden)
+                    .body(ResponseStatusConsts.Forbidden)
             }, {
                 byggIaTjenesteMetrikk(iaTjeneste).fold(
                     { enhetsregisteretException ->
@@ -91,7 +91,7 @@ class IaTjenesterMetrikkerInnloggetController(
                         )
                         ResponseEntity.status(HttpStatus.OK)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .body(ResponseStatus.OK)
+                            .body(ResponseStatusConsts.OK)
                     },
                     { innloggetIaTjeneste -> persisterMottattIaTjenesteMetrikk(innloggetIaTjeneste) }
                 )
@@ -155,12 +155,12 @@ class IaTjenesterMetrikkerInnloggetController(
                 log.warn(iaSjekk.value.message, iaSjekk.value)
                 ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(ResponseStatus.BadRequest)
+                    .body(ResponseStatusConsts.BadRequest)
             }
             is Either.Right -> {
                 ResponseEntity.status(HttpStatus.CREATED)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(ResponseStatus.Created)
+                    .body(ResponseStatusConsts.Created)
             }
         }
     }

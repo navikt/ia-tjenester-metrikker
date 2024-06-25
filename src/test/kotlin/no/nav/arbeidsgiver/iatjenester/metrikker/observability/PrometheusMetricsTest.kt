@@ -21,7 +21,7 @@ internal class PrometheusMetricsTest : IntegrationTestSuite() {
     @Test
     @DirtiesContext(methodMode = BEFORE_METHOD)
     fun `Applikasjoner får registrert en counter ved oppstart`() {
-        val metricName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"FOREBYGGE_FRAVÆR\",}"
+        val metricName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"FOREBYGGE_FRAVÆR\"}"
         mockMvc.getPrometheusMetrics().andExpectMetricValueToBe(metricName, 0.0)
     }
 
@@ -30,7 +30,7 @@ internal class PrometheusMetricsTest : IntegrationTestSuite() {
         prometheusMetrics.inkrementerInnloggedeMetrikkerPersistert(
             Kilde.FOREBYGGE_FRAVÆR,
         )
-        val metricName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"FOREBYGGE_FRAVÆR\",}"
+        val metricName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"FOREBYGGE_FRAVÆR\"}"
         mockMvc.getPrometheusMetrics().andExpectMetricValueToBe(metricName, 1.0)
     }
 }

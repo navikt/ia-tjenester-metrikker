@@ -1,7 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 
 import arrow.core.Either
-import io.prometheus.client.CollectorRegistry
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnConfig
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlientConfig
@@ -37,11 +36,6 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
     @Autowired
     private lateinit var altinnrettigheterProxyKlient: AltinnrettigheterProxyKlient
 
-    @BeforeEach
-    @AfterEach
-    fun cleanup() {
-        CollectorRegistry.defaultRegistry.clear()
-    }
 
     init {
         val tokenValidationContextHolderMock: TokenValidationContextHolder =

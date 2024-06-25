@@ -43,7 +43,7 @@ internal class IaTjenesterMetrikkerServiceTest : IntegrationTestSuite() {
     @Throws(Exception::class)
     fun `sjekkOgPersister oppdaterer teller for metrikk`() {
 
-        val counterName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"FOREBYGGE_FRAVÆR\",}"
+        val counterName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"FOREBYGGE_FRAVÆR\"}"
         mockMvc.getPrometheusMetrics().andExpectMetricValueToBe(counterName, 0.0)
 
         val sjekkOgOpprett =

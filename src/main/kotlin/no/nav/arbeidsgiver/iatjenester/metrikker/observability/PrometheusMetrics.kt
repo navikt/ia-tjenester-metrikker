@@ -1,18 +1,19 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.observability
 
-import io.prometheus.client.CollectorRegistry
-import io.prometheus.client.Counter
+import io.prometheus.metrics.core.metrics.Counter
+import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
 import org.springframework.stereotype.Component
 
 @Component
 class PrometheusMetrics(
-    meterRegistry: CollectorRegistry,
+    meterRegistry: PrometheusRegistry,
 ) {
-    private val innloggedeMetrikkerPersistert = Counter.build()
+    private val innloggedeMetrikkerPersistert = Counter.builder()
         .name("innloggede_ia_tjenester_metrikker_persistert")
         .help("Teller hvor mange innloggede IA-tjenestemetrikker som har blitt persistert i databasen")
         .labelNames("kilde")
+        .withoutExemplars()
         .register(meterRegistry)
 
     init {
@@ -20,12 +21,12 @@ class PrometheusMetrics(
     }
 
     fun inkrementerInnloggedeMetrikkerPersistert(kilde: Kilde) {
-        innloggedeMetrikkerPersistert.labels(kilde.name).inc()
+        innloggedeMetrikkerPersistert.labelValues(kilde.name).inc()
     }
 
     private fun settOppTellere() {
         Kilde.entries.forEach {
-            innloggedeMetrikkerPersistert.labels(it.name).inc(0.0)
+            innloggedeMetrikkerPersistert.labelValues(it.name).inc(0.0)
         }
     }
 }
