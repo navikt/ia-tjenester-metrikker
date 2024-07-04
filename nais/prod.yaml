@@ -36,8 +36,6 @@ spec:
     inbound:
       rules:
         - application: min-ia
-          namespace: teamia
-        - application: min-ia
           namespace: pia
     outbound:
       rules:
