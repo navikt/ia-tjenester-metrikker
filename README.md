@@ -6,7 +6,7 @@ Applikasjon som mottar og lagrer metrikker fra andre IA-applikasjoner.
 
 Pass på at docker-compose er satt opp og at docker kjører. Gå så til en rotmappen i prosjektet med en terminal og kjør `./run.sh`
 
-Appen burde da svare på `http://localhost:9090/ia-tjeneste-metrikker/ping`
+Appen burde da svare på `http://localhost:9090/ia-tjenester-metrikker/ping`
 
 **Resten av guiden går utifra at `./run.sh` kjører, man er på mac og har `jq` og `psql` innstallert** 
 

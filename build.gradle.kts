@@ -1,15 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.3.1"
+    id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.4"
     id("com.github.ben-manes.versions") version "0.51.0"
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.spring") version "2.0.0"
+    kotlin("jvm") version "2.0.10"
+    kotlin("plugin.spring") version "2.0.10"
     application
 }
 
-val navTokenSupportVersion = "5.0.1"
+val navTokenSupportVersion = "5.0.2"
 val springdocOpenapiVersion = "1.8.0"
 val log4jVersion = "2.20.0"
 
@@ -66,25 +66,25 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-ui:$springdocOpenapiVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdocOpenapiVersion")
-    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
+    implementation("net.logstash.logback:logstash-logback-encoder:8.0")
     implementation("io.arrow-kt:arrow-core:1.2.4")
-    implementation("org.flywaydb:flyway-core:10.15.0")
-    implementation("org.flywaydb:flyway-database-postgresql:10.15.0")
+    implementation("org.flywaydb:flyway-core:10.17.1")
+    implementation("org.flywaydb:flyway-database-postgresql:10.17.1")
     implementation("org.postgresql:postgresql:42.7.3")
     implementation("org.springframework.retry:spring-retry")
     implementation("no.nav.security:token-validation-spring:${navTokenSupportVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:4.0.0")
     implementation("io.micrometer:micrometer-registry-prometheus")
 
-    compileOnly("jakarta.servlet:jakarta.servlet-api:6.0.0")
+    compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 
     // Test dependencies
-    testImplementation("com.h2database:h2:2.2.224")
+    testImplementation("com.h2database:h2:2.3.232")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:token-validation-spring-test:${navTokenSupportVersion}")
-    testImplementation("io.mockk:mockk:1.13.11")
-    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.1.3")
+    testImplementation("io.mockk:mockk:1.13.12")
+    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.1.4")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
