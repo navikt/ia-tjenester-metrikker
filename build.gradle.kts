@@ -1,15 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.3.2"
+    id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.4"
     id("com.github.ben-manes.versions") version "0.51.0"
     kotlin("jvm") version "2.0.10"
-    kotlin("plugin.spring") version "2.0.10"
+    kotlin("plugin.spring") version "2.0.20"
     application
 }
 
-val navTokenSupportVersion = "5.0.2"
+val navTokenSupportVersion = "5.0.5"
 val springdocOpenapiVersion = "1.8.0"
 val log4jVersion = "2.20.0"
 
@@ -70,11 +70,11 @@ dependencies {
     implementation("io.arrow-kt:arrow-core:1.2.4")
     implementation("org.flywaydb:flyway-core:10.17.1")
     implementation("org.flywaydb:flyway-database-postgresql:10.17.1")
-    implementation("org.postgresql:postgresql:42.7.3")
+    implementation("org.postgresql:postgresql:42.7.4")
     implementation("org.springframework.retry:spring-retry")
     implementation("no.nav.security:token-validation-spring:${navTokenSupportVersion}")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:4.0.0")
-    implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.13.5")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 
