@@ -18,20 +18,18 @@ enum class TypeIATjeneste {
     DIGITAL_IA_TJENESTE,
 }
 
-
 interface MottattIaTjeneste {
     var tjenesteMottakkelsesdato: ZonedDateTime
     var type: TypeIATjeneste
     var kilde: Kilde
 }
 
-
 data class InnloggetMottattIaTjeneste(
     var orgnr: String,
     override var type: TypeIATjeneste,
     override var kilde: Kilde,
-    @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
-    @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @get:JsonSerialize(using = ZonedDateTimeSerializer::class)
+    @get:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @Schema(required = false, example = "2022-04-20T10:03:44Z")
     override var tjenesteMottakkelsesdato: ZonedDateTime = ZonedDateTime.now(),
 ) : MottattIaTjeneste
@@ -41,8 +39,8 @@ data class MottattIaTjenesteMedVirksomhetGrunndata(
     var næringKode5Siffer: String,
     override var type: TypeIATjeneste,
     override var kilde: Kilde,
-    @get: JsonSerialize(using = ZonedDateTimeSerializer::class)
-    @get: JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @get:JsonSerialize(using = ZonedDateTimeSerializer::class)
+    @get:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     override var tjenesteMottakkelsesdato: ZonedDateTime = ZonedDateTime.now(),
     var antallAnsatte: Int,
     var næringskode5SifferBeskrivelse: String,
@@ -55,14 +53,13 @@ data class MottattIaTjenesteMedVirksomhetGrunndata(
     var SSBSektorKodeBeskrivelse: String,
     var fylke: String,
     var kommunenummer: String,
-    var kommune: String
+    var kommune: String,
 ) : MottattIaTjeneste
-
 
 fun getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
     innloggetIaTjeneste: InnloggetMottattIaTjeneste,
     underenhet: Underenhet,
-    overordnetEnhet: OverordnetEnhet
+    overordnetEnhet: OverordnetEnhet,
 ) = MottattIaTjenesteMedVirksomhetGrunndata(
     orgnr = innloggetIaTjeneste.orgnr,
     næringKode5Siffer = underenhet.næringskode.kode!!,
@@ -72,11 +69,11 @@ fun getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
     antallAnsatte = underenhet.antallAnsatte,
     næringskode5SifferBeskrivelse = underenhet.næringskode.beskrivelse,
     næring2SifferBeskrivelse = Næringsbeskrivelser.mapTilNæringsbeskrivelse(
-        underenhet.næringskode.kode!!.substring(0, 2)
+        underenhet.næringskode.kode!!.substring(0, 2),
     ),
     SSBSektorKode = overordnetEnhet.institusjonellSektorkode.kode,
     SSBSektorKodeBeskrivelse = overordnetEnhet.institusjonellSektorkode.beskrivelse,
     fylke = underenhet.fylke.navn,
     kommunenummer = underenhet.kommunenummer,
-    kommune = underenhet.kommune
+    kommune = underenhet.kommune,
 )

@@ -1,8 +1,8 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.restdto
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Fylke
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InstitusjonellSektorkode
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
@@ -12,44 +12,43 @@ import java.time.ZonedDateTime
 import java.time.ZonedDateTime.now
 
 internal class MottattIaTjenesteTest {
-
     @Test
     fun getInnloggetMottattIaTjenesteMedVirksomhetGrunndata_returnerer_objektet_som_skal_persisteresi_DB() {
-
         val innloggetIaTjeneste = InnloggetMottattIaTjeneste(
             UNDERENHET_ORGNR,
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
             Kilde.FOREBYGGE_FRAVÆR,
-            TODAY
+            TODAY,
         )
         val underenhet = Underenhet(
             orgnr = Orgnr(UNDERENHET_ORGNR),
             navn = "Test bedrift",
             næringskode = Næringskode5Siffer(
                 "88911",
-                "Barnehager"
+                "Barnehager",
             ),
             overordnetEnhetOrgnr = Orgnr(OVERORDNET_ENHET_ORGNR),
             kommune = "DRAMMEN",
             kommunenummer = "3005",
             fylke = Fylke.VIKEN,
-            antallAnsatte = 15
+            antallAnsatte = 15,
         )
         val overordnetEnhet = OverordnetEnhet(
             orgnr = Orgnr(OVERORDNET_ENHET_ORGNR),
             navn = "Test overordnet enhet",
             næringskode = Næringskode5Siffer(
                 "88912",
-                "Barneparker og dagmammaer"
+                "Barneparker og dagmammaer",
             ),
             institusjonellSektorkode = InstitusjonellSektorkode(
                 "2100",
-                "Private aksjeselskaper mv."
+                "Private aksjeselskaper mv.",
             ),
-            antallAnsatte = 156
+            antallAnsatte = 156,
         )
 
-        val (orgnr,
+        val (
+            orgnr,
             næringKode5Siffer,
             type,
             kilde,
@@ -61,10 +60,11 @@ internal class MottattIaTjenesteTest {
             SSBSektorKodeBeskrivelse,
             fylke,
             kommunenummer,
-            kommune) = getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
+            kommune,
+        ) = getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
             innloggetIaTjeneste = innloggetIaTjeneste,
             underenhet = underenhet,
-            overordnetEnhet = overordnetEnhet
+            overordnetEnhet = overordnetEnhet,
         )
 
         assertThat(orgnr).isEqualTo(UNDERENHET_ORGNR)

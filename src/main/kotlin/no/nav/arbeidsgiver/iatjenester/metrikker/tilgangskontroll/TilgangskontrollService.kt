@@ -4,7 +4,6 @@ import arrow.core.Either
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
 import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.TokenXToken
-import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
 
 @Component
@@ -13,17 +12,12 @@ class TilgangskontrollService(
     private val tilgangskontrollUtils: TilgangskontrollUtils,
     private val tokendingsService: TokenxService,
 ) {
-
-    fun hentInnloggetBruker(): Either<Exception, InnloggetBruker> {
-        return hentInnloggetBrukerFraAltinn()
-    }
+    fun hentInnloggetBruker(): Either<Exception, InnloggetBruker> = hentInnloggetBrukerFraAltinn()
 
     fun hentInnloggetBrukerFraAltinn(): Either<Exception, InnloggetBruker> {
-
         try {
             val innloggetSelvbetjeningBruker: InnloggetBruker =
                 tilgangskontrollUtils.hentInnloggetBruker()
-
 
             val tokendingsToken =
                 tokendingsService.exchangeTokenToAltinnProxy(tilgangskontrollUtils.hentJwtToken())
@@ -32,7 +26,7 @@ class TilgangskontrollService(
                 klient.hentOrganisasjoner(
                     TokenXToken(tokendingsToken.encodedToken),
                     Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                    filtrerPåAktiveOrganisasjoner = true
+                    filtrerPåAktiveOrganisasjoner = true,
                 ).map {
                     AltinnOrganisasjon(
                         it.name,
@@ -40,7 +34,7 @@ class TilgangskontrollService(
                         it.organizationNumber,
                         it.organizationForm,
                         it.status!!,
-                        it.type
+                        it.type,
                     )
                 }
             return Either.Right(innloggetSelvbetjeningBruker)
@@ -49,12 +43,10 @@ class TilgangskontrollService(
         }
     }
 
-
     companion object {
-
         fun sjekkTilgangTilOrgnr(
             orgnr: Orgnr,
-            bruker: InnloggetBruker
+            bruker: InnloggetBruker,
         ): Either<TilgangskontrollException, InnloggetBruker> {
             val harTilgang = bruker.harTilgang(orgnr)
             return if (harTilgang) {

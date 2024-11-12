@@ -1,8 +1,8 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.repository
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
@@ -14,9 +14,8 @@ import java.time.LocalDateTime
 @Transactional
 @Repository
 class IaTjenesterMetrikkerRepository(
-    private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
+    private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,
 ) {
-
     fun persister(iatjeneste: MottattIaTjenesteMedVirksomhetGrunndata) {
         insertIaTjeneste(iatjeneste)
     }
@@ -62,26 +61,25 @@ class IaTjenesterMetrikkerRepository(
                 .addValue("kilde_applikasjon", iatjeneste.kilde.name)
                 .addValue(
                     "tjeneste_mottakkelsesdato",
-                    iatjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
+                    iatjeneste.tjenesteMottakkelsesdato.toLocalDateTime(),
                 )
                 .addValue("antall_ansatte", iatjeneste.antallAnsatte)
                 .addValue(
                     "naering_kode5siffer_beskrivelse",
-                    iatjeneste.næringskode5SifferBeskrivelse
+                    iatjeneste.næringskode5SifferBeskrivelse,
                 )
                 .addValue("naering_2siffer_beskrivelse", iatjeneste.næring2SifferBeskrivelse)
                 .addValue("ssb_sektor_kode", iatjeneste.SSBSektorKode)
                 .addValue("ssb_sektor_kode_beskrivelse", iatjeneste.SSBSektorKodeBeskrivelse)
                 .addValue("fylke", iatjeneste.fylke)
                 .addValue("kommunenummer", iatjeneste.kommunenummer)
-                .addValue("kommune", iatjeneste.kommune)
+                .addValue("kommune", iatjeneste.kommune),
         )
     }
 
     sealed class MottattIaTjenesteMetrikk {
         abstract val tidspunkt: LocalDateTime
         abstract val kilde: Kilde
-
     }
 
     data class MottattInnloggetIaTjenesteMetrikk(
@@ -91,9 +89,8 @@ class IaTjenesterMetrikkerRepository(
         val kommunenummer: String,
         val kommune: String,
         val fylke: String,
-        override val tidspunkt: LocalDateTime
+        override val tidspunkt: LocalDateTime,
     ) : MottattIaTjenesteMetrikk()
-
 
     fun hentInnloggetMetrikker(startDato: LocalDate): List<MottattInnloggetIaTjenesteMetrikk> =
         namedParameterJdbcTemplate.query(
@@ -110,7 +107,7 @@ class IaTjenesterMetrikkerRepository(
             from metrikker_ia_tjenester_innlogget 
             where tjeneste_mottakkelsesdato >= :startDato
             """,
-            MapSqlParameterSource().addValue("startDato", startDato)
+            MapSqlParameterSource().addValue("startDato", startDato),
         ) { rs: ResultSet, _: Int ->
             MottattInnloggetIaTjenesteMetrikk(
                 rs.getString("orgnr"),
@@ -118,13 +115,12 @@ class IaTjenesterMetrikkerRepository(
                 Næring(
                     rs.getString("naering_kode_5siffer"),
                     rs.getString("naering_kode5siffer_beskrivelse"),
-                    rs.getString("naering_2siffer_beskrivelse")
-
+                    rs.getString("naering_2siffer_beskrivelse"),
                 ),
                 rs.getString("kommunenummer"),
                 rs.getString("kommune"),
                 rs.getString("fylke"),
-                rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay()
+                rs.getDate("tjeneste_mottakkelsesdato").toLocalDate().atStartOfDay(),
             )
         }
 }

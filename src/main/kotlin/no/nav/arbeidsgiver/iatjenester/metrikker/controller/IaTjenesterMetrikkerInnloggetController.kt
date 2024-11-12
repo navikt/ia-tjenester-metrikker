@@ -35,22 +35,22 @@ import org.springframework.web.bind.annotation.RestController
     origins = [
         "https://forebygge-fravar.intern.dev.nav.no",
     ],
-    allowCredentials = "true"
+    allowCredentials = "true",
 )
 @RequestMapping("/innlogget")
 class IaTjenesterMetrikkerInnloggetController(
     private val iaTjenesterMetrikkerService: IaTjenesterMetrikkerService,
     private val tilgangskontrollService: TilgangskontrollService,
-    private val enhetsregisteretService: EnhetsregisteretService
+    private val enhetsregisteretService: EnhetsregisteretService,
 ) {
     @PostMapping(
         value = ["/mottatt-iatjeneste"],
         consumes = ["application/json"],
-        produces = ["application/json"]
+        produces = ["application/json"],
     )
     fun leggTilNyIaMottattTjeneste(
         @RequestHeader headers: HttpHeaders,
-        @RequestBody iaTjeneste: InnloggetMottattIaTjeneste
+        @RequestBody iaTjeneste: InnloggetMottattIaTjeneste,
     ): ResponseEntity<ResponseStatus> {
         log.info("Mottatt IA tjeneste (innlogget) fra ${iaTjeneste.kilde.name}")
 
@@ -82,30 +82,30 @@ class IaTjenesterMetrikkerInnloggetController(
                 ResponseEntity.status(httpStatus)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatusConsts.Forbidden)
-            }, {
+            },
+            {
                 byggIaTjenesteMetrikk(iaTjeneste).fold(
                     { enhetsregisteretException ->
                         log.warn(
                             enhetsregisteretException.message,
-                            enhetsregisteretException
+                            enhetsregisteretException,
                         )
                         ResponseEntity.status(HttpStatus.OK)
                             .contentType(MediaType.APPLICATION_JSON)
                             .body(ResponseStatusConsts.OK)
                     },
-                    { innloggetIaTjeneste -> persisterMottattIaTjenesteMetrikk(innloggetIaTjeneste) }
+                    { innloggetIaTjeneste -> persisterMottattIaTjenesteMetrikk(innloggetIaTjeneste) },
                 )
-            }
+            },
         )
     }
 
-
     private fun byggIaTjenesteMetrikk(
-        innloggetIaTjeneste: InnloggetMottattIaTjeneste
+        innloggetIaTjeneste: InnloggetMottattIaTjeneste,
     ): Either<EnhetsregisteretException, MottattIaTjenesteMedVirksomhetGrunndata> {
         log.info(
             "Mottatt IaTjenester metrikk (med virksomhet metadata) av tpye '${innloggetIaTjeneste.type}' " +
-                    "fra kilde '${innloggetIaTjeneste.kilde}' "
+                "fra kilde '${innloggetIaTjeneste.kilde}' ",
         )
 
         val opplysningerForUnderenhet: Either<EnhetsregisteretException, Underenhet> =
@@ -115,42 +115,45 @@ class IaTjenesterMetrikkerInnloggetController(
             { enhetsregisteretException ->
                 log.warn(
                     "Kunne ikke hente opplysninger for underenhet i enhetsregisteret. " +
-                            "Feilmelding er: '${enhetsregisteretException.message}'"
+                        "Feilmelding er: '${enhetsregisteretException.message}'",
                 )
                 return Either.Left(enhetsregisteretException)
-            }, { underenhet ->
+            },
+            { underenhet ->
                 val opplysningerForOverordnetEnhet: Either<EnhetsregisteretException, OverordnetEnhet> =
                     enhetsregisteretService.hentOverordnetEnhet(
-                        underenhet.overordnetEnhetOrgnr
+                        underenhet.overordnetEnhetOrgnr,
                     )
 
                 opplysningerForOverordnetEnhet.fold(
                     { enhetsregisteretException ->
                         log.warn(
                             "Kunne ikke hente opplysninger for overordnetEnhet i enhetsregisteret. " +
-                                    "Feilmelding er: '${enhetsregisteretException.message}'"
+                                "Feilmelding er: '${enhetsregisteretException.message}'",
                         )
                         Either.Left(enhetsregisteretException)
-                    }, { overordnetEnhet ->
+                    },
+                    { overordnetEnhet ->
                         Either.Right(
                             getInnloggetMottattIaTjenesteMedVirksomhetGrunndata(
                                 innloggetIaTjeneste,
                                 underenhet,
-                                overordnetEnhet
-                            )
+                                overordnetEnhet,
+                            ),
                         )
-                    }
+                    },
                 )
-            }
+            },
         )
     }
 
     private fun persisterMottattIaTjenesteMetrikk(
-        innloggetIaTjenesteMedVirksomhetGrunndata: MottattIaTjenesteMedVirksomhetGrunndata
-    ): ResponseEntity<ResponseStatus> {
-
-        return when (val iaSjekk =
-            iaTjenesterMetrikkerService.sjekkOgPersister(innloggetIaTjenesteMedVirksomhetGrunndata)) {
+        innloggetIaTjenesteMedVirksomhetGrunndata: MottattIaTjenesteMedVirksomhetGrunndata,
+    ): ResponseEntity<ResponseStatus> =
+        when (
+            val iaSjekk =
+                iaTjenesterMetrikkerService.sjekkOgPersister(innloggetIaTjenesteMedVirksomhetGrunndata)
+        ) {
             is Either.Left -> {
                 log.warn(iaSjekk.value.message, iaSjekk.value)
                 ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -163,7 +166,4 @@ class IaTjenesterMetrikkerInnloggetController(
                     .body(ResponseStatusConsts.Created)
             }
         }
-    }
 }
-
-

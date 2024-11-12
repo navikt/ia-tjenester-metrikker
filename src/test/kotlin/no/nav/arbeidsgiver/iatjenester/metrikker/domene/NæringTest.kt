@@ -6,18 +6,14 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring.Arbeidsmiljøpor
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring.ArbeidsmiljøportalenBransje.NÆRINGSMIDDELINDUSTRI
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næring.ArbeidsmiljøportalenBransje.TRANSPORT
 import org.assertj.core.api.Assertions
-
 import org.junit.jupiter.api.Test
 
 internal class NæringTest {
-
     @Test
     fun `getArbeidstilsynetBransje returner riktig bransje basert på 5-sifret kode`() {
-
         val næringForBarnehage = Næring("88911", "Barnehager", "Helse- og sosialtjenester")
         val næringForTransport =
             Næring("49311", "Rutebiltransport i by- og forstadsområde", "Landtransport og rørtransport")
-
 
         Assertions.assertThat(næringForBarnehage.getArbeidstilsynetBransje()).isEqualTo(BARNEHAGER)
         Assertions.assertThat(næringForTransport.getArbeidstilsynetBransje()).isEqualTo(TRANSPORT)
@@ -46,5 +42,6 @@ internal class NæringTest {
     fun `getNæringskode2Siffer mapper femsifret kode til tosifret`() {
         val dummyNæring = Næring("12345", "xxx", "yyy")
 
-        Assertions.assertThat(dummyNæring.getKode2siffer()).isEqualTo("12")}
+        Assertions.assertThat(dummyNæring.getKode2siffer()).isEqualTo("12")
+    }
 }

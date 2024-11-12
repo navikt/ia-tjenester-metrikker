@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.util.*
+import java.util.UUID
 
 private const val DEFAULT_CALLID_HEADER_NAME = "Nav-CallId"
 private const val ALTERNATIVE_CALLID_HEADER_NAME = "Nav-Call-Id"
@@ -21,7 +21,7 @@ class MDCFilter : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         try {
             val correlationId = extractCorrelationId(request)
@@ -36,7 +36,10 @@ class MDCFilter : OncePerRequestFilter() {
         }
     }
 
-    private fun addToMDC(callId: String, correlationId: String) {
+    private fun addToMDC(
+        callId: String,
+        correlationId: String,
+    ) {
         MDC.put(DEFAULT_CALLID_HEADER_NAME, callId)
         MDC.put(ALTERNATIVE_CALLID_HEADER_NAME, callId)
         MDC.put(CORRELATION_ID_MDC_NAME, correlationId)
@@ -48,11 +51,10 @@ class MDCFilter : OncePerRequestFilter() {
         MDC.remove(CORRELATION_ID_MDC_NAME)
     }
 
-    private fun extractCorrelationId(request: HttpServletRequest): String {
-        return Option.fromNullable(request.getHeader(CORRELATION_ID_HEADER_NAME))
+    private fun extractCorrelationId(request: HttpServletRequest): String =
+        Option.fromNullable(request.getHeader(CORRELATION_ID_HEADER_NAME))
             .filter { it.isNotBlank() }
             .fold({ UUID.randomUUID().toString() }, { it })
-    }
 
     private fun extractCallId(request: HttpServletRequest): String {
         val defaultCallid: Option<String> =

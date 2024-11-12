@@ -22,7 +22,6 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
 
 private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
-
     @Autowired
     private val mockOAuth2Server: MockOAuth2Server? = null
 
@@ -35,13 +34,14 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
     @Test
     fun `Innlogget endepunkt mottatt-ia-tjeneste skal tillate at mottakkelsesdato ikke sendes i payload`() {
         // language=JSON
-        val requestBodyUtenMottakkelsesdato: String = """
+        val requestBodyUtenMottakkelsesdato: String =
+            """
             {
               "orgnr": "$ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN",
               "kilde": "FOREBYGGE_FRAVÆR",
               "type": "DIGITAL_IA_TJENESTE"
             }
-        """.trimIndent()
+            """.trimIndent()
         val gyldigToken = issueGyldigTokenXToken()
         val response = HttpClient.newBuilder().build().send(
             HttpRequest.newBuilder()
@@ -50,7 +50,7 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
                 .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBodyUtenMottakkelsesdato))
                 .build(),
-            BodyHandlers.ofString()
+            BodyHandlers.ofString(),
         )
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -67,12 +67,12 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
                 .uri(URI.create(hostAndPort() + innloggetEndepunkt))
                 .header(
                     HttpHeaders.AUTHORIZATION,
-                    "Bearer " + "DETTE_ER_IKKE_EN_GYLDIG_TOKEN"
+                    "Bearer " + "DETTE_ER_IKKE_EN_GYLDIG_TOKEN",
                 )
                 .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build(),
-            BodyHandlers.ofString()
+            BodyHandlers.ofString(),
         )
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
@@ -93,7 +93,7 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
                 .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build(),
-            BodyHandlers.ofString()
+            BodyHandlers.ofString(),
         )
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -114,7 +114,7 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
                 .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build(),
-            BodyHandlers.ofString()
+            BodyHandlers.ofString(),
         )
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -135,7 +135,7 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
                 .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build(),
-            BodyHandlers.ofString()
+            BodyHandlers.ofString(),
         )
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -157,7 +157,7 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
                 .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBodyMedOrgnrBrukerIkkeHarTilgangTil))
                 .build(),
-            BodyHandlers.ofString()
+            BodyHandlers.ofString(),
         )
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
@@ -178,7 +178,7 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
                 .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBodyMedUgyldigOrgnr))
                 .build(),
-            BodyHandlers.ofString()
+            BodyHandlers.ofString(),
         )
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
@@ -188,7 +188,6 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
 
     @Test
     fun `Innlogget endepunkt mottatt-ia-tjeneste returnerer 400 bad request ved ugyldig data (håndterer feil Enum verdi i request body)`() {
-
         val requestBody: String = ugyldigInnloggetIaTjenesteAsString(ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN)
 
         val gyldigToken = issueGyldigTokenXToken()
@@ -199,7 +198,7 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
                 .header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build(),
-            BodyHandlers.ofString()
+            BodyHandlers.ofString(),
         )
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
@@ -219,7 +218,7 @@ private class IaTjenesterMetrikkerControllerTest : IntegrationTestSuite() {
                 typeHeader = "JWT",
                 audience = listOf("someaudience"),
                 claims = mapOf(Pair("pid", "01079812345")),
-                expiry = 3600
-            )
+                expiry = 3600,
+            ),
         ).serialize()
 }

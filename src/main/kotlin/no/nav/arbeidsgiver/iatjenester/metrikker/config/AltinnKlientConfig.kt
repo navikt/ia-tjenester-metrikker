@@ -8,8 +8,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class AltinnKlientConfig(private val altinnConfigProperties: AltinnConfigProperties) {
-
+class AltinnKlientConfig(
+    private val altinnConfigProperties: AltinnConfigProperties,
+) {
     @Bean
     fun altinnrettigheterProxyKlient(): AltinnrettigheterProxyKlient {
         val proxyKlientConfig = AltinnrettigheterProxyKlientConfig(
@@ -17,8 +18,8 @@ class AltinnKlientConfig(private val altinnConfigProperties: AltinnConfigPropert
             AltinnConfig(
                 altinnConfigProperties.fallbackUrl,
                 altinnConfigProperties.altinnApiKey,
-                altinnConfigProperties.apiGwKey
-            )
+                altinnConfigProperties.apiGwKey,
+            ),
         )
         return AltinnrettigheterProxyKlient(proxyKlientConfig)
     }

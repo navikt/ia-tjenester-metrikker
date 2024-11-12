@@ -8,20 +8,18 @@ import org.springframework.stereotype.Component
 import java.security.InvalidParameterException
 
 @Component
-class EnhetsregisteretService(private val enhetsregisteretClient: EnhetsregisteretClient) {
-
-    fun hentUnderenhet(orgnrUnderenhet: Orgnr): Either<EnhetsregisteretException, Underenhet> {
-
-        return try {
+class EnhetsregisteretService(
+    private val enhetsregisteretClient: EnhetsregisteretClient,
+) {
+    fun hentUnderenhet(orgnrUnderenhet: Orgnr): Either<EnhetsregisteretException, Underenhet> =
+        try {
             val underenhet: Underenhet = enhetsregisteretClient.hentUnderenhet(orgnrUnderenhet)
             Either.Right(underenhet)
         } catch (e: Exception) {
             Either.Left(EnhetsregisteretException(e.message, e))
         }
-    }
 
-    fun hentOverordnetEnhet(orgnrOverordnetEnhet: Orgnr?):
-            Either<EnhetsregisteretException, OverordnetEnhet> {
+    fun hentOverordnetEnhet(orgnrOverordnetEnhet: Orgnr?): Either<EnhetsregisteretException, OverordnetEnhet> {
         orgnrOverordnetEnhet?.let {
             return try {
                 val overordnetEnhet: OverordnetEnhet =
@@ -35,5 +33,4 @@ class EnhetsregisteretService(private val enhetsregisteretClient: Enhetsregister
             return Either.Left(EnhetsregisteretException(melding, InvalidParameterException(melding)))
         }
     }
-
 }

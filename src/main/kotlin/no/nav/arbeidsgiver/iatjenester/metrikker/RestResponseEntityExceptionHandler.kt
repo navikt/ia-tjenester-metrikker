@@ -21,15 +21,13 @@ import org.springframework.web.context.request.WebRequest
 import org.springframework.web.server.ResponseStatusException
 import java.nio.file.AccessDeniedException
 
-
 @ControllerAdvice(annotations = [RestController::class])
 @ResponseBody
 class RestResponseEntityExceptionHandler {
-
     @ExceptionHandler(value = [IaTjenesterMetrikkerValideringException::class])
     protected fun handleBadRequestException(
         e: IaTjenesterMetrikkerValideringException,
-        webRequest: WebRequest?
+        webRequest: WebRequest?,
     ): ResponseEntity<Any> {
         val melding = "Innhold til request er ikke gyldig: '${e.årsak}'"
         val body = HashMap<String, String>(1)
@@ -38,8 +36,8 @@ class RestResponseEntityExceptionHandler {
             String.format(
                 "Returnerer følgende HttpStatus '%s' med melding '%s'",
                 HttpStatus.BAD_REQUEST.toString(),
-                melding
-            )
+                melding,
+            ),
         )
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -47,23 +45,30 @@ class RestResponseEntityExceptionHandler {
             .body(body)
     }
 
-    @ExceptionHandler(value = [JwtTokenValidatorException::class, JwtTokenMissingException::class, JwtTokenUnauthorizedException::class, AccessDeniedException::class])
+    @ExceptionHandler(
+        value = [
+            JwtTokenValidatorException::class,
+            JwtTokenMissingException::class,
+            JwtTokenUnauthorizedException::class,
+            AccessDeniedException::class,
+        ],
+    )
     protected fun handleUnauthorizedException(
         e: RuntimeException,
-        webRequest: WebRequest?
+        webRequest: WebRequest?,
     ): ResponseEntity<Any> {
         log.info("Validering av token feilet: '${e.cause?.message}'", e)
         return getResponseEntity(
             e,
             "You are not authorized to access this resource",
-            HttpStatus.UNAUTHORIZED
+            HttpStatus.UNAUTHORIZED,
         )
     }
 
     @ExceptionHandler(value = [AltinnrettigheterProxyKlientFallbackException::class, AltinnrettigheterProxyKlientException::class])
     protected fun handleAltinnException(
         e: RuntimeException,
-        webRequest: WebRequest?
+        webRequest: WebRequest?,
     ): ResponseEntity<Any> {
         log.error("Kunne ikke verifisere at innlogget bruker har tilgang til orgnr i Altinn", e)
         return getResponseEntity(e, "Forbidden", HttpStatus.FORBIDDEN)
@@ -72,7 +77,7 @@ class RestResponseEntityExceptionHandler {
     @ExceptionHandler(value = [TilgangskontrollException::class])
     protected fun handleTilgangskontrollException(
         e: RuntimeException,
-        webRequest: WebRequest?
+        webRequest: WebRequest?,
     ): ResponseEntity<Any> {
         log.error("Bruker har tilgang til orgnr i Altinn", e)
         return getResponseEntity(e, "Forbidden", HttpStatus.FORBIDDEN)
@@ -81,7 +86,7 @@ class RestResponseEntityExceptionHandler {
     @ExceptionHandler(value = [ErrorResponseException::class])
     protected fun handleResponseStatusException(
         e: ResponseStatusException,
-        webRequest: WebRequest?
+        webRequest: WebRequest?,
     ): ResponseEntity<Any> {
         log.warn(e.message, e)
         return getResponseEntity(e, e.message, HttpStatus.valueOf(e.statusCode.value()))
@@ -90,20 +95,20 @@ class RestResponseEntityExceptionHandler {
     @ExceptionHandler(value = [HttpMessageNotReadableException::class])
     protected fun handleRequestParsingException(
         e: HttpMessageNotReadableException,
-        webRequest: WebRequest?
+        webRequest: WebRequest?,
     ): ResponseEntity<Any> {
         log.info(e.message, e)
         return getResponseEntity(
             e,
             "Innhold til request er ikke gyldig (feil ved parsing av request body)",
-            HttpStatus.BAD_REQUEST
+            HttpStatus.BAD_REQUEST,
         )
     }
 
     @ExceptionHandler(value = [Exception::class])
     protected fun handleGenerellException(
         e: RuntimeException,
-        webRequest: WebRequest?
+        webRequest: WebRequest?,
     ): ResponseEntity<Any> {
         log.error("Uhåndtert feil", e)
         return getResponseEntity(e, "Internal error", HttpStatus.INTERNAL_SERVER_ERROR)
@@ -112,7 +117,7 @@ class RestResponseEntityExceptionHandler {
     private fun getResponseEntity(
         e: RuntimeException,
         melding: String,
-        status: HttpStatus
+        status: HttpStatus,
     ): ResponseEntity<Any> {
         val body = HashMap<String, String>(1)
         body["message"] = melding
@@ -122,10 +127,9 @@ class RestResponseEntityExceptionHandler {
                 "Returnerer følgende HttpStatus '%s' med melding '%s' pga exception '%s'",
                 status.toString(),
                 melding,
-                opprineligMeldingEllerNavnTilException
-            )
+                opprineligMeldingEllerNavnTilException,
+            ),
         )
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).body(body)
     }
-
 }

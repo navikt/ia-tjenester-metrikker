@@ -24,30 +24,28 @@ import java.time.LocalDate.now
 import javax.sql.DataSource
 
 class IaTjenesterMetrikkerRepositoryJdbcTest {
-
-    private val IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED = false
+    private val inMemDb2InteractiveConsoleActivated = false
 
     @BeforeEach
     fun cleanUp() {
         dataSource.connection.cleanTable("metrikker_ia_tjenester_innlogget")
     }
 
-
     @Test
     fun `hentInnloggetIaTjenesterMetrikker fungerer`() {
         opprettInnloggetIaTjenesterFraDatoer(
             listOf(
                 Date.valueOf(now().minusDays(3)),
-                Date.valueOf(now().minusDays(3))
-            )
+                Date.valueOf(now().minusDays(3)),
+            ),
         )
 
-        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
+        startWebConsoleForInMemDatabase(inMemDb2InteractiveConsoleActivated)
         val innloggetMetrikker =
             IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentInnloggetMetrikker(
                 now().withDayOfMonth(
-                    1
-                ).withMonth(1)
+                    1,
+                ).withMonth(1),
             )
 
         assertThat(innloggetMetrikker.size).isEqualTo(2)
@@ -62,20 +60,20 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
             "0576",
             "Oslo",
             "Oslo",
-            now().atStartOfDay()
+            now().atStartOfDay(),
         )
         opprettInnloggetIaTjenester(
             listOf(
-                iaTjenesteMetrikk
-            )
+                iaTjenesteMetrikk,
+            ),
         )
 
-        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
+        startWebConsoleForInMemDatabase(inMemDb2InteractiveConsoleActivated)
         val innloggetMetrikker =
             IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).hentInnloggetMetrikker(
                 now().withDayOfMonth(
-                    1
-                ).withMonth(1)
+                    1,
+                ).withMonth(1),
             )
 
         assertThat(innloggetMetrikker.size).isEqualTo(1)
@@ -84,12 +82,11 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
 
     @Test
     fun `opprett() lagrer en IaTjeneste i DB`() {
-
         IaTjenesterMetrikkerRepository(NamedParameterJdbcTemplate(dataSource)).persister(
-            TestUtils.vilkårligIaTjeneste()
+            TestUtils.vilkårligIaTjeneste(),
         )
 
-        startWebConsoleForInMemDatabase(IN_MEM_DB2_INTERACTIVE_CONSOLE_ACTIVATED)
+        startWebConsoleForInMemDatabase(inMemDb2InteractiveConsoleActivated)
         val antallIATjenester = dataSource.connection.getAlleIATjenester()
         assertThat(antallIATjenester.size).isEqualTo(1)
         val iaTjenesteRad = antallIATjenester[0]
@@ -109,11 +106,10 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         assertThat(iaTjenesteRad.opprettet).isNotNull()
     }
 
-
     private fun opprettInnloggetIaTjenester(
-        mottatteInnloggetIATjenester: List<IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk>
+        mottatteInnloggetIATjenester: List<IaTjenesterMetrikkerRepository.MottattInnloggetIaTjenesteMetrikk>,
     ) {
-        mottatteInnloggetIATjenester.forEachIndexed() { index, mottattIATjeneste ->
+        mottatteInnloggetIATjenester.forEachIndexed { index, mottattIATjeneste ->
             dataSource.connection.opprettInnloggetIaTjeneste(
                 IaTjenesteRad(
                     id = index + 1,
@@ -130,14 +126,14 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     fylke = mottattIATjeneste.fylke,
                     kommunenummer = mottattIATjeneste.kommunenummer,
                     kommune = mottattIATjeneste.kommune,
-                    opprettet = Date.valueOf(now())
-                )
+                    opprettet = Date.valueOf(now()),
+                ),
             )
         }
     }
 
     private fun opprettInnloggetIaTjenesterFraDatoer(dates: List<Date>) {
-        dates.forEachIndexed() { index, date ->
+        dates.forEachIndexed { index, date ->
             dataSource.connection.opprettInnloggetIaTjeneste(
                 IaTjenesteRad(
                     id = index + 1,
@@ -154,15 +150,13 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
                     fylke = "",
                     kommunenummer = "",
                     kommune = "",
-                    opprettet = Date.valueOf(now())
-                )
+                    opprettet = Date.valueOf(now()),
+                ),
             )
         }
     }
 
-
     companion object {
-
         private val dataSource: DataSource = HikariConfig().let { config ->
             config.jdbcUrl = "jdbc:h2:mem:ia-tjenester-metrikker;MODE=PostgreSQL"
             config.username = "sa"
@@ -187,7 +181,10 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         private fun startWebConsoleForInMemDatabase(isActivated: Boolean) {
             if (!isActivated) return
             val lokalDBInMemoryServer = Server.createTcpServer(
-                "-tcp", "-tcpAllowOthers", "-tcpPort", "9090"
+                "-tcp",
+                "-tcpAllowOthers",
+                "-tcpPort",
+                "9090",
             )
             lokalDBInMemoryServer.start()
             val connection = dataSource.connection.unwrap(JdbcConnection::class.java)
@@ -195,6 +192,3 @@ class IaTjenesterMetrikkerRepositoryJdbcTest {
         }
     }
 }
-
-
-

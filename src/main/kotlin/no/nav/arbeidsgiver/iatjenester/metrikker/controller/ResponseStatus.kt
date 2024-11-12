@@ -1,6 +1,5 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
-
 object ResponseStatusConsts {
     val OK = ResponseStatus("ok")
     val Created = ResponseStatus("created")
@@ -9,5 +8,5 @@ object ResponseStatusConsts {
 }
 
 data class ResponseStatus(
-    val status: String
+    val status: String,
 )

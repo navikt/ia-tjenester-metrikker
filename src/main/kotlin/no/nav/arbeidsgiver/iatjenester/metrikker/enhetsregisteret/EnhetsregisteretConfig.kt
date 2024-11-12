@@ -5,7 +5,9 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
 
 @Configuration
-class EnhetsregisteretConfig(private val enhetsregisteretProperties: EnhetsregisteretProperties) {
+class EnhetsregisteretConfig(
+    private val enhetsregisteretProperties: EnhetsregisteretProperties,
+) {
     @Bean
     fun restTemplateEnhetsregisteret(): RestTemplate = RestTemplate()
 
@@ -13,9 +15,9 @@ class EnhetsregisteretConfig(private val enhetsregisteretProperties: Enhetsregis
     fun enhetsregisteretUrl(): String = enhetsregisteretProperties.url
 
     @Bean
-    fun enhetregisteretClient(): EnhetsregisteretClient {
-        return EnhetsregisteretClient(
-            restTemplateEnhetsregisteret(), enhetsregisteretProperties.url
+    fun enhetregisteretClient(): EnhetsregisteretClient =
+        EnhetsregisteretClient(
+            restTemplateEnhetsregisteret(),
+            enhetsregisteretProperties.url,
         )
-    }
 }

@@ -16,14 +16,12 @@ import no.nav.security.token.support.core.jwt.JwtToken
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.fail
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.BeforeAll
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
-
+import kotlin.test.Test
 
 internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
-
     private lateinit var dummyTilgangskontrollUtils: TilgangskontrollUtils
     private lateinit var tilgangskontrollService: TilgangskontrollService
     private lateinit var tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer: TilgangskontrollService
@@ -35,7 +33,6 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
 
     @Autowired
     private lateinit var altinnrettigheterProxyKlient: AltinnrettigheterProxyKlient
-
 
     init {
         val tokenValidationContextHolderMock: TokenValidationContextHolder =
@@ -49,16 +46,14 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
 
         Mockito.`when`(tokenValidationContextMock.firstValidToken)
             .thenReturn(
-                JwtToken(testTokenForTestFNR())
+                JwtToken(testTokenForTestFNR()),
             )
 
         dummyTilgangskontrollUtils =
             object : TilgangskontrollUtils(
                 contextHolder = tokenValidationContextHolderMock,
             ) {
-                override fun hentInnloggetBruker(): InnloggetBruker {
-                    return InnloggetBruker(TEST_FNR)
-                }
+                override fun hentInnloggetBruker(): InnloggetBruker = InnloggetBruker(TEST_FNR)
             }
 
         proxyKlientSomIkkeSvarer = AltinnrettigheterProxyKlient(
@@ -67,39 +62,34 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
                 AltinnConfig(
                     url = "http://localhost:7778/virker/ikke/heller",
                     altinnApiGwApiKey = "",
-                    altinnApiKey = ""
-                )
-            )
+                    altinnApiKey = "",
+                ),
+            ),
         )
     }
-
 
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
         dummyTokendingsService =
             object : TokenxService(
-                tokenXConfig = tokenXConfigProperties
+                tokenXConfig = tokenXConfigProperties,
             ) {
-                override fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken {
-                    return JwtToken(FAKE_TOKEN_FRA_TOKENX)
-                }
+                override fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken = JwtToken(FAKE_TOKEN_FRA_TOKENX)
             }
 
         tilgangskontrollService =
             TilgangskontrollService(
                 altinnrettigheterProxyKlient,
                 dummyTilgangskontrollUtils,
-                dummyTokendingsService
+                dummyTokendingsService,
             )
         tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer =
             TilgangskontrollService(
                 proxyKlientSomIkkeSvarer,
                 dummyTilgangskontrollUtils,
-                dummyTokendingsService
+                dummyTokendingsService,
             )
-
     }
-
 
     @Test
     @Throws(Exception::class)
@@ -121,7 +111,7 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
                 organizationForm = "AS",
                 status = "Active",
                 type = "Enterprise",
-            )
+            ),
         )
 
         val actualInnloggetBruker =
@@ -132,7 +122,7 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
         Assertions.assertThat(actualInnloggetBruker.getOrNull()!!.organisasjoner)
             .isEqualTo(expectedInnloggetBruker.organisasjoner)
             .usingRecursiveFieldByFieldElementComparator(
-                RecursiveComparisonConfiguration.builder().withStrictTypeChecking(true).build()
+                RecursiveComparisonConfiguration.builder().withStrictTypeChecking(true).build(),
             )
     }
 

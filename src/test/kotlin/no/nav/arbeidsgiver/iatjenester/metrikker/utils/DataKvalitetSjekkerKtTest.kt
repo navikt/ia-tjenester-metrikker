@@ -1,9 +1,14 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
@@ -36,7 +41,6 @@ internal class DataKvalitetSjekkerKtTest {
     @Test
     fun `sjekkDataKvalitet skal returnere true hvis deata er gyldig`() {
         assertTrue(erOrgnrGyldig(getGyldigTestInnloggetIATjeneste()))
-
     }
 
     @Test
@@ -83,13 +87,13 @@ internal class DataKvalitetSjekkerKtTest {
         val value = captor.value.toString(Charsets.UTF_8)
         Assertions.assertTrue(
             value.contains(
-                "For lang beskrivelse for næringskode 5 siffer felt fra innlogget tjeneste, avslutter registrering"
-            )
+                "For lang beskrivelse for næringskode 5 siffer felt fra innlogget tjeneste, avslutter registrering",
+            ),
         )
     }
 
-    private fun getGyldigTestInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
-        return MottattIaTjenesteMedVirksomhetGrunndata(
+    private fun getGyldigTestInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata =
+        MottattIaTjenesteMedVirksomhetGrunndata(
             "999999999",
             "85000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -102,12 +106,11 @@ internal class DataKvalitetSjekkerKtTest {
             "Offenltig",
             "Oslo",
             "5444",
-            "Oslo"
+            "Oslo",
         )
-    }
 
-    private fun getUgyldigOrgNrTestInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
-        return MottattIaTjenesteMedVirksomhetGrunndata(
+    private fun getUgyldigOrgNrTestInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata =
+        MottattIaTjenesteMedVirksomhetGrunndata(
             "959595",
             "85000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -120,12 +123,11 @@ internal class DataKvalitetSjekkerKtTest {
             "Offenltig",
             "Oslo",
             "5444",
-            "Oslo"
+            "Oslo",
         )
-    }
 
-    private fun getUgyldigNæringskode5SifferInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
-        return MottattIaTjenesteMedVirksomhetGrunndata(
+    private fun getUgyldigNæringskode5SifferInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata =
+        MottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "85525000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -138,12 +140,11 @@ internal class DataKvalitetSjekkerKtTest {
             "feil ssbsektor kode",
             "Feil fylke ",
             "5445",
-            "Feil kommune"
+            "Feil kommune",
         )
-    }
 
-    private fun getUgyldigKommuneNrInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
-        return MottattIaTjenesteMedVirksomhetGrunndata(
+    private fun getUgyldigKommuneNrInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata =
+        MottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "25000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -156,12 +157,11 @@ internal class DataKvalitetSjekkerKtTest {
             "besk",
             "fylke ",
             "10000",
-            "Feil kommune"
+            "Feil kommune",
         )
-    }
 
-    private fun getUgyldigSSBSektorkodeInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
-        return MottattIaTjenesteMedVirksomhetGrunndata(
+    private fun getUgyldigSSBSektorkodeInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata =
+        MottattIaTjenesteMedVirksomhetGrunndata(
             "123456789",
             "25000",
             TypeIATjeneste.DIGITAL_IA_TJENESTE,
@@ -174,9 +174,8 @@ internal class DataKvalitetSjekkerKtTest {
             "besk",
             "fylke ",
             "5444",
-            "Feil kommune"
+            "Feil kommune",
         )
-    }
 
     private fun getForLangNæringskode5SifferBeskrivelseInnloggetIATjeneste(): MottattIaTjenesteMedVirksomhetGrunndata {
         var i = 0
@@ -198,7 +197,7 @@ internal class DataKvalitetSjekkerKtTest {
             "besk",
             "fylke ",
             "5444",
-            "Feil kommune"
+            "Feil kommune",
         )
     }
 }

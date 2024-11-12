@@ -3,8 +3,8 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Fylke
-import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.InstitusjonellSektorkode
+import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
@@ -14,9 +14,11 @@ import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import java.io.IOException
 
-
 @Configuration
-class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregisteretUrl: String) {
+class EnhetsregisteretClient(
+    val restTemplate: RestTemplate,
+    val enhetsregisteretUrl: String,
+) {
     private val objectMapper = jacksonObjectMapper()
 
     fun hentOverordnetEnhet(orgnrTilEnhet: Orgnr): OverordnetEnhet {
@@ -45,7 +47,6 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregistere
         }
     }
 
-
     private fun mapTilEnhet(jsonResponseFraEnhetsregisteret: String?): OverordnetEnhet {
         try {
             val enhetJson = objectMapper.readTree(jsonResponseFraEnhetsregisteret)
@@ -62,14 +63,14 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregistere
                 navn = navn,
                 næringskode = næringskode,
                 institusjonellSektorkode = institusjonellSektorkode,
-                antallAnsatte = antallAnsatte
+                antallAnsatte = antallAnsatte,
             )
         } catch (e: Exception) {
             when (e) {
                 is IOException, is NullPointerException, is IllegalArgumentException -> {
                     throw EnhetsregisteretMappingException(
                         "Feil ved kall til Enhetsregisteret. Kunne ikke parse respons til overordnet enhet.",
-                        e
+                        e,
                     )
                 }
                 else -> {
@@ -79,13 +80,17 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregistere
         }
     }
 
-    private fun validerReturnertOrgnrLikInnsendtOrgnr(innsendtOrgnr: Orgnr, returnertOrgnr: Orgnr) {
+    private fun validerReturnertOrgnrLikInnsendtOrgnr(
+        innsendtOrgnr: Orgnr,
+        returnertOrgnr: Orgnr,
+    ) {
         if (!innsendtOrgnr.equals(returnertOrgnr)) {
             throw IllegalStateException(
-                ("Orgnr hentet fra Enhetsregisteret samsvarer ikke med det innsendte orgnr. Request: "
-                        + innsendtOrgnr.verdi
-                        ) + ", response: "
-                        + returnertOrgnr.verdi
+                (
+                    "Orgnr hentet fra Enhetsregisteret samsvarer ikke med det innsendte orgnr. Request: " +
+                        innsendtOrgnr.verdi
+                ) + ", response: " +
+                    returnertOrgnr.verdi,
             )
         }
     }
@@ -104,20 +109,20 @@ class EnhetsregisteretClient(val restTemplate: RestTemplate, val enhetsregistere
                 navn = enhetJson["navn"].textValue(),
                 næringskode = objectMapper.treeToValue(
                     næringskodeJson,
-                    Næringskode5Siffer::class.java
+                    Næringskode5Siffer::class.java,
                 ),
                 overordnetEnhetOrgnr = Orgnr(enhetJson["overordnetEnhet"].textValue()),
                 kommune = kommune,
                 kommunenummer = kommunenummer,
                 fylke = Fylke.fraKommunenummer(kommunenummer),
-                antallAnsatte = enhetJson["antallAnsatte"].intValue()
+                antallAnsatte = enhetJson["antallAnsatte"].intValue(),
             )
         } catch (e: Exception) {
             when (e) {
                 is IOException, is NullPointerException -> {
                     throw EnhetsregisteretMappingException(
                         "Feil ved kall til Enhetsregisteret. Kunne ikke parse respons til underenhet.",
-                        e
+                        e,
                     )
                 }
                 else -> {

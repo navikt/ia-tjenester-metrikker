@@ -4,9 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "spring.flyway")
 data class FlywayConfigProperties(
-    var locations: Array<String>
+    var locations: Array<String>,
 ) {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -18,7 +17,5 @@ data class FlywayConfigProperties(
         return true
     }
 
-    override fun hashCode(): Int {
-        return locations.contentHashCode()
-    }
+    override fun hashCode(): Int = locations.contentHashCode()
 }

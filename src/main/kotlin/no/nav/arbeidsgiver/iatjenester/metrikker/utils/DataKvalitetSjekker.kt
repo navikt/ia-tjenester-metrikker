@@ -1,14 +1,13 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.utils
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.InnloggetMottattIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 
 private const val MAKSIMUM_KOMMUNE_NR = 9999
 private const val MAKSIMUM_SSBSEKTORKODE = 9000
 private const val MAKSIMUM_ANTALL_KARAKTERER_TILLATT = 512
 
-fun erOrgnrGyldig(innloggetIaTjenesteMedVirksomhetGrunndata: MottattIaTjenesteMedVirksomhetGrunndata)
-        : Boolean {
+fun erOrgnrGyldig(innloggetIaTjenesteMedVirksomhetGrunndata: MottattIaTjenesteMedVirksomhetGrunndata): Boolean {
     if (innloggetIaTjenesteMedVirksomhetGrunndata.orgnr.length != 9) {
         log("")
             .warn("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering")
@@ -40,7 +39,8 @@ fun erOrgnrGyldig(innloggetIaTjenesteMedVirksomhetGrunndata: MottattIaTjenesteMe
     }
 
     if (
-        innloggetIaTjenesteMedVirksomhetGrunndata.næringskode5SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERER_TILLATT) {
+        innloggetIaTjenesteMedVirksomhetGrunndata.næringskode5SifferBeskrivelse.length > MAKSIMUM_ANTALL_KARAKTERER_TILLATT
+    ) {
         log("IaTjenesterMetrikkerInnloggetController")
             .warn("For lang beskrivelse for næringskode 5 siffer felt fra innlogget tjeneste, avslutter registrering")
         return false
@@ -79,5 +79,5 @@ fun erOrgnrGyldig(innloggetIaTjeneste: InnloggetMottattIaTjeneste): Boolean {
             .warn("Ugyldig orgnr mottatt fra innlogget tjeneste, avslutter registrering")
         return false
     }
-return true
+    return true
 }

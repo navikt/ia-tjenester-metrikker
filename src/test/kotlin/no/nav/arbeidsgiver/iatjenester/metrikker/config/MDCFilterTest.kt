@@ -11,18 +11,15 @@ import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
-
+import java.util.UUID
 
 class MDCFilterTest {
-
     @RestController
     private class TestController {
-
         @GetMapping("/test")
         fun test(): ResponseEntity<String> {
-            if(MDC.get("Nav-CallId").isNullOrEmpty()) return ResponseEntity.internalServerError().build()
-            if(MDC.get("correlationId").isNullOrEmpty()) return ResponseEntity.internalServerError().build()
+            if (MDC.get("Nav-CallId").isNullOrEmpty()) return ResponseEntity.internalServerError().build()
+            if (MDC.get("correlationId").isNullOrEmpty()) return ResponseEntity.internalServerError().build()
             return ResponseEntity.ok("Test Controller")
         }
 
@@ -30,17 +27,17 @@ class MDCFilterTest {
         fun testCallId(
             @RequestParam callIdToTestAgainst: String,
         ): ResponseEntity<String> {
-            if(!MDC.get("Nav-CallId").equals(callIdToTestAgainst)) return ResponseEntity.internalServerError().build()
-            if(MDC.get("correlationId").isNullOrEmpty()) return ResponseEntity.internalServerError().build()
+            if (!MDC.get("Nav-CallId").equals(callIdToTestAgainst)) return ResponseEntity.internalServerError().build()
+            if (MDC.get("correlationId").isNullOrEmpty()) return ResponseEntity.internalServerError().build()
             return ResponseEntity.ok("Test Controller")
         }
 
         @GetMapping("/testCorrelationId")
         fun testCorrelationId(
-            @RequestParam correlationIdToTestAgainst: String
+            @RequestParam correlationIdToTestAgainst: String,
         ): ResponseEntity<String> {
-            if(MDC.get("Nav-CallId").isNullOrEmpty()) return ResponseEntity.internalServerError().build()
-            if(!MDC.get("correlationId").equals(correlationIdToTestAgainst)) return ResponseEntity.internalServerError().build()
+            if (MDC.get("Nav-CallId").isNullOrEmpty()) return ResponseEntity.internalServerError().build()
+            if (!MDC.get("correlationId").equals(correlationIdToTestAgainst)) return ResponseEntity.internalServerError().build()
             return ResponseEntity.ok("Test Controller")
         }
     }
@@ -57,7 +54,6 @@ class MDCFilterTest {
             .andExpect(status().isOk)
     }
 
-
     @Test
     fun `skal legge til callID i MDC hvis det kommer med headers`() {
         val mockMvc = MockMvcBuilders
@@ -69,11 +65,11 @@ class MDCFilterTest {
         val differentUuid = UUID.randomUUID().toString()
 
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/testCallId?callIdToTestAgainst=${uuid}").header("Nav-CallId", uuid))
+            .perform(MockMvcRequestBuilders.get("/testCallId?callIdToTestAgainst=$uuid").header("Nav-CallId", uuid))
             .andExpect(status().isOk)
 
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/testCallId?callIdToTestAgainst=${uuid}").header("Nav-CallId", differentUuid))
+            .perform(MockMvcRequestBuilders.get("/testCallId?callIdToTestAgainst=$uuid").header("Nav-CallId", differentUuid))
             .andExpect(status().isInternalServerError)
     }
 
@@ -88,11 +84,13 @@ class MDCFilterTest {
         val differentUuid = UUID.randomUUID().toString()
 
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/testCorrelationId?correlationIdToTestAgainst=${uuid}").header("X-Correlation-ID", uuid))
+            .perform(MockMvcRequestBuilders.get("/testCorrelationId?correlationIdToTestAgainst=$uuid").header("X-Correlation-ID", uuid))
             .andExpect(status().isOk)
 
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/testCorrelationId?correlationIdToTestAgainst=${uuid}").header("X-Correlation-ID", differentUuid))
+            .perform(
+                MockMvcRequestBuilders.get("/testCorrelationId?correlationIdToTestAgainst=$uuid").header("X-Correlation-ID", differentUuid),
+            )
             .andExpect(status().isInternalServerError)
     }
 
@@ -106,9 +104,8 @@ class MDCFilterTest {
         val uuid = UUID.randomUUID().toString()
 
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/testCorrelationId?correlationIdToTestAgainst=${uuid}").header("X-Correlation-ID", uuid))
+            .perform(MockMvcRequestBuilders.get("/testCorrelationId?correlationIdToTestAgainst=$uuid").header("X-Correlation-ID", uuid))
             .andExpect(status().isOk)
             .andExpect(header().string("X-Correlation-ID", uuid))
     }
 }
-

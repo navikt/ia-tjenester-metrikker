@@ -20,9 +20,7 @@ data class TokenXConfigProperties(
     }
 }
 
-internal fun String.toBeAValidTokenUrl(): Boolean {
-    return this.startsWith("http") && this.endsWith("/token")
-}
+internal fun String.toBeAValidTokenUrl(): Boolean = this.startsWith("http") && this.endsWith("/token")
 
 internal fun String.toContainCorrectClaims() = this.contains("kty") && this.contains("kid")
 

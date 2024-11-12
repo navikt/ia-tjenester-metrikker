@@ -8,7 +8,9 @@ import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
 
 @Configuration
-class FlywayConfig(private val flywayConfigProperties: FlywayConfigProperties) {
+class FlywayConfig(
+    private val flywayConfigProperties: FlywayConfigProperties,
+) {
     @Bean
     fun flyway(dataSource: DataSource): Flyway {
         val flywayConfig = Flyway
@@ -29,7 +31,6 @@ class FlywayConfig(private val flywayConfigProperties: FlywayConfigProperties) {
     @Bean
     fun flywayMigrationInitializer(
         flyway: Flyway,
-        flywayMigrationStrategy: FlywayMigrationStrategy
-    ): FlywayMigrationInitializer =
-        FlywayMigrationInitializer(flyway, flywayMigrationStrategy)
+        flywayMigrationStrategy: FlywayMigrationStrategy,
+    ): FlywayMigrationInitializer = FlywayMigrationInitializer(flyway, flywayMigrationStrategy)
 }

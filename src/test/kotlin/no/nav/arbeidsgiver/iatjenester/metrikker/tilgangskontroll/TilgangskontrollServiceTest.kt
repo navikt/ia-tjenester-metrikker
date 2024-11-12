@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
 internal class TilgangskontrollServiceTest {
-
     @Test
     @Throws(Exception::class)
     fun `Sjekker at bruker har tilgang til en bedrift`() {
@@ -26,5 +25,3 @@ internal class TilgangskontrollServiceTest {
         Assertions.assertThat(sjekkResult is Either.Left).isEqualTo(true)
     }
 }
-
-

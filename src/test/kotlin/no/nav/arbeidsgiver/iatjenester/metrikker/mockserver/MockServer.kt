@@ -11,11 +11,10 @@ import org.springframework.stereotype.Component
 
 @Profile("local")
 @Component
-class MockServer: InitializingBean {
-
+class MockServer : InitializingBean {
     @Value("\${wiremock.port}")
     var wiremockPort: Int = 8484
-    private val MOCK_SERVER_VERBOSE_CONSOLE_LOGGING_ENABLED = false
+    private val mockServerVerboseConsoleLoggingEnabled = false
     lateinit var wireMockServer: WireMockServer
 
     override fun afterPropertiesSet() {
@@ -23,11 +22,11 @@ class MockServer: InitializingBean {
             WireMockConfiguration()
                 .port(wiremockPort)
                 .extensions(
-                    ResponseTemplateTransformer(true)
+                    ResponseTemplateTransformer(true),
                 )
                 .notifier(
-                    ConsoleNotifier(MOCK_SERVER_VERBOSE_CONSOLE_LOGGING_ENABLED)
-                )
+                    ConsoleNotifier(mockServerVerboseConsoleLoggingEnabled),
+                ),
         )
         wireMockServer.start()
     }

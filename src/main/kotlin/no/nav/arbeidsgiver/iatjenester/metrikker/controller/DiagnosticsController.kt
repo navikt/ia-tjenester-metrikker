@@ -8,17 +8,12 @@ import org.springframework.web.bind.annotation.RestController
 @Unprotected
 @RestController
 class DiagnosticsController {
-
     @GetMapping("/ping")
-    fun ping(): ResponseEntity<Unit> {
-        return ResponseEntity.ok().build()
-    }
+    fun ping(): ResponseEntity<Unit> = ResponseEntity.ok().build()
+
     @GetMapping("/internal/isalive")
-    fun isalive(): ResponseEntity<String> {
-        return ResponseEntity.ok("Is alive")
-    }
+    fun isalive(): ResponseEntity<String> = ResponseEntity.ok("Is alive")
+
     @GetMapping("/internal/isready")
-    fun isready(): ResponseEntity<String> {
-        return ResponseEntity.ok("Is ready")
-    }
+    fun isready(): ResponseEntity<String> = ResponseEntity.ok("Is ready")
 }

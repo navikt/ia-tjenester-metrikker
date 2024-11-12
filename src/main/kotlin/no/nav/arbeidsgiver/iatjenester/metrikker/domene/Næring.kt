@@ -4,8 +4,11 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.domene
   Næringskode 2 siffer og næringskode 5 siffer er standard for næringsgruppering (SN) fra SSB:
   Ref: https://www.ssb.no/klass/klassifikasjoner/6
 */
-data class Næring(val kode5Siffer: String, val kode5SifferBeskrivelse: String, val kode2SifferBeskrivelse: String) {
-
+data class Næring(
+    val kode5Siffer: String,
+    val kode5SifferBeskrivelse: String,
+    val kode2SifferBeskrivelse: String,
+) {
     fun getKode2siffer(): String = if (kode5Siffer.length > 1) kode5Siffer.substring(0, 2) else ""
 
     fun getArbeidstilsynetBransje(): ArbeidsmiljøportalenBransje {
@@ -33,11 +36,14 @@ data class Næring(val kode5Siffer: String, val kode5SifferBeskrivelse: String, 
         TRANSPORT,
         BYGG,
         ANLEGG,
-        ANDRE_BRANSJER
+        ANDRE_BRANSJER,
     }
 }
 
-data class Næringskode5Siffer(var kode: String?, val beskrivelse: String) {
+data class Næringskode5Siffer(
+    var kode: String?,
+    val beskrivelse: String,
+) {
     init {
         if (kode.isNullOrBlank()) {
             throw IllegalArgumentException("Kode for næring kan IKKE være null")
@@ -54,24 +60,25 @@ data class Næringskode5Siffer(var kode: String?, val beskrivelse: String) {
     private fun erGyldigNæringskode(verdi: String): Boolean = verdi.matches(Regex("^[0-9]{5}$"))
 }
 
-data class Næringsbeskrivelse(val kode: String, val beskrivelse: String)
+data class Næringsbeskrivelse(
+    val kode: String,
+    val beskrivelse: String,
+)
 
 class Næringsbeskrivelser {
-
     companion object {
-
         private val næringsbeskrivelser = listOf(
             Næringsbeskrivelse(
                 kode = "01",
-                beskrivelse = "Jordbruk og tjenester tilknyttet jordbruk, jakt og viltstell"
+                beskrivelse = "Jordbruk og tjenester tilknyttet jordbruk, jakt og viltstell",
             ),
             Næringsbeskrivelse(
                 kode = "01",
-                beskrivelse = "Jordbruk og tjenester tilknyttet jordbruk, jakt og viltstell"
+                beskrivelse = "Jordbruk og tjenester tilknyttet jordbruk, jakt og viltstell",
             ),
             Næringsbeskrivelse(
                 kode = "02",
-                beskrivelse = "Skogbruk og tjenester tilknyttet skogbruk"
+                beskrivelse = "Skogbruk og tjenester tilknyttet skogbruk",
             ),
             Næringsbeskrivelse(kode = "03", beskrivelse = "Fiske, fangst og akvakultur"),
             Næringsbeskrivelse(kode = "05", beskrivelse = "Bryting av steinkull og brunkull"),
@@ -87,7 +94,7 @@ class Næringsbeskrivelser {
             Næringsbeskrivelse(kode = "15", beskrivelse = "Produksjon av lær og lærvarer"),
             Næringsbeskrivelse(
                 kode = "16",
-                beskrivelse = "Produksjon av trelast og varer av tre, kork, strå og flettematerialer, unntatt møbler"
+                beskrivelse = "Produksjon av trelast og varer av tre, kork, strå og flettematerialer, unntatt møbler",
             ),
             Næringsbeskrivelse(kode = "17", beskrivelse = "Produksjon av papir og papirvarer"),
             Næringsbeskrivelse(kode = "18", beskrivelse = "Trykking og reproduksjon av innspilte opptak"),
@@ -100,12 +107,12 @@ class Næringsbeskrivelser {
             Næringsbeskrivelse(kode = "25", beskrivelse = "Produksjon av metallvarer, unntatt maskiner og utstyr"),
             Næringsbeskrivelse(
                 kode = "26",
-                beskrivelse = "Produksjon av datamaskiner og elektroniske og optiske produkter"
+                beskrivelse = "Produksjon av datamaskiner og elektroniske og optiske produkter",
             ),
             Næringsbeskrivelse(kode = "27", beskrivelse = "Produksjon av elektrisk utstyr"),
             Næringsbeskrivelse(
                 kode = "28",
-                beskrivelse = "Produksjon av maskiner og utstyr til generell bruk, ikke nevnt annet sted"
+                beskrivelse = "Produksjon av maskiner og utstyr til generell bruk, ikke nevnt annet sted",
             ),
             Næringsbeskrivelse(kode = "29", beskrivelse = "Produksjon av motorvogner og tilhengere"),
             Næringsbeskrivelse(kode = "30", beskrivelse = "Produksjon av andre transportmidler"),
@@ -117,7 +124,7 @@ class Næringsbeskrivelser {
             Næringsbeskrivelse(kode = "37", beskrivelse = "Oppsamling og behandling av avløpsvann"),
             Næringsbeskrivelse(
                 kode = "38",
-                beskrivelse = "Innsamling, behandling, disponering og gjenvinning av avfall"
+                beskrivelse = "Innsamling, behandling, disponering og gjenvinning av avfall",
             ),
             Næringsbeskrivelse(kode = "39", beskrivelse = "Miljørydding, miljørensing og lignende virksomhet"),
             Næringsbeskrivelse(kode = "41", beskrivelse = "Oppføring av bygninger"),
@@ -136,7 +143,7 @@ class Næringsbeskrivelser {
             Næringsbeskrivelse(kode = "58", beskrivelse = "Forlagsvirksomhet"),
             Næringsbeskrivelse(
                 kode = "59",
-                beskrivelse = "Film-, video- og fjernsynsprogramproduksjon, utgivelse av musikk- og lydopptak"
+                beskrivelse = "Film-, video- og fjernsynsprogramproduksjon, utgivelse av musikk- og lydopptak",
             ),
             Næringsbeskrivelse(kode = "60", beskrivelse = "Radio- og fjernsynskringkasting"),
             Næringsbeskrivelse(kode = "61", beskrivelse = "Telekommunikasjon"),
@@ -145,19 +152,18 @@ class Næringsbeskrivelser {
             Næringsbeskrivelse(kode = "64", beskrivelse = "Finansieringsvirksomhet"),
             Næringsbeskrivelse(
                 kode = "65",
-                beskrivelse = "Forsikringsvirksomhet og pensjonskasser, unntatt trygdeordninger underlagt offentlig forvaltning"
+                beskrivelse = "Forsikringsvirksomhet og pensjonskasser, unntatt trygdeordninger underlagt offentlig forvaltning",
             ),
-
             Næringsbeskrivelse(
                 kode = "66",
-                beskrivelse = "Tjenester tilknyttet finansierings- og forsikringsvirksomhet"
+                beskrivelse = "Tjenester tilknyttet finansierings- og forsikringsvirksomhet",
             ),
             Næringsbeskrivelse(kode = "68", beskrivelse = "Omsetning og drift av fast eiendom"),
             Næringsbeskrivelse(kode = "69", beskrivelse = "Juridisk og regnskapsmessig tjenesteyting"),
             Næringsbeskrivelse(kode = "70", beskrivelse = "Hovedkontortjenester, administrativ rådgivning"),
             Næringsbeskrivelse(
                 kode = "71",
-                beskrivelse = "Arkitektvirksomhet og teknisk konsulentvirksomhet, og teknisk prøving og analyse"
+                beskrivelse = "Arkitektvirksomhet og teknisk konsulentvirksomhet, og teknisk prøving og analyse",
             ),
             Næringsbeskrivelse(kode = "72", beskrivelse = "Forskning og utviklingsarbeid"),
             Næringsbeskrivelse(kode = "73", beskrivelse = "Annonse- og reklamevirksomhet og markedsundersøkelser"),
@@ -167,14 +173,14 @@ class Næringsbeskrivelser {
             Næringsbeskrivelse(kode = "78", beskrivelse = "Arbeidskrafttjenester"),
             Næringsbeskrivelse(
                 kode = "79",
-                beskrivelse = "Reisebyrå- og reisearrangørvirksomhet og tilknyttede tjenester"
+                beskrivelse = "Reisebyrå- og reisearrangørvirksomhet og tilknyttede tjenester",
             ),
             Næringsbeskrivelse(kode = "80", beskrivelse = "Vakttjeneste og etterforsking"),
             Næringsbeskrivelse(kode = "81", beskrivelse = "Tjenester tilknyttet eiendomsdrift"),
             Næringsbeskrivelse(kode = "82", beskrivelse = "Annen forretningsmessig tjenesteyting"),
             Næringsbeskrivelse(
                 kode = "84",
-                beskrivelse = "Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning"
+                beskrivelse = "Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning",
             ),
             Næringsbeskrivelse(kode = "85", beskrivelse = "Undervisning"),
             Næringsbeskrivelse(kode = "86", beskrivelse = "Helsetjenester"),
@@ -183,30 +189,29 @@ class Næringsbeskrivelser {
             Næringsbeskrivelse(kode = "90", beskrivelse = "Kunstnerisk virksomhet og underholdningsvirksomhet"),
             Næringsbeskrivelse(
                 kode = "91",
-                beskrivelse = "Drift av biblioteker, arkiver, museer og annen kulturvirksomhet"
+                beskrivelse = "Drift av biblioteker, arkiver, museer og annen kulturvirksomhet",
             ),
             Næringsbeskrivelse(kode = "92", beskrivelse = "Lotteri og totalisatorspill"),
             Næringsbeskrivelse(
                 kode = "93",
-                beskrivelse = "Sports- og fritidsaktiviteter og drift av fornøyelsesetablissementer"
+                beskrivelse = "Sports- og fritidsaktiviteter og drift av fornøyelsesetablissementer",
             ),
             Næringsbeskrivelse(kode = "94", beskrivelse = "Aktiviteter i medlemsorganisasjoner"),
             Næringsbeskrivelse(
                 kode = "95",
-                beskrivelse = "Reparasjon av datamaskiner, husholdningsvarer og varer til personlig bruk"
+                beskrivelse = "Reparasjon av datamaskiner, husholdningsvarer og varer til personlig bruk",
             ),
             Næringsbeskrivelse(kode = "96", beskrivelse = "Annen personlig tjenesteyting"),
             Næringsbeskrivelse(kode = "97", beskrivelse = "Lønnet arbeid i private husholdninger"),
-            Næringsbeskrivelse(kode = "99", beskrivelse = "Internasjonale organisasjoner og organer")
+            Næringsbeskrivelse(kode = "99", beskrivelse = "Internasjonale organisasjoner og organer"),
         )
 
-
-        fun mapTilNæringsbeskrivelse(næringskode2siffer: String): String {
-            return næringsbeskrivelser.find { beskrivelse -> beskrivelse.kode == næringskode2siffer }
+        fun mapTilNæringsbeskrivelse(næringskode2siffer: String): String =
+            næringsbeskrivelser.find { beskrivelse ->
+                beskrivelse.kode == næringskode2siffer
+            }
                 .let {
                     it?.beskrivelse
                 } ?: "Ingen beskrivelse funnet for kode '$næringskode2siffer'"
-        }
-
     }
 }

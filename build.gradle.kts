@@ -35,9 +35,11 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
     val javaToolchains = project.extensions.getByType<JavaToolchainService>()
-    javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    })
+    javaLauncher.set(
+        javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        },
+    )
 }
 
 tasks.getByName<Jar>("jar") {
@@ -72,7 +74,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:10.19.0")
     implementation("org.postgresql:postgresql:42.7.4")
     implementation("org.springframework.retry:spring-retry")
-    implementation("no.nav.security:token-validation-spring:${navTokenSupportVersion}")
+    implementation("no.nav.security:token-validation-spring:$navTokenSupportVersion")
     implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:4.0.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.13.5")
 
@@ -82,7 +84,7 @@ dependencies {
     testImplementation("com.h2database:h2:2.3.232")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("no.nav.security:token-validation-spring-test:${navTokenSupportVersion}")
+    testImplementation("no.nav.security:token-validation-spring-test:$navTokenSupportVersion")
     testImplementation("io.mockk:mockk:1.13.12")
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.1.4")
 

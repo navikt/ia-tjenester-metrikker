@@ -1,8 +1,13 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.mockito.Mockito.times
@@ -10,7 +15,6 @@ import org.mockito.Mockito.verify
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.PrintStream
-
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LogbackMaskeringTest {
@@ -27,7 +31,6 @@ class LogbackMaskeringTest {
     @AfterEach
     fun afterEach() {
         Mockito.reset(System.out)
-
     }
 
     @AfterAll
@@ -36,7 +39,7 @@ class LogbackMaskeringTest {
     }
 
     @Test
-    fun masksElevenDigitNumbersWhenInfoLogging(){
+    fun masksElevenDigitNumbersWhenInfoLogging() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
 
         log.info("fnr:12345678901")
@@ -49,7 +52,7 @@ class LogbackMaskeringTest {
     }
 
     @Test
-    fun masksElevenDigitNumbersWhenWarnLogging(){
+    fun masksElevenDigitNumbersWhenWarnLogging() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
 
         log.warn("fnr:12345678901")
@@ -62,7 +65,7 @@ class LogbackMaskeringTest {
     }
 
     @Test
-    fun masksElevenDigitNumbersWhenErrorLogging(){
+    fun masksElevenDigitNumbersWhenErrorLogging() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
 
         log.error("fnr:12345678901")
@@ -89,7 +92,7 @@ class LogbackMaskeringTest {
     }
 
     @Test
-    fun shouldNotMaskWhenLoggingNonSensitiveNumbers(){
+    fun shouldNotMaskWhenLoggingNonSensitiveNumbers() {
         val captor = ArgumentCaptor.forClass(ByteArray::class.java)
 
         log.info("fnr:1111111111")

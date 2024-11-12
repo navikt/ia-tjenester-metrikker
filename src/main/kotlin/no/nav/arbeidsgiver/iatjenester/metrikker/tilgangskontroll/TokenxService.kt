@@ -27,28 +27,32 @@ import java.util.UUID
 class TokenxService(
     val tokenXConfig: TokenXConfigProperties,
 ) {
-    fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken = with(tokenXConfig) {
+    fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken =
+        with(tokenXConfig) {
+            val clientAssertionToken = clientAssertion(
+                clientId = clientId,
+                audience = tokenEndpoint,
+                rsaKey = RSAKey.parse(privateJwk),
+            )
 
-        val clientAssertionToken = clientAssertion(
-            clientId = clientId,
-            audience = tokenEndpoint,
-            rsaKey = RSAKey.parse(privateJwk)
-        )
+            val tokenExchangeRequest = OAuth2TokenExchangeRequest(
+                clientAssertion = clientAssertionToken,
+                subjectToken = subjectToken.encodedToken,
+                audience = altinnRettigheterProxyAudience,
+            )
 
-        val tokenExchangeRequest = OAuth2TokenExchangeRequest(
-            clientAssertion = clientAssertionToken,
-            subjectToken = subjectToken.encodedToken,
-            audience = altinnRettigheterProxyAudience
-        )
+            val response = tokenExchange(tokenEndpoint, tokenExchangeRequest)
+            return response.body?.access_token?.let {
+                log.debug("Token exchange completed; returned access_token has length of ${it.length}")
+                JwtToken(it)
+            } ?: throw TilgangskontrollException("Kunne ikke veksle token mot altinn")
+        }
 
-        val response = tokenExchange(tokenEndpoint, tokenExchangeRequest)
-        return response.body?.access_token?.let {
-            log.debug("Token exchange completed; returned access_token has length of ${it.length}")
-            JwtToken(it)
-        } ?: throw TilgangskontrollException("Kunne ikke veksle token mot altinn")
-    }
-
-    internal fun clientAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
+    internal fun clientAssertion(
+        clientId: String,
+        audience: String,
+        rsaKey: RSAKey,
+    ): String {
         log.debug("Performing client assertion with clientId:$clientId and audience:$audience")
 
         val now = Date.from(now())
@@ -77,15 +81,16 @@ class TokenxService(
         return RestTemplate().postForEntity(
             tokenEndpoint,
             tokenExchangeRequest.asHttpEntity(),
-            TokenExchangeResponse::class
+            TokenExchangeResponse::class,
         )
     }
 }
 
-internal fun OAuth2TokenExchangeRequest.asHttpEntity() = HttpEntity<MultiValueMap<String, String>>(
-    this.asParameterMap(),
-    HttpHeaders().apply { contentType = MediaType.APPLICATION_FORM_URLENCODED }
-)
+internal fun OAuth2TokenExchangeRequest.asHttpEntity() =
+    HttpEntity<MultiValueMap<String, String>>(
+        this.asParameterMap(),
+        HttpHeaders().apply { contentType = MediaType.APPLICATION_FORM_URLENCODED },
+    )
 
 internal const val PARAMS_GRANT_TYPE = "grant_type"
 internal const val PARAMS_SUBJECT_TOKEN_TYPE = "subject_token_type"
@@ -123,7 +128,7 @@ internal fun JWTClaimsSet.sign(with: RSAKey): SignedJWT =
             .keyID(with.keyID)
             .type(JWT)
             .build(),
-        this
+        this,
     ).apply { sign(RSASSASigner(with.toPrivateKey())) }
 
 internal data class TokenExchangeResponse(

@@ -12,7 +12,7 @@ import org.springframework.test.context.TestPropertySource
 
 @ActiveProfiles("test")
 @SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 )
 @TestPropertySource(locations = ["classpath:application-test.yaml"])
 @EnableMockOAuth2Server
@@ -21,4 +21,4 @@ import org.springframework.test.context.TestPropertySource
 @AutoConfigureWireMock(port = 0)
 @AutoConfigureObservability
 @AutoConfigureMockMvc
-internal class IntegrationTestSuite {}
+internal class IntegrationTestSuite

@@ -1,6 +1,5 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret
 
-
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
@@ -26,6 +25,7 @@ class EnhetsregisteretClientTest {
 
     @Mock
     private val restTemplate: RestTemplate? = null
+
     @BeforeEach
     fun setup() {
         enhetsregisteretClient = EnhetsregisteretClient(restTemplate!!, "")
@@ -39,7 +39,7 @@ class EnhetsregisteretClientTest {
         assertThat(overordnetEnhet?.navn).isEqualTo("NAV ARBEID OG YTELSER")
         assertThat(overordnetEnhet?.næringskode?.kode).isEqualTo("84300")
         assertThat(
-            overordnetEnhet?.næringskode?.beskrivelse
+            overordnetEnhet?.næringskode?.beskrivelse,
         ).isEqualTo("Trygdeordninger underlagt offentlig forvaltning")
         assertThat(overordnetEnhet?.institusjonellSektorkode?.kode).isEqualTo("6100")
         assertThat(overordnetEnhet?.institusjonellSektorkode?.beskrivelse).isEqualTo("Statsforvaltningen")
@@ -51,14 +51,14 @@ class EnhetsregisteretClientTest {
         Mockito.`when`(
             restTemplate!!.getForObject(
                 ArgumentMatchers.anyString(),
-                ArgumentMatchers.any<Class<Any>>()
-            )
+                ArgumentMatchers.any<Class<Any>>(),
+            ),
         ).thenThrow(
-            HttpServerErrorException(HttpStatus.BAD_GATEWAY)
+            HttpServerErrorException(HttpStatus.BAD_GATEWAY),
         )
         assertThrows(EnhetsregisteretException::class.java) {
             enhetsregisteretClient!!.hentOverordnetEnhet(
-                Orgnr("971800534")
+                Orgnr("971800534"),
             )
         }
     }
@@ -70,7 +70,7 @@ class EnhetsregisteretClientTest {
         mockRespons(responsMedManglendeFelt)
         assertThrows(EnhetsregisteretMappingException::class.java) {
             enhetsregisteretClient!!.hentOverordnetEnhet(
-                Orgnr("971800534")
+                Orgnr("971800534"),
             )
         }
     }
@@ -80,7 +80,7 @@ class EnhetsregisteretClientTest {
         val responsMedFeilOrgnr = gyldigEnhetRespons("999263550")
         mockRespons(responsMedFeilOrgnr)
         assertThrows(
-            IllegalStateException::class.java
+            IllegalStateException::class.java,
         ) { enhetsregisteretClient!!.hentOverordnetEnhet(Orgnr("777777777")) }
     }
 
@@ -93,7 +93,7 @@ class EnhetsregisteretClientTest {
         assertThat(underenhet?.navn).isEqualTo("NAV ARBEID OG YTELSER AVD OSLO")
         assertThat(underenhet?.næringskode?.kode).isEqualTo("84300")
         assertThat(
-            underenhet?.næringskode?.beskrivelse
+            underenhet?.næringskode?.beskrivelse,
         ).isEqualTo("Trygdeordninger underlagt offentlig forvaltning")
         assertThat(underenhet?.kommunenummer).isEqualTo("3005")
         assertThat(underenhet?.kommune).isEqualTo("DRAMMEN")
@@ -107,13 +107,13 @@ class EnhetsregisteretClientTest {
         Mockito.`when`(
             restTemplate!!.getForObject(
                 ArgumentMatchers.anyString(),
-                ArgumentMatchers.any<Class<Any>>()
-            )
+                ArgumentMatchers.any<Class<Any>>(),
+            ),
         ).thenThrow(
-            HttpServerErrorException(HttpStatus.BAD_GATEWAY)
+            HttpServerErrorException(HttpStatus.BAD_GATEWAY),
         )
         assertThrows(
-            EnhetsregisteretIkkeTilgjengeligException::class.java
+            EnhetsregisteretIkkeTilgjengeligException::class.java,
         ) { enhetsregisteretClient!!.hentUnderenhet(Orgnr("971800534")) }
     }
 
@@ -123,7 +123,7 @@ class EnhetsregisteretClientTest {
         responsMedManglendeFelt.remove("navn")
         mockRespons(responsMedManglendeFelt)
         assertThrows(
-            EnhetsregisteretMappingException::class.java
+            EnhetsregisteretMappingException::class.java,
         ) { enhetsregisteretClient!!.hentUnderenhet(Orgnr("971800534")) }
     }
 
@@ -132,14 +132,14 @@ class EnhetsregisteretClientTest {
         val responsMedFeilOrgnr = gyldigUnderenhetRespons("822565212")
         mockRespons(responsMedFeilOrgnr)
         assertThrows(
-            IllegalStateException::class.java
+            IllegalStateException::class.java,
         ) { enhetsregisteretClient!!.hentUnderenhet(Orgnr("777777777")) }
     }
 
     private fun mockRespons(node: JsonNode) {
         Mockito.`when`(restTemplate!!.getForObject(ArgumentMatchers.anyString(), ArgumentMatchers.any<Class<Any>>()))
             .thenReturn(
-                objectMapper.writeValueAsString(node)
+                objectMapper.writeValueAsString(node),
             )
     }
 
@@ -189,4 +189,3 @@ class EnhetsregisteretClientTest {
         private val objectMapper = ObjectMapper()
     }
 }
-

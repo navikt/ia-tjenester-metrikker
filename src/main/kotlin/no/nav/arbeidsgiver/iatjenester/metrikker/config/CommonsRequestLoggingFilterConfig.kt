@@ -10,12 +10,11 @@ class CommonsRequestLoggingFilterConfig {
      * Logs incoming requests to DEBUG.
      */
     @Bean
-    fun requestLoggingFilter(): CommonsRequestLoggingFilter {
-        return CommonsRequestLoggingFilter().apply {
+    fun requestLoggingFilter(): CommonsRequestLoggingFilter =
+        CommonsRequestLoggingFilter().apply {
             setIncludeClientInfo(false)
             setIncludeHeaders(false)
             setIncludeQueryString(false)
             setIncludePayload(false)
         }
-    }
 }

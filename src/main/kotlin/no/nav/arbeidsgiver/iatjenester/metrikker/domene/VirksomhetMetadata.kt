@@ -2,7 +2,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.domene
 
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
 
-
 interface Virksomhet {
     val orgnr: Orgnr
     val navn: String
@@ -14,7 +13,7 @@ data class OverordnetEnhet(
     override val navn: String,
     override val næringskode: Næringskode5Siffer,
     val institusjonellSektorkode: InstitusjonellSektorkode,
-    val antallAnsatte: Int
+    val antallAnsatte: Int,
 ) : Virksomhet
 
 data class Underenhet(
@@ -25,7 +24,10 @@ data class Underenhet(
     val kommune: String,
     val kommunenummer: String,
     val fylke: Fylke,
-    val antallAnsatte: Int
+    val antallAnsatte: Int,
 ) : Virksomhet
 
-data class InstitusjonellSektorkode(val kode: String, val beskrivelse: String)
+data class InstitusjonellSektorkode(
+    val kode: String,
+    val beskrivelse: String,
+)

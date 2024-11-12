@@ -10,7 +10,6 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD
 import org.springframework.test.web.servlet.MockMvc
 
-
 internal class PrometheusMetricsTest : IntegrationTestSuite() {
     @Autowired
     lateinit var prometheusMetrics: PrometheusMetrics

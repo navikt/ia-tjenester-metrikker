@@ -1,7 +1,7 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.Kilde
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.TypeIATjeneste
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Fnr
 import java.sql.Connection
@@ -11,9 +11,7 @@ import java.sql.Timestamp
 import java.time.ZonedDateTime
 
 class TestUtils {
-
     companion object {
-
         const val ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN: String = "811076112"
         const val ORGNR_UTEN_NÆRINGSKODE_I_ENHETSREGISTERET: String = "833445566"
 
@@ -26,61 +24,59 @@ class TestUtils {
                 "eyJraWQiOiJtb2NrLW9hdXRoMi1zZXJ2ZXIta2V5IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ"
             val localhostOnlyJasonPayload =
                 "eyJzdWIiOiIwMTAxOTkxMjM0NSIsImF1ZCI6ImF1ZC1sb2NhbGhvc3QiLCJhY3IiOi" +
-                        "JMZXZlbDQiLCJuYmYiOjE2MTY0OTQwMDksImF6cCI6Ik1vY2tMb2dpbkNvbnRyb2xsZXIiLCJpc3MiOiJodH" +
-                        "RwOlwvXC9sb2NhbGhvc3Q6MTA4MzJcL3NlbHZiZXRqZW5pbmciLCJleHAiOjE2MTY0OTc2MDksImlhdCI6M" +
-                        "TYxNjQ5NDAwOSwianRpIjoiZWY1ZGEzM2YtMTBhMC00YTZlLTgyMjYtOWY5NTUxNTA5Y2ZlIiwidGlkIjoic" +
-                        "2VsdmJldGplbmluZyJ9"
+                    "JMZXZlbDQiLCJuYmYiOjE2MTY0OTQwMDksImF6cCI6Ik1vY2tMb2dpbkNvbnRyb2xsZXIiLCJpc3MiOiJodH" +
+                    "RwOlwvXC9sb2NhbGhvc3Q6MTA4MzJcL3NlbHZiZXRqZW5pbmciLCJleHAiOjE2MTY0OTc2MDksImlhdCI6M" +
+                    "TYxNjQ5NDAwOSwianRpIjoiZWY1ZGEzM2YtMTBhMC00YTZlLTgyMjYtOWY5NTUxNTA5Y2ZlIiwidGlkIjoic" +
+                    "2VsdmJldGplbmluZyJ9"
             val signature = "Ingen signature"
             return "$mockOAuth2Header.$localhostOnlyJasonPayload.$signature"
         }
 
-        fun vilkårligIaTjeneste(): MottattIaTjenesteMedVirksomhetGrunndata = MottattIaTjenesteMedVirksomhetGrunndata(
-            "987654321",
-            "12345",
-            TypeIATjeneste.DIGITAL_IA_TJENESTE,
-            Kilde.FOREBYGGE_FRAVÆR,
-            ZonedDateTime.now(),
-            10,
-            "En beskrivelse for næringskode 5 siffer",
-            "En beskrivelse for næring kode 2 siffer",
-            "21000",
-            "Beskrivelse ssb sektor kode",
-            "Viken",
-            "0234",
-            "Gjerdrum"
-        )
+        fun vilkårligIaTjeneste(): MottattIaTjenesteMedVirksomhetGrunndata =
+            MottattIaTjenesteMedVirksomhetGrunndata(
+                "987654321",
+                "12345",
+                TypeIATjeneste.DIGITAL_IA_TJENESTE,
+                Kilde.FOREBYGGE_FRAVÆR,
+                ZonedDateTime.now(),
+                10,
+                "En beskrivelse for næringskode 5 siffer",
+                "En beskrivelse for næring kode 2 siffer",
+                "21000",
+                "Beskrivelse ssb sektor kode",
+                "Viken",
+                "0234",
+                "Gjerdrum",
+            )
 
-        fun vilkårligInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String {
-            return """
+        fun vilkårligInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String =
+            """
             {
               "orgnr":"$orgnr",
               "kilde":"FOREBYGGE_FRAVÆR",
               "type":"DIGITAL_IA_TJENESTE",
               "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
             }
-        """.trimIndent()
-        }
+            """.trimIndent()
 
-        fun ugyldigInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String {
-            return """
+        fun ugyldigInnloggetIaTjenesteAsString(orgnr: String? = ORGNR_SOM_RETURNERES_AV_MOCK_ALTINN): String =
+            """
             {
               "orgnr":"$orgnr",
               "kilde":"FOREBYGGE_FRAVÆR",
               "type":"drop table innlogget_ia_tjenester",
               "tjenesteMottakkelsesdato":"2021-03-11T18:48:38Z"
             }
-        """.trimIndent()
-        }
+            """.trimIndent()
 
         fun Connection.cleanTable(tableName: String) =
             use {
                 this.prepareStatement(
-                    """delete from $tableName"""
+                    """delete from $tableName""",
                 ).use {
                     it.executeUpdate()
                 }
             }
-
 
         fun Connection.getAlleIATjenester(): List<IaTjenesteRad> =
             use {
@@ -89,7 +85,7 @@ class TestUtils {
                 SELECT *  
                 FROM metrikker_ia_tjenester_innlogget
                 WHERE orgnr = ?
-                """
+                """,
                 ).use {
                     it.setString(1, "987654321")
                     it.executeQuery()
@@ -122,7 +118,8 @@ class TestUtils {
                          kommunenummer, 
                          kommune,
                          tjeneste_mottakkelsesdato
-                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".trimMargin()
+                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """.trimMargin(),
                 ).run {
                     setString(1, rad.type.name)
                     setString(2, rad.kilde.name)
@@ -141,8 +138,8 @@ class TestUtils {
                 }
             }
 
-        private fun ResultSet.getIaTjenesteRad(): IaTjenesteRad {
-            return IaTjenesteRad(
+        private fun ResultSet.getIaTjenesteRad(): IaTjenesteRad =
+            IaTjenesteRad(
                 id = getInt("id"),
                 orgnr = getString("orgnr"),
                 næringKode5Siffer = getString("naering_kode_5siffer"),
@@ -157,9 +154,8 @@ class TestUtils {
                 fylke = getString("fylke"),
                 kommunenummer = getString("kommunenummer"),
                 kommune = getString("kommune"),
-                opprettet = getDate("opprettet")
+                opprettet = getDate("opprettet"),
             )
-        }
     }
 }
 
@@ -178,5 +174,5 @@ data class IaTjenesteRad(
     val fylke: String,
     val kommunenummer: String,
     val kommune: String,
-    val opprettet: Date?
+    val opprettet: Date?,
 )

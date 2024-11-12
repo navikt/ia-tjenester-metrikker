@@ -12,21 +12,19 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Profile
 
-
 @Profile("local")
 @SpringBootApplication(exclude = [DataSourceAutoConfiguration::class, FlywayAutoConfiguration::class])
 @EnableConfigurationProperties(
     value = [
         DBConfigProperties::class,
-        AltinnConfigProperties::class
-    ]
+        AltinnConfigProperties::class,
+    ],
 )
 @EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])
 @EnableMockOAuth2Server
 class LokalApp
 
 fun main(args: Array<String>) {
-
     log("main()").info("Starter ia-tjenester-metrikker applikasjon -- LOKALT --")
     runApplication<LokalApp>(*args)
 }

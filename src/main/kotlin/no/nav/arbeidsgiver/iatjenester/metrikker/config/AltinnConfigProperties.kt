@@ -7,5 +7,5 @@ data class AltinnConfigProperties(
     var proxyUrl: String,
     var fallbackUrl: String,
     var altinnApiKey: String,
-    var apiGwKey: String
+    var apiGwKey: String,
 )

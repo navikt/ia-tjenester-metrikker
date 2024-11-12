@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class FylkerTest {
-
     @Test
     fun `alleFylkerAlfabetisk returnerer navnet på fylker i alfabetisk rekkefølge`() {
         val fylker = alleFylkerAlfabetisk()
@@ -20,7 +19,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Ukjent for kommunenumre som ikke eksisterer`() {
-
         val kommunenumre = setOf(
             "0000",
             "9999",
@@ -35,7 +33,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Ukjent for kommunenumre som ikke har gyldig nummer`() {
-
         val kommunenumre = setOf(
             "",
             "9",
@@ -55,7 +52,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Viken for tilhørende kommunenumre`() {
-
         val kommunenumre = setOf(
             "3001",
             "3090",
@@ -71,7 +67,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Oslo for Oslo kommune`() {
-
         val fylke = Fylke.fraKommunenummer("0301")
 
         assertThat(fylke.navn).isEqualTo("Oslo")
@@ -80,7 +75,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Innlandet for tilhørende kommunenumre`() {
-
         val kommunenumre = setOf(
             "3401",
             "3405",
@@ -95,7 +89,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Vestfold og Telemark for tilhørende kommunenumre`() {
-
         val kommunenumre = setOf(
             "3804",
             "3806",
@@ -110,7 +103,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Agder for tilhørende kommunenumre`() {
-
         val kommunenumre = setOf(
             "4201",
             "4204",
@@ -125,7 +117,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Rogaland for Eigersund kommune`() {
-
         val fylke = Fylke.fraKommunenummer("1101")
 
         assertThat(fylke.navn).isEqualTo("Rogaland")
@@ -134,7 +125,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Vestland for tilhørende kommunenumre`() {
-
         val kommunenumre = setOf(
             "4601",
             "4602",
@@ -149,7 +139,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Møre og Romsdal for Molde kommune`() {
-
         val fylke = Fylke.fraKommunenummer("1506")
 
         assertThat(fylke.navn).isEqualTo("Møre og Romsdal")
@@ -158,7 +147,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Nordland for Bodø kommune`() {
-
         val fylke = Fylke.fraKommunenummer("1804")
 
         assertThat(fylke.navn).isEqualTo("Nordland")
@@ -167,7 +155,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Troms og Finnmark for tilhørende kommunenumre`() {
-
         val kommunenumre = setOf(
             "5401",
             "5404",
@@ -182,7 +169,6 @@ internal class FylkerTest {
 
     @Test
     fun `Fylke_fraKommunenummer returnerer Trøndelag for tilhørende kommunenumre`() {
-
         val kommunenumre = setOf(
             "5001",
             "5006",

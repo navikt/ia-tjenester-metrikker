@@ -1,6 +1,5 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.service
 
-
 import arrow.core.Either
 import no.nav.arbeidsgiver.iatjenester.metrikker.IntegrationTestSuite
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils
@@ -31,7 +30,6 @@ internal class IaTjenesterMetrikkerServiceTest : IntegrationTestSuite() {
     @Test
     @Throws(Exception::class)
     fun `sjekkOgPersister validerer gyldig IA-tjeneste OK`() {
-
         val sjekkOgOpprett =
             IaTjenesterMetrikkerService(iaTjenesterMetrikkerRepository, prometheusMetrics)
                 .sjekkOgPersister(TestUtils.vilkårligIaTjeneste())
@@ -42,7 +40,6 @@ internal class IaTjenesterMetrikkerServiceTest : IntegrationTestSuite() {
     @Test
     @Throws(Exception::class)
     fun `sjekkOgPersister oppdaterer teller for metrikk`() {
-
         val counterName = "innloggede_ia_tjenester_metrikker_persistert_total{kilde=\"FOREBYGGE_FRAVÆR\"}"
         mockMvc.getPrometheusMetrics().andExpectMetricValueToBe(counterName, 0.0)
 
@@ -58,7 +55,6 @@ internal class IaTjenesterMetrikkerServiceTest : IntegrationTestSuite() {
     @Test
     @Throws(Exception::class)
     fun `Skal ikke godkjenne datoer i fremtiden`() {
-
         val iaTjenesteMedDatoIFremtiden = TestUtils.vilkårligIaTjeneste()
         iaTjenesteMedDatoIFremtiden.tjenesteMottakkelsesdato = now().plusMinutes(2)
 
@@ -81,9 +77,8 @@ internal class IaTjenesterMetrikkerServiceTest : IntegrationTestSuite() {
                 .sjekkOgPersister(levertIaTjenesteFraInnlandet)
 
         val persisterteData = (resultat as Either.Right).value
-                as MottattIaTjenesteMedVirksomhetGrunndata
+            as MottattIaTjenesteMedVirksomhetGrunndata
 
         assertThat(persisterteData.fylke).isEqualTo("Innlandet")
     }
 }
-

@@ -5,8 +5,8 @@ import arrow.core.left
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Fylke
 import no.nav.arbeidsgiver.iatjenester.metrikker.observability.PrometheusMetrics
 import no.nav.arbeidsgiver.iatjenester.metrikker.repository.IaTjenesterMetrikkerRepository
-import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjeneste
+import no.nav.arbeidsgiver.iatjenester.metrikker.restdto.MottattIaTjenesteMedVirksomhetGrunndata
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime.now
@@ -14,10 +14,11 @@ import java.time.LocalDateTime.now
 @Component
 class IaTjenesterMetrikkerService(
     private val iaTjenesterMetrikkerRepository: IaTjenesterMetrikkerRepository,
-    private val prometheusMetrics: PrometheusMetrics
+    private val prometheusMetrics: PrometheusMetrics,
 ) {
-
-    fun sjekkOgPersister(innloggetIaTjeneste: MottattIaTjenesteMedVirksomhetGrunndata): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
+    fun sjekkOgPersister(
+        innloggetIaTjeneste: MottattIaTjenesteMedVirksomhetGrunndata,
+    ): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val iaTjenesteSjekkResultat = validerMottakelsesdato(innloggetIaTjeneste).onLeft {
             return it.left()
         }
@@ -28,9 +29,9 @@ class IaTjenesterMetrikkerService(
         iaTjenesterMetrikkerRepository.persister(innloggetIaTjeneste)
         log("sjekkOgPersister()").info(
             "IA Tjeneste av type '${innloggetIaTjeneste.type.name}' " +
-                    "fra kilde '${innloggetIaTjeneste.kilde.name}' " +
-                    "og sektor '${innloggetIaTjeneste.SSBSektorKodeBeskrivelse}' " +
-                    "opprettet"
+                "fra kilde '${innloggetIaTjeneste.kilde.name}' " +
+                "og sektor '${innloggetIaTjeneste.SSBSektorKodeBeskrivelse}' " +
+                "opprettet",
         )
 
         prometheusMetrics.inkrementerInnloggedeMetrikkerPersistert(innloggetIaTjeneste.kilde)
@@ -38,8 +39,9 @@ class IaTjenesterMetrikkerService(
         return iaTjenesteSjekkResultat
     }
 
-
-    private fun validerMottakelsesdato(mottattIaTjeneste: MottattIaTjeneste): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
+    private fun validerMottakelsesdato(
+        mottattIaTjeneste: MottattIaTjeneste,
+    ): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val muligTidsforskjellMellomServerneiMinutter: Long = 1
 
         return if (mottattIaTjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
