@@ -9,9 +9,10 @@ plugins {
     application
 }
 
-val navTokenSupportVersion = "5.0.11"
+val navTokenSupportVersion = "5.0.13"
 val springdocOpenapiVersion = "1.8.0"
 val log4jVersion = "2.20.0"
+val flywayVersion = "11.1.0"
 
 group = "no.nav.arbeidsgiver"
 version = "0.0.1-SNAPSHOT"
@@ -67,14 +68,13 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-ui:$springdocOpenapiVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdocOpenapiVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:8.0")
-    implementation("io.arrow-kt:arrow-core:1.2.4")
-    implementation("org.flywaydb:flyway-core:10.21.0")
-    implementation("org.flywaydb:flyway-database-postgresql:10.21.0")
+    implementation("io.arrow-kt:arrow-core:2.0.0")
+    implementation("org.flywaydb:flyway-core:$flywayVersion")
+    implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("org.postgresql:postgresql:42.7.4")
-    implementation("org.springframework.retry:spring-retry")
     implementation("no.nav.security:token-validation-spring:$navTokenSupportVersion")
     implementation("com.github.navikt:altinn-rettigheter-proxy-klient:altinn-rettigheter-proxy-klient-5.0.0")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.14.0")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.14.2")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 
@@ -84,7 +84,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:token-validation-spring-test:$navTokenSupportVersion")
     testImplementation("io.mockk:mockk:1.13.13")
-    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.1.4")
+    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.2.0")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
