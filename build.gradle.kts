@@ -48,9 +48,7 @@ tasks.getByName<Jar>("jar") {
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://repo1.maven.org/maven2/")
-    }
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -75,7 +73,7 @@ dependencies {
     implementation("org.postgresql:postgresql:42.7.4")
     implementation("org.springframework.retry:spring-retry")
     implementation("no.nav.security:token-validation-spring:$navTokenSupportVersion")
-    implementation("no.nav.arbeidsgiver:altinn-rettigheter-proxy-klient:4.0.0")
+    implementation("com.github.navikt:altinn-rettigheter-proxy-klient:altinn-rettigheter-proxy-klient-5.0.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.14.0")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
