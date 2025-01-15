@@ -2,17 +2,17 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.4.0"
+    id("org.springframework.boot") version "3.4.1"
     id("io.spring.dependency-management") version "1.1.6"
     kotlin("jvm") version "2.1.0"
     kotlin("plugin.spring") version "2.1.0"
     application
 }
 
-val navTokenSupportVersion = "5.0.13"
+val navTokenSupportVersion = "5.0.14"
 val springdocOpenapiVersion = "1.8.0"
 val log4jVersion = "2.20.0"
-val flywayVersion = "11.1.0"
+val flywayVersion = "11.1.1"
 
 group = "no.nav.arbeidsgiver"
 version = "0.0.1-SNAPSHOT"
@@ -83,7 +83,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:token-validation-spring-test:$navTokenSupportVersion")
-    testImplementation("io.mockk:mockk:1.13.13")
+    testImplementation("io.mockk:mockk:1.13.14")
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.2.0")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
