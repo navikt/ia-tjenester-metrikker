@@ -87,4 +87,15 @@ dependencies {
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.2.0")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    constraints {
+        implementation("net.minidev:json-smart") {
+            version {
+                require("2.5.2")
+            }
+            because(
+                "versjoner < 2.5.2 har diverse sårbarheter",
+            )
+        }
+    }
 }
