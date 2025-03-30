@@ -27,7 +27,7 @@ import java.util.UUID
 class TokenxService(
     val tokenXConfig: TokenXConfigProperties,
 ) {
-    fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken =
+    fun exchangeTokenToAltinnTilganger(subjectToken: JwtToken): JwtToken =
         with(tokenXConfig) {
             val clientAssertionToken = clientAssertion(
                 clientId = clientId,
@@ -38,14 +38,13 @@ class TokenxService(
             val tokenExchangeRequest = OAuth2TokenExchangeRequest(
                 clientAssertion = clientAssertionToken,
                 subjectToken = subjectToken.encodedToken,
-                audience = altinnRettigheterProxyAudience,
+                audience = arbeidsgiverAltinnTilgangerAudience,
             )
 
             val response = tokenExchange(tokenEndpoint, tokenExchangeRequest)
             return response.body?.access_token?.let {
-                log.debug("Token exchange completed; returned access_token has length of ${it.length}")
                 JwtToken(it)
-            } ?: throw TilgangskontrollException("Kunne ikke veksle token mot altinn")
+            } ?: throw TilgangskontrollException("Kunne ikke veksle token for altinn-tilganger")
         }
 
     internal fun clientAssertion(

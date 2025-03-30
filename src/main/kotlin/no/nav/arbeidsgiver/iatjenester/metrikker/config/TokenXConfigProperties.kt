@@ -10,13 +10,13 @@ data class TokenXConfigProperties(
     val clientId: String,
     val privateJwk: String,
     val tokenEndpoint: String,
-    val altinnRettigheterProxyAudience: String,
+    val arbeidsgiverAltinnTilgangerAudience: String,
 ) {
     init {
         require(clientId.toHaveCorrectFormat()) { "'clientId' må være på format cluster:namespace:app" }
         require(tokenEndpoint.toBeAValidTokenUrl()) { "'tokenEndpoint' er ikke en gyldig URL" }
         require(privateJwk.toContainCorrectClaims()) { "'privateJwk' må inneholde nødvendige claims" }
-        require(altinnRettigheterProxyAudience.toHaveCorrectFormat()) { "'audience' må være på format cluster:namespace:app" }
+        require(arbeidsgiverAltinnTilgangerAudience.toHaveCorrectFormat()) { "'audience' må være på format cluster:namespace:app" }
     }
 }
 

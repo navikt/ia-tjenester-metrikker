@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.common.ConsoleNotifier
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer
+import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
@@ -28,6 +29,7 @@ class MockServer : InitializingBean {
                     ConsoleNotifier(mockServerVerboseConsoleLoggingEnabled),
                 ),
         )
+        log.info("[Lokalt][Test] Starting WireMock server on port $wiremockPort")
         wireMockServer.start()
     }
 }

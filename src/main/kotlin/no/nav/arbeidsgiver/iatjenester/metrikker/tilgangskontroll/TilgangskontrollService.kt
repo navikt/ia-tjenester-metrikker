@@ -1,14 +1,12 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 
 import arrow.core.Either
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.Subject
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.model.TokenXToken
+import no.nav.arbeidsgiver.iatjenester.metrikker.altinn.AltinnTilgangerKlient
 import org.springframework.stereotype.Component
 
 @Component
 class TilgangskontrollService(
-    private val klient: AltinnrettigheterProxyKlient,
+    private val altinnTilgangerKlient: AltinnTilgangerKlient,
     private val tilgangskontrollUtils: TilgangskontrollUtils,
     private val tokendingsService: TokenxService,
 ) {
@@ -18,25 +16,11 @@ class TilgangskontrollService(
         try {
             val innloggetSelvbetjeningBruker: InnloggetBruker =
                 tilgangskontrollUtils.hentInnloggetBruker()
-
             val tokendingsToken =
-                tokendingsService.exchangeTokenToAltinnProxy(tilgangskontrollUtils.hentJwtToken())
+                tokendingsService.exchangeTokenToAltinnTilganger(tilgangskontrollUtils.hentJwtToken())
 
-            innloggetSelvbetjeningBruker.organisasjoner =
-                klient.hentOrganisasjoner(
-                    TokenXToken(tokendingsToken.encodedToken),
-                    Subject(innloggetSelvbetjeningBruker.fnr.asString()),
-                    filtrerPåAktiveOrganisasjoner = true,
-                ).map {
-                    AltinnOrganisasjon(
-                        it.name,
-                        it.parentOrganizationNumber,
-                        it.organizationNumber,
-                        it.organizationForm,
-                        it.status!!,
-                        it.type,
-                    )
-                }
+            val altinnOrganisasjoner = altinnTilgangerKlient.hentAltinnOrganisasjoner(tokendingsToken)
+            innloggetSelvbetjeningBruker.organisasjoner = altinnOrganisasjoner
             return Either.Right(innloggetSelvbetjeningBruker)
         } catch (exception: Exception) {
             return Either.Left(exception)

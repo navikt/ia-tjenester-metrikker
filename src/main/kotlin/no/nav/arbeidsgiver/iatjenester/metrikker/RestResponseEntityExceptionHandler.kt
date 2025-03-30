@@ -1,7 +1,5 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.AltinnrettigheterProxyKlientException
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.AltinnrettigheterProxyKlientFallbackException
 import no.nav.arbeidsgiver.iatjenester.metrikker.service.IaTjenesterMetrikkerValideringException
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.TilgangskontrollException
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
@@ -63,15 +61,6 @@ class RestResponseEntityExceptionHandler {
             "You are not authorized to access this resource",
             HttpStatus.UNAUTHORIZED,
         )
-    }
-
-    @ExceptionHandler(value = [AltinnrettigheterProxyKlientFallbackException::class, AltinnrettigheterProxyKlientException::class])
-    protected fun handleAltinnException(
-        e: RuntimeException,
-        webRequest: WebRequest?,
-    ): ResponseEntity<Any> {
-        log.error("Kunne ikke verifisere at innlogget bruker har tilgang til orgnr i Altinn", e)
-        return getResponseEntity(e, "Forbidden", HttpStatus.FORBIDDEN)
     }
 
     @ExceptionHandler(value = [TilgangskontrollException::class])

@@ -2,7 +2,6 @@ package no.nav.arbeidsgiver.iatjenester.metrikker.controller
 
 import arrow.core.Either
 import arrow.core.flatMap
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.AltinnException
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.enhetsregisteret.EnhetsregisteretException
@@ -69,7 +68,7 @@ class IaTjenesterMetrikkerInnloggetController(
         return innloggetBruker.fold(
             {
                 val httpStatus = when (it) {
-                    is TilgangskontrollException, is AltinnException -> {
+                    is TilgangskontrollException -> {
                         HttpStatus.FORBIDDEN
                     }
                     else -> {

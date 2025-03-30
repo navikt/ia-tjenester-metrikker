@@ -73,7 +73,6 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("org.postgresql:postgresql:42.7.5")
     implementation("no.nav.security:token-validation-spring:$navTokenSupportVersion")
-    implementation("com.github.navikt:altinn-rettigheter-proxy-klient:altinn-rettigheter-proxy-klient-5.0.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.14.4")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")

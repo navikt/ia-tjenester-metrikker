@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker
 
-import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnConfigProperties
+import no.nav.arbeidsgiver.iatjenester.metrikker.config.AltinnTilgangerConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.DBConfigProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Profile
 @EnableConfigurationProperties(
     value = [
         DBConfigProperties::class,
-        AltinnConfigProperties::class,
+        AltinnTilgangerConfigProperties::class,
     ],
 )
 @EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])

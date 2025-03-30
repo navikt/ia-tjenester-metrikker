@@ -1,0 +1,62 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/tilganger",
+    "headers": {
+      "Accept": {
+        "contains": "application/json"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "hierarki": [
+        {
+          "orgnr": "811076112",
+          "altinn3Tilganger": [],
+          "altinn2Tilganger": [],
+          "underenheter": [
+            {
+              "orgnr": "833445566",
+              "altinn3Tilganger": [
+                "tilgang1",
+                "tilgang2"
+              ],
+              "altinn2Tilganger": [
+                "serviceCode:serviceEdition"
+              ],
+              "underenheter": [],
+              "navn": "BALLSTAD OG HORTEN",
+              "organisasjonsform": "AS"
+            }
+          ],
+          "navn": "BALLSTAD OG HORTEN AS",
+          "organisasjonsform": "ORG"
+        }
+      ],
+      "orgNrTilTilganger": {
+        "833445566": [
+          "serviceCode:serviceEdition",
+          "tilgang1",
+          "tilgang2"
+        ]
+      },
+      "tilgangTilOrgNr": {
+        "serviceCode:serviceEdition": [
+          "833445566"
+        ],
+        "tilgang1": [
+          "833445566"
+        ],
+        "tilgang2": [
+          "833445566"
+        ]
+      },
+      "error": false
+    }
+  }
+}

@@ -49,7 +49,7 @@ no.nav.security.jwt:
 tokenx-service:
   client-id: localhost:arbeidsgiver:ia-tjenester-metrikker
   token_endpoint: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration/token
-  altinn_rettigheter_proxy_audience: localhost:arbeidsgiver:altinn-rettigheter-proxy
+  arbeidsgiver_altinn_tilganger_audience: lokalt:fager:arbeidsgiver-altinn-tilganger
   private_jwk: '{
       "kty": "RSA",
       "d": "BRcX3ywynvH9WA5wOz_vU9HzSY6OkmRKOGGqLEG_fEtVcXwxReSSuVcXZUngZrPkoC3li-jvNfDz9c_7WP44HkO07RkG10mSspLjS-EarYg5HUI8JPfrjtacCVmq0pnVlvEeR-35x1e91o6iC5-hEGQPkBgImKwuFy1u2eiPBM-mIoNHOSpO5IqHBAP2Gi2w7SU28mZ1xt2xmvj6kGE96u3G6nSkr175tgdi0tHO9T7BCYFjr1NNkLojzExpo5gUVyNsm17ahMi2XE7NIRdduHkEXcprr5DayDK7_VaQYqa3OPsN3UcRZanXcpdFt9HHt8KyuRW3zvXJ6-AtM1UCkQ",
@@ -59,11 +59,8 @@ tokenx-service:
       "n": "ssXDjDMHXWxvnAFXwJiKqgyf6tn_zHGbkSiWNgHZ2xsQgxo-gzv5JssbJxLCDZCdC5zX7nXIHOC5fid_fxMXGNAYh6xaJzxSLGGAJHSp_uCh5zSPAGFigihxLNwwWaDxYDcLFC9QHzaV__BaB_JUaHyD7aFDUEyQiB4MXAqTkCEUmPj-RTiUbcnicD5Q32zByJ8gzG3ufxuCGnP-xcc5QJQ8TmrlLgNzgiHHdkpRjeXCHovP_gYGXujJkhQ0dvgYtVpgoHeGcH1FC9ZRd6IiFtanJ1MPwg2i6sR_HlE2l3Ua_Knj4FZY3F0cM3P4AgXI8TyEhQgM2GWwPGf6YNrHyQ"
   }'
 
-altinn-proxy:
-  proxyUrl: http://localhost:${wiremock.port}/proxy/
-  fallbackUrl: http://localhost:${wiremock.port}/altinn/
-  altinnApiKey: "local-altinn-API-key"
-  apiGwKey: "local-API-GW-key"
+arbeidsgiver-altinn-tilganger:
+  url: http://localhost:${wiremock.port}
 
 enhetsregisteret:
   url: "http://localhost:9191/enhetsregisteret/"

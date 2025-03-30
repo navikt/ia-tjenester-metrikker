@@ -8,6 +8,7 @@ import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Næringskode5Siffer
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.OverordnetEnhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.domene.Underenhet
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.Orgnr
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClientException
@@ -16,6 +17,7 @@ import java.io.IOException
 
 @Configuration
 class EnhetsregisteretClient(
+    @Qualifier("restTemplateEnhetsregisteret")
     val restTemplate: RestTemplate,
     val enhetsregisteretUrl: String,
 ) {

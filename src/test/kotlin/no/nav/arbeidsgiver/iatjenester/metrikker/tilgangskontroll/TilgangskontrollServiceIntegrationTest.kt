@@ -1,14 +1,10 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll
 
 import arrow.core.Either
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnConfig
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlient
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.AltinnrettigheterProxyKlientConfig
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.ProxyConfig
-import no.nav.arbeidsgiver.altinnrettigheter.proxy.klient.error.exceptions.AltinnrettigheterProxyKlientFallbackException
 import no.nav.arbeidsgiver.iatjenester.metrikker.IntegrationTestSuite
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.TEST_FNR
 import no.nav.arbeidsgiver.iatjenester.metrikker.TestUtils.Companion.testTokenForTestFNR
+import no.nav.arbeidsgiver.iatjenester.metrikker.altinn.AltinnTilgangerKlient
 import no.nav.arbeidsgiver.iatjenester.metrikker.config.TokenXConfigProperties
 import no.nav.security.token.support.core.context.TokenValidationContext
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -17,22 +13,27 @@ import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.fail
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration
 import org.junit.jupiter.api.BeforeAll
+import org.mockito.Mock
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.client.RestTemplate
 import kotlin.test.Test
 
 internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
     private lateinit var dummyTilgangskontrollUtils: TilgangskontrollUtils
     private lateinit var tilgangskontrollService: TilgangskontrollService
-    private lateinit var tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer: TilgangskontrollService
-    private lateinit var proxyKlientSomIkkeSvarer: AltinnrettigheterProxyKlient
+    private lateinit var tilgangskontrollServiceHvorAltinnTilgangIkkeSvarer: TilgangskontrollService
+    private lateinit var altinnTilgangerKlientSomIkkeSvarer: AltinnTilgangerKlient
     private lateinit var dummyTokendingsService: TokenxService
 
     @Autowired
     private lateinit var tokenXConfigProperties: TokenXConfigProperties
 
     @Autowired
-    private lateinit var altinnrettigheterProxyKlient: AltinnrettigheterProxyKlient
+    private lateinit var altinnTilgangerKlient: AltinnTilgangerKlient
+
+    @Mock
+    private val restTemplate: RestTemplate? = null
 
     init {
         val tokenValidationContextHolderMock: TokenValidationContextHolder =
@@ -55,37 +56,32 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
             ) {
                 override fun hentInnloggetBruker(): InnloggetBruker = InnloggetBruker(TEST_FNR)
             }
-
-        proxyKlientSomIkkeSvarer = AltinnrettigheterProxyKlient(
-            AltinnrettigheterProxyKlientConfig(
-                ProxyConfig(consumerId = "", url = "http://localhost:7777/virker/ikke/"),
-                AltinnConfig(
-                    url = "http://localhost:7778/virker/ikke/heller",
-                    altinnApiGwApiKey = "",
-                    altinnApiKey = "",
-                ),
-            ),
-        )
     }
 
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
+        altinnTilgangerKlientSomIkkeSvarer = AltinnTilgangerKlient(
+            restTemplate = restTemplate!!,
+            altinnTilgangerApiUrl = "http://localhost:7778/virker/ikke/heller",
+        )
+
         dummyTokendingsService =
             object : TokenxService(
                 tokenXConfig = tokenXConfigProperties,
             ) {
-                override fun exchangeTokenToAltinnProxy(subjectToken: JwtToken): JwtToken = JwtToken(FAKE_TOKEN_FRA_TOKENX)
+                override fun exchangeTokenToAltinnTilganger(subjectToken: JwtToken): JwtToken =
+                    JwtToken(FAKE_TOKEN_FRA_TOKENX)
             }
 
         tilgangskontrollService =
             TilgangskontrollService(
-                altinnrettigheterProxyKlient,
+                altinnTilgangerKlient,
                 dummyTilgangskontrollUtils,
                 dummyTokendingsService,
             )
-        tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer =
+        tilgangskontrollServiceHvorAltinnTilgangIkkeSvarer =
             TilgangskontrollService(
-                proxyKlientSomIkkeSvarer,
+                altinnTilgangerKlientSomIkkeSvarer,
                 dummyTilgangskontrollUtils,
                 dummyTokendingsService,
             )
@@ -97,20 +93,20 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
         val expectedInnloggetBruker = InnloggetBruker(TEST_FNR)
         expectedInnloggetBruker.organisasjoner = listOf(
             AltinnOrganisasjon(
-                name = "BALLSTAD OG HORTEN",
-                parentOrganizationNumber = null,
+                name = "BALLSTAD OG HORTEN AS",
+                parentOrganizationNumber = "",
                 organizationNumber = "811076112",
-                organizationForm = "AS",
-                status = "Active",
-                type = "Enterprise",
+                organizationForm = "ORG",
+                status = null,
+                type = null,
             ),
             AltinnOrganisasjon(
                 name = "BALLSTAD OG HORTEN",
-                parentOrganizationNumber = null,
+                parentOrganizationNumber = "811076112",
                 organizationNumber = "833445566",
                 organizationForm = "AS",
-                status = "Active",
-                type = "Enterprise",
+                status = null,
+                type = null,
             ),
         )
 
@@ -127,15 +123,14 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
     }
 
     @Test
-    fun `Returnerer feil (Either Left) dersom hverken AltinnProxy eller Altinn svarer`() {
+    fun `Returnerer feil (Either Left) dersom AltinnTilganger ikke svarer`() {
         val result =
-            tilgangskontrollServiceHvorAltinnOgAltinnProxyIkkeSvarer.hentInnloggetBrukerFraAltinn()
+            tilgangskontrollServiceHvorAltinnTilgangIkkeSvarer.hentInnloggetBrukerFraAltinn()
 
         when (result) {
-            is Either.Left -> Assertions.assertThat(result.value)
-                .isInstanceOf(AltinnrettigheterProxyKlientFallbackException::class.java)
+            is Either.Right -> Assertions.assertThat(result.value.organisasjoner).isEmpty()
 
-            else -> fail("Returnerte ikke forventet feil")
+            else -> fail("Returnerte ikke forventet resultat")
         }
     }
 
