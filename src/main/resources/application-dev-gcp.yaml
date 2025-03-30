@@ -39,13 +39,10 @@ tokenx-service:
   client-id: ${TOKEN_X_CLIENT_ID}
   token_endpoint: ${TOKEN_X_TOKEN_ENDPOINT}
   private_jwk: ${TOKEN_X_PRIVATE_JWK}
-  altinn_rettigheter_proxy_audience: dev-gcp:arbeidsgiver:altinn-rettigheter-proxy
+  arbeidsgiver_altinn_tilganger_audience: ${ARBEIDSGIVER_ALTINN_TILGANGER_AUDIENCE}
 
-altinn-proxy:
-  proxyUrl: http://altinn-rettigheter-proxy.arbeidsgiver/altinn-rettigheter-proxy
-  fallbackUrl: https://api-gw-q1.adeo.no/
-  altinnApiKey: ${ALTINN_APIKEY}
-  apiGwKey: ${ALTINN_APIGW_APIKEY}
+arbeidsgiver-altinn-tilganger:
+  url: ${ARBEIDSGIVER_ALTINN_TILGANGER_URL}
 
 enhetsregisteret:
   url: https://arbeidsgiver-mock-enhetsregisteret.intern.dev.nav.no/enhetsregisteret/api/

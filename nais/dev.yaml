@@ -39,6 +39,10 @@ spec:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: dev-gcp
+    - name: ARBEIDSGIVER_ALTINN_TILGANGER_URL
+      value: http://arbeidsgiver-altinn-tilganger.fager
+    - name: ARBEIDSGIVER_ALTINN_TILGANGER_AUDIENCE
+      value: dev-gcp:fager:arbeidsgiver-altinn-tilganger
   envFrom:
     - secret: ia-tjenester-metrikker-secrets
   tokenx:

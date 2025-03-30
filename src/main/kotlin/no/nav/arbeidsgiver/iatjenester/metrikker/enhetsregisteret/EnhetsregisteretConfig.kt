@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate
 class EnhetsregisteretConfig(
     private val enhetsregisteretProperties: EnhetsregisteretProperties,
 ) {
-    @Bean
+    @Bean(name = ["restTemplateEnhetsregisteret"])
     fun restTemplateEnhetsregisteret(): RestTemplate = RestTemplate()
 
     @Bean
