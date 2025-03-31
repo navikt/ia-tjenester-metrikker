@@ -13,7 +13,7 @@ class AltinnTilgangerKlientConfig(
     fun restTemplateAltinnTilganger(): RestTemplate = RestTemplate()
 
     @Bean
-    fun altinnTilgangerApiUrl(): String = "${altinnTilgangerConfigProperties.url}/tilganger"
+    fun altinnTilgangerApiUrl(): String = "${altinnTilgangerConfigProperties.url}/altinn-tilganger"
 
     @Bean
     fun altinnTilgangerKlient(): AltinnTilgangerKlient =
