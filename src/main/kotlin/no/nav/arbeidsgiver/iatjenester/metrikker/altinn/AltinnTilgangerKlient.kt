@@ -69,7 +69,6 @@ class AltinnTilgangerKlient(
 
     private fun hentAltinnTilganger(tokendingsToken: JwtToken): AltinnTilganger? {
         try {
-            log.info("henter Altinn tilganger på URL $altinnTilgangerApiUrl")
             val response = restTemplate.exchange<AltinnTilganger>(
                 altinnTilgangerApiUrl,
                 HttpMethod.POST,
