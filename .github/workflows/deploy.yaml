@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - dependency-update-apr-2024
+      - ta-i-bruk-altinn-tilganger
     paths-ignore:
       - '**.md'
       - '**/**.md'
