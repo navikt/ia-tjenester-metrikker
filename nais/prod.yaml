@@ -31,7 +31,7 @@ spec:
         - id: elastic
   gcp:
     sqlInstances:
-      - type: POSTGRES_12
+      - type: POSTGRES_17
         tier: db-custom-1-3840
         databases:
           - name: ia-tjenester-metrikker
