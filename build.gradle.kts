@@ -9,8 +9,12 @@ plugins {
     application
 }
 
-val flywayVersion = "11.3.4"
+val arrowKtVersion = "2.1.1"
+val flywayVersion = "11.8.1"
+val logbackEncoderVersion = "8.1"
+val mockkVersion = "1.14.2"
 val navTokenSupportVersion = "5.0.25"
+val postgresqlVersion = "42.7.5"
 val prometheusVersion = "1.14.6"
 val springCloudStubRunnerVersion = "4.2.1"
 val springdocOpenapiVersion = "1.8.0"
@@ -68,11 +72,11 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-ui:$springdocOpenapiVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdocOpenapiVersion")
-    implementation("net.logstash.logback:logstash-logback-encoder:8.0")
-    implementation("io.arrow-kt:arrow-core:2.0.1")
+    implementation("net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion")
+    implementation("io.arrow-kt:arrow-core:$arrowKtVersion")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("org.postgresql:postgresql:42.7.5")
+    implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("no.nav.security:token-validation-spring:$navTokenSupportVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
 
@@ -83,7 +87,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:token-validation-spring-test:$navTokenSupportVersion")
-    testImplementation("io.mockk:mockk:1.13.17")
+    testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:$springCloudStubRunnerVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
