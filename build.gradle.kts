@@ -2,17 +2,18 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.4.3"
+    id("org.springframework.boot") version "3.4.5"
     id("io.spring.dependency-management") version "1.1.6"
-    kotlin("jvm") version "2.1.10"
-    kotlin("plugin.spring") version "2.1.10"
+    kotlin("jvm") version "2.1.20"
+    kotlin("plugin.spring") version "2.1.20"
     application
 }
 
-val navTokenSupportVersion = "5.0.19"
-val springdocOpenapiVersion = "1.8.0"
-val log4jVersion = "2.20.0"
 val flywayVersion = "11.3.4"
+val navTokenSupportVersion = "5.0.25"
+val prometheusVersion = "1.14.6"
+val springCloudStubRunnerVersion = "4.2.1"
+val springdocOpenapiVersion = "1.8.0"
 
 group = "no.nav.arbeidsgiver"
 version = "0.0.1-SNAPSHOT"
@@ -73,7 +74,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("org.postgresql:postgresql:42.7.5")
     implementation("no.nav.security:token-validation-spring:$navTokenSupportVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.14.4")
+    implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 
@@ -83,7 +84,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:token-validation-spring-test:$navTokenSupportVersion")
     testImplementation("io.mockk:mockk:1.13.17")
-    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.2.0")
+    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:$springCloudStubRunnerVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
