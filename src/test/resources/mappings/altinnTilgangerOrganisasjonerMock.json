@@ -31,10 +31,12 @@
               ],
               "underenheter": [],
               "navn": "BALLSTAD OG HORTEN",
+              "erSlettet": false,
               "organisasjonsform": "AS"
             }
           ],
           "navn": "BALLSTAD OG HORTEN AS",
+          "erSlettet": false,
           "organisasjonsform": "ORG"
         }
       ],

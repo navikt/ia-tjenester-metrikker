@@ -96,6 +96,7 @@ class AltinnTilgangerKlient(
         val underenheter: List<AltinnTilgang>,
         val navn: String,
         val organisasjonsform: String,
+        val erSlettet: Boolean = false,
     )
 
     data class AltinnTilganger(
