@@ -2,21 +2,21 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.4.5"
+    id("org.springframework.boot") version "3.5.4"
     id("io.spring.dependency-management") version "1.1.6"
-    kotlin("jvm") version "2.1.20"
-    kotlin("plugin.spring") version "2.1.20"
+    kotlin("jvm") version "2.2.0"
+    kotlin("plugin.spring") version "2.2.0"
     application
 }
 
-val arrowKtVersion = "2.1.1"
-val flywayVersion = "11.8.1"
+val arrowKtVersion = "2.1.2"
+val flywayVersion = "11.10.4"
 val logbackEncoderVersion = "8.1"
-val mockkVersion = "1.14.2"
-val navTokenSupportVersion = "5.0.25"
-val postgresqlVersion = "42.7.5"
-val prometheusVersion = "1.14.6"
-val springCloudStubRunnerVersion = "4.2.1"
+val mockkVersion = "1.14.5"
+val navTokenSupportVersion = "5.0.30"
+val postgresqlVersion = "42.7.7"
+val prometheusVersion = "1.15.2"
+val springCloudStubRunnerVersion = "4.3.0"
 val springdocOpenapiVersion = "1.8.0"
 
 group = "no.nav.arbeidsgiver"
