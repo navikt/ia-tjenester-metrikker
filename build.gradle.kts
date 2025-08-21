@@ -2,20 +2,20 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.5.4"
+    id("org.springframework.boot") version "3.5.5"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.2.0"
+    kotlin("jvm") version "2.2.10"
     kotlin("plugin.spring") version "2.2.0"
     application
 }
 
 val arrowKtVersion = "2.1.2"
-val flywayVersion = "11.10.4"
+val flywayVersion = "11.11.2"
 val logbackEncoderVersion = "8.1"
 val mockkVersion = "1.14.5"
 val navTokenSupportVersion = "5.0.30"
 val postgresqlVersion = "42.7.7"
-val prometheusVersion = "1.15.2"
+val prometheusVersion = "1.15.3"
 val springCloudStubRunnerVersion = "4.3.0"
 val springdocOpenapiVersion = "1.8.0"
 
@@ -95,11 +95,12 @@ dependencies {
     constraints {
         implementation("net.minidev:json-smart") {
             version {
-                require("2.5.2")
+                require("2.6.0")
             }
             because(
                 "versjoner < 2.5.2 har diverse sårbarheter",
             )
         }
     }
+
 }
