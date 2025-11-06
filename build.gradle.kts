@@ -11,6 +11,7 @@ plugins {
 
 val arrowKtVersion = "2.2.0"
 val flywayVersion = "11.15.0"
+// Kan ikke oppdatere til versjon 9.x enda, da denne knekker PersonnummerValueMasker > net.logstash.logback.mask.ValueMasker
 val logbackEncoderVersion = "8.1"
 val mockkVersion = "1.14.6"
 val navTokenSupportVersion = "5.0.30"
