@@ -9,8 +9,8 @@ plugins {
     application
 }
 
-val arrowKtVersion = "2.1.2"
-val flywayVersion = "11.11.2"
+val arrowKtVersion = "2.2.0"
+val flywayVersion = "11.15.0"
 val logbackEncoderVersion = "8.1"
 val mockkVersion = "1.14.6"
 val navTokenSupportVersion = "5.0.30"
@@ -83,7 +83,7 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 
     // Test dependencies
-    testImplementation("com.h2database:h2:2.3.232")
+    testImplementation("com.h2database:h2:2.4.240")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:token-validation-spring-test:$navTokenSupportVersion")
