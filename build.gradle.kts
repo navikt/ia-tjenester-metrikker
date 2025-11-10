@@ -80,6 +80,8 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("no.nav.security:token-validation-spring:$navTokenSupportVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
+    implementation("org.apache.commons:commons-lang3:3.19.0")
+    implementation("net.minidev:json-smart:2.6.0")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 
@@ -110,7 +112,7 @@ dependencies {
                 "versjon 3.17.0 har en sårbarhet (CVE-2025-48924)",
             )
         }
-        implementation("net.java.dev.jna:jna-platform") {
+        testImplementation("net.java.dev.jna:jna-platform") {
             version {
                 require("5.1.0") // fra 4.1.0 (brukt i test via org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
             }
