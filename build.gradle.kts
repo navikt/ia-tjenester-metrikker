@@ -102,6 +102,22 @@ dependencies {
                 "versjoner < 2.5.2 har diverse sårbarheter",
             )
         }
+        implementation("org.apache.commons:commons-lang3") {
+            version {
+                require("3.19.0")
+            }
+            because(
+                "versjon 3.17.0 har en sårbarhet (CVE-2025-48924)",
+            )
+        }
+        implementation("net.java.dev.jna:jna-platform") {
+            version {
+                require("5.1.0") // fra 4.1.0 (brukt i test via org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
+            }
+            because(
+                "versjoner < 5.0.0 har en sårbarhet (WS-2014-0065)",
+            )
+        }
     }
 
 }
