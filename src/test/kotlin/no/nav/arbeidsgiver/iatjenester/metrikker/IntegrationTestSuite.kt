@@ -2,13 +2,13 @@ package no.nav.arbeidsgiver.iatjenester.metrikker
 
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.junit.jupiter.api.TestInstance
-import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.micrometer.metrics.test.autoconfigure.AutoConfigureMetrics
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
+import org.wiremock.spring.EnableWireMock
 
 @ActiveProfiles("test")
 @SpringBootTest(
@@ -18,7 +18,7 @@ import org.springframework.test.context.TestPropertySource
 @EnableMockOAuth2Server
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@AutoConfigureWireMock(port = 0)
-@AutoConfigureObservability
+@EnableWireMock
+@AutoConfigureMetrics
 @AutoConfigureMockMvc
 internal class IntegrationTestSuite

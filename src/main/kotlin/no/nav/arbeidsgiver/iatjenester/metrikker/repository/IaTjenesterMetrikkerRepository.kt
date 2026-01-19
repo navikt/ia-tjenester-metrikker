@@ -61,7 +61,7 @@ class IaTjenesterMetrikkerRepository(
                 .addValue("kilde_applikasjon", iatjeneste.kilde.name)
                 .addValue(
                     "tjeneste_mottakkelsesdato",
-                    iatjeneste.tjenesteMottakkelsesdato.toLocalDateTime(),
+                    iatjeneste.tjenesteMottakkelsesdato?.toLocalDateTime() ?: LocalDateTime.now(),
                 )
                 .addValue("antall_ansatte", iatjeneste.antallAnsatte)
                 .addValue(

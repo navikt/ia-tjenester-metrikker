@@ -44,7 +44,7 @@ class IaTjenesterMetrikkerService(
     ): Either<IaTjenesterMetrikkerValideringException, MottattIaTjeneste> {
         val muligTidsforskjellMellomServerneiMinutter: Long = 1
 
-        return if (mottattIaTjeneste.tjenesteMottakkelsesdato.toLocalDateTime()
+        return if ((mottattIaTjeneste.tjenesteMottakkelsesdato?.toLocalDateTime() ?: now())
                 .isAfter(now().plusMinutes(muligTidsforskjellMellomServerneiMinutter))
         ) {
             Either.Left(IaTjenesterMetrikkerValideringException("tjenesteMottakkelsesdato kan ikke være i fremtiden"))

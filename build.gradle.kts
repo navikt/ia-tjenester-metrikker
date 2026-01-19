@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.5.7"
+    id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("jvm") version "2.2.21"
     kotlin("plugin.spring") version "2.2.0"
@@ -13,11 +13,10 @@ val arrowKtVersion = "2.2.0"
 val flywayVersion = "11.15.0"
 // Kan ikke oppdatere til versjon 9.x enda, da denne knekker PersonnummerValueMasker > net.logstash.logback.mask.ValueMasker
 val logbackEncoderVersion = "8.1"
-val mockkVersion = "1.14.6"
+val mockkVersion = "1.14.7"
 val navTokenSupportVersion = "5.0.30"
 val postgresqlVersion = "42.7.8"
 val prometheusVersion = "1.15.5"
-val springCloudStubRunnerVersion = "4.3.0"
 val springdocOpenapiVersion = "1.8.0"
 
 group = "no.nav.arbeidsgiver"
@@ -70,6 +69,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-flyway")
 
     implementation("org.springdoc:springdoc-openapi-ui:$springdocOpenapiVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdocOpenapiVersion")
@@ -89,9 +89,11 @@ dependencies {
     testImplementation("com.h2database:h2:2.4.240")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-micrometer-metrics-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("no.nav.security:token-validation-spring-test:$navTokenSupportVersion")
+    testImplementation("org.wiremock.integrations:wiremock-spring-boot:4.0.9")
     testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:$springCloudStubRunnerVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
@@ -110,14 +112,6 @@ dependencies {
             }
             because(
                 "versjon 3.17.0 har en sårbarhet (CVE-2025-48924)",
-            )
-        }
-        testImplementation("net.java.dev.jna:jna-platform") {
-            version {
-                require("5.1.0") // fra 4.1.0 (brukt i test via org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
-            }
-            because(
-                "versjoner < 5.0.0 har en sårbarhet (WS-2014-0065)",
             )
         }
     }

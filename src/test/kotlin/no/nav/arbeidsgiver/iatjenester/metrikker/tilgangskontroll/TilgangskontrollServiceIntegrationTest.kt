@@ -13,7 +13,6 @@ import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.fail
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration
 import org.junit.jupiter.api.BeforeAll
-import org.mockito.Mock
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.client.RestTemplate
@@ -32,8 +31,8 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
     @Autowired
     private lateinit var altinnTilgangerKlient: AltinnTilgangerKlient
 
-    @Mock
-    private val restTemplate: RestTemplate? = null
+    @Autowired
+    private lateinit var restTemplateAltinnTilganger: RestTemplate
 
     init {
         val tokenValidationContextHolderMock: TokenValidationContextHolder =
@@ -61,7 +60,7 @@ internal class TilgangskontrollServiceIntegrationTest : IntegrationTestSuite() {
     @BeforeAll
     fun setUpClassUnderTestWithInjectedAndDummyBeans() {
         altinnTilgangerKlientSomIkkeSvarer = AltinnTilgangerKlient(
-            restTemplate = restTemplate!!,
+            restTemplate = restTemplateAltinnTilganger,
             altinnTilgangerApiUrl = "http://localhost:7778/virker/ikke/heller",
         )
 
