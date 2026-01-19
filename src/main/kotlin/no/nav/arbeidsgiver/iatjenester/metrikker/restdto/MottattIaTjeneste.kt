@@ -19,7 +19,7 @@ enum class TypeIATjeneste {
 }
 
 interface MottattIaTjeneste {
-    var tjenesteMottakkelsesdato: ZonedDateTime
+    var tjenesteMottakkelsesdato: ZonedDateTime?
     var type: TypeIATjeneste
     var kilde: Kilde
 }
@@ -31,7 +31,7 @@ data class InnloggetMottattIaTjeneste(
     @get:JsonSerialize(using = ZonedDateTimeSerializer::class)
     @get:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @Schema(required = false, example = "2022-04-20T10:03:44Z")
-    override var tjenesteMottakkelsesdato: ZonedDateTime = ZonedDateTime.now(),
+    override var tjenesteMottakkelsesdato: ZonedDateTime? = ZonedDateTime.now(),
 ) : MottattIaTjeneste
 
 data class MottattIaTjenesteMedVirksomhetGrunndata(
@@ -41,7 +41,7 @@ data class MottattIaTjenesteMedVirksomhetGrunndata(
     override var kilde: Kilde,
     @get:JsonSerialize(using = ZonedDateTimeSerializer::class)
     @get:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    override var tjenesteMottakkelsesdato: ZonedDateTime = ZonedDateTime.now(),
+    override var tjenesteMottakkelsesdato: ZonedDateTime? = ZonedDateTime.now(),
     var antallAnsatte: Int,
     var næringskode5SifferBeskrivelse: String,
     var næring2SifferBeskrivelse: String,

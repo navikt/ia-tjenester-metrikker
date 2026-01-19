@@ -24,7 +24,7 @@ services:
     ports:
       - "8585:8080"
     volumes:
-      - ./src/test/resources:/home/wiremock
+      - ./src/test/resources/wiremock:/home/wiremock
 
 volumes:
   postgres-data:
