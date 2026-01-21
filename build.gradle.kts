@@ -4,19 +4,19 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.2.21"
+    kotlin("jvm") version "2.3.0"
     kotlin("plugin.spring") version "2.2.0"
     application
 }
 
-val arrowKtVersion = "2.2.0"
-val flywayVersion = "11.15.0"
+val arrowKtVersion = "2.2.1"
+val flywayVersion = "11.20.2"
 // Kan ikke oppdatere til versjon 9.x enda, da denne knekker PersonnummerValueMasker > net.logstash.logback.mask.ValueMasker
-val logbackEncoderVersion = "8.1"
+val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.7"
 val navTokenSupportVersion = "5.0.30"
-val postgresqlVersion = "42.7.8"
-val prometheusVersion = "1.15.5"
+val postgresqlVersion = "42.7.9"
+val prometheusVersion = "1.16.2"
 val springdocOpenapiVersion = "1.8.0"
 
 group = "no.nav.arbeidsgiver"
@@ -80,7 +80,7 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("no.nav.security:token-validation-spring:$navTokenSupportVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
-    implementation("org.apache.commons:commons-lang3:3.19.0")
+    implementation("org.apache.commons:commons-lang3:3.20.0")
     implementation("net.minidev:json-smart:2.6.0")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")

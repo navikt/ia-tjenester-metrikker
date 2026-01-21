@@ -1,11 +1,11 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.config
 
-import com.fasterxml.jackson.core.JsonStreamContext
 import net.logstash.logback.mask.ValueMasker
+import tools.jackson.core.TokenStreamContext
 
 class PersonnummerValueMasker : ValueMasker {
     override fun mask(
-        context: JsonStreamContext?,
+        context: TokenStreamContext?,
         value: Any?,
     ): Any? {
         if (value is CharSequence) {
