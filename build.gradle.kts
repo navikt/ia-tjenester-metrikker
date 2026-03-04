@@ -95,12 +95,19 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+}
 
-    // sårbarheter (funker ikke å ha dette som constraint, må settes som enforcedPlatform,
-    // da det har presedens over spring sin faenskap)
+dependencyManagement {
+    imports {
+        /*
+            Sårbarheter.
+            Funker ikke å ha disse som constraint. Virker som det må settes på denne måten,
+            da dette har presedens over spring sin faenskap.
+         */
 
-    // versjoner < 2.21.1 har sårbarhet. inkludert i spring-boot, diverse steder
-    implementation(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.21.1"))
-    // versjoner < 3.1.0 har sårbarhet. inkludert i spring-boot, diverse steder
-    implementation(enforcedPlatform("tools.jackson:jackson-bom:3.1.0"))
+        // versjoner < 2.21.1 har sårbarhet. inkludert i spring-boot, diverse steder
+        mavenBom("com.fasterxml.jackson:jackson-bom:2.21.1")
+        // versjoner < 3.1.0 har sårbarhet. inkludert i spring-boot, diverse steder
+        mavenBom("tools.jackson:jackson-bom:3.1.0")
+    }
 }
