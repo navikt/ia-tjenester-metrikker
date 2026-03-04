@@ -96,14 +96,11 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    constraints {
-        implementation("com.fasterxml.jackson.core:jackson-core") {
-            version { require("2.21.1") }
-            because("versjoner < 2.21.1 har sårbarhet. inkludert i ktor-server-auth:3.4.0")
-        }
-        implementation("tools.jackson.core:jackson-core") {
-            version { require("3.1.0") }
-            because("versjoner < 3.1.0 har sårbarhet. inkludert i logstash-logback-encoder:9.0")
-        }
-    }
+    // sårbarheter (funker ikke å ha dette som constraint, må settes som enforcedPlatform,
+    // da det har presedens over spring sin faenskap)
+
+    // versjoner < 2.21.1 har sårbarhet. inkludert i spring-boot, diverse steder
+    implementation(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.21.1"))
+    // versjoner < 3.1.0 har sårbarhet. inkludert i spring-boot, diverse steder
+    implementation(enforcedPlatform("tools.jackson:jackson-bom:3.1.0"))
 }

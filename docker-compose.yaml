@@ -1,6 +1,6 @@
 services:
   authserver:
-    image: ghcr.io/navikt/mock-oauth2-server:2.1.8
+    image: ghcr.io/navikt/mock-oauth2-server:3.0.1
     environment:
       TZ: Europe/Oslo
       SERVER_PORT: 6969
@@ -9,7 +9,7 @@ services:
       - "6969:6969"
 
   postgres:
-    image: postgres:14
+    image: postgres:17
     restart: always
     environment:
       POSTGRES_PASSWORD: test
