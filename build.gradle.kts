@@ -97,22 +97,13 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     constraints {
-        implementation("net.minidev:json-smart") {
-            version {
-                require("2.6.0")
-            }
-            because(
-                "versjoner < 2.5.2 har diverse sårbarheter",
-            )
+        implementation("com.fasterxml.jackson.core:jackson-core") {
+            version { require("2.21.1") }
+            because("versjoner < 2.21.1 har sårbarhet. inkludert i ktor-server-auth:3.4.0")
         }
-        implementation("org.apache.commons:commons-lang3") {
-            version {
-                require("3.19.0")
-            }
-            because(
-                "versjon 3.17.0 har en sårbarhet (CVE-2025-48924)",
-            )
+        implementation("tools.jackson.core:jackson-core") {
+            version { require("3.1.0") }
+            because("versjoner < 3.1.0 har sårbarhet. inkludert i logstash-logback-encoder:9.0")
         }
     }
-
 }
