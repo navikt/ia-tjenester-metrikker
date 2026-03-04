@@ -4,18 +4,18 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "4.0.3"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.0"
+    kotlin("jvm") version "2.3.10"
+    kotlin("plugin.spring") version "2.3.10"
     application
 }
 
-val arrowKtVersion = "2.2.1"
-val flywayVersion = "11.20.2"
+val arrowKtVersion = "2.2.1.1"
+val flywayVersion = "12.0.2"
 val logbackEncoderVersion = "9.0"
-val mockkVersion = "1.14.7"
+val mockkVersion = "1.14.9"
 val navTokenSupportVersion = "5.0.30"
-val postgresqlVersion = "42.7.9"
-val prometheusVersion = "1.16.2"
+val postgresqlVersion = "42.7.10"
+val prometheusVersion = "1.16.3"
 val springdocOpenapiVersion = "1.8.0"
 
 group = "no.nav.arbeidsgiver"
@@ -91,7 +91,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-micrometer-metrics-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("no.nav.security:token-validation-spring-test:$navTokenSupportVersion")
-    testImplementation("org.wiremock.integrations:wiremock-spring-boot:4.0.9")
+    testImplementation("org.wiremock.integrations:wiremock-spring-boot:4.1.0")
     testImplementation("io.mockk:mockk:$mockkVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
