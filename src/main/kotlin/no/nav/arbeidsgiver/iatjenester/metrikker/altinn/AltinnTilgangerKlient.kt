@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.iatjenester.metrikker.altinn
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import no.nav.arbeidsgiver.iatjenester.metrikker.tilgangskontroll.AltinnOrganisasjon
 import no.nav.arbeidsgiver.iatjenester.metrikker.utils.log
 import no.nav.security.token.support.core.jwt.JwtToken
@@ -99,6 +100,7 @@ class AltinnTilgangerKlient(
         val erSlettet: Boolean = false,
     )
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     data class AltinnTilganger(
         val hierarki: List<AltinnTilgang>,
         val orgNrTilTilganger: Map<String, Set<String>>,
