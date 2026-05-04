@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "4.0.3"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.3.20"
-    kotlin("plugin.spring") version "2.3.20"
+    kotlin("jvm") version "2.3.21"
+    kotlin("plugin.spring") version "2.3.21"
     application
 }
 
@@ -106,7 +106,7 @@ dependencyManagement {
          */
 
         // versjoner < 2.21.1 har sårbarhet. inkludert i spring-boot, diverse steder
-        mavenBom("com.fasterxml.jackson:jackson-bom:2.21.1")
+        mavenBom("com.fasterxml.jackson:jackson-bom:2.21.2")
         // versjoner < 3.1.0 har sårbarhet. inkludert i spring-boot, diverse steder
         mavenBom("tools.jackson:jackson-bom:3.1.2")
     }
