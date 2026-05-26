@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - ta-i-bruk-altinn-tilganger
+      - trigger-build
     paths-ignore:
       - '**.md'
       - '**/**.md'
