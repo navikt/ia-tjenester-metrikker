@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController
 @CrossOrigin(
     origins = [
         "https://forebygge-fravar.intern.dev.nav.no",
+        "https://arbeidsgiver.nav.no"
     ],
     allowCredentials = "true",
 )
@@ -71,6 +72,7 @@ class IaTjenesterMetrikkerInnloggetController(
                     is TilgangskontrollException -> {
                         HttpStatus.FORBIDDEN
                     }
+
                     else -> {
                         log.info("Feil ved validering av rettigheter til bruker. Årsaken er: '${it.message}', exception er: '$it' ")
                         log.debug("StackTrace: \n ${it.stackTraceToString()}")
@@ -159,6 +161,7 @@ class IaTjenesterMetrikkerInnloggetController(
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(ResponseStatusConsts.BadRequest)
             }
+
             is Either.Right -> {
                 ResponseEntity.status(HttpStatus.CREATED)
                     .contentType(MediaType.APPLICATION_JSON)
