@@ -4,18 +4,18 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.3.21"
-    kotlin("plugin.spring") version "2.3.21"
+    kotlin("jvm") version "2.4.0"
+    kotlin("plugin.spring") version "2.4.0"
     application
 }
 
 val arrowKtVersion = "2.2.3"
-val flywayVersion = "12.8.1"
+val flywayVersion = "12.9.0"
 val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.11"
 val navTokenSupportVersion = "5.0.30"
 val postgresqlVersion = "42.7.11"
-val prometheusVersion = "1.16.5"
+val prometheusVersion = "1.17.0"
 val springdocOpenapiVersion = "1.8.0"
 
 group = "no.nav.arbeidsgiver"
@@ -108,6 +108,6 @@ dependencyManagement {
         // versjoner < 2.21.1 har sårbarhet. inkludert i spring-boot, diverse steder
         mavenBom("com.fasterxml.jackson:jackson-bom:2.22.0")
         // versjoner < 3.1.0 har sårbarhet. inkludert i spring-boot, diverse steder
-        mavenBom("tools.jackson:jackson-bom:3.1.4")
+        mavenBom("tools.jackson:jackson-bom:3.2.0")
     }
 }
