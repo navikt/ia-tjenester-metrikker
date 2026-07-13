@@ -4,17 +4,17 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.3.21"
-    kotlin("plugin.spring") version "2.3.21"
+    kotlin("jvm") version "2.4.0"
+    kotlin("plugin.spring") version "2.4.0"
     application
 }
 
 val arrowKtVersion = "2.2.3"
-val flywayVersion = "12.9.0"
+val flywayVersion = "12.10.0"
 val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.11"
 val navTokenSupportVersion = "5.0.30"
-val postgresqlVersion = "42.7.11"
+val postgresqlVersion = "42.7.12"
 val prometheusVersion = "1.17.0"
 val springdocOpenapiVersion = "1.8.0"
 
