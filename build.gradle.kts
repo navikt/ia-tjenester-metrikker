@@ -10,11 +10,11 @@ plugins {
 }
 
 val arrowKtVersion = "2.2.3"
-val flywayVersion = "12.10.0"
+val flywayVersion = "12.11.0"
 val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.11"
 val navTokenSupportVersion = "5.0.30"
-val postgresqlVersion = "42.7.12"
+val postgresqlVersion = "42.7.13"
 val prometheusVersion = "1.17.0"
 val springdocOpenapiVersion = "1.8.0"
 
@@ -106,8 +106,8 @@ dependencyManagement {
          */
 
         // versjoner < 2.21.1 har sårbarhet. inkludert i spring-boot, diverse steder
-        mavenBom("com.fasterxml.jackson:jackson-bom:2.22.0")
+        mavenBom("com.fasterxml.jackson:jackson-bom:2.22.1")
         // versjoner < 3.1.0 har sårbarhet. inkludert i spring-boot, diverse steder
-        mavenBom("tools.jackson:jackson-bom:3.2.0")
+        mavenBom("tools.jackson:jackson-bom:3.2.1")
     }
 }
