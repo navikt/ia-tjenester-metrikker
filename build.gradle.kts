@@ -4,17 +4,17 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.4.0"
-    kotlin("plugin.spring") version "2.4.0"
+    kotlin("jvm") version "2.4.10"
+    kotlin("plugin.spring") version "2.4.10"
     application
 }
 
 val arrowKtVersion = "2.2.3"
-val flywayVersion = "12.10.0"
+val flywayVersion = "13.0.0"
 val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.11"
 val navTokenSupportVersion = "5.0.30"
-val postgresqlVersion = "42.7.12"
+val postgresqlVersion = "42.7.13"
 val prometheusVersion = "1.17.0"
 val springdocOpenapiVersion = "1.8.0"
 
@@ -91,7 +91,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-micrometer-metrics-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("no.nav.security:token-validation-spring-test:$navTokenSupportVersion")
-    testImplementation("org.wiremock.integrations:wiremock-spring-boot:4.2.1")
+    testImplementation("org.wiremock.integrations:wiremock-spring-boot:4.2.2")
     testImplementation("io.mockk:mockk:$mockkVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -106,8 +106,8 @@ dependencyManagement {
          */
 
         // versjoner < 2.21.1 har sårbarhet. inkludert i spring-boot, diverse steder
-        mavenBom("com.fasterxml.jackson:jackson-bom:2.22.0")
+        mavenBom("com.fasterxml.jackson:jackson-bom:2.22.1")
         // versjoner < 3.1.0 har sårbarhet. inkludert i spring-boot, diverse steder
-        mavenBom("tools.jackson:jackson-bom:3.2.0")
+        mavenBom("tools.jackson:jackson-bom:3.2.1")
     }
 }
