@@ -10,7 +10,7 @@ plugins {
 }
 
 val arrowKtVersion = "2.2.3"
-val flywayVersion = "13.0.0"
+val flywayVersion = "13.2.0"
 val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.11"
 val navTokenSupportVersion = "5.0.30"
