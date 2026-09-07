@@ -10,12 +10,12 @@ plugins {
 }
 
 val arrowKtVersion = "2.2.3"
-val flywayVersion = "13.3.0"
+val flywayVersion = "13.4.0"
 val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.11"
 val navTokenSupportVersion = "5.0.30"
 val postgresqlVersion = "42.7.13"
-val prometheusVersion = "1.17.0"
+val prometheusVersion = "1.17.1"
 val springdocOpenapiVersion = "1.8.0"
 
 group = "no.nav.arbeidsgiver"
