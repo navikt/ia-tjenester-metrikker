@@ -2,20 +2,20 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "4.1.0"
+    id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.4.10"
-    kotlin("plugin.spring") version "2.4.10"
+    kotlin("jvm") version "2.4.20"
+    kotlin("plugin.spring") version "2.4.20"
     application
 }
 
 val arrowKtVersion = "2.2.3"
-val flywayVersion = "13.3.0"
+val flywayVersion = "13.7.0"
 val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.11"
 val navTokenSupportVersion = "5.0.30"
 val postgresqlVersion = "42.7.13"
-val prometheusVersion = "1.17.0"
+val prometheusVersion = "1.17.1"
 val springdocOpenapiVersion = "1.8.0"
 
 group = "no.nav.arbeidsgiver"
@@ -85,16 +85,31 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 
     // Test dependencies
-    testImplementation("com.h2database:h2:2.4.240")
+    testImplementation("com.h2database:h2:2.5.250")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-micrometer-metrics-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("no.nav.security:token-validation-spring-test:$navTokenSupportVersion")
-    testImplementation("org.wiremock.integrations:wiremock-spring-boot:4.2.2")
+    testImplementation("org.wiremock.integrations:wiremock-spring-boot:4.4.2")
     testImplementation("io.mockk:mockk:$mockkVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    constraints {
+        implementation("org.apache.tomcat.embed:tomcat-embed-core") {
+            version { require("11.0.26") }
+            because("versjoner < 11.0.24 har kritiske sårbarheter")
+        }
+        implementation("org.apache.tomcat.embed:tomcat-embed-el") {
+            version { require("11.0.26") }
+            because("versjoner < 11.0.24 har kritiske sårbarheter")
+        }
+        implementation("org.apache.tomcat.embed:tomcat-embed-websocket") {
+            version { require("11.0.26") }
+            because("versjoner < 11.0.24 har kritiske sårbarheter")
+        }
+    }
 }
 
 dependencyManagement {
