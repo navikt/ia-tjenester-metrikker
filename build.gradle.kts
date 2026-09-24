@@ -95,24 +95,10 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-
-    constraints {
-        implementation("org.apache.tomcat.embed:tomcat-embed-core") {
-            version { require("11.0.26") }
-            because("versjoner < 11.0.24 har kritiske sårbarheter")
-        }
-        implementation("org.apache.tomcat.embed:tomcat-embed-el") {
-            version { require("11.0.26") }
-            because("versjoner < 11.0.24 har kritiske sårbarheter")
-        }
-        implementation("org.apache.tomcat.embed:tomcat-embed-websocket") {
-            version { require("11.0.26") }
-            because("versjoner < 11.0.24 har kritiske sårbarheter")
-        }
-    }
 }
 
 dependencyManagement {
+    extra["tomcat.version"] = "11.0.26"
     imports {
         /*
             Sårbarheter.
