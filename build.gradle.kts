@@ -4,13 +4,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.4.10"
-    kotlin("plugin.spring") version "2.4.10"
+    kotlin("jvm") version "2.4.20"
+    kotlin("plugin.spring") version "2.4.20"
     application
 }
 
 val arrowKtVersion = "2.2.3"
-val flywayVersion = "13.7.0"
+val flywayVersion = "13.9.0"
 val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.11"
 val navTokenSupportVersion = "5.0.30"
@@ -79,13 +79,13 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("no.nav.security:token-validation-spring:$navTokenSupportVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
-    implementation("org.apache.commons:commons-lang3:3.20.0")
+    implementation("org.apache.commons:commons-lang3:3.21.0")
     implementation("net.minidev:json-smart:2.6.0")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 
     // Test dependencies
-    testImplementation("com.h2database:h2:2.5.250")
+    testImplementation("com.h2database:h2:2.5.252")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-micrometer-metrics-test")
@@ -107,8 +107,8 @@ dependencyManagement {
          */
 
         // versjoner < 2.21.1 har sårbarhet. inkludert i spring-boot, diverse steder
-        mavenBom("com.fasterxml.jackson:jackson-bom:2.22.2")
+        mavenBom("com.fasterxml.jackson:jackson-bom:2.22.3")
         // versjoner < 3.1.0 har sårbarhet. inkludert i spring-boot, diverse steder
-        mavenBom("tools.jackson:jackson-bom:3.2.2")
+        mavenBom("tools.jackson:jackson-bom:3.2.3")
     }
 }
