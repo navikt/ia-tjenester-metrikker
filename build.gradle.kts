@@ -9,7 +9,7 @@ plugins {
     application
 }
 
-val arrowKtVersion = "2.3.0"
+val arrowKtVersion = "2.3.0.1"
 val flywayVersion = "13.12.0"
 val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.11"
