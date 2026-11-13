@@ -8,6 +8,10 @@ on:
     paths-ignore:
       - '**.md'
       - '**/**.md'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * *'
+      timezone: Europe/Oslo
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
