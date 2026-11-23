@@ -10,7 +10,7 @@ plugins {
 }
 
 val arrowKtVersion = "2.3.0.1"
-val flywayVersion = "13.12.1"
+val flywayVersion = "13.12.2"
 val logbackEncoderVersion = "9.0"
 val mockkVersion = "1.14.12"
 val navTokenSupportVersion = "5.0.30"
@@ -79,7 +79,7 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("no.nav.security:token-validation-spring:$navTokenSupportVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
-    implementation("org.apache.commons:commons-lang3:3.21.0")
+    implementation("org.apache.commons:commons-lang3:3.22.0")
     implementation("net.minidev:json-smart:2.6.1")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
@@ -103,7 +103,7 @@ dependencyManagement {
     extra["flyway.version"] = flywayVersion
     dependencies {
         dependency("com.google.guava:guava:33.8.0-jre")
-        dependency("no.nav.security:mock-oauth2-server:6.1.4")
+        dependency("no.nav.security:mock-oauth2-server:7.0.0")
     }
     imports {
         /*
